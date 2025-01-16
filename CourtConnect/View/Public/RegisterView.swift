@@ -15,11 +15,10 @@ struct RegisterView: View {
     let navigate: (LoginNavigationView) -> Void
     
     init(
-        repository: Repository,
         @ObservedObject userViewModel: SharedUserViewModel,
         navigate: @escaping (LoginNavigationView) -> Void = {_ in }
     ) {
-        self.vm = RegisterViewModel(userRepository: repository.userRepository)
+        self.vm = RegisterViewModel(userRepository: userViewModel.repository.userRepository)
         self.userViewModel = userViewModel
         self.navigate = navigate
         self.focus = nil 
@@ -167,5 +166,5 @@ struct RegisterView: View {
  
 #Preview {
     let repo = Repository(type: .preview)
-    RegisterView(repository: repo, userViewModel: SharedUserViewModel(repository: repo))
+    RegisterView(userViewModel: SharedUserViewModel(repository: repo))
 }

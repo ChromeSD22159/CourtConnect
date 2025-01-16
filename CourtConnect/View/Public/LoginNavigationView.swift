@@ -10,11 +10,8 @@ import Supabase
 struct LoginNavigation: View {
     @State var navigationView: LoginNavigationView
     @State var userViewModel: SharedUserViewModel
-    
-    let repository: Repository
-    
+     
     init(repository: Repository) {
-        self.repository = repository
         self.navigationView = .login
         self.userViewModel = SharedUserViewModel(repository: repository)
     }
@@ -22,22 +19,17 @@ struct LoginNavigation: View {
     var body: some View {
         ZStack {
             if userViewModel.user != nil {
-                MainNavigationView(repository: repository, userViewModel: userViewModel)
+                MainNavigationView(userViewModel: userViewModel)
             } else {
                 switch navigationView {
-                case .login: LoginView(repository: repository, userViewModel: userViewModel, navigate: handleNavigate)
-                case .register: RegisterView(repository: repository, userViewModel: userViewModel, navigate: handleNavigate)
+                case .login: LoginView(userViewModel: userViewModel, navigate: handleNavigate)
+                case .register: RegisterView(userViewModel: userViewModel, navigate: handleNavigate)
                 case .forget: EmptyView()
                 }
             }
         }
         .task {
-            await repository.userRepository.isAuthendicated { (user: User?, userProfile: UserProfile?) in
-                withAnimation {
-                    userViewModel.user = user
-                    userViewModel.userProfile = userProfile 
-                }
-            }
+            userViewModel.isAuthendicated()
         }
         
     }

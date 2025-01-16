@@ -8,6 +8,16 @@ import SwiftData
 import Foundation
 import Supabase
  
+@Model class Item {
+    var id: UUID
+    var test: String
+    
+    init(id: UUID, test: String) {
+        self.id = id
+        self.test = test
+    }
+}
+
 @MainActor
 class UserRepository: DatabaseProtocol {
     let type: RepositoryType
@@ -22,10 +32,10 @@ class UserRepository: DatabaseProtocol {
             UserProfile.self
         ])
         
-        let modelConfiguration = ModelConfiguration(schema: schema)
+        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: type == .preview ? true : false )
         
         do {
-            self.container = try ModelContainer(for: schema, configurations: [modelConfiguration])
+            self.container = try ModelContainer(for: schema, configurations: [modelConfiguration]) 
         } catch {
             fatalError("Could not create User DataBase Container: \(error)")
         }
@@ -74,7 +84,7 @@ class UserRepository: DatabaseProtocol {
     
     func getUserProfileFromDatabase(user: User) throws -> UserProfile? {
         let predicate = #Predicate<UserProfile> {
-            $0.userId == user.id
+            $0.userId == user.id.uuidString
         }
         
         let sortBy = [SortDescriptor(\UserProfile.createdAt, order: .reverse)]
@@ -85,17 +95,17 @@ class UserRepository: DatabaseProtocol {
     }
     
     func syncUserProfile(user: User) async throws {
-    let date: [UserProfile] = try await backendClient.supabase
-        .from(DatabaseTables.userProfile.rawValue)
-        .select("*")
-        .eq("userId", value: user.id)
-        .execute()
-        .value
-        
-    if let newProfile = date.first {
-        try insertOrUpdate(profile: newProfile)
+        let date: [UserProfile] = try await backendClient.supabase
+            .from(DatabaseTables.userProfile.rawValue)
+            .select("*")
+            .eq("userId", value: user.id)
+            .execute()
+            .value
+            
+        if let newProfile = date.first {
+            try insertOrUpdate(profile: newProfile)
+        }
     }
-}
     
     private func insertOrUpdate(profile: UserProfile) throws {
         container.mainContext.insert(profile)
@@ -110,6 +120,11 @@ class UserRepository: DatabaseProtocol {
             .from(DatabaseTables.userProfile.rawValue)
             .upsert(profile, onConflict: "userId")
             .execute()
+    }
+    
+    func userComeOnline(profile: UserProfile) async throws {
+        profile.lastOnline = Date()
+        try await sendUserProfileToBackend(profile: profile)
     }
     
     func removeUserProfile(user: User) throws {

@@ -21,7 +21,6 @@ import Supabase
     var showRepeatPassword = false
     var focus: Field? = nil
     
-    
     init(userRepository: UserRepository) {
         self.userRepository = userRepository
     }
@@ -41,7 +40,7 @@ import Supabase
             let user = try await userRepository.signUp(email: email, password: password)
             
             // TODO: GUARD PROFILE DATA
-            let profile = UserProfile(firstName: firstName, lastName: lastName, birthday: birthday, roleString: role.rawValue)
+            let profile = UserProfile(userId: user!.id.uuidString ,firstName: firstName, lastName: lastName, birthday: birthday, roleString: role.rawValue)
             try await userRepository.sendUserProfileToBackend(profile: profile)
             complete( user, profile )
         } catch {

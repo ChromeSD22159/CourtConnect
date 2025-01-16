@@ -11,7 +11,8 @@ struct UserProfileEditView: View {
     @Environment(\.dismiss) var dismiss
     var body: some View {
         VStack {
-            Text(userViewModel.editProfile.id.uuidString.lowercased())
+            Text(userViewModel.user?.id.uuidString ?? "")
+            Text(userViewModel.editProfile.userId)
             
             TextField("Firstname", text: $userViewModel.editProfile.firstName)
             
@@ -34,6 +35,22 @@ struct UserProfileEditView: View {
                     dismiss()
                 }
             }
+            
+            Spacer()
+            
+            VStack(spacing: 10) {
+                if let createdAt = userViewModel.userProfile?.createdAt {
+                    Text("createdAt: \(createdAt.formatted(date: .long, time: .shortened))").font(.caption)
+                }
+                
+                if let updatedAt = userViewModel.userProfile?.updatedAt {
+                    Text("updatedAt: \(updatedAt.formatted(date: .long, time: .shortened))").font(.caption)
+                }
+                
+                if let lastOnline = userViewModel.userProfile?.lastOnline {
+                    Text("lastOnline: \(lastOnline.formatted(date: .long, time: .shortened))").font(.caption)
+                }
+            }
         }
         .padding()
         .onAppear {
@@ -44,4 +61,8 @@ struct UserProfileEditView: View {
             }
         }
     }
+}
+
+#Preview {
+    UserProfileEditView(userViewModel: SharedUserViewModel(repository: Repository(type: .preview)))
 }
