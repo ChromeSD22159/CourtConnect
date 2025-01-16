@@ -27,4 +27,19 @@ struct DateUtil {
     static func convertDateStringToDate(string: String) -> Date? {
         return isoDateFormatter.date(from: string)
     }
+    
+    
+    static let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd.MM.yyyy"
+        return formatter
+    }()
+
+    static func stringToDateDDMMYYYY(string: String) -> Date? {
+        return dateFormatter.date(from: string)
+    }
+
+    static func dateDDMMYYYYToString(date: Date) -> String {
+        return dateFormatter.string(from: date)
+    }
 }

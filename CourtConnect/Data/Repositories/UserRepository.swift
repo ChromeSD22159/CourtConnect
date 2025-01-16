@@ -6,17 +6,7 @@
 // 
 import SwiftData
 import Foundation
-import Supabase
- 
-@Model class Item {
-    var id: UUID
-    var test: String
-    
-    init(id: UUID, test: String) {
-        self.id = id
-        self.test = test
-    }
-}
+import Supabase 
 
 @MainActor
 class UserRepository: DatabaseProtocol {
@@ -100,7 +90,7 @@ class UserRepository: DatabaseProtocol {
             .select("*")
             .eq("userId", value: user.id)
             .execute()
-            .value
+            .value 
             
         if let newProfile = date.first {
             try insertOrUpdate(profile: newProfile)
@@ -114,17 +104,14 @@ class UserRepository: DatabaseProtocol {
     
     /// SAVE CHANGES LOCAL AND SEND TO SUPABASE
     func sendUserProfileToBackend(profile: UserProfile) async throws {
+        guard type == .app else { return }
+        
         try insertOrUpdate(profile: profile)
         
         try await backendClient.supabase
             .from(DatabaseTables.userProfile.rawValue)
             .upsert(profile, onConflict: "userId")
             .execute()
-    }
-    
-    func userComeOnline(profile: UserProfile) async throws {
-        profile.lastOnline = Date()
-        try await sendUserProfileToBackend(profile: profile)
     }
     
     func removeUserProfile(user: User) throws {

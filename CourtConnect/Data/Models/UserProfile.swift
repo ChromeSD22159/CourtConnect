@@ -12,8 +12,8 @@ import SwiftData
     var userId: String
     var firstName: String
     var lastName: String
-    var birthday: Date
     var roleString: String
+    var birthday: String
     var createdAt: Date
     var updatedAt: Date
     var lastOnline: Date
@@ -22,7 +22,7 @@ import SwiftData
         case id, firstName, lastName, birthday, roleString, userId, createdAt, updatedAt, lastOnline
     }
     
-    init(id: UUID = UUID(), userId: String, firstName: String, lastName: String, birthday: Date, roleString: String, createdAt: Date = Date(), updatedAt: Date = Date(), lastOnline: Date = Date()) {
+    init(id: UUID = UUID(), userId: String, firstName: String, lastName: String, roleString: String, birthday: String, createdAt: Date = Date(), updatedAt: Date = Date(), lastOnline: Date = Date()) {
         self.id = id
         self.userId = userId
         self.firstName = firstName
@@ -42,17 +42,16 @@ import SwiftData
         self.lastName = try container.decode(String.self, forKey: .lastName)
         self.roleString = try container.decode(String.self, forKey: .roleString)
           
-        let bithdayString = try container.decode(String.self, forKey: .birthday)
-        self.birthday = DateUtil.convertDateStringToDate(string: bithdayString) ?? Date()
-        
-        let createdAtString = try container.decode(String.self, forKey: .createdAt) 
+        self.birthday = try container.decode(String.self, forKey: .birthday)
+         
+        let createdAtString = try container.decode(String.self, forKey: .createdAt)
         self.createdAt = DateUtil.convertDateStringToDate(string: createdAtString) ?? Date()
         
         let updatedAtString = try container.decode(String.self, forKey: .updatedAt)
         self.updatedAt = DateUtil.convertDateStringToDate(string: updatedAtString) ?? Date()
         
-        let lastOnlineString = try container.decode(String.self, forKey: .lastName)
-        self.lastOnline = DateUtil.convertDateStringToDate(string: lastOnlineString) ?? Date()
+        let lastOnlineString = try container.decode(String.self, forKey: .lastOnline)
+        self.lastOnline = DateUtil.convertDateStringToDate(string: lastOnlineString) ?? Date() 
     }
 
     func encode(to encoder: Encoder) throws {
@@ -60,10 +59,8 @@ import SwiftData
         try container.encode(userId, forKey: .userId)
         try container.encode(firstName, forKey: .firstName)
         try container.encode(lastName, forKey: .lastName)
-        try container.encode(roleString, forKey: .roleString)
-        
-        let birthdayString = DateUtil.convertDateToString(date: birthday)
-        try container.encode(birthdayString, forKey: .birthday)
+        try container.encode(roleString, forKey: .roleString) 
+        try container.encode(birthday, forKey: .birthday)
         
         let createdAtString = DateUtil.convertDateToString(date: createdAt)
         try container.encode(createdAtString, forKey: .createdAt)

@@ -12,7 +12,19 @@ import SwiftUI
     var user: User? = nil
     var userProfile: UserProfile? = nil
     var showOnBoarding = false
-    var editProfile: UserProfile
+    var editProfile: UserProfile = UserProfile(userId: "", firstName: "", lastName: "", roleString: UserRole.player.rawValue, birthday: "", createdAt: Date(), updatedAt: Date())
+    
+    var birthBinding: Binding<Date> {
+        Binding {
+            if let date = DateUtil.stringToDateDDMMYYYY(string: self.editProfile.birthday) {
+                return date
+            } else {
+                return Date()
+            }
+        } set: { updatedDate in
+            self.editProfile.birthday = DateUtil.dateDDMMYYYYToString(date: updatedDate)
+        }
+    }
     
     let repository: Repository
     
@@ -23,14 +35,11 @@ import SwiftUI
     init(repository: Repository) {
         self.repository = repository
         if repository.userRepository.type == .preview {
-            let cal = Calendar.current
-            
-            let birthday = cal.date(byAdding: .year, value: -1, to: Date())
-            let createdAt = cal.date(byAdding: .day, value: -10, to: Date())
-            let updatedAt = cal.date(byAdding: .day, value: -1, to: Date())
-            self.userProfile = UserProfile(userId: "", firstName: "", lastName: "", birthday: birthday!, roleString: UserRole.player.rawValue, createdAt: createdAt!, updatedAt: updatedAt!)
+            let cal = Calendar.current 
+            let createdAt = cal.date(byAdding: .day, value: -10, to: Date())!
+            let updatedAt = cal.date(byAdding: .day, value: -1, to: Date())!
+            self.userProfile = UserProfile(userId: "", firstName: "", lastName: "", roleString: UserRole.player.rawValue, birthday: "", createdAt: createdAt, updatedAt: updatedAt)
         }
-        self.editProfile = UserProfile(userId: "", firstName: "", lastName: "", birthday: Date(), roleString: UserRole.player.rawValue, createdAt: Date(), updatedAt: Date())
     }
     
     func onAppDashboardAppear() {
@@ -47,7 +56,7 @@ import SwiftUI
     
     func resetEditUserProfile() {
         guard let uid = self.user?.id.uuidString else { return }
-        self.editProfile = UserProfile(userId: uid, firstName: "", lastName: "", birthday: Date(), roleString: UserRole.player.rawValue)
+        self.editProfile = UserProfile(userId: uid, firstName: "", lastName: "", roleString: UserRole.player.rawValue, birthday: "")
     }
     
     func saveUserProfile() {
@@ -101,5 +110,11 @@ import SwiftUI
                 }
             }
         }
+    }
+    
+    func openEditProfileSheet() {
+        guard let profile = userProfile else { return }
+        self.setEditUserProfile(userProfile: profile)
+        self.showOnBoarding.toggle()
     }
 }

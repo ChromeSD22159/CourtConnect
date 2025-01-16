@@ -11,13 +11,17 @@ struct MainNavigationView: View {
     @ObservedObject var userViewModel: SharedUserViewModel
     
     var body: some View {
-        NavigationStack {
-            TabView {
-                Tab("house.fill", systemImage: "home") {
-                    DashboardView(userViewModel: userViewModel)
-                }
+        TabView {
+            Tab("Home", systemImage: "house.fill") {
+                DashboardView(userViewModel: userViewModel)
+            }
+            Tab("Settings", systemImage: "gear") {
+                SettingsView(userViewModel: userViewModel)
             }
         }
+        .sheet(isPresented: $userViewModel.showOnBoarding, content: {
+            UserProfileEditView(userViewModel: userViewModel)
+        })
     }
 } 
  
