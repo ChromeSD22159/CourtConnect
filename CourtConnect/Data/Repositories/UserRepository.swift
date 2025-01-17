@@ -7,12 +7,13 @@
 import SwiftData
 import Foundation
 import Supabase 
+import UIKit
 
 @MainActor
-class UserRepository: DatabaseProtocol {
+class UserRepository: DatabaseProtocol, SupabaseRepositoryProtocol {
     let type: RepositoryType
     let container: ModelContainer
-
+    let deviceToken = UIDevice.current.identifierForVendor!.uuidString
     let backendClient = BackendClient.shared
     
     init(type: RepositoryType) {
@@ -130,4 +131,72 @@ class UserRepository: DatabaseProtocol {
             container.mainContext.delete(userProfile)
         }
     }
+    
+    func setUserOnline(user: User) async throws -> Bool {
+        let userOnline = UserOnline(userId: user.id.uuidString, deviceToken: self.deviceToken)
+        
+        let response: PostgrestResponse<Void> = try await backendClient.supabase
+            .from(DatabaseTables.userOnline.rawValue)
+            .insert(userOnline)
+            .execute() 
+        
+        return await isRequestSuccessful(statusCode: response.response.statusCode)
+    }
+    
+    func setUserOffline(user: User) async throws -> Bool {
+         let query = try await backendClient.supabase
+           .from(DatabaseTables.userOnline.rawValue)
+           .delete()
+           .match(["userId": user.id.uuidString, "deviceToken": self.deviceToken])
+           .execute()
+
+         // Check the response status code
+         return await isRequestSuccessful(statusCode: query.response.statusCode)
+    }
+    
+    func listenForOnlineUserComesOnline(completion: @escaping ([UserOnline]) -> Void) {
+        let channelInsertUserOnline = backendClient.supabase.realtimeV2.channel("public:UserOnline:insert")
+          
+        let insertions = channelInsertUserOnline.postgresChange(InsertAction.self, table: "UserOnline")
+        Task {
+            await channelInsertUserOnline.subscribe()
+            for await _ in insertions {
+                let list = try await getOnlineUserList()
+                completion(list)
+            }
+        }
+    }
+    
+    func listenForOnlineUserGoesOffline(completion: @escaping ([UserOnline]) -> Void) {
+        let channelDeleteUserOnline = backendClient.supabase.realtimeV2.channel("public:UserOnline:delete")
+         
+        let deletions = channelDeleteUserOnline.postgresChange(DeleteAction.self, table: "UserOnline")
+        Task {
+            await channelDeleteUserOnline.subscribe()
+            for await _ in deletions {
+                let list = try await getOnlineUserList()
+                completion(list)
+            }
+        }
+    }
+    
+    func getOnlineUserList() async throws -> [UserOnline] {
+        let list: [UserOnline] = try await backendClient.supabase
+            .from(DatabaseTables.userOnline.rawValue)
+            .select()
+            .execute()
+            .value
+        
+        print("Fetch UserList")
+        
+        return list
+    }
+    
+    func isRequestSuccessful(statusCode: Int) async -> Bool {
+        return (200...299).contains(statusCode)
+    }
+} 
+
+enum SupabaseError: Error, LocalizedError {
+    case unexpectedError(message: String)
 }

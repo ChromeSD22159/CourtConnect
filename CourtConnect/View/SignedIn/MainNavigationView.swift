@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MainNavigationView: View {
     @ObservedObject var userViewModel: SharedUserViewModel
+    @Environment(\.scenePhase) var scenePhase
     
     var body: some View {
         TabView {
@@ -22,6 +23,16 @@ struct MainNavigationView: View {
         .sheet(isPresented: $userViewModel.showOnBoarding, content: {
             UserProfileEditView(userViewModel: userViewModel)
         })
+        .onAppear{
+            userViewModel.setUserOnline() 
+        }
+        .onChange(of: scenePhase) { oldPhase, newPhase in
+            if newPhase == .active {
+                userViewModel.setUserOnline()
+            } else if newPhase == .background {
+                userViewModel.setUserOffline()
+            }
+        }
     }
 } 
  

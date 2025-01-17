@@ -8,12 +8,16 @@ import Supabase
 import Foundation
 import SwiftUI
 
-@Observable class SharedUserViewModel: ObservableObject {
+@Observable
+class SharedUserViewModel: ObservableObject {
     var user: User? = nil
     var userProfile: UserProfile? = nil
     var showOnBoarding = false
     var editProfile: UserProfile = UserProfile(userId: "", firstName: "", lastName: "", roleString: UserRole.player.rawValue, birthday: "", createdAt: Date(), updatedAt: Date())
-    
+    var onlineUser: [UserOnline] = []
+    var onlineUserCount: Int {
+        self.onlineUser.count
+    }
     var birthBinding: Binding<Date> {
         Binding {
             if let date = DateUtil.stringToDateDDMMYYYY(string: self.editProfile.birthday) {
@@ -25,7 +29,7 @@ import SwiftUI
             self.editProfile.birthday = DateUtil.dateDDMMYYYYToString(date: updatedDate)
         }
     }
-    
+
     let repository: Repository
     
     private var userRepository: UserRepository {
@@ -48,6 +52,9 @@ import SwiftUI
         } else {
             userIsOnline()
         }
+       
+        self.listenForOnlineUserComesOnline()
+        self.listenForOnlineUserGoesOffline()
     }
     
     func setEditUserProfile(userProfile: UserProfile) {
@@ -116,5 +123,59 @@ import SwiftUI
         guard let profile = userProfile else { return }
         self.setEditUserProfile(userProfile: profile)
         self.showOnBoarding.toggle()
+    }
+    
+    func setUserOnline() {
+        guard let user = user else { return }
+        Task {
+            do {
+                let result = try await userRepository.setUserOnline(user: user)
+                
+                if result {
+                    print("User wurde Online gesetzt!")
+                } else {
+                    print("User konnte nicht Online gesetzt werden!")
+                }
+                
+                self.onlineUser = try await userRepository.getOnlineUserList()
+            }
+            catch { print(error) }
+        }
+    }
+    
+    func setUserOffline() {
+        guard let user = user else { return }
+        Task {
+            do {
+                let result = try await userRepository.setUserOffline(user: user)
+                
+                if result {
+                    print("User wurde Offline gesetzt!")
+                } else {
+                    print("User konnte nicht Offline gesetzt werden!")
+                }
+            }
+            catch { print(error) }
+        }
+    } 
+    
+    func listenForOnlineUserComesOnline() {
+        Task {
+            await repository.userRepository.listenForOnlineUserComesOnline() { onlineUserList in
+                self.onlineUser = onlineUserList
+                
+                print("VM RECIEVED ONLINEUSER CHANGES")
+            }
+        }
+    }
+    
+    func listenForOnlineUserGoesOffline() {
+        Task {
+            await repository.userRepository.listenForOnlineUserGoesOffline() { onlineUserList in
+                self.onlineUser = onlineUserList
+                
+                print("VM RECIEVED ONLINEUSER CHANGES")
+            }
+        }
     }
 }

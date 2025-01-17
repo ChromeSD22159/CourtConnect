@@ -15,10 +15,21 @@ struct DashboardView: View {
                     BodyText(email)
                 }
                 
-                Button("Logout") {
-                    userViewModel.signOut()
+                VStack {
+                    Text("Online User: \(userViewModel.onlineUserCount)")
+                    HStack {
+                        Button("Online") {
+                            userViewModel.setUserOnline()
+                        }
+                        
+                        Button("Offline") {
+                            userViewModel.setUserOffline()
+                        }
+                    }
+                    .padding(.top, 50)
                 }
-            } 
+                
+            }
             .navigationTitle("Daskboard")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
