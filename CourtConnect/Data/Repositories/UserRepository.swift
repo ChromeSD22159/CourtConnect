@@ -6,23 +6,14 @@
 // 
 import SwiftData
 import Foundation
-import Supabase
- 
-@Model class Item {
-    var id: UUID
-    var test: String
-    
-    init(id: UUID, test: String) {
-        self.id = id
-        self.test = test
-    }
-}
+import Supabase 
+import UIKit
 
 @MainActor
-class UserRepository: DatabaseProtocol {
+class UserRepository: DatabaseProtocol, SupabaseRepositoryProtocol {
     let type: RepositoryType
     let container: ModelContainer
-
+    let deviceToken = UIDevice.current.identifierForVendor!.uuidString
     let backendClient = BackendClient.shared
     
     init(type: RepositoryType) {
@@ -100,7 +91,7 @@ class UserRepository: DatabaseProtocol {
             .select("*")
             .eq("userId", value: user.id)
             .execute()
-            .value
+            .value 
             
         if let newProfile = date.first {
             try insertOrUpdate(profile: newProfile)
@@ -114,17 +105,14 @@ class UserRepository: DatabaseProtocol {
     
     /// SAVE CHANGES LOCAL AND SEND TO SUPABASE
     func sendUserProfileToBackend(profile: UserProfile) async throws {
+        guard type == .app else { return }
+        
         try insertOrUpdate(profile: profile)
         
         try await backendClient.supabase
             .from(DatabaseTables.userProfile.rawValue)
             .upsert(profile, onConflict: "userId")
             .execute()
-    }
-    
-    func userComeOnline(profile: UserProfile) async throws {
-        profile.lastOnline = Date()
-        try await sendUserProfileToBackend(profile: profile)
     }
     
     func removeUserProfile(user: User) throws {
@@ -143,4 +131,79 @@ class UserRepository: DatabaseProtocol {
             container.mainContext.delete(userProfile)
         }
     }
-}
+    
+    func setUserOnline(user: User, userProfile: UserProfile) async throws -> Bool {
+        let userOnline = UserOnline(userId: user.id.uuidString, firstName: userProfile.firstName, lastName: userProfile.lastName, deviceToken: self.deviceToken)
+        
+        try await backendClient.supabase
+            .from(DatabaseTables.userOnline.rawValue)
+            .insert(userOnline)
+            .execute()
+        
+        return await isRequestSuccessful(statusCode: 201)
+    }
+    
+    func setUserOffline(user: User) async throws -> Bool {
+         let query = try await backendClient.supabase
+           .from(DatabaseTables.userOnline.rawValue)
+           .delete()
+           .match(["userId": user.id.uuidString, "deviceToken": self.deviceToken])
+           .execute()
+
+         // Check the response status code
+         return await isRequestSuccessful(statusCode: query.response.statusCode)
+    }
+    
+    func listenForOnlineUserComesOnline(completion: @escaping ([UserOnline]) -> Void) {
+        let channelInsertUserOnline = backendClient.supabase.realtimeV2.channel("public:UserOnline:insert")
+          
+        let insertions = channelInsertUserOnline.postgresChange(InsertAction.self, table: SupabaseTable.userOnline.rawValue)
+        Task {
+            await channelInsertUserOnline.subscribe()
+            for await _ in insertions {
+                let list = try await getOnlineUserList()
+                completion(list)
+            }
+        }
+    }
+    
+    func listenForOnlineUserGoesOffline(completion: @escaping ([UserOnline]) -> Void) {
+        let channelDeleteUserOnline = backendClient.supabase.realtimeV2.channel("public:UserOnline:delete")
+         
+        let deletions = channelDeleteUserOnline.postgresChange(DeleteAction.self, table: SupabaseTable.userOnline.rawValue)
+        Task {
+            await channelDeleteUserOnline.subscribe()
+            for await _ in deletions {
+                let list = try await getOnlineUserList()
+                completion(list)
+            }
+        }
+    }
+    
+    func getOnlineUserList() async throws -> [UserOnline] {
+        let list: [UserOnline] = try await backendClient.supabase
+            .from(DatabaseTables.userOnline.rawValue)
+            .select()
+            .execute()
+            .value
+        
+        var uniqueUsers: [UserOnline] = []
+        
+        list.forEach { user in
+            let result = uniqueUsers.filter {
+                $0.deviceToken == user.deviceToken &&
+                $0.userId == user.userId
+            }
+            
+            if result.isEmpty {
+                uniqueUsers.append(UserOnline(userId: user.userId, firstName: user.firstName, lastName: user.lastName, deviceToken: user.deviceToken, timestamp: user.timestamp))
+            }
+        }
+        
+        return uniqueUsers
+    }
+    
+    func isRequestSuccessful(statusCode: Int) async -> Bool {
+        return (200...299).contains(statusCode)
+    }
+} 

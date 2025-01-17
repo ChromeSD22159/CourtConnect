@@ -10,3 +10,7 @@ protocol DatabaseProtocol {
     var type: RepositoryType { get }
     var container: ModelContainer { get } 
 }
+
+protocol SupabaseRepositoryProtocol {
+    func isRequestSuccessful(statusCode: Int) async -> Bool
+}

@@ -38,9 +38,9 @@ import Supabase
         
         do {
             let user = try await userRepository.signUp(email: email, password: password)
-            
-            // TODO: GUARD PROFILE DATA
-            let profile = UserProfile(userId: user!.id.uuidString ,firstName: firstName, lastName: lastName, birthday: birthday, roleString: role.rawValue)
+            let date = Date()
+            guard let user = user else { return }
+            let profile = UserProfile(userId: user.id.uuidString ,firstName: firstName, lastName: lastName, roleString: role.rawValue, birthday: DateUtil.dateDDMMYYYYToString(date: birthday), createdAt: date, updatedAt: date, lastOnline: date)
             try await userRepository.sendUserProfileToBackend(profile: profile)
             complete( user, profile )
         } catch {

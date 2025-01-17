@@ -7,4 +7,5 @@
 
 enum DatabaseTables: String {
     case userProfile = "UserProfile"
+    case userOnline = "UserOnline"
 }
