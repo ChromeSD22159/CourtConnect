@@ -24,7 +24,8 @@ struct MainNavigationView: View {
             UserProfileEditView(userViewModel: userViewModel)
         })
         .onAppear{
-            userViewModel.setUserOnline() 
+            userViewModel.setUserOnline()
+            userViewModel.startListeners()
         }
         .onChange(of: scenePhase) { oldPhase, newPhase in
             if newPhase == .active {

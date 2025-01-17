@@ -52,9 +52,11 @@ class SharedUserViewModel: ObservableObject {
         } else {
             userIsOnline()
         }
-       
+    }
+    
+    func startListeners() {
         self.listenForOnlineUserComesOnline()
-        self.listenForOnlineUserGoesOffline()
+        self.listenForOnlineUserGoesOffline() 
     }
     
     func setEditUserProfile(userProfile: UserProfile) {
@@ -126,10 +128,10 @@ class SharedUserViewModel: ObservableObject {
     }
     
     func setUserOnline() {
-        guard let user = user else { return }
+        guard let user = user, let userProfile = userProfile else { return }
         Task {
             do {
-                let result = try await userRepository.setUserOnline(user: user)
+                let result = try await userRepository.setUserOnline(user: user, userProfile: userProfile)
                 
                 if result {
                     print("User wurde Online gesetzt!")
@@ -169,9 +171,10 @@ class SharedUserViewModel: ObservableObject {
     
     func listenForOnlineUserGoesOffline() {
         Task {
+            
             await repository.userRepository.listenForOnlineUserGoesOffline() { onlineUserList in
                 self.onlineUser = onlineUserList
             }
         }
-    }
+    } 
 }

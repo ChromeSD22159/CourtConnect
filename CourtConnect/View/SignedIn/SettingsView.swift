@@ -15,7 +15,11 @@ struct SettingsView: View {
             List {
                 Section {
                     // MARK: - Total Online Users
-                    Text("Total Online Users: \(userViewModel.onlineUserCount)")
+                    NavigationLink {
+                        OnlineUserList(userViewModel: userViewModel)
+                    } label: {
+                        Text("Total Online Users: \(userViewModel.onlineUserCount)")
+                    }
                     
                     // MARK: - LastOnline
                     if let date = userViewModel.userProfile?.lastOnline {
@@ -64,23 +68,29 @@ struct SettingsView: View {
         
     }
 }
-
-extension Date {
-    func formattedDate() -> String {
-        self.formatted(
-            .dateTime
-                .day(.twoDigits)
-                .month(.twoDigits)
-                .year(.twoDigits)
-        )
-    }
+ 
+fileprivate struct OnlineUserList: View {
+    @ObservedObject var userViewModel: SharedUserViewModel
     
-    func formattedTime() -> String {
-        self.formatted(
-            .dateTime
-                .hour(.twoDigits(amPM: .narrow))
-                .minute(.twoDigits)
-        )
+    var body: some View {
+        List {
+            Section {
+                Text("Total Online: \(userViewModel.onlineUserCount)")
+            }
+            Section {
+                if userViewModel.onlineUser.isEmpty {
+                    Text("Niemand ist Online!")
+                } else {
+                    ForEach(userViewModel.onlineUser) { onlineUser in
+                        HStack() {
+                            Text(onlineUser.firstName + " " + onlineUser.firstName)
+                            
+                            Spacer()
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 

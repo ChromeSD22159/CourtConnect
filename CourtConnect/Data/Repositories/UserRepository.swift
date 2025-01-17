@@ -132,15 +132,15 @@ class UserRepository: DatabaseProtocol, SupabaseRepositoryProtocol {
         }
     }
     
-    func setUserOnline(user: User) async throws -> Bool {
-        let userOnline = UserOnline(userId: user.id.uuidString, deviceToken: self.deviceToken)
+    func setUserOnline(user: User, userProfile: UserProfile) async throws -> Bool {
+        let userOnline = UserOnline(userId: user.id.uuidString, firstName: userProfile.firstName, lastName: userProfile.lastName, deviceToken: self.deviceToken)
         
-        let response: PostgrestResponse<Void> = try await backendClient.supabase
+        try await backendClient.supabase
             .from(DatabaseTables.userOnline.rawValue)
             .insert(userOnline)
-            .execute() 
+            .execute()
         
-        return await isRequestSuccessful(statusCode: response.response.statusCode)
+        return await isRequestSuccessful(statusCode: 201)
     }
     
     func setUserOffline(user: User) async throws -> Bool {
@@ -157,7 +157,7 @@ class UserRepository: DatabaseProtocol, SupabaseRepositoryProtocol {
     func listenForOnlineUserComesOnline(completion: @escaping ([UserOnline]) -> Void) {
         let channelInsertUserOnline = backendClient.supabase.realtimeV2.channel("public:UserOnline:insert")
           
-        let insertions = channelInsertUserOnline.postgresChange(InsertAction.self, table: "UserOnline")
+        let insertions = channelInsertUserOnline.postgresChange(InsertAction.self, table: SupabaseTable.userOnline.rawValue)
         Task {
             await channelInsertUserOnline.subscribe()
             for await _ in insertions {
@@ -170,7 +170,7 @@ class UserRepository: DatabaseProtocol, SupabaseRepositoryProtocol {
     func listenForOnlineUserGoesOffline(completion: @escaping ([UserOnline]) -> Void) {
         let channelDeleteUserOnline = backendClient.supabase.realtimeV2.channel("public:UserOnline:delete")
          
-        let deletions = channelDeleteUserOnline.postgresChange(DeleteAction.self, table: "UserOnline")
+        let deletions = channelDeleteUserOnline.postgresChange(DeleteAction.self, table: SupabaseTable.userOnline.rawValue)
         Task {
             await channelDeleteUserOnline.subscribe()
             for await _ in deletions {
@@ -196,9 +196,9 @@ class UserRepository: DatabaseProtocol, SupabaseRepositoryProtocol {
             }
             
             if result.isEmpty {
-                uniqueUsers.append(UserOnline(userId: user.userId, deviceToken: user.deviceToken, timestamp: user.timestamp))
+                uniqueUsers.append(UserOnline(userId: user.userId, firstName: user.firstName, lastName: user.lastName, deviceToken: user.deviceToken, timestamp: user.timestamp))
             }
-        } 
+        }
         
         return uniqueUsers
     }
@@ -207,7 +207,3 @@ class UserRepository: DatabaseProtocol, SupabaseRepositoryProtocol {
         return (200...299).contains(statusCode)
     }
 } 
-
-enum SupabaseError: Error, LocalizedError {
-    case unexpectedError(message: String)
-}

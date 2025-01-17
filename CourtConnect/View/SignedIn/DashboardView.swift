@@ -14,21 +14,6 @@ struct DashboardView: View {
                 if let user = userViewModel.user, let email = user.email {
                     BodyText(email)
                 }
-                
-                VStack {
-                    Text("Online User: \(userViewModel.onlineUserCount)")
-                    HStack {
-                        Button("Online") {
-                            userViewModel.setUserOnline()
-                        }
-                        
-                        Button("Offline") {
-                            userViewModel.setUserOffline()
-                        }
-                    }
-                    .padding(.top, 50)
-                }
-                
             }
             .navigationTitle("Daskboard")
             .navigationBarTitleDisplayMode(.inline)
