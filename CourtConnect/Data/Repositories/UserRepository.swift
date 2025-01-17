@@ -187,9 +187,20 @@ class UserRepository: DatabaseProtocol, SupabaseRepositoryProtocol {
             .execute()
             .value
         
-        print("Fetch UserList")
+        var uniqueUsers: [UserOnline] = []
         
-        return list
+        list.forEach { user in
+            let result = uniqueUsers.filter {
+                $0.deviceToken == user.deviceToken &&
+                $0.userId == user.userId
+            }
+            
+            if result.isEmpty {
+                uniqueUsers.append(UserOnline(userId: user.userId, deviceToken: user.deviceToken, timestamp: user.timestamp))
+            }
+        } 
+        
+        return uniqueUsers
     }
     
     func isRequestSuccessful(statusCode: Int) async -> Bool {

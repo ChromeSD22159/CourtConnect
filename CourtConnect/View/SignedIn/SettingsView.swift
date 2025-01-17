@@ -14,6 +14,10 @@ struct SettingsView: View {
         NavigationStack {
             List {
                 Section {
+                    // MARK: - Total Online Users
+                    Text("Total Online Users: \(userViewModel.onlineUserCount)")
+                    
+                    // MARK: - LastOnline
                     if let date = userViewModel.userProfile?.lastOnline {
                         HStack {
                             Text("Zuletzt Online:")
@@ -22,8 +26,9 @@ struct SettingsView: View {
                         }
                     } else {
                         Text("Zuletzt Online: -")
-                    } 
+                    }
                     
+                    // MARK: - Version
                     if let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
                         Text("Version: \(appVersion)")
                     } else {

@@ -162,9 +162,7 @@ class SharedUserViewModel: ObservableObject {
     func listenForOnlineUserComesOnline() {
         Task {
             await repository.userRepository.listenForOnlineUserComesOnline() { onlineUserList in
-                self.onlineUser = onlineUserList
-                
-                print("VM RECIEVED ONLINEUSER CHANGES")
+                self.onlineUser = onlineUserList 
             }
         }
     }
@@ -173,8 +171,6 @@ class SharedUserViewModel: ObservableObject {
         Task {
             await repository.userRepository.listenForOnlineUserGoesOffline() { onlineUserList in
                 self.onlineUser = onlineUserList
-                
-                print("VM RECIEVED ONLINEUSER CHANGES")
             }
         }
     }
