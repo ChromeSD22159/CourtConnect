@@ -16,4 +16,4 @@ struct CourtConnectApp: App {
             LoginNavigation(repository: repository)
         }
     }
-}
+} 
