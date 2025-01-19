@@ -18,7 +18,7 @@ struct ChatView: View {
     var body: some View {
         ZStack {
             ScrollView(.vertical) {
-                VStack(spacing: 20) {
+                LazyVStack(spacing: 20) {
                     if !viewModel.messages.isEmpty {
                         ForEach(viewModel.messages) { message in
                             if let decrypted = message.decryptMessage() {
@@ -32,20 +32,25 @@ struct ChatView: View {
                     }
                 }
                 .padding()
+                .scrollTargetLayout()
             }
             .contentMargins(.bottom, 75)
             .scrollPosition($scrollPosition)
             .scrollIndicators(.hidden)
         }
         .overlay(alignment: .bottom) {
-            InputField(inputText: $viewModel.inputText, scrollPosition: $scrollPosition) {
+            InputField(vm: viewModel, scrollPosition: $scrollPosition) {
                 viewModel.addMessage(senderID: viewModel.myUser.userId, recipientId: viewModel.recipientUser.userId)
             }
         }
         .onAppear {
             viewModel.getAllMessages()
-            scrollPosition.scrollTo(edge: .bottom) 
         }
+        .onChange(of: viewModel.messages, {
+            withAnimation {
+                scrollPosition.scrollTo(edge: .bottom)
+            }
+        })
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 HStack(spacing: 20) {
@@ -63,17 +68,15 @@ struct ChatView: View {
                             viewModel.deleteAll() 
                         }
                     } label: {
-                        Image(systemName: "figure")
+                        Text(viewModel.recipientUser.inizials)
                             .font(.subheadline)
                             .foregroundStyle(.white)
                             .padding(10)
                             .background {
-                                Circle()
-                                    .background(Material.ultraThin)
+                                Circle().fill(Material.ultraThin)
                             }
                             .padding(5)
                     }
-
                 }
             }
         }
@@ -84,19 +87,16 @@ struct ChatView: View {
 }
 
 fileprivate struct InputField: View {
-    @Binding var inputText: String
+    @ObservedObject var vm: ChatRoomViewModel
     @Binding var scrollPosition: ScrollPosition
     let onPressSend: () -> Void
     
     var body: some View {
         HStack {
-            TextField("Deine Nachricht", text: $inputText, prompt: Text("Deine Nachricht"))
+            TextField("Deine Nachricht", text: $vm.inputText, prompt: Text("Deine Nachricht"))
                 .padding(.leading)
-            RoundImageButton(systemName: "paperplane") {
+            RoundImageButton(vm: vm, systemName: "paperplane") {
                 onPressSend()
-                withAnimation {
-                    scrollPosition.scrollTo(edge: .bottom)
-                }
             }
         }
         .background(Material.ultraThin)
@@ -156,6 +156,7 @@ fileprivate struct MessageRow: View {
 }
  
 fileprivate struct RoundImageButton: View {
+    @ObservedObject var vm: ChatRoomViewModel
     let systemName: String
     var onComplete: () -> Void
     var body: some View {
@@ -164,11 +165,17 @@ fileprivate struct RoundImageButton: View {
             .foregroundStyle(.white)
             .padding(10)
             .background {
-                Circle().background(Material.ultraThin)
+                Circle().fill(
+                    withAnimation(.easeInOut) {
+                        vm.inputText.count > 0 ? .orange : .gray
+                    }
+                )
             }
             .padding(5)
             .onTapGesture {
-                onComplete()
+                if vm.inputText.count > 0 {
+                    onComplete()
+                }
             }
     }
 }

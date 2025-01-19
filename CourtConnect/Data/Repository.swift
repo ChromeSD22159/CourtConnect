@@ -11,13 +11,14 @@ import SwiftData
 @MainActor class Repository {
     var userRepository: UserRepositoryProtocol
     let chatRepository: ChatRepository
-    
+    let syncHistoryRepository: SyncHistoryRepository
     let container: ModelContainer
     
     init(type: RepositoryType) {
         let schema = Schema([
             UserProfile.self,
-            Chat.self
+            Chat.self,
+            SyncHistory.self
         ])
         
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: type == .preview ? true : false )
@@ -34,8 +35,10 @@ import SwiftData
             } 
             
             self.chatRepository = ChatRepository(container: container, type: type)
+            self.syncHistoryRepository = SyncHistoryRepository(container: container, type: type)
         } catch {
             fatalError("Could not create User DataBase Container: \(error)")
         }
     }
-}
+} 
+

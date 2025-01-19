@@ -1,13 +1,22 @@
+//
+//  SyncHistory.swift
+//  CourtConnect
+//
+//  Created by Frederik Kohler on 19.01.25.
+//
+import SwiftData
+import Foundation
+
 @Model class SyncHistory: Identifiable {
-    var id: UUID
-    var userId: String
+    @Attribute(.unique) var id: UUID
     var table: String
+    var userId: String
     var timestamp: Date
     
-    init(id: UUID = UUID(), userId: String, table: String, timestamp: Date) {
+    init(id: UUID = UUID(), table: String, userId: String, timestamp: Date = Date()) {
         self.id = id
-        self.userId = userId
         self.table = table
+        self.userId = userId
         self.timestamp = timestamp
     }
 }

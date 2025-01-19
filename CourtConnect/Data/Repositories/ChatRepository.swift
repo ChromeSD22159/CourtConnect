@@ -31,21 +31,27 @@ class ChatRepository {
         return try container.mainContext.fetch(fetchDescriptor)
     }
     
-    func syncChatFromBackend(myUserId: String, recipientId: String, afterTimeStamp: Date? = nil, complete: @escaping ([Chat]) -> Void) async {
-        let cal = Calendar.current
-        let defaultStartDate = cal.date(byAdding: .year, value: -10, to: Date())!
-        
+    func syncChatFromBackend(myUserId: String, recipientId: String, lastSync: Date ,complete: @escaping ([Chat]) -> Void) async {
         do {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ" // Passe das Format an
+            let formattedLastSync = dateFormatter.string(from: lastSync)
+            
+            print(formattedLastSync)
+            
             let response: [Chat] = try await backendClient.supabase.from("Messages")
-               .select("*")
+               .select()
                //.eq("senderId", value: senderId)
                //.eq("recipientId", value: recipientId)
                //.greaterThan("timestamp", value: DateUtil.convertDateToString(date: timeStamp ?? defaultStartDate))
-               .or("senderId.eq.\(myUserId), recipientId.eq.\(recipientId)") // OR-Bedingung
-               .greaterThan("createdAt", value: DateUtil.convertDateToString(date: afterTimeStamp ?? defaultStartDate)) // Zeitstempelvergleich
+               .or("senderId.eq.\(myUserId), recipientId.eq.\(recipientId), createdAt.gt.\(formattedLastSync)") // OR-Bedingung
+               //.greaterThan("createdAt", value: formattedLastSync)
+               .gte("createdAt", value: formattedLastSync)
                .order("createdAt", ascending: true) // Sortiere nach createdAt
                .execute()
                .value
+            
+            print(response.count)
 
             for chat in response {
                 container.mainContext.insert(chat)
@@ -61,14 +67,14 @@ class ChatRepository {
         }
     }
     
-    func sendMessageToBackend(message: Chat, complete: @escaping ([Chat]) -> Void) async throws {
+    func sendMessageToBackend(message: Chat, lastDate: Date, complete: @escaping ([Chat]) -> Void) async throws {
         guard type == .app else { return }
         
         do {
             if let data = message.encryptMessage() {
                 try await backendClient.supabase.from(SupabaseTable.messages.rawValue).insert(data).execute()
                 
-                await syncChatFromBackend(myUserId: data.senderId, recipientId: data.recipientId) { chats in
+                await syncChatFromBackend(myUserId: data.senderId, recipientId: data.recipientId, lastSync: lastDate) { chats in
                     complete(chats)
                 }
             } else {
@@ -81,12 +87,15 @@ class ChatRepository {
     
     func receiveMessages(myUserId: String, recipientId: String, complete: @escaping ([Chat]) -> Void) {
         let channel = backendClient.supabase.realtimeV2.channel("public:Messages")
-        let insertions = channel.postgresChange(InsertAction.self, table: "Messages")
+         
+        let inserts = channel.postgresChange(InsertAction.self, table: SupabaseTable.userOnline.rawValue)
         
         Task {
             await channel.subscribe()
             
-            for await insertion in insertions {
+            for await insertion in inserts {
+                print("NEW MESSAGE")
+                
                 if let message = await handleInsertedAndDecode(insertion) {
                     container.mainContext.insert(message)
                     try container.mainContext.save()
@@ -118,4 +127,4 @@ class ChatRepository {
     func delete(message: Chat) {
          container.mainContext.delete(message)
     }
-}
+} 

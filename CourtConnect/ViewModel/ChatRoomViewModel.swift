@@ -31,14 +31,25 @@ class ChatRoomViewModel: ObservableObject {
     
     func addMessage(senderID: String, recipientId: String) {
         guard !inputText.isEmpty else { return }
+        let timestamp = SyncHistory(table: DatabaseTables.chat.rawValue, userId: myUser.userId)
         let new = Chat(senderId: senderID, recipientId: recipientId, message: inputText, createdAt: Date(), readedAt: nil)
-         
         Task {
             do {
-                try await self.repository.chatRepository.sendMessageToBackend(message: new, complete: { messages in
-                    self.messages = messages
-                    self.inputText = ""
-                })
+                if let lastSync = try lastSyncDate() {
+                    try await self.repository.chatRepository.sendMessageToBackend(message: new, lastDate: lastSync, complete: { messages in
+                        self.messages = messages
+                        self.resetInput()
+                    })
+                    try self.repository.syncHistoryRepository.insertTimestamp(for: .chat, userId: myUser.userId)
+                } else {
+                    let lastSync = self.repository.syncHistoryRepository.defaultStartDate
+                    try await self.repository.chatRepository.sendMessageToBackend(message: new, lastDate: lastSync, complete: { messages in
+                        self.messages = messages
+                        self.resetInput()
+                    })
+                }
+                
+                try self.repository.syncHistoryRepository.insertTimestamp(timestamp: timestamp)
             } catch {
                 print(error.localizedDescription)
             }
@@ -47,9 +58,16 @@ class ChatRoomViewModel: ObservableObject {
     
     func getAllMessages() {
         Task {
-            await repository.chatRepository.syncChatFromBackend(myUserId: myUser.userId, recipientId: recipientUser.userId, complete: { messages in
-                self.messages = messages
-            })
+            if let lastSync = try lastSyncDate() {
+                await repository.chatRepository.syncChatFromBackend(myUserId: myUser.userId, recipientId: recipientUser.userId, lastSync: lastSync) { messages in
+                    self.messages = messages
+                }
+            } else {
+                let lastSync = self.repository.syncHistoryRepository.defaultStartDate
+                await repository.chatRepository.syncChatFromBackend(myUserId: myUser.userId, recipientId: recipientUser.userId, lastSync: lastSync) { messages in
+                    self.messages = messages
+                }
+            }
         }
     }
     
@@ -67,5 +85,13 @@ class ChatRoomViewModel: ObservableObject {
         }
         
         messages = []
+    }
+    
+    private func resetInput() {
+        self.inputText = ""
+    }
+    
+    private func lastSyncDate() throws -> Date? {
+        return try repository.syncHistoryRepository.getLastSyncDate(for: .chat, userId: myUser.userId)?.timestamp
     }
 }
