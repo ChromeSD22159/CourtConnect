@@ -61,9 +61,6 @@ struct RegisterView: View {
                 
                 DatePicker("Your Birthday", selection: $vm.birthday, displayedComponents: .date)
                     .datePickerStyle(.compact)
-                    .onChange(of: vm.birthday) { oldValue, newValue in
-                        print(DateUtil.convertDateToString(date: newValue))
-                    }
                 
                 VStack(alignment: .leading, spacing: 5) {
                     SmallText("Which position?")

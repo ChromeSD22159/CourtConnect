@@ -42,17 +42,10 @@ class UserProfile: Codable {
         self.firstName = try container.decode(String.self, forKey: .firstName)
         self.lastName = try container.decode(String.self, forKey: .lastName)
         self.roleString = try container.decode(String.self, forKey: .roleString)
-          
         self.birthday = try container.decode(String.self, forKey: .birthday)
-         
-        let createdAtString = try container.decode(String.self, forKey: .createdAt)
-        self.createdAt = DateUtil.convertDateStringToDate(string: createdAtString) ?? Date()
-        
-        let updatedAtString = try container.decode(String.self, forKey: .updatedAt)
-        self.updatedAt = DateUtil.convertDateStringToDate(string: updatedAtString) ?? Date()
-        
-        let lastOnlineString = try container.decode(String.self, forKey: .lastOnline)
-        self.lastOnline = DateUtil.convertDateStringToDate(string: lastOnlineString) ?? Date() 
+        self.createdAt = try container.decode(Date.self, forKey: .createdAt)
+        self.updatedAt = try container.decode(Date.self, forKey: .updatedAt)
+        self.lastOnline = try container.decode(Date.self, forKey: .lastOnline)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -62,15 +55,9 @@ class UserProfile: Codable {
         try container.encode(lastName, forKey: .lastName)
         try container.encode(roleString, forKey: .roleString) 
         try container.encode(birthday, forKey: .birthday)
-        
-        let createdAtString = DateUtil.convertDateToString(date: createdAt)
-        try container.encode(createdAtString, forKey: .createdAt)
-        
-        let updatedAtString = DateUtil.convertDateToString(date: updatedAt)
-        try container.encode(updatedAtString, forKey: .updatedAt)
-        
-        let lastOnlineString = DateUtil.convertDateToString(date: lastOnline)
-        try container.encode(lastOnlineString, forKey: .lastOnline)
+        try container.encode(createdAt, forKey: .createdAt)
+        try container.encode(updatedAt, forKey: .updatedAt)
+        try container.encode(updatedAt, forKey: .lastOnline)
     }
 } 
 

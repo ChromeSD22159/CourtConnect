@@ -36,9 +36,7 @@ class UserOnline: Identifiable, Codable {
         self.firstName = try container.decode(String.self, forKey: .firstName)
         self.lastName = try container.decode(String.self, forKey: .lastName)
         self.deviceToken = try container.decode(String.self, forKey: .deviceToken)
-        
-        let timestampString = try container.decode(String.self, forKey: .timestamp)
-        self.timestamp = DateUtil.convertDateStringToDate(string: timestampString) ?? Date()
+        self.timestamp = try container.decode(Date.self, forKey: .timestamp)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -46,10 +44,8 @@ class UserOnline: Identifiable, Codable {
         try container.encode(userId, forKey: .userId)
         try container.encode(firstName, forKey: .firstName)
         try container.encode(lastName, forKey: .lastName)
-        try container.encode(deviceToken, forKey: .deviceToken)
-        
-        let timestampString = DateUtil.convertDateToString(date: timestamp)
-        try container.encode(timestampString, forKey: .timestamp)
+        try container.encode(deviceToken, forKey: .deviceToken) 
+        try container.encode(timestamp, forKey: .timestamp)
     }
 }
 
