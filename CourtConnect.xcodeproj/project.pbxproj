@@ -19,6 +19,8 @@
 		B698AC772D33359C0086AF8C /* Realtime in Frameworks */ = {isa = PBXBuildFile; productRef = B698AC762D33359C0086AF8C /* Realtime */; };
 		B698AC792D33359C0086AF8C /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = B698AC782D33359C0086AF8C /* Storage */; };
 		B698AC7C2D3335F20086AF8C /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = B698AC7B2D3335F20086AF8C /* Supabase */; };
+		B6B1D4CD2D3D42A900251542 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = B6B1D4CC2D3D42A900251542 /* FirebaseMessaging */; };
+		B6B1D4CF2D3D434E00251542 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = B6B1D4CE2D3D434E00251542 /* FirebaseCore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,9 +46,22 @@
 		B698AC172D330FC30086AF8C /* CourtConnectUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CourtConnectUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		B6B1D4D22D3D449200251542 /* Exceptions for "CourtConnect" folder in "CourtConnect" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = B698ABFA2D330FC10086AF8C /* CourtConnect */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		B698ABFD2D330FC10086AF8C /* CourtConnect */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				B6B1D4D22D3D449200251542 /* Exceptions for "CourtConnect" folder in "CourtConnect" target */,
+			);
 			path = CourtConnect;
 			sourceTree = "<group>";
 		};
@@ -67,12 +82,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B6B1D4CD2D3D42A900251542 /* FirebaseMessaging in Frameworks */,
 				B66529D82D3A81EC00B87D71 /* RNCryptor in Frameworks */,
 				B698AC6B2D3335110086AF8C /* PostgREST in Frameworks */,
 				B698AC692D3335110086AF8C /* Functions in Frameworks */,
 				B698AC7C2D3335F20086AF8C /* Supabase in Frameworks */,
 				B698AC672D3335110086AF8C /* Auth in Frameworks */,
 				B698AC6F2D3335110086AF8C /* Storage in Frameworks */,
+				B6B1D4CF2D3D434E00251542 /* FirebaseCore in Frameworks */,
 				B698AC6D2D3335110086AF8C /* Realtime in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -154,6 +171,8 @@
 				B698AC6E2D3335110086AF8C /* Storage */,
 				B698AC7B2D3335F20086AF8C /* Supabase */,
 				B66529D72D3A81EC00B87D71 /* RNCryptor */,
+				B6B1D4CC2D3D42A900251542 /* FirebaseMessaging */,
+				B6B1D4CE2D3D434E00251542 /* FirebaseCore */,
 			);
 			productName = CourtConnect;
 			productReference = B698ABFB2D330FC10086AF8C /* CourtConnect.app */;
@@ -245,6 +264,7 @@
 			packageReferences = (
 				B698AC652D3335100086AF8C /* XCRemoteSwiftPackageReference "supabase-swift" */,
 				B66529D62D3A81EC00B87D71 /* XCRemoteSwiftPackageReference "RNCryptor" */,
+				B6B1D4CB2D3D42A900251542 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B698ABFC2D330FC10086AF8C /* Products */;
@@ -444,13 +464,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_ENTITLEMENTS = CourtConnect/CourtConnect.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = ZD275Y62U7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CourtConnect/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -463,10 +484,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = de.frederikkohler.CourtConnect;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -475,12 +499,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = CourtConnect/CourtConnect.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"CourtConnect/Resources/Preview Content\"";
 				DEVELOPMENT_TEAM = ZD275Y62U7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CourtConnect/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -493,9 +519,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = de.frederikkohler.CourtConnect;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -629,6 +659,14 @@
 				minimumVersion = 2.5.1;
 			};
 		};
+		B6B1D4CB2D3D42A900251542 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.7.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -686,6 +724,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B698AC652D3335100086AF8C /* XCRemoteSwiftPackageReference "supabase-swift" */;
 			productName = Supabase;
+		};
+		B6B1D4CC2D3D42A900251542 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B6B1D4CB2D3D42A900251542 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+		B6B1D4CE2D3D434E00251542 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B6B1D4CB2D3D42A900251542 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

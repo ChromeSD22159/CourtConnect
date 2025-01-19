@@ -7,7 +7,7 @@
 import Supabase
 import Foundation
 import SwiftUI
-
+import FirebaseMessaging
 @Observable
 class SharedUserViewModel: ObservableObject {
     var user: User? = nil
@@ -98,7 +98,12 @@ class SharedUserViewModel: ObservableObject {
     private func userIsOnline() {
         guard let userProfile = userProfile else { return }
         userProfile.lastOnline = Date()
+        
         Task {
+            if let fcmToken = try? await Messaging.messaging().token() {
+                userProfile.fcmToken = fcmToken 
+            }
+            
             try await self.repository.userRepository.sendUserProfileToBackend(profile: userProfile)
         }
     }

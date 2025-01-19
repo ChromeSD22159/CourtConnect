@@ -6,7 +6,7 @@
 //
 import Observation
 import Foundation
- 
+
 @Observable
 @MainActor
 class ChatRoomViewModel: ObservableObject {

@@ -5,9 +5,11 @@
 //  Created by Frederik Kohler on 16.01.25.
 //
 import SwiftUI
+import FirebaseMessaging
 
 struct DashboardView: View {
     @ObservedObject var userViewModel: SharedUserViewModel
+    
     var body: some View {
         NavigationStack {
             VStack(spacing: 20) {

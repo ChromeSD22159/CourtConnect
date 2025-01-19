@@ -15,17 +15,21 @@ class UserProfile: Codable {
     var lastName: String
     var roleString: String
     var birthday: String
+    var fcmToken: String?
     var createdAt: Date
     var updatedAt: Date
     var lastOnline: Date
     
+    
     enum CodingKeys: String, CodingKey {
-        case id, firstName, lastName, birthday, roleString, userId, createdAt, updatedAt, lastOnline
+        case id, firstName, lastName, birthday, roleString, userId, fcmToken, updatedAt, lastOnline
+        case createdAt = "created_at"
     }
     
-    init(id: UUID = UUID(), userId: String, firstName: String, lastName: String, roleString: String, birthday: String, createdAt: Date = Date(), updatedAt: Date = Date(), lastOnline: Date = Date()) {
+    init(id: UUID = UUID(), userId: String, fcmToken: String? = nil, firstName: String, lastName: String, roleString: String, birthday: String, createdAt: Date = Date(), updatedAt: Date = Date(), lastOnline: Date = Date()) {
         self.id = id
         self.userId = userId
+        self.fcmToken = fcmToken
         self.firstName = firstName
         self.lastName = lastName
         self.birthday = birthday
@@ -39,6 +43,7 @@ class UserProfile: Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(UUID.self, forKey: .id)
         self.userId = try container.decode(String.self, forKey: .userId)
+        self.fcmToken = try container.decode(String?.self, forKey: .fcmToken)
         self.firstName = try container.decode(String.self, forKey: .firstName)
         self.lastName = try container.decode(String.self, forKey: .lastName)
         self.roleString = try container.decode(String.self, forKey: .roleString)
@@ -51,6 +56,7 @@ class UserProfile: Codable {
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(userId, forKey: .userId)
+        try container.encode(fcmToken, forKey: .fcmToken)
         try container.encode(firstName, forKey: .firstName)
         try container.encode(lastName, forKey: .lastName)
         try container.encode(roleString, forKey: .roleString) 

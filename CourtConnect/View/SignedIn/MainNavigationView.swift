@@ -11,6 +11,8 @@ struct MainNavigationView: View {
     @ObservedObject var userViewModel: SharedUserViewModel
     @Environment(\.scenePhase) var scenePhase
     
+    @State var notificationManager = NotificationService()
+    
     var body: some View {
         TabView {
             Tab("Home", systemImage: "house.fill") {
@@ -26,6 +28,12 @@ struct MainNavigationView: View {
         .onAppear{
             userViewModel.setUserOnline()
             userViewModel.startListeners()
+            
+        }
+        .task {
+            if !notificationManager.hasPermission {
+                await notificationManager.request()
+            }
         }
         .onChange(of: scenePhase) { oldPhase, newPhase in
             if newPhase == .active {
