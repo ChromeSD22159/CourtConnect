@@ -18,8 +18,6 @@ struct UserProfileEditView: View {
             TextField("Firstname", text: $userViewModel.editProfile.firstName)
             
             TextField("LastName", text: $userViewModel.editProfile.lastName)
-            
-            Text(userViewModel.editProfile.birthday)
 
             DatePicker("Birthday", selection: userViewModel.birthBinding, displayedComponents: .date)
             .datePickerStyle(.compact)

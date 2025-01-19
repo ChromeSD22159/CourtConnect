@@ -18,7 +18,7 @@ struct RegisterView: View {
         @ObservedObject userViewModel: SharedUserViewModel,
         navigate: @escaping (LoginNavigationView) -> Void = {_ in }
     ) {
-        self.vm = RegisterViewModel(userRepository: userViewModel.repository.userRepository)
+        self.vm = RegisterViewModel(repository: userViewModel.repository)
         self.userViewModel = userViewModel
         self.navigate = navigate
         self.focus = nil 

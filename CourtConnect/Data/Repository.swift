@@ -6,15 +6,36 @@
 //
 
 import Foundation
+import SwiftData
 
-class Repository {
-    let userRepository: UserRepository
-   // let chatRepository: ChatRepository
+@MainActor class Repository {
+    var userRepository: UserRepositoryProtocol
+    let chatRepository: ChatRepository
     
-    @MainActor init(type: RepositoryType) {
-        self.userRepository = UserRepository(type: type)
-        // self.chatRepository = ChatRepository(type: type)
+    let container: ModelContainer
+    
+    init(type: RepositoryType) {
+        let schema = Schema([
+            UserProfile.self,
+            Chat.self
+        ])
+        
+        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: type == .preview ? true : false )
+        
+        do {
+            let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
+            self.container = container
+            
+            switch type {
+                case .app:
+                self.userRepository = UserRepository(container: container)
+                case .preview:
+                self.userRepository = PreviewUserRepository(container: container)
+            } 
+            
+            self.chatRepository = ChatRepository(container: container, type: type)
+        } catch {
+            fatalError("Could not create User DataBase Container: \(error)")
+        }
     }
-} 
-
-
+}

@@ -18,7 +18,7 @@ struct LoginView: View {
         @ObservedObject userViewModel: SharedUserViewModel,
         navigate: @escaping (LoginNavigationView) -> Void = {_ in }
     ) {
-        self.vm = LoginViewModel(userRepository: userViewModel.repository.userRepository)
+        self.vm = LoginViewModel(repository: userViewModel.repository)
         self.userViewModel = userViewModel
         self.navigate = navigate
         self.focus = nil 

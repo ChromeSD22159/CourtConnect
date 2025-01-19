@@ -7,7 +7,8 @@
 import Foundation
 import SwiftData
 
-@Model class UserProfile: Codable {
+@Model
+class UserProfile: Codable {
     @Attribute(.unique) var id: UUID
     var userId: String
     var firstName: String
@@ -76,5 +77,19 @@ import SwiftData
 extension UserProfile {
     var role: UserRole? {
         UserRole(rawValue: self.roleString)
+    }
+    
+    func toUserOnline()  -> UserOnline {
+        return UserOnline(userId: userId, firstName: firstName, lastName: lastName, deviceToken: "asds")
+    }
+    
+    var fullName: String {
+        return firstName + " " + lastName
+    }
+    
+    var inizials: String {
+        guard let first = firstName.first, let second = lastName.first else { return "" }
+        
+        return "\(first)\(second)"
     }
 }

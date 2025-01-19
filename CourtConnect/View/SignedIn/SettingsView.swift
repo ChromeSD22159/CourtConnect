@@ -71,7 +71,7 @@ struct SettingsView: View {
  
 fileprivate struct OnlineUserList: View {
     @ObservedObject var userViewModel: SharedUserViewModel
-    
+     
     var body: some View {
         List {
             Section {
@@ -83,13 +83,22 @@ fileprivate struct OnlineUserList: View {
                 } else {
                     ForEach(userViewModel.onlineUser) { onlineUser in
                         HStack() {
-                            Text(onlineUser.firstName + " " + onlineUser.firstName)
+                            if let myUser: UserProfile = userViewModel.userProfile  {
+                                NavigationLink { 
+                                    ChatView(repository: userViewModel.repository, myUser: myUser, recipientUser: onlineUser.toUserProfile())
+                                } label: {
+                                    Text(onlineUser.firstName + " " + onlineUser.lastName)
+                                }
+                            } 
                             
                             Spacer()
                         }
                     }
                 }
             }
+        }
+        .onAppear {
+            userViewModel.getAllOnlineUser()
         }
     }
 }

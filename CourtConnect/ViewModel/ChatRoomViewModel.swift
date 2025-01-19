@@ -4,25 +4,68 @@
 //
 //  Created by Frederik Kohler on 17.01.25.
 //
+import Observation
 import Foundation
-
-@MainActor
+ 
 @Observable
+@MainActor
 class ChatRoomViewModel: ObservableObject {
     private let supabase = BackendClient.shared
     let repository: Repository
     
-    init(repository: Repository) {
-        self.repository = repository
-    }
+    var myUser: UserProfile
     
-    var inputText = ""
+    var recipientUser: UserProfile
+    
+    var messages: [Chat] = []
+    
+    var inputText: String = ""
+    
+    init(repository: Repository, myUser: UserProfile, recipientUser: UserProfile) {
+        self.repository = repository
+        self.myUser = myUser
+        self.recipientUser = recipientUser
+        
+        self.startReceiveMessages()
+    }
     
     func addMessage(senderID: String, recipientId: String) {
         guard !inputText.isEmpty else { return }
-        self.messages.append(Chat(senderId: senderID, recipientId: recipientId, text: inputText, readedAt: nil))
-        self.inputText = ""
+        let new = Chat(senderId: senderID, recipientId: recipientId, message: inputText, createdAt: Date(), readedAt: nil)
+         
+        Task {
+            do {
+                try await self.repository.chatRepository.sendMessageToBackend(message: new, complete: { messages in
+                    self.messages = messages
+                    self.inputText = ""
+                })
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
     }
-
-    var messages: [Chat] = []
+    
+    func getAllMessages() {
+        Task {
+            await repository.chatRepository.syncChatFromBackend(myUserId: myUser.userId, recipientId: recipientUser.userId, complete: { messages in
+                self.messages = messages
+            })
+        }
+    }
+    
+    func startReceiveMessages() {
+        Task {
+            repository.chatRepository.receiveMessages(myUserId: myUser.userId, recipientId: recipientUser.userId, complete: { messages in
+                self.messages = messages
+            })
+        }
+    }
+    
+    func deleteAll() {
+        messages.forEach {
+            repository.chatRepository.delete(message: $0)
+        }
+        
+        messages = []
+    }
 }

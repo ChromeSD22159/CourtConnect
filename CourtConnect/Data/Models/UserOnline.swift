@@ -51,4 +51,10 @@ class UserOnline: Identifiable, Codable {
         let timestampString = DateUtil.convertDateToString(date: timestamp)
         try container.encode(timestampString, forKey: .timestamp)
     }
-} 
+}
+
+extension UserOnline {
+    func toUserProfile() -> UserProfile {
+        return UserProfile(userId: self.userId, firstName: self.firstName, lastName: self.lastName, roleString: "", birthday: "")
+    }
+}

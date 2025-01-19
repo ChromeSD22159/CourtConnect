@@ -25,7 +25,16 @@ struct DateUtil {
     /// Converts a string in ISO8601 format using InternetDateTime
     /// and fractions of a second into a date
     static func convertDateStringToDate(string: String) -> Date? {
-        return isoDateFormatter.date(from: string)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+        
+        if let date = isoDateFormatter.date(from: string) {
+            return date
+        } else if let date = dateFormatter.date(from: string) {
+            return date
+        } else {
+            return nil
+        }
     }
     
     

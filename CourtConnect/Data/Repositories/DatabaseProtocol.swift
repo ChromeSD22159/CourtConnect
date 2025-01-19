@@ -8,7 +8,7 @@ import SwiftData
  
 protocol DatabaseProtocol {
     var type: RepositoryType { get }
-    var container: ModelContainer { get } 
+    var container: ModelContainer { get }
 }
 
 protocol SupabaseRepositoryProtocol {

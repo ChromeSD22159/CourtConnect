@@ -32,18 +32,8 @@ class SharedUserViewModel: ObservableObject {
 
     let repository: Repository
     
-    private var userRepository: UserRepository {
-        self.repository.userRepository
-    }
-    
-    init(repository: Repository) {
+    @MainActor init(repository: Repository) {
         self.repository = repository
-        if repository.userRepository.type == .preview {
-            let cal = Calendar.current 
-            let createdAt = cal.date(byAdding: .day, value: -10, to: Date())!
-            let updatedAt = cal.date(byAdding: .day, value: -1, to: Date())!
-            self.userProfile = UserProfile(userId: "", firstName: "", lastName: "", roleString: UserRole.player.rawValue, birthday: "", createdAt: createdAt, updatedAt: updatedAt)
-        }
     }
     
     func onAppDashboardAppear() {
@@ -83,7 +73,10 @@ class SharedUserViewModel: ObservableObject {
         
         Task {
             do { 
-                try await self.userRepository.sendUserProfileToBackend(profile: editProfile)
+                try await self.repository.userRepository.sendUserProfileToBackend(profile: editProfile)
+                
+                self.setUserOffline()
+                self.setUserOnline()
             } catch {
                 print(error.localizedDescription)
             }
@@ -94,7 +87,7 @@ class SharedUserViewModel: ObservableObject {
         Task {
             do {
                 if let user = user {
-                    try await userRepository.signOut(user: user)
+                    try await self.repository.userRepository.signOut(user: user)
                 }
             } catch {
                 print(error.localizedDescription)
@@ -106,13 +99,13 @@ class SharedUserViewModel: ObservableObject {
         guard let userProfile = userProfile else { return }
         userProfile.lastOnline = Date()
         Task {
-            try await self.userRepository.sendUserProfileToBackend(profile: userProfile)
+            try await self.repository.userRepository.sendUserProfileToBackend(profile: userProfile)
         }
     }
     
     func isAuthendicated() {
         Task {
-            await repository.userRepository.isAuthendicated { (user: User?, userProfile: UserProfile?) in
+            await self.repository.userRepository.isAuthendicated { (user: User?, userProfile: UserProfile?) in
                 withAnimation {
                     self.user = user
                     self.userProfile = userProfile
@@ -131,7 +124,7 @@ class SharedUserViewModel: ObservableObject {
         guard let user = user, let userProfile = userProfile else { return }
         Task {
             do {
-                let result = try await userRepository.setUserOnline(user: user, userProfile: userProfile)
+                let result = try await self.repository.userRepository.setUserOnline(user: user, userProfile: userProfile)
                 
                 if result {
                     print("User wurde Online gesetzt!")
@@ -139,7 +132,7 @@ class SharedUserViewModel: ObservableObject {
                     print("User konnte nicht Online gesetzt werden!")
                 }
                 
-                self.onlineUser = try await userRepository.getOnlineUserList()
+                self.onlineUser = try await self.repository.userRepository.getOnlineUserList()
             }
             catch { print(error) }
         }
@@ -149,7 +142,7 @@ class SharedUserViewModel: ObservableObject {
         guard let user = user else { return }
         Task {
             do {
-                let result = try await userRepository.setUserOffline(user: user)
+                let result = try await self.repository.userRepository.setUserOffline(user: user)
                 
                 if result {
                     print("User wurde Offline gesetzt!")
@@ -163,18 +156,27 @@ class SharedUserViewModel: ObservableObject {
     
     func listenForOnlineUserComesOnline() {
         Task {
-            await repository.userRepository.listenForOnlineUserComesOnline() { onlineUserList in
-                self.onlineUser = onlineUserList 
+            await self.repository.userRepository.listenForOnlineUserComesOnline() { onlineUserList in
+                self.onlineUser = onlineUserList
             }
         }
     }
     
     func listenForOnlineUserGoesOffline() {
         Task {
-            
-            await repository.userRepository.listenForOnlineUserGoesOffline() { onlineUserList in
+            await self.repository.userRepository.listenForOnlineUserGoesOffline() { onlineUserList in
                 self.onlineUser = onlineUserList
             }
         }
-    } 
+    }
+    
+    func getAllOnlineUser() {
+        Task {
+            do {
+                self.onlineUser = try await repository.userRepository.getOnlineUserList()
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
 }

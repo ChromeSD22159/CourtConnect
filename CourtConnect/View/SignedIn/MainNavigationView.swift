@@ -38,6 +38,9 @@ struct MainNavigationView: View {
 } 
  
 #Preview {
-    let repo = Repository(type: .preview)
-    MainNavigationView(userViewModel: SharedUserViewModel(repository: repo))
+    @Previewable @State var vm = SharedUserViewModel(repository: Repository(type: .preview))
+    MainNavigationView(userViewModel: vm)
+        .onAppear {
+            vm.user = MockUser.myUser
+        }
 }

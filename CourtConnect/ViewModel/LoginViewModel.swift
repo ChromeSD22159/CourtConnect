@@ -8,7 +8,7 @@ import Foundation
 import Supabase
 
 @Observable class LoginViewModel: ObservableObject {
-    var userRepository: UserRepository
+    var repository: Repository
     
     var email: String = ""
     var password: String = ""
@@ -17,8 +17,8 @@ import Supabase
     var focus: Field? = nil
     
     
-    init(userRepository: UserRepository) {
-        self.userRepository = userRepository
+    init(repository: Repository) {
+        self.repository = repository
     }
     
     func changeFocus() {
@@ -34,11 +34,11 @@ import Supabase
         
         Task {
             do {
-                let user = try await userRepository.signIn(email: email, password: password)
+                let user = try await repository.userRepository.signIn(email: email, password: password)
                 
                 if let user = user {
-                    try await userRepository.syncUserProfile(user: user)
-                    let userProfile = try await userRepository.getUserProfileFromDatabase(user: user)
+                    try await repository.userRepository.syncUserProfile(user: user)
+                    let userProfile = try await repository.userRepository.getUserProfileFromDatabase(user: user)
                     complete( user , userProfile )
                 } else {
                     complete( nil, nil )
