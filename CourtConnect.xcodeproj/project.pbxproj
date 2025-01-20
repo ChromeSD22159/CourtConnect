@@ -10,6 +10,9 @@
 		B66529D82D3A81EC00B87D71 /* RNCryptor in Frameworks */ = {isa = PBXBuildFile; productRef = B66529D72D3A81EC00B87D71 /* RNCryptor */; };
 		B6652A512D3DAA2E00B87D71 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = B6652A502D3DAA2E00B87D71 /* FirebaseAuth */; };
 		B6652B402D3E4E8C00B87D71 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = B6652B3F2D3E4E8C00B87D71 /* .swiftlint.yml */; };
+		B66532592D3EC28500B87D71 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = B66532582D3EC28500B87D71 /* .gitignore */; };
+		B665325B2D3EC28F00B87D71 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B665325A2D3EC28F00B87D71 /* GoogleService-Info.plist */; };
+		B665325D2D3EC35300B87D71 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = B665325C2D3EC35300B87D71 /* README.md */; };
 		B698AC692D3335110086AF8C /* Functions in Frameworks */ = {isa = PBXBuildFile; productRef = B698AC682D3335110086AF8C /* Functions */; };
 		B698AC6B2D3335110086AF8C /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = B698AC6A2D3335110086AF8C /* PostgREST */; };
 		B698AC6D2D3335110086AF8C /* Realtime in Frameworks */ = {isa = PBXBuildFile; productRef = B698AC6C2D3335110086AF8C /* Realtime */; };
@@ -43,6 +46,9 @@
 
 /* Begin PBXFileReference section */
 		B6652B3F2D3E4E8C00B87D71 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
+		B66532582D3EC28500B87D71 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		B665325A2D3EC28F00B87D71 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		B665325C2D3EC35300B87D71 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		B698ABFB2D330FC10086AF8C /* CourtConnect.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CourtConnect.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B698AC0D2D330FC30086AF8C /* CourtConnectTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CourtConnectTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B698AC172D330FC30086AF8C /* CourtConnectUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CourtConnectUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -121,7 +127,10 @@
 		B698ABF22D330FC10086AF8C = {
 			isa = PBXGroup;
 			children = (
+				B66532582D3EC28500B87D71 /* .gitignore */,
+				B665325A2D3EC28F00B87D71 /* GoogleService-Info.plist */,
 				B6652B3F2D3E4E8C00B87D71 /* .swiftlint.yml */,
+				B665325C2D3EC35300B87D71 /* README.md */,
 				B698ABFD2D330FC10086AF8C /* CourtConnect */,
 				B698AC102D330FC30086AF8C /* CourtConnectTests */,
 				B698AC1A2D330FC30086AF8C /* CourtConnectUITests */,
@@ -288,6 +297,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B665325B2D3EC28F00B87D71 /* GoogleService-Info.plist in Resources */,
+				B665325D2D3EC35300B87D71 /* README.md in Resources */,
+				B66532592D3EC28500B87D71 /* .gitignore in Resources */,
 				B6652B402D3E4E8C00B87D71 /* .swiftlint.yml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

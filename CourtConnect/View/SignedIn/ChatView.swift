@@ -20,9 +20,7 @@ struct ChatView: View {
                 LazyVStack(spacing: 20) {
                     if !viewModel.messages.isEmpty {
                         ForEach(viewModel.messages) { message in
-                            if let decrypted = message.decryptMessage() {
-                                MessageRow(message: decrypted, myUserId: viewModel.myUser.userId)
-                            }
+                            MessageRow(message: message, myUserId: viewModel.myUser.userId)
                         }
                     } else {
                         HStack {
@@ -44,6 +42,7 @@ struct ChatView: View {
         }
         .onAppear {
             viewModel.getAllMessages()
+            viewModel.startReceiveMessages()
         }
         .onChange(of: viewModel.messages, {
             withAnimation {
@@ -166,13 +165,13 @@ fileprivate struct RoundImageButton: View {
             .background {
                 Circle().fill(
                     withAnimation(.easeInOut) {
-                        viewModel.inputText.isEmpty ? .orange : .gray
+                        !viewModel.inputText.isEmpty ? .orange : .gray
                     }
                 )
             }
             .padding(5)
             .onTapGesture {
-                if viewModel.inputText.isEmpty {
+                if !viewModel.inputText.isEmpty {
                     onComplete()
                 }
             }

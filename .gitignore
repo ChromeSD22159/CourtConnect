@@ -1,3 +1,64 @@
+# Xcode
+## User settings
+xcuserdata/
+APIKeys.swift
+
+## Obj-C/Swift specific
+*.hmap
+
+## App packaging
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+Pods/
+
+# FIREBASE #
 GoogleService-Info.plist
 /CourtConnect/GoogleService-Info.plist
-.DS_Store
+/CourtConnect.xcodeproj/project.xcworkspace/xcuserdata/frederikkohler.xcuserdatad/UserInterfaceState.xcuserstate
+.vscode
+
+# Supabase
+/supabase/functions/.branches
+/supabase/functions/.temp
+/supabase/functions/.env
+/supabase/functions/.service-account.json

@@ -24,9 +24,7 @@ class ChatRoomViewModel: ObservableObject {
     init(repository: Repository, myUser: UserProfile, recipientUser: UserProfile) {
         self.repository = repository
         self.myUser = myUser
-        self.recipientUser = recipientUser
-        
-        self.startReceiveMessages()
+        self.recipientUser = recipientUser 
     }
     
     func addMessage(senderID: String, recipientId: String) {

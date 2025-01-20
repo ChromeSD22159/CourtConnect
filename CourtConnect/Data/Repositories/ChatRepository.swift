@@ -63,14 +63,10 @@ class ChatRepository {
         guard type == .app else { return }
         
         do {
-            if let data = message.encryptMessage() {
-                try await backendClient.supabase.from(SupabaseTable.messages.rawValue).insert(data).execute()
-                
-                await syncChatFromBackend(myUserId: data.senderId, recipientId: data.recipientId, lastSync: lastDate) { chats in
-                    complete(chats)
-                }
-            } else {
-                throw CryptError.encrypt
+            try await backendClient.supabase.from(SupabaseTable.messages.rawValue).insert(message).execute()
+            
+            await syncChatFromBackend(myUserId: message.senderId, recipientId: message.recipientId, lastSync: lastDate) { chats in
+                complete(chats)
             }
         } catch {
             throw error
@@ -80,23 +76,22 @@ class ChatRepository {
     func receiveMessages(myUserId: String, recipientId: String, complete: @escaping ([Chat]) -> Void) {
         let channel = backendClient.supabase.realtimeV2.channel("public:Messages")
          
-        let inserts = channel.postgresChange(InsertAction.self, table: SupabaseTable.userOnline.rawValue)
+        let inserts = channel.postgresChange(InsertAction.self, table: SupabaseTable.messages.rawValue)
         
         Task {
             await channel.subscribe()
             
             for await insertion in inserts {
-                print("NEW MESSAGE")
                 
                 if let message = await handleInsertedAndDecode(insertion) {
                     container.mainContext.insert(message)
                     try container.mainContext.save()
+                    
+                    let all = try self.getAllFromDatabase(myUserId: myUserId, recipientId: recipientId)
+                    
+                    complete(all)
                 }
             }
-            
-            let all = try self.getAllFromDatabase(myUserId: myUserId, recipientId: recipientId)
-            
-            complete(all)
         }
     }
     
@@ -106,11 +101,7 @@ class ChatRepository {
             decoder.dateDecodingStrategy = .iso8601
             
             let decodedMessage = try action.decodeRecord(decoder: decoder) as Chat
-            if let message = decodedMessage.decryptMessage() {
-                return message
-            } else {
-                return nil
-            }
+            return decodedMessage
         } catch {
             return nil
         }

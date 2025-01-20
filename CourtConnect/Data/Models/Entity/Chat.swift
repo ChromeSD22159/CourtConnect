@@ -51,43 +51,46 @@ class Chat: Codable {
         try container.encode(readedAt, forKey: .readedAt)
     }
 }
+/*
+ 
+ extension Chat {
+     /// Verschlüsselt
+     func encryptMessage() -> Chat? {
+         do {
+             let entrypedText = try EncryptionHelper.encryptMessage(senderId: self.senderId, text: self.message)
+             return Chat(id: id, senderId: senderId, recipientId: recipientId, message: entrypedText, createdAt: createdAt, readedAt: readedAt)
+         } catch {
+             return nil
+         }
+     }
+     
+     /// Entschlüssel
+     func decryptMessage() -> Chat? {
+         do {
+             let decryptText = try EncryptionHelper.decryptMessage(text: message, senderId: senderId)
+             return Chat(id: id, senderId: senderId, recipientId: recipientId, message: decryptText, createdAt: createdAt, readedAt: readedAt)
+         } catch {
+             return nil
+         }
+     }
+ }
 
-extension Chat {
-    /// Verschlüsselt
-    func encryptMessage() -> Chat? {
-        do {
-            let entrypedText = try EncryptionHelper.encryptMessage(senderId: self.senderId, text: self.message)
-            return Chat(id: id, senderId: senderId, recipientId: recipientId, message: entrypedText, createdAt: createdAt, readedAt: readedAt)
-        } catch {
-            return nil
-        }
-    }
-    
-    /// Entschlüssel
-    func decryptMessage() -> Chat? {
-        do {
-            let decryptText = try EncryptionHelper.decryptMessage(text: message, senderId: senderId)
-            return Chat(id: id, senderId: senderId, recipientId: recipientId, message: decryptText, createdAt: createdAt, readedAt: readedAt)
-        } catch {
-            return nil
-        }
-    }
-}
+ struct EncryptionHelper {
+     // Verschlüsselt
+     static func encryptMessage(senderId: String, text: String) throws -> String {
+         let messageData = text.data(using: .utf8)!
+         let cipherData = RNCryptor.encrypt(data: messageData, withPassword: senderId)
+         return cipherData.base64EncodedString()
+     }
+     
+     // Entschlüssel
+     static func decryptMessage(text: String, senderId: String) throws -> String {
+         let encryptedData = Data.init(base64Encoded: text)!
+         let decryptedData = try RNCryptor.decrypt(data: encryptedData, withPassword: senderId)
+         let decryptedString = String(data: decryptedData, encoding: .utf8)!
+         
+         return decryptedString
+     }
+ }
 
-struct EncryptionHelper {
-    // Verschlüsselt
-    static func encryptMessage(senderId: String, text: String) throws -> String {
-        let messageData = text.data(using: .utf8)!
-        let cipherData = RNCryptor.encrypt(data: messageData, withPassword: senderId)
-        return cipherData.base64EncodedString()
-    }
-    
-    // Entschlüssel
-    static func decryptMessage(text: String, senderId: String) throws -> String {
-        let encryptedData = Data.init(base64Encoded: text)!
-        let decryptedData = try RNCryptor.decrypt(data: encryptedData, withPassword: senderId)
-        let decryptedString = String(data: decryptedData, encoding: .utf8)!
-        
-        return decryptedString
-    }
-}
+ */
