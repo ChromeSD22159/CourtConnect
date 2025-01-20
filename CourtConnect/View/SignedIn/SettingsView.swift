@@ -14,6 +14,19 @@ struct SettingsView: View {
         NavigationStack {
             List {
                 Section {
+                    // MARK: - Edit Profile
+                    NavigationLink {
+                        UserProfileEditView(userViewModel: userViewModel)
+                    } label: {
+                        Text("Your Profile")
+                    }
+
+                } header: {
+                    Text("Profile")
+                }
+                
+                Section {
+                    
                     // MARK: - Total Online Users
                     NavigationLink {
                         OnlineUserList(userViewModel: userViewModel, networkMonitorViewModel: networkMonitorViewModel)
@@ -43,6 +56,21 @@ struct SettingsView: View {
                 }
                 
                 Section {
+                    Text("Delete User Account")
+                        .onTapGesture {
+                            userViewModel.showDeleteConfirmMenu.toggle()
+                        }
+                        .foregroundStyle(.white)
+                        .listRowBackground(Color.red)
+                        .confirmationDialog("Delete your Account", isPresented: $userViewModel.showDeleteConfirmMenu) {
+                            Button("Delete", role: .destructive) {  userViewModel.deleteUserAccount() }
+                            Button("Cancel", role: .cancel) { userViewModel.showDeleteConfirmMenu.toggle() }
+                        } message: {
+                            Text("Delete your Account")
+                        }
+                }
+                
+                Section {
                     Text("Logout")
                         .onTapGesture {
                             userViewModel.signOut()
@@ -53,17 +81,6 @@ struct SettingsView: View {
             }
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    HStack {
-                        Image(systemName: "person.fill")
-                            .padding(10)
-                            .onTapGesture {
-                                userViewModel.openEditProfileSheet()
-                            }
-                    }
-                }
-            }
         }
         .onAppear {
             userViewModel.getAllOnlineUser()
@@ -89,8 +106,8 @@ fileprivate struct OnlineUserList: View {
                     Text("Niemand ist Online!")
                 } else {
                     ForEach(userViewModel.onlineUser) { onlineUser in
-                        HStack() {
-                            if let myUser: UserProfile = userViewModel.userProfile  {
+                        HStack {
+                            if let myUser: UserProfile = userViewModel.userProfile {
                                 NavigationLink { 
                                     ChatView(repository: userViewModel.repository, myUser: myUser, recipientUser: onlineUser.toUserProfile())
                                 } label: {

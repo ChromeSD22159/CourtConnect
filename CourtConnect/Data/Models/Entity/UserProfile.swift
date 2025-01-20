@@ -20,7 +20,6 @@ class UserProfile: Codable {
     var updatedAt: Date
     var lastOnline: Date
     
-    
     enum CodingKeys: String, CodingKey {
         case id, firstName, lastName, birthday, roleString, userId, fcmToken, updatedAt, lastOnline
         case createdAt = "created_at"
@@ -72,7 +71,7 @@ extension UserProfile {
         UserRole(rawValue: self.roleString)
     }
     
-    func toUserOnline()  -> UserOnline {
+    func toUserOnline() -> UserOnline {
         return UserOnline(userId: userId, firstName: firstName, lastName: lastName, deviceToken: "asds")
     }
     

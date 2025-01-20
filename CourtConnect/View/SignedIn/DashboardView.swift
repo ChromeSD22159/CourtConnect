@@ -12,17 +12,15 @@ struct DashboardView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 20) {
-                if let email = userViewModel.user?.email {
-                    BodyText(email)
+             
+                if !networkMonitorViewModel.isConnected {
+                    InternetUnavailableView()
+                } else {
+                    if let email = userViewModel.user?.email {
+                        BodyText(email)
+                    }
                 }
                 
-                Button {
-                    Task {
-                        await networkMonitorViewModel.checkConnection()
-                    }
-                } label: {
-                    Image(systemName: networkMonitorViewModel.isConnected ? "wifi" : "wifi.exclamationmark")
-                } 
             }
             .navigationTitle("Daskboard")
             .navigationBarTitleDisplayMode(.inline)
@@ -30,12 +28,6 @@ struct DashboardView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     HStack {
                         Image(systemName: "person.fill")
-                            .padding(10)
-                            .onTapGesture {
-                                userViewModel.openEditProfileSheet()
-                            }
-                        
-                        Image(systemName: "rectangle.portrait.and.arrow.right")
                             .padding(10)
                             .onTapGesture {
                                 userViewModel.openEditProfileSheet()
@@ -49,7 +41,7 @@ struct DashboardView: View {
         } 
     }
 }
-
+ 
 #Preview {
     DashboardView(userViewModel: SharedUserViewModel(repository: Repository(type: .preview)), networkMonitorViewModel: NetworkMonitorViewModel())
 }

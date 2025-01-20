@@ -186,6 +186,10 @@ class UserRepository {
     func isRequestSuccessful(statusCode: Int) async -> Bool {
         return (200...299).contains(statusCode)
     }
+    
+    func deleteUserAccount() async throws { 
+        try await firebaseAuth.currentUser?.delete()
+    }
 }
 
 struct MockUser { 

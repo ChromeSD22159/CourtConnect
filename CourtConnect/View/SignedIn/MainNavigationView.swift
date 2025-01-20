@@ -10,7 +10,7 @@ import SwiftUI
 struct MainNavigationView: View {
     @ObservedObject var userViewModel: SharedUserViewModel
     @Environment(\.scenePhase) var scenePhase
-     
+    
     @State var networkMonitorViewModel: NetworkMonitorViewModel = NetworkMonitorViewModel()
     
     var body: some View {
@@ -31,13 +31,13 @@ struct MainNavigationView: View {
                 await NotificationService.request()
             }
         }
-        .onChange(of: scenePhase) { oldPhase, newPhase in
+        .onChange(of: scenePhase) { _, newPhase in
             userViewModel.changeOnlineStatus(phase: newPhase)
         }
     }
 }
  
 #Preview {
-    @Previewable @State var vm = SharedUserViewModel(repository: Repository(type: .preview))
-    MainNavigationView(userViewModel: vm) 
+    @Previewable @State var viewModel = SharedUserViewModel(repository: Repository(type: .preview))
+    MainNavigationView(userViewModel: viewModel)
 }

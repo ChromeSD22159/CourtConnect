@@ -21,14 +21,17 @@ import SwiftData
             SyncHistory.self
         ])
         
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: type == .preview ? true : false )
-        
-        let container = try! ModelContainer(for: schema, configurations: [modelConfiguration])
-        self.container = container
-        
-        self.userRepository = UserRepository(container: container)
-        self.chatRepository = ChatRepository(container: container, type: type)
-        self.syncHistoryRepository = SyncHistoryRepository(container: container, type: type)
+        do {
+            let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: type == .preview ? true : false )
+            
+            let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
+            self.container = container
+            
+            self.userRepository = UserRepository(container: container)
+            self.chatRepository = ChatRepository(container: container, type: type)
+            self.syncHistoryRepository = SyncHistoryRepository(container: container, type: type)
+        } catch {
+            fatalError("Cannot create Database \(error.localizedDescription)")
+        }
     }
 } 
-

@@ -25,11 +25,8 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
 
 extension AppDelegate: MessagingDelegate {
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-        if let _ = Messaging.messaging().fcmToken {
-            //print("fcmToken:")
-        }
+        /* if let _ = Messaging.messaging().fcmToken {
+            print("fcmToken:")
+        } */
     }
-}
-
-
-
+} 

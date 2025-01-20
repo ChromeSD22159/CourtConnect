@@ -14,9 +14,8 @@ import FirebaseAuth
     var password: String = ""
     var showPassword = false
     var keepSignededIn = true
-    var focus: Field? = nil
-    
-    
+    var focus: Field?
+     
     init(repository: Repository) {
         self.repository = repository
     }
@@ -24,8 +23,8 @@ import FirebaseAuth
     func changeFocus() {
         guard let currentFocus = focus else { return }
         switch currentFocus {
-            case .email: focus = .password
-            case .password: focus = nil
+        case .email: focus = .password
+        case .password: focus = nil
         }
     }
     

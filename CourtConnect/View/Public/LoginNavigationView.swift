@@ -33,14 +33,12 @@ struct LoginNavigation: View {
         
     }
     
-    private func handleNavigate(to: LoginNavigationView) {
+    private func handleNavigate(toView: LoginNavigationView) {
         withAnimation {
-            self.navigationView = to
+            self.navigationView = toView
         }
     }
 }
-
-
 
 enum LoginNavigationView {
     case login, register, forget

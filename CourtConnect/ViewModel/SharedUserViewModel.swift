@@ -11,9 +11,10 @@ import FirebaseAuth
 
 @Observable
 class SharedUserViewModel: ObservableObject {
-    var user: FirebaseAuth.User? = nil
-    var userProfile: UserProfile? = nil
+    var user: FirebaseAuth.User?
+    var userProfile: UserProfile?
     var showOnBoarding = false
+    var showDeleteConfirmMenu = false
     var editProfile: UserProfile = UserProfile(userId: "", firstName: "", lastName: "", roleString: UserRole.player.rawValue, birthday: "", createdAt: Date(), updatedAt: Date())
     var onlineUser: [UserOnline] = []
     var onlineUserCount: Int {
@@ -53,8 +54,8 @@ class SharedUserViewModel: ObservableObject {
     }
     
     func resetEditUserProfile() {
-        guard let uid = self.user?.uid else { return }
-        self.editProfile = UserProfile(userId: uid, firstName: "", lastName: "", roleString: UserRole.player.rawValue, birthday: "")
+        guard let user = user else { return }
+        self.editProfile = UserProfile(userId: user.uid, firstName: "", lastName: "", roleString: UserRole.player.rawValue, birthday: "", createdAt: Date(), updatedAt: Date())
     }
     
     func saveUserProfile() {
@@ -119,13 +120,12 @@ class SharedUserViewModel: ObservableObject {
                     userProfile.fcmToken = fcmToken
                 }
                 
-                let _ = try await self.repository.userRepository.setUserOnline(user: user, userProfile: userProfile)
+                _ = try await self.repository.userRepository.setUserOnline(user: user, userProfile: userProfile)
                 
                 self.onlineUser = try await self.repository.userRepository.getOnlineUserList()
                 
                 try await self.repository.userRepository.sendUserProfileToBackend(profile: userProfile)
-            }
-            catch { print(error) }
+            } catch { print(error) }
         }
     }
     
@@ -133,9 +133,8 @@ class SharedUserViewModel: ObservableObject {
         guard let user = user else { return }
         Task {
             do {
-                let _ = try await self.repository.userRepository.setUserOffline(user: user)
-            }
-            catch { print(error) }
+                _ = try await self.repository.userRepository.setUserOffline(user: user)
+            } catch { print(error) }
         }
     } 
      
@@ -157,9 +156,23 @@ class SharedUserViewModel: ObservableObject {
         }
     }
     
+    func deleteUserAccount() {
+        Task {
+            do {
+                try await repository.userRepository.signOut()
+                try await repository.userRepository.deleteUserAccount()
+                
+                self.user = nil
+                self.userProfile = nil
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
     private func listenForOnlineUserComesOnline() {
         Task {
-            await self.repository.userRepository.listenForOnlineUserComesOnline() { onlineUserList in
+            await self.repository.userRepository.listenForOnlineUserComesOnline { onlineUserList in
                 self.onlineUser = onlineUserList
             }
         }
@@ -167,7 +180,7 @@ class SharedUserViewModel: ObservableObject {
     
     private func listenForOnlineUserGoesOffline() {
         Task {
-            await self.repository.userRepository.listenForOnlineUserGoesOffline() { onlineUserList in
+            await self.repository.userRepository.listenForOnlineUserGoesOffline { onlineUserList in
                 self.onlineUser = onlineUserList
             }
         }

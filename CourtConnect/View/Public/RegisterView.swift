@@ -7,7 +7,7 @@
 import SwiftUI 
 
 struct RegisterView: View {
-    @State var vm: RegisterViewModel
+    @State var viewModel: RegisterViewModel
     @ObservedObject var userViewModel: SharedUserViewModel
     @FocusState var focus: LoginViewModel.Field?
     
@@ -17,7 +17,7 @@ struct RegisterView: View {
         @ObservedObject userViewModel: SharedUserViewModel,
         navigate: @escaping (LoginNavigationView) -> Void = {_ in }
     ) {
-        self.vm = RegisterViewModel(repository: userViewModel.repository)
+        self.viewModel = RegisterViewModel(repository: userViewModel.repository)
         self.userViewModel = userViewModel
         self.navigate = navigate
         self.focus = nil 
@@ -33,7 +33,7 @@ struct RegisterView: View {
             VStack(spacing: 15) {
                 VStack(alignment: .leading, spacing: 5) {
                     SmallText("E-Mail")
-                    TextField("E-Mail", text: $vm.email, prompt: Text("Enter your E-Mail"))
+                    TextField("E-Mail", text: $viewModel.email, prompt: Text("Enter your E-Mail"))
                         .keyboardType(.emailAddress)
                         .focused($focus, equals: .email)
                         .submitLabel(.next)
@@ -42,7 +42,7 @@ struct RegisterView: View {
                 
                 VStack(alignment: .leading, spacing: 5) {
                     SmallText("Firstname")
-                    TextField("Firstname", text: $vm.firstName, prompt: Text("Enter your Firstname"))
+                    TextField("Firstname", text: $viewModel.firstName, prompt: Text("Enter your Firstname"))
                         .keyboardType(.emailAddress)
                         .focused($focus, equals: .email)
                         .submitLabel(.next)
@@ -51,19 +51,19 @@ struct RegisterView: View {
                 
                 VStack(alignment: .leading, spacing: 5) {
                     SmallText("Lastname")
-                    TextField("Lastname", text: $vm.lastName, prompt: Text("Enter your Lastname"))
+                    TextField("Lastname", text: $viewModel.lastName, prompt: Text("Enter your Lastname"))
                         .keyboardType(.emailAddress)
                         .focused($focus, equals: .email)
                         .submitLabel(.next)
                         .textFieldStyle(.roundedBorder)
                 }
                 
-                DatePicker("Your Birthday", selection: $vm.birthday, displayedComponents: .date)
+                DatePicker("Your Birthday", selection: $viewModel.birthday, displayedComponents: .date)
                     .datePickerStyle(.compact)
                 
                 VStack(alignment: .leading, spacing: 5) {
                     SmallText("Which position?")
-                    Picker("UserRole", selection: $vm.role) {
+                    Picker("UserRole", selection: $viewModel.role) {
                         ForEach(UserRole.registerRoles) { role in
                             Text(role.rawValue).tag(role)
                         }
@@ -73,46 +73,46 @@ struct RegisterView: View {
                 
                 VStack(alignment: .leading, spacing: 5) {
                     SmallText("Password")
-                    if vm.showPassword {
-                        TextField("Password", text: $vm.password, prompt: Text("Enter your Password"))
+                    if viewModel.showPassword {
+                        TextField("Password", text: $viewModel.password, prompt: Text("Enter your Password"))
                             .keyboardType(.default)
                             .focused($focus, equals: .password)
                             .submitLabel(.done)
                             .textFieldStyle(.roundedBorder)
                             .overlay(alignment: .trailing) {
-                                ShowPasswordButton(showPassword: $vm.showPassword)
+                                ShowPasswordButton(showPassword: $viewModel.showPassword)
                             }
                     } else {
-                        SecureField("Password", text: $vm.password, prompt: Text("Enter your Password"))
+                        SecureField("Password", text: $viewModel.password, prompt: Text("Enter your Password"))
                             .keyboardType(.default)
                             .focused($focus, equals: .password)
                             .submitLabel(.done)
                             .textFieldStyle(.roundedBorder)
                             .overlay(alignment: .trailing) {
-                                ShowPasswordButton(showPassword: $vm.showPassword)
+                                ShowPasswordButton(showPassword: $viewModel.showPassword)
                             }
                     }
                 }
                 
                 VStack(alignment: .leading, spacing: 5) {
                     SmallText("Repeat password")
-                    if vm.showPassword {
-                        TextField("Repeat password", text: $vm.repeatPassword, prompt: Text("Repeat your password"))
+                    if viewModel.showPassword {
+                        TextField("Repeat password", text: $viewModel.repeatPassword, prompt: Text("Repeat your password"))
                             .keyboardType(.default)
                             .focused($focus, equals: .password)
                             .submitLabel(.done)
                             .textFieldStyle(.roundedBorder)
                             .overlay(alignment: .trailing) {
-                                ShowPasswordButton(showPassword: $vm.showRepeatPassword)
+                                ShowPasswordButton(showPassword: $viewModel.showRepeatPassword)
                             }
                     } else {
-                        SecureField("Repeat password", text: $vm.repeatPassword, prompt: Text("Repeat your password"))
+                        SecureField("Repeat password", text: $viewModel.repeatPassword, prompt: Text("Repeat your password"))
                             .keyboardType(.default)
                             .focused($focus, equals: .password)
                             .submitLabel(.done)
                             .textFieldStyle(.roundedBorder)
                             .overlay(alignment: .trailing) {
-                                ShowPasswordButton(showPassword: $vm.showRepeatPassword)
+                                ShowPasswordButton(showPassword: $viewModel.showRepeatPassword)
                             }
                     }
                 }
@@ -133,13 +133,12 @@ struct RegisterView: View {
             .clipShape(.rect(cornerRadius: 10))
             .onTapGesture {
                 Task {
-                    let (user, profile) = await vm.signUp()
+                    let (user, profile) = await viewModel.signUp()
                     
                     userViewModel.user = user
                     userViewModel.userProfile = profile
                 }
             }
-           
             
             HStack {
                 BodyText("You have an account?")
@@ -155,7 +154,7 @@ struct RegisterView: View {
         }
         .padding()
         .onSubmit {
-            vm.changeFocus()
+            viewModel.changeFocus()
         }
     }
 }

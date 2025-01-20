@@ -19,7 +19,7 @@ import FirebaseAuth
     var repeatPassword: String = ""
     var showPassword = false
     var showRepeatPassword = false
-    var focus: Field? = nil
+    var focus: Field?
     
     init(repository: Repository) {
         self.repository = repository
@@ -28,8 +28,8 @@ import FirebaseAuth
     func changeFocus() {
         guard let currentFocus = focus else { return }
         switch currentFocus {
-            case .email: focus = .password
-            case .password: focus = nil
+        case .email: focus = .password
+        case .password: focus = nil
         }
     }
     

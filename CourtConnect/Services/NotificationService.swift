@@ -11,10 +11,10 @@ import UserNotifications
  
 struct NotificationService {
     
-    static func request() async{
+    static func request() async {
         do {
             try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) 
-        } catch{
+        } catch {
             print(error)
         }
     }

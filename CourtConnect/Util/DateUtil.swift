@@ -36,8 +36,7 @@ struct DateUtil {
             return nil
         }
     }
-    
-    
+     
     static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd.MM.yyyy"

@@ -38,7 +38,7 @@ struct ChatView: View {
             .scrollIndicators(.hidden)
         }
         .overlay(alignment: .bottom) {
-            InputField(vm: viewModel, scrollPosition: $scrollPosition) {
+            InputField(viewModel: viewModel, scrollPosition: $scrollPosition) {
                 viewModel.addMessage(senderID: viewModel.myUser.userId, recipientId: viewModel.recipientUser.userId)
             }
         }
@@ -86,15 +86,15 @@ struct ChatView: View {
 }
 
 fileprivate struct InputField: View {
-    @ObservedObject var vm: ChatRoomViewModel
+    @ObservedObject var viewModel: ChatRoomViewModel
     @Binding var scrollPosition: ScrollPosition
     let onPressSend: () -> Void
     
     var body: some View {
         HStack {
-            TextField("Deine Nachricht", text: $vm.inputText, prompt: Text("Deine Nachricht"))
+            TextField("Deine Nachricht", text: $viewModel.inputText, prompt: Text("Deine Nachricht"))
                 .padding(.leading)
-            RoundImageButton(vm: vm, systemName: "paperplane") {
+            RoundImageButton(viewModel: viewModel, systemName: "paperplane") {
                 onPressSend()
             }
         }
@@ -155,7 +155,7 @@ fileprivate struct MessageRow: View {
 }
  
 fileprivate struct RoundImageButton: View {
-    @ObservedObject var vm: ChatRoomViewModel
+    @ObservedObject var viewModel: ChatRoomViewModel
     let systemName: String
     var onComplete: () -> Void
     var body: some View {
@@ -166,13 +166,13 @@ fileprivate struct RoundImageButton: View {
             .background {
                 Circle().fill(
                     withAnimation(.easeInOut) {
-                        vm.inputText.count > 0 ? .orange : .gray
+                        viewModel.inputText.isEmpty ? .orange : .gray
                     }
                 )
             }
             .padding(5)
             .onTapGesture {
-                if vm.inputText.count > 0 {
+                if viewModel.inputText.isEmpty {
                     onComplete()
                 }
             }
@@ -180,10 +180,9 @@ fileprivate struct RoundImageButton: View {
 }
  
 #Preview {
-    @Previewable @State var vm = ChatRoomViewModel(repository: Repository(type: .preview), myUser: MockUser.myUserProfile, recipientUser: MockUser.userList[1])
+    @Previewable @State var viewModel = ChatRoomViewModel(repository: Repository(type: .preview), myUser: MockUser.myUserProfile, recipientUser: MockUser.userList[1])
   
     NavigationStack {
-        ChatView(repository: Repository(type: .preview), myUser: vm.myUser, recipientUser: vm.recipientUser)
+        ChatView(repository: Repository(type: .preview), myUser: viewModel.myUser, recipientUser: viewModel.recipientUser)
     }
  }
-

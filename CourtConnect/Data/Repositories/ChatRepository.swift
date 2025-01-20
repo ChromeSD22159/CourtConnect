@@ -70,7 +70,7 @@ class ChatRepository {
                     complete(chats)
                 }
             } else {
-                // TODO: THROW CANNOT SEND
+                throw CryptError.encrypt
             }
         } catch {
             throw error
@@ -120,3 +120,7 @@ class ChatRepository {
          container.mainContext.delete(message)
     }
 } 
+
+enum CryptError: Error, LocalizedError {
+    case encrypt
+}
