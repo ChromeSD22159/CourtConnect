@@ -4,8 +4,7 @@
 //
 //  Created by Frederik Kohler on 17.01.25.
 //
-import SwiftUI
-import Auth
+import SwiftUI 
 
 struct ChatView: View {
     @State var viewModel: ChatRoomViewModel

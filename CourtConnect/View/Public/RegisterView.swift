@@ -4,8 +4,7 @@
 //
 //  Created by Frederik Kohler on 11.01.25.
 //
-import SwiftUI
-import Supabase
+import SwiftUI 
 
 struct RegisterView: View {
     @State var vm: RegisterViewModel
@@ -134,10 +133,10 @@ struct RegisterView: View {
             .clipShape(.rect(cornerRadius: 10))
             .onTapGesture {
                 Task {
-                    await vm.signUp() { (user: User?, profile: UserProfile?) in
-                        userViewModel.user = user
-                        userViewModel.userProfile = profile
-                    }
+                    let (user, profile) = await vm.signUp()
+                    
+                    userViewModel.user = user
+                    userViewModel.userProfile = profile
                 }
             }
            

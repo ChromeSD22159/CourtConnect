@@ -4,8 +4,7 @@
 //
 //  Created by Frederik Kohler on 11.01.25.
 //
-import SwiftUI
-import Supabase
+import SwiftUI 
 
 struct LoginView: View {
     @State var vm: LoginViewModel
@@ -86,9 +85,15 @@ struct LoginView: View {
             .background(Theme.accentColor)
             .clipShape(.rect(cornerRadius: 10))
             .onTapGesture {
-                vm.signIn() { (user: User?, userProfile: UserProfile?) in
-                    userViewModel.user = user
-                    userViewModel.userProfile = userProfile
+                Task {
+                    do {
+                        let (user, userProfile) = try await vm.signIn()
+                        
+                        userViewModel.user = user
+                        userViewModel.userProfile = userProfile
+                    } catch {
+                        
+                    }
                 }
             }
            

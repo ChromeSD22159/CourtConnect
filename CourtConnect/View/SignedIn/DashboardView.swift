@@ -4,18 +4,25 @@
 //
 //  Created by Frederik Kohler on 16.01.25.
 //
-import SwiftUI
-import FirebaseMessaging
+import SwiftUI 
 
 struct DashboardView: View {
     @ObservedObject var userViewModel: SharedUserViewModel
-    
+    @ObservedObject var networkMonitorViewModel: NetworkMonitorViewModel
     var body: some View {
         NavigationStack {
             VStack(spacing: 20) {
-                if let user = userViewModel.user, let email = user.email {
+                if let email = userViewModel.user?.email {
                     BodyText(email)
                 }
+                
+                Button {
+                    Task {
+                        await networkMonitorViewModel.checkConnection()
+                    }
+                } label: {
+                    Image(systemName: networkMonitorViewModel.isConnected ? "wifi" : "wifi.exclamationmark")
+                } 
             }
             .navigationTitle("Daskboard")
             .navigationBarTitleDisplayMode(.inline)
@@ -39,10 +46,10 @@ struct DashboardView: View {
             .onAppear {
                 userViewModel.onAppDashboardAppear()
             }
-        }
+        } 
     }
 }
 
 #Preview {
-    DashboardView(userViewModel: SharedUserViewModel(repository: Repository(type: .preview)))
+    DashboardView(userViewModel: SharedUserViewModel(repository: Repository(type: .preview)), networkMonitorViewModel: NetworkMonitorViewModel())
 }

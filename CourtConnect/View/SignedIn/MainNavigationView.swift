@@ -10,45 +10,34 @@ import SwiftUI
 struct MainNavigationView: View {
     @ObservedObject var userViewModel: SharedUserViewModel
     @Environment(\.scenePhase) var scenePhase
-    
-    @State var notificationManager = NotificationService()
+     
+    @State var networkMonitorViewModel: NetworkMonitorViewModel = NetworkMonitorViewModel()
     
     var body: some View {
         TabView {
             Tab("Home", systemImage: "house.fill") {
-                DashboardView(userViewModel: userViewModel)
+                DashboardView(userViewModel: userViewModel, networkMonitorViewModel: networkMonitorViewModel)
             }
             Tab("Settings", systemImage: "gear") {
-                SettingsView(userViewModel: userViewModel)
+                SettingsView(userViewModel: userViewModel, networkMonitorViewModel: networkMonitorViewModel)
             }
         }
         .sheet(isPresented: $userViewModel.showOnBoarding, content: {
             UserProfileEditView(userViewModel: userViewModel)
         })
-        .onAppear{
-            userViewModel.setUserOnline()
-            userViewModel.startListeners()
-            
-        }
         .task {
-            if !notificationManager.hasPermission {
-                await notificationManager.request()
+            userViewModel.setUserOnline()
+            if await !NotificationService.getAuthStatus() {
+                await NotificationService.request()
             }
         }
         .onChange(of: scenePhase) { oldPhase, newPhase in
-            if newPhase == .active {
-                userViewModel.setUserOnline()
-            } else if newPhase == .background {
-                userViewModel.setUserOffline()
-            }
+            userViewModel.changeOnlineStatus(phase: newPhase)
         }
     }
-} 
+}
  
 #Preview {
     @Previewable @State var vm = SharedUserViewModel(repository: Repository(type: .preview))
-    MainNavigationView(userViewModel: vm)
-        .onAppear {
-            vm.user = MockUser.myUser
-        }
+    MainNavigationView(userViewModel: vm) 
 }

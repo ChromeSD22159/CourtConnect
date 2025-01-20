@@ -5,7 +5,7 @@
 //  Created by Frederik Kohler on 11.01.25.
 //
 import Foundation
-import Supabase
+import FirebaseAuth
 
 @Observable class LoginViewModel: ObservableObject {
     var repository: Repository
@@ -29,25 +29,16 @@ import Supabase
         }
     }
     
-    func signIn(complete: @escaping (User?, UserProfile?) -> Void) {
-        guard !email.isEmpty, !password.isEmpty else { return }
-        
-        Task {
-            do {
-                let user = try await repository.userRepository.signIn(email: email, password: password)
-                
-                if let user = user {
-                    try await repository.userRepository.syncUserProfile(user: user)
-                    let userProfile = try await repository.userRepository.getUserProfileFromDatabase(user: user)
-                    complete( user , userProfile )
-                } else {
-                    complete( nil, nil )
-                }
-            } catch {
-                print(error.localizedDescription)
-                complete( nil, nil )
-            }
+    func signIn() async throws -> (User?, UserProfile?) {
+        guard !email.isEmpty, !password.isEmpty else {
+            return (nil , nil)
         }
+        
+        let user = try await repository.userRepository.signIn(email: email, password: password)
+         
+        try await repository.userRepository.syncUserProfile(userId: user.uid)
+        let userProfile = try await repository.userRepository.getUserProfileFromDatabase(userId: user.uid)
+        return ( user , userProfile )
     }
     
     enum Field {

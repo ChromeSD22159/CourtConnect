@@ -37,21 +37,13 @@ class ChatRepository {
             dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ" // Passe das Format an
             let formattedLastSync = dateFormatter.string(from: lastSync)
             
-            print(formattedLastSync)
-            
             let response: [Chat] = try await backendClient.supabase.from("Messages")
                .select()
-               //.eq("senderId", value: senderId)
-               //.eq("recipientId", value: recipientId)
-               //.greaterThan("timestamp", value: DateUtil.convertDateToString(date: timeStamp ?? defaultStartDate))
-               .or("senderId.eq.\(myUserId), recipientId.eq.\(recipientId), createdAt.gt.\(formattedLastSync)") // OR-Bedingung
-               //.greaterThan("createdAt", value: formattedLastSync)
+               .or("senderId.eq.\(myUserId), recipientId.eq.\(recipientId), createdAt.gt.\(formattedLastSync)")
                .gte("createdAt", value: formattedLastSync)
-               .order("createdAt", ascending: true) // Sortiere nach createdAt
+               .order("createdAt", ascending: true)
                .execute()
-               .value
-            
-            print(response.count)
+               .value 
 
             for chat in response {
                 container.mainContext.insert(chat)

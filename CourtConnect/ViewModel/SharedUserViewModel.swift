@@ -4,13 +4,14 @@
 //
 //  Created by Frederik Kohler on 12.01.25.
 //
-import Supabase
 import Foundation
 import SwiftUI
 import FirebaseMessaging
+import FirebaseAuth
+
 @Observable
 class SharedUserViewModel: ObservableObject {
-    var user: User? = nil
+    var user: FirebaseAuth.User? = nil
     var userProfile: UserProfile? = nil
     var showOnBoarding = false
     var editProfile: UserProfile = UserProfile(userId: "", firstName: "", lastName: "", roleString: UserRole.player.rawValue, birthday: "", createdAt: Date(), updatedAt: Date())
@@ -39,8 +40,6 @@ class SharedUserViewModel: ObservableObject {
     func onAppDashboardAppear() {
         if userProfile == nil {
             showOnBoarding.toggle()
-        } else {
-            userIsOnline()
         }
     }
     
@@ -54,13 +53,13 @@ class SharedUserViewModel: ObservableObject {
     }
     
     func resetEditUserProfile() {
-        guard let uid = self.user?.id.uuidString else { return }
+        guard let uid = self.user?.uid else { return }
         self.editProfile = UserProfile(userId: uid, firstName: "", lastName: "", roleString: UserRole.player.rawValue, birthday: "")
     }
     
     func saveUserProfile() {
         guard
-            let user = user,
+            let user = self.user,
             !editProfile.firstName.isEmpty,
             !editProfile.lastName.isEmpty,
             !editProfile.roleString.isEmpty
@@ -68,7 +67,7 @@ class SharedUserViewModel: ObservableObject {
             return
         }
         
-        editProfile.userId = user.id.uuidString
+        editProfile.userId = user.uid
         editProfile.updatedAt = Date()
         
         Task {
@@ -86,31 +85,16 @@ class SharedUserViewModel: ObservableObject {
     func signOut() {
         Task {
             do {
-                if let user = user {
-                    try await self.repository.userRepository.signOut(user: user)
-                }
+                try await self.repository.userRepository.signOut()
             } catch {
                 print(error.localizedDescription)
             }
         }
     }
     
-    private func userIsOnline() {
-        guard let userProfile = userProfile else { return }
-        userProfile.lastOnline = Date()
-        
-        Task {
-            if let fcmToken = try? await Messaging.messaging().token() {
-                userProfile.fcmToken = fcmToken 
-            }
-            
-            try await self.repository.userRepository.sendUserProfileToBackend(profile: userProfile)
-        }
-    }
-    
     func isAuthendicated() {
         Task {
-            await self.repository.userRepository.isAuthendicated { (user: User?, userProfile: UserProfile?) in
+            if let user = try await self.repository.userRepository.isAuthendicated(), let userProfile = try await self.repository.userRepository.getUserProfileFromDatabase(userId: user.uid) {
                 withAnimation {
                     self.user = user
                     self.userProfile = userProfile
@@ -127,17 +111,19 @@ class SharedUserViewModel: ObservableObject {
     
     func setUserOnline() {
         guard let user = user, let userProfile = userProfile else { return }
+         
         Task {
             do {
-                let result = try await self.repository.userRepository.setUserOnline(user: user, userProfile: userProfile)
-                
-                if result {
-                    print("User wurde Online gesetzt!")
-                } else {
-                    print("User konnte nicht Online gesetzt werden!")
+                userProfile.lastOnline = Date()
+                if let fcmToken = try? await Messaging.messaging().token() {
+                    userProfile.fcmToken = fcmToken
                 }
                 
+                let _ = try await self.repository.userRepository.setUserOnline(user: user, userProfile: userProfile)
+                
                 self.onlineUser = try await self.repository.userRepository.getOnlineUserList()
+                
+                try await self.repository.userRepository.sendUserProfileToBackend(profile: userProfile)
             }
             catch { print(error) }
         }
@@ -147,19 +133,31 @@ class SharedUserViewModel: ObservableObject {
         guard let user = user else { return }
         Task {
             do {
-                let result = try await self.repository.userRepository.setUserOffline(user: user)
-                
-                if result {
-                    print("User wurde Offline gesetzt!")
-                } else {
-                    print("User konnte nicht Offline gesetzt werden!")
-                }
+                let _ = try await self.repository.userRepository.setUserOffline(user: user)
             }
             catch { print(error) }
         }
     } 
+     
+    func getAllOnlineUser() {
+        Task {
+            do {
+                self.onlineUser = try await repository.userRepository.getOnlineUserList()
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
     
-    func listenForOnlineUserComesOnline() {
+    func changeOnlineStatus(phase: ScenePhase) {
+        if phase == .active {
+            setUserOnline()
+        } else if phase == .background {
+            setUserOffline()
+        }
+    }
+    
+    private func listenForOnlineUserComesOnline() {
         Task {
             await self.repository.userRepository.listenForOnlineUserComesOnline() { onlineUserList in
                 self.onlineUser = onlineUserList
@@ -167,20 +165,10 @@ class SharedUserViewModel: ObservableObject {
         }
     }
     
-    func listenForOnlineUserGoesOffline() {
+    private func listenForOnlineUserGoesOffline() {
         Task {
             await self.repository.userRepository.listenForOnlineUserGoesOffline() { onlineUserList in
                 self.onlineUser = onlineUserList
-            }
-        }
-    }
-    
-    func getAllOnlineUser() {
-        Task {
-            do {
-                self.onlineUser = try await repository.userRepository.getOnlineUserList()
-            } catch {
-                print(error.localizedDescription)
             }
         }
     }

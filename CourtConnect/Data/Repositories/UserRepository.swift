@@ -6,87 +6,57 @@
 // 
 import SwiftData
 import Foundation
-import Supabase 
+import Supabase
+import FirebaseAuth
 import UIKit
 
 @MainActor
-protocol UserRepositoryProtocol {
-    var container: ModelContainer { get }
-    var deviceToken: String { get }
-    var backendClient: BackendClient { get }
-    func signIn(email:String, password: String) async throws -> User?
-    func signUp(email:String, password: String) async throws -> User?
-    func signOut(user: User) async throws
-    func isAuthendicated(isComplete: (User?, UserProfile?) -> Void) async
-    func getUserProfileFromDatabase(user: User) throws -> UserProfile?
-    func syncUserProfile(user: User) async throws
-    func insertOrUpdate(profile: UserProfile) throws
-    func sendUserProfileToBackend(profile: UserProfile) async throws
-    func removeUserProfile(user: User) throws
-    func setUserOnline(user: User, userProfile: UserProfile) async throws -> Bool
-    func setUserOffline(user: User) async throws -> Bool
-    func listenForOnlineUserComesOnline(completion: @escaping ([UserOnline]) -> Void)
-    func listenForOnlineUserGoesOffline(completion: @escaping ([UserOnline]) -> Void)
-    func getOnlineUserList() async throws -> [UserOnline]
-    func isRequestSuccessful(statusCode: Int) async -> Bool
-}
-
-@MainActor
-class UserRepository: UserRepositoryProtocol {
+class UserRepository {
     let container: ModelContainer
     let deviceToken: String
     let backendClient:BackendClient
-    
+    let firebaseAuth: Auth
+     
     init(container: ModelContainer) {
         self.container = container
         self.deviceToken = UIDevice.current.identifierForVendor!.uuidString
         self.backendClient = BackendClient.shared
+        self.firebaseAuth = Auth.auth()
     }
        
     /// LOGIN INTO SUPABASE
-    func signIn(email:String, password: String) async throws -> User? {
-        let response = try await backendClient.supabase.auth.signIn(email: email, password: password)
-        return response.user
-    }
-    
-    /// REGISTER AND LOGIN INTO SUPABASE
-    func signUp(email:String, password: String) async throws -> User? {
-        let response = try await backendClient.supabase.auth.signUp(email: email, password: password)
-        return response.session?.user
-    }
-    
-    /// LOGOUT FROM SUPABASE
-    func signOut(user: User) async throws {
-        try await backendClient.supabase.auth.signOut()
-         
-        try removeUserProfile(user: user)
-    }
-    
-    /// CHECK IF LOGGEDIN AND SET USER / USERPROFILE
-    func isAuthendicated(isComplete: (User?, UserProfile?) -> Void) async {
-        for await state in backendClient.supabase.auth.authStateChanges {
-            if [.initialSession, .signedIn, .signedOut].contains(state.event) {
-                if let user = state.session?.user {
-                    do {
-                        
-                        try await syncUserProfile(user: user)
-                        
-                        let profile = try getUserProfileFromDatabase(user: user)
-                        
-                        isComplete( user, profile )
-                    } catch {
-                        isComplete( user, nil )
-                    }
-                } else {
-                    isComplete( nil, nil )
-                } 
-            }
+    func signIn(email:String, password: String) async throws -> FirebaseAuth.User {
+        do {
+            let result = try await firebaseAuth.signIn(withEmail: email, password: password)
+            return result.user
+        } catch {
+            throw error
         }
     }
     
-    func getUserProfileFromDatabase(user: User) throws -> UserProfile? {
+    /// REGISTER AND LOGIN INTO SUPABASE
+    func signUp(email:String, password: String) async throws -> FirebaseAuth.User {
+        do {
+            let result = try await firebaseAuth.createUser(withEmail: email, password: password)
+            return result.user
+        } catch {
+            throw error
+        }
+    }
+    
+    /// LOGOUT FROM SUPABASE
+    func signOut() async throws {
+        try await backendClient.supabase.auth.signOut() 
+    }
+    
+    /// CHECK IF LOGGEDIN AND SET USER / USERPROFILE
+    func isAuthendicated() async throws -> FirebaseAuth.User? {
+        return firebaseAuth.currentUser
+    }
+    
+    func getUserProfileFromDatabase(userId: String) throws -> UserProfile? {
         let predicate = #Predicate<UserProfile> {
-            $0.userId == user.id.uuidString
+            $0.userId == userId
         }
         
         let sortBy = [SortDescriptor(\UserProfile.createdAt, order: .reverse)]
@@ -96,11 +66,11 @@ class UserRepository: UserRepositoryProtocol {
         return try container.mainContext.fetch(fetchDescriptor).first
     }
     
-    func syncUserProfile(user: User) async throws {
+    func syncUserProfile(userId: String) async throws {
         let date: [UserProfile] = try await backendClient.supabase
             .from(DatabaseTables.userProfile.rawValue)
             .select("*")
-            .eq("userId", value: user.id)
+            .eq("userId", value: userId)
             .execute()
             .value 
             
@@ -124,9 +94,10 @@ class UserRepository: UserRepositoryProtocol {
             .execute()
     }
     
-    func removeUserProfile(user: User) throws {
+    func removeUserProfile(user: FirebaseAuth.User) throws {
+        let userId = user.uid
         let predicate = #Predicate<UserProfile> {
-            $0.id == user.id
+            $0.userId == userId
         }
         
         let fetchDescriptor = FetchDescriptor<UserProfile>(
@@ -141,8 +112,8 @@ class UserRepository: UserRepositoryProtocol {
         }
     }
     
-    func setUserOnline(user: User, userProfile: UserProfile) async throws -> Bool {
-        let userOnline = UserOnline(userId: user.id.uuidString, firstName: userProfile.firstName, lastName: userProfile.lastName, deviceToken: self.deviceToken)
+    func setUserOnline(user: FirebaseAuth.User, userProfile: UserProfile) async throws -> Bool {
+        let userOnline = UserOnline(userId: user.uid, firstName: userProfile.firstName, lastName: userProfile.lastName, deviceToken: self.deviceToken)
         
         try await backendClient.supabase
             .from(DatabaseTables.userOnline.rawValue)
@@ -152,11 +123,11 @@ class UserRepository: UserRepositoryProtocol {
         return await isRequestSuccessful(statusCode: 201)
     }
     
-    func setUserOffline(user: User) async throws -> Bool {
+    func setUserOffline(user: FirebaseAuth.User) async throws -> Bool {
          let query = try await backendClient.supabase
            .from(DatabaseTables.userOnline.rawValue)
            .delete()
-           .match(["userId": user.id.uuidString, "deviceToken": self.deviceToken])
+           .match(["userId": user.uid, "deviceToken": self.deviceToken])
            .execute()
 
          // Check the response status code
@@ -217,134 +188,8 @@ class UserRepository: UserRepositoryProtocol {
     }
 }
 
-@MainActor
-class PreviewUserRepository: UserRepositoryProtocol {
-    let container: ModelContainer
-    let deviceToken: String
-    let backendClient:BackendClient
-    
-    init(container: ModelContainer) {
-        self.container = container
-        self.deviceToken = UIDevice.current.identifierForVendor!.uuidString
-        self.backendClient = BackendClient.shared
-        
-        container.mainContext.insert(MockUser.myUserProfile)
-        
-        container.mainContext.insert(Chat(senderId: MockUser.myUserProfile.userId, recipientId: MockUser.userList[1].userId, message: "Hallo?", createdAt: Date()))
-    }
-       
-    /// LOGIN INTO SUPABASE
-    func signIn(email:String, password: String) async throws -> User? {
-        return MockUser.myUser
-    }
-    
-    /// REGISTER AND LOGIN INTO SUPABASE
-    func signUp(email:String, password: String) async throws -> User? {
-        return MockUser.myUser
-    }
-    
-    /// LOGOUT FROM SUPABASE
-    func signOut(user: User) async throws {
-        try removeUserProfile(user: MockUser.myUser)
-    }
-    
-    /// CHECK IF LOGGEDIN AND SET USER / USERPROFILE
-    func isAuthendicated(isComplete: (User?, UserProfile?) -> Void) async {
-        for await state in backendClient.supabase.auth.authStateChanges {
-            if [.initialSession, .signedIn, .signedOut].contains(state.event) {
-                if let user = state.session?.user {
-                    do {
-                        
-                        try await syncUserProfile(user: user)
-                        
-                        let profile = try getUserProfileFromDatabase(user: user)
-                        
-                        isComplete( user, profile )
-                    } catch {
-                        isComplete( user, nil )
-                    }
-                } else {
-                    isComplete( nil, nil )
-                }
-            }
-        }
-    }
-    
-    func getUserProfileFromDatabase(user: User) throws -> UserProfile? {
-        let predicate = #Predicate<UserProfile> {
-            $0.userId == user.id.uuidString
-        }
-        
-        let sortBy = [SortDescriptor(\UserProfile.createdAt, order: .reverse)]
-        
-        let fetchDescriptor = FetchDescriptor<UserProfile>(predicate: predicate, sortBy: sortBy)
-         
-        return try container.mainContext.fetch(fetchDescriptor).first
-    }
-    
-    func syncUserProfile(user: User) async throws {  }
-    
-    func insertOrUpdate(profile: UserProfile) throws {
-        container.mainContext.insert(profile)
-        try container.mainContext.save()
-    }
-    
-    /// SAVE CHANGES LOCAL AND SEND TO SUPABASE
-    func sendUserProfileToBackend(profile: UserProfile) async throws {
-        try insertOrUpdate(profile: profile)
-    }
-    
-    func removeUserProfile(user: User) throws {
-        let predicate = #Predicate<UserProfile> {
-            $0.id == user.id
-        }
-        
-        let fetchDescriptor = FetchDescriptor<UserProfile>(
-            predicate: predicate,
-            sortBy: [SortDescriptor(\UserProfile.createdAt, order: .reverse)]
-        )
-        
-        let result = try container.mainContext.fetch(fetchDescriptor).first
-        
-        if let userProfile = result {
-            container.mainContext.delete(userProfile)
-        }
-    }
-    
-    func setUserOnline(user: User, userProfile: UserProfile) async throws -> Bool {
-        return true
-    }
-    
-    func setUserOffline(user: User) async throws -> Bool {
-         return true
-    }
-    
-    func listenForOnlineUserComesOnline(completion: @escaping ([UserOnline]) -> Void) {
-        Task {
-            let list = try await getOnlineUserList()
-            completion(list)
-        }
-    }
-    
-    func listenForOnlineUserGoesOffline(completion: @escaping ([UserOnline]) -> Void) {
-        Task {
-            let list = try await getOnlineUserList()
-            completion(list)
-        }
-    }
-    
-    func getOnlineUserList() async throws -> [UserOnline] {
-        return MockUser.userList.map { $0.toUserOnline() }
-    }
-    
-    func isRequestSuccessful(statusCode: Int) async -> Bool {
-        return true
-    }
-}
-
-struct MockUser {
-    static let myUser = User(id: UUID(uuidString: "00000000-0000-0000-0000-000000000000")!, appMetadata: [:], userMetadata: [:], aud: "", createdAt: Date(), updatedAt: Date())
-    static let myUserProfile = UserProfile(userId: myUser.id.uuidString, firstName: "Frederik", lastName: "Kohler", roleString: UserRole.player.rawValue, birthday: "22.11.1986")
+struct MockUser { 
+    static let myUserProfile = UserProfile(userId: UUID(uuidString: "00000000-0000-0000-0000-000000000000")!.uuidString, firstName: "Frederik", lastName: "Kohler", roleString: UserRole.player.rawValue, birthday: "22.11.1986")
     
     static let userList = [
         myUserProfile,

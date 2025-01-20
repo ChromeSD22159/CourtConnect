@@ -5,15 +5,26 @@
 //  Created by Frederik Kohler on 11.01.25.
 //
 import SwiftUI
-import SwiftData
-import FirebaseCore
+
 @main
 struct CourtConnectApp: App {
-    @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
-    let repository: Repository = Repository(type: .app)
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+      
+    init() {
+        loadRocketSimConnect()
+    }
+    
     var body: some Scene {
         WindowGroup {
-           LoginNavigation(repository: repository)
+            LoginNavigation(repository: Repository(type: .app))
         }
-    } 
+    }
+    
+    private func loadRocketSimConnect() {
+        guard (Bundle(path: "/Applications/RocketSim.app/Contents/Frameworks/RocketSimConnectLinker.nocache.framework")?.load() == true) else {
+            print("Failed to load linker framework")
+            return
+        }
+        print("RocketSim Connect successfully linked")
+    }
 }

@@ -9,32 +9,23 @@ import Observation
 import Foundation
 import UserNotifications
  
-@Observable
-class NotificationService: ObservableObject {
-    var hasPermission = false
+struct NotificationService {
     
-    init() {
-        Task{
-            await getAuthStatus()
-        }
-    }
-    
-    func request() async{
+    static func request() async{
         do {
-            try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound])
-             await getAuthStatus()
+            try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) 
         } catch{
             print(error)
         }
     }
     
-    func getAuthStatus() async {
+    static func getAuthStatus() async -> Bool {
         let status = await UNUserNotificationCenter.current().notificationSettings()
         switch status.authorizationStatus {
         case .authorized, .ephemeral, .provisional:
-            hasPermission = true
+            return true
         default:
-            hasPermission = false
+            return false
         }
     }
 }

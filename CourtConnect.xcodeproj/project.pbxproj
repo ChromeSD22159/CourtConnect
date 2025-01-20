@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		B66529D82D3A81EC00B87D71 /* RNCryptor in Frameworks */ = {isa = PBXBuildFile; productRef = B66529D72D3A81EC00B87D71 /* RNCryptor */; };
-		B698AC672D3335110086AF8C /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = B698AC662D3335110086AF8C /* Auth */; };
+		B6652A512D3DAA2E00B87D71 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = B6652A502D3DAA2E00B87D71 /* FirebaseAuth */; };
 		B698AC692D3335110086AF8C /* Functions in Frameworks */ = {isa = PBXBuildFile; productRef = B698AC682D3335110086AF8C /* Functions */; };
 		B698AC6B2D3335110086AF8C /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = B698AC6A2D3335110086AF8C /* PostgREST */; };
 		B698AC6D2D3335110086AF8C /* Realtime in Frameworks */ = {isa = PBXBuildFile; productRef = B698AC6C2D3335110086AF8C /* Realtime */; };
@@ -83,11 +83,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				B6B1D4CD2D3D42A900251542 /* FirebaseMessaging in Frameworks */,
+				B6652A512D3DAA2E00B87D71 /* FirebaseAuth in Frameworks */,
 				B66529D82D3A81EC00B87D71 /* RNCryptor in Frameworks */,
 				B698AC6B2D3335110086AF8C /* PostgREST in Frameworks */,
 				B698AC692D3335110086AF8C /* Functions in Frameworks */,
 				B698AC7C2D3335F20086AF8C /* Supabase in Frameworks */,
-				B698AC672D3335110086AF8C /* Auth in Frameworks */,
 				B698AC6F2D3335110086AF8C /* Storage in Frameworks */,
 				B6B1D4CF2D3D434E00251542 /* FirebaseCore in Frameworks */,
 				B698AC6D2D3335110086AF8C /* Realtime in Frameworks */,
@@ -164,7 +164,6 @@
 			);
 			name = CourtConnect;
 			packageProductDependencies = (
-				B698AC662D3335110086AF8C /* Auth */,
 				B698AC682D3335110086AF8C /* Functions */,
 				B698AC6A2D3335110086AF8C /* PostgREST */,
 				B698AC6C2D3335110086AF8C /* Realtime */,
@@ -173,6 +172,7 @@
 				B66529D72D3A81EC00B87D71 /* RNCryptor */,
 				B6B1D4CC2D3D42A900251542 /* FirebaseMessaging */,
 				B6B1D4CE2D3D434E00251542 /* FirebaseCore */,
+				B6652A502D3DAA2E00B87D71 /* FirebaseAuth */,
 			);
 			productName = CourtConnect;
 			productReference = B698ABFB2D330FC10086AF8C /* CourtConnect.app */;
@@ -475,8 +475,8 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -510,8 +510,8 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -675,10 +675,10 @@
 			package = B66529D62D3A81EC00B87D71 /* XCRemoteSwiftPackageReference "RNCryptor" */;
 			productName = RNCryptor;
 		};
-		B698AC662D3335110086AF8C /* Auth */ = {
+		B6652A502D3DAA2E00B87D71 /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B698AC652D3335100086AF8C /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = Auth;
+			package = B6B1D4CB2D3D42A900251542 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
 		};
 		B698AC682D3335110086AF8C /* Functions */ = {
 			isa = XCSwiftPackageProductDependency;

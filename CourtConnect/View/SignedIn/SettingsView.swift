@@ -4,19 +4,19 @@
 //
 //  Created by Frederik Kohler on 16.01.25.
 //
-import Foundation
-import Supabase
+import Foundation 
 import SwiftUI
 
 struct SettingsView: View {
     @ObservedObject var userViewModel: SharedUserViewModel
+    @ObservedObject var networkMonitorViewModel: NetworkMonitorViewModel
     var body: some View {
         NavigationStack {
             List {
                 Section {
                     // MARK: - Total Online Users
                     NavigationLink {
-                        OnlineUserList(userViewModel: userViewModel)
+                        OnlineUserList(userViewModel: userViewModel, networkMonitorViewModel: networkMonitorViewModel)
                     } label: {
                         Text("Total Online Users: \(userViewModel.onlineUserCount)")
                     }
@@ -65,20 +65,27 @@ struct SettingsView: View {
                 }
             }
         }
-        
+        .onAppear {
+            userViewModel.getAllOnlineUser()
+            userViewModel.startListeners()
+        }
     }
 }
  
 fileprivate struct OnlineUserList: View {
     @ObservedObject var userViewModel: SharedUserViewModel
-     
+    @ObservedObject var networkMonitorViewModel: NetworkMonitorViewModel
     var body: some View {
         List {
             Section {
                 Text("Total Online: \(userViewModel.onlineUserCount)")
             }
             Section {
-                if userViewModel.onlineUser.isEmpty {
+                if networkMonitorViewModel.isConnected == false {
+                    HStack {
+                        Image(systemName: networkMonitorViewModel.isConnected ? "wifi" : "wifi.exclamationmark")
+                    }
+                } else if userViewModel.onlineUser.isEmpty {
                     Text("Niemand ist Online!")
                 } else {
                     ForEach(userViewModel.onlineUser) { onlineUser in
@@ -96,13 +103,10 @@ fileprivate struct OnlineUserList: View {
                     }
                 }
             }
-        }
-        .onAppear {
-            userViewModel.getAllOnlineUser()
-        }
+        } 
     }
 }
 
 #Preview {
-    SettingsView(userViewModel: SharedUserViewModel(repository: Repository(type: .preview)))
+    SettingsView(userViewModel: SharedUserViewModel(repository: Repository(type: .preview)), networkMonitorViewModel: NetworkMonitorViewModel())
 }
