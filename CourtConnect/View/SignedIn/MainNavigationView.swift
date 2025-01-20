@@ -11,33 +11,33 @@ struct MainNavigationView: View {
     @ObservedObject var userViewModel: SharedUserViewModel
     @Environment(\.scenePhase) var scenePhase
     
+    @State var networkMonitorViewModel: NetworkMonitorViewModel = NetworkMonitorViewModel()
+    
     var body: some View {
         TabView {
             Tab("Home", systemImage: "house.fill") {
-                DashboardView(userViewModel: userViewModel)
+                DashboardView(userViewModel: userViewModel, networkMonitorViewModel: networkMonitorViewModel)
             }
             Tab("Settings", systemImage: "gear") {
-                SettingsView(userViewModel: userViewModel)
+                SettingsView(userViewModel: userViewModel, networkMonitorViewModel: networkMonitorViewModel)
             }
         }
         .sheet(isPresented: $userViewModel.showOnBoarding, content: {
             UserProfileEditView(userViewModel: userViewModel)
         })
-        .onAppear{
+        .task {
             userViewModel.setUserOnline()
-            userViewModel.startListeners()
-        }
-        .onChange(of: scenePhase) { oldPhase, newPhase in
-            if newPhase == .active {
-                userViewModel.setUserOnline()
-            } else if newPhase == .background {
-                userViewModel.setUserOffline()
+            if await !NotificationService.getAuthStatus() {
+                await NotificationService.request()
             }
         }
+        .onChange(of: scenePhase) { _, newPhase in
+            userViewModel.changeOnlineStatus(phase: newPhase)
+        }
     }
-} 
+}
  
 #Preview {
-    let repo = Repository(type: .preview)
-    MainNavigationView(userViewModel: SharedUserViewModel(repository: repo))
+    @Previewable @State var viewModel = SharedUserViewModel(repository: Repository(type: .preview))
+    MainNavigationView(userViewModel: viewModel)
 }

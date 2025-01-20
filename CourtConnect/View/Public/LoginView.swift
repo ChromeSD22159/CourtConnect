@@ -4,11 +4,10 @@
 //
 //  Created by Frederik Kohler on 11.01.25.
 //
-import SwiftUI
-import Supabase
+import SwiftUI 
 
 struct LoginView: View {
-    @State var vm: LoginViewModel
+    @State var viewModel: LoginViewModel
     @ObservedObject var userViewModel: SharedUserViewModel
     @FocusState var focus: LoginViewModel.Field?
     
@@ -18,7 +17,7 @@ struct LoginView: View {
         @ObservedObject userViewModel: SharedUserViewModel,
         navigate: @escaping (LoginNavigationView) -> Void = {_ in }
     ) {
-        self.vm = LoginViewModel(userRepository: userViewModel.repository.userRepository)
+        self.viewModel = LoginViewModel(repository: userViewModel.repository)
         self.userViewModel = userViewModel
         self.navigate = navigate
         self.focus = nil 
@@ -34,7 +33,7 @@ struct LoginView: View {
             VStack(spacing: 15) {
                 VStack(alignment: .leading, spacing: 5) {
                     SmallText("E-Mail")
-                    TextField("E-Mail", text: $vm.email, prompt: Text("Enter your E-Mail"))
+                    TextField("E-Mail", text: $viewModel.email, prompt: Text("Enter your E-Mail"))
                         .keyboardType(.emailAddress)
                         .focused($focus, equals: .email)
                         .submitLabel(.next)
@@ -43,29 +42,29 @@ struct LoginView: View {
                 
                 VStack(alignment: .leading, spacing: 5) {
                     SmallText("Password")
-                    if vm.showPassword {
-                        TextField("Password", text: $vm.password, prompt: Text("Enter your Password"))
+                    if viewModel.showPassword {
+                        TextField("Password", text: $viewModel.password, prompt: Text("Enter your Password"))
                             .keyboardType(.default)
                             .focused($focus, equals: .password)
                             .submitLabel(.done)
                             .textFieldStyle(.roundedBorder)
                             .overlay(alignment: .trailing) {
-                                ShowPasswordButton(showPassword: $vm.showPassword)
+                                ShowPasswordButton(showPassword: $viewModel.showPassword)
                             }
                     } else {
-                        SecureField("Password", text: $vm.password, prompt: Text("Enter your Password"))
+                        SecureField("Password", text: $viewModel.password, prompt: Text("Enter your Password"))
                             .keyboardType(.default)
                             .focused($focus, equals: .password)
                             .submitLabel(.done)
                             .textFieldStyle(.roundedBorder)
                             .overlay(alignment: .trailing) {
-                                ShowPasswordButton(showPassword: $vm.showPassword)
+                                ShowPasswordButton(showPassword: $viewModel.showPassword)
                             }
                     }
                     
                 }
                 
-                Toggle(isOn: $vm.keepSignededIn) {
+                Toggle(isOn: $viewModel.keepSignededIn) {
                     Text("Keep me signed in")
                 }
                 .tint(Theme.accentColor)
@@ -86,13 +85,18 @@ struct LoginView: View {
             .background(Theme.accentColor)
             .clipShape(.rect(cornerRadius: 10))
             .onTapGesture {
-                vm.signIn() { (user: User?, userProfile: UserProfile?) in
-                    userViewModel.user = user
-                    userViewModel.userProfile = userProfile
+                Task {
+                    do {
+                        let (user, userProfile) = try await viewModel.signIn()
+                        
+                        userViewModel.user = user
+                        userViewModel.userProfile = userProfile
+                    } catch {
+                        
+                    }
                 }
             }
-           
-            
+          
             HStack {
                 BodyText("Don`t have an account?")
                 BodyText("SignUp here")
@@ -107,7 +111,7 @@ struct LoginView: View {
         }
         .padding()
         .onSubmit {
-            vm.changeFocus()
+            viewModel.changeFocus()
         }
     }
 } 

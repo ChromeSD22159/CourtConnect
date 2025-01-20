@@ -8,7 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		B66529D82D3A81EC00B87D71 /* RNCryptor in Frameworks */ = {isa = PBXBuildFile; productRef = B66529D72D3A81EC00B87D71 /* RNCryptor */; };
-		B698AC672D3335110086AF8C /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = B698AC662D3335110086AF8C /* Auth */; };
+		B6652A512D3DAA2E00B87D71 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = B6652A502D3DAA2E00B87D71 /* FirebaseAuth */; };
+		B6652B402D3E4E8C00B87D71 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = B6652B3F2D3E4E8C00B87D71 /* .swiftlint.yml */; };
 		B698AC692D3335110086AF8C /* Functions in Frameworks */ = {isa = PBXBuildFile; productRef = B698AC682D3335110086AF8C /* Functions */; };
 		B698AC6B2D3335110086AF8C /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = B698AC6A2D3335110086AF8C /* PostgREST */; };
 		B698AC6D2D3335110086AF8C /* Realtime in Frameworks */ = {isa = PBXBuildFile; productRef = B698AC6C2D3335110086AF8C /* Realtime */; };
@@ -19,6 +20,8 @@
 		B698AC772D33359C0086AF8C /* Realtime in Frameworks */ = {isa = PBXBuildFile; productRef = B698AC762D33359C0086AF8C /* Realtime */; };
 		B698AC792D33359C0086AF8C /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = B698AC782D33359C0086AF8C /* Storage */; };
 		B698AC7C2D3335F20086AF8C /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = B698AC7B2D3335F20086AF8C /* Supabase */; };
+		B6B1D4CD2D3D42A900251542 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = B6B1D4CC2D3D42A900251542 /* FirebaseMessaging */; };
+		B6B1D4CF2D3D434E00251542 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = B6B1D4CE2D3D434E00251542 /* FirebaseCore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,14 +42,28 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B6652B3F2D3E4E8C00B87D71 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		B698ABFB2D330FC10086AF8C /* CourtConnect.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CourtConnect.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B698AC0D2D330FC30086AF8C /* CourtConnectTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CourtConnectTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B698AC172D330FC30086AF8C /* CourtConnectUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CourtConnectUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		B6B1D4D22D3D449200251542 /* Exceptions for "CourtConnect" folder in "CourtConnect" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = B698ABFA2D330FC10086AF8C /* CourtConnect */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		B698ABFD2D330FC10086AF8C /* CourtConnect */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				B6B1D4D22D3D449200251542 /* Exceptions for "CourtConnect" folder in "CourtConnect" target */,
+			);
 			path = CourtConnect;
 			sourceTree = "<group>";
 		};
@@ -67,12 +84,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B6B1D4CD2D3D42A900251542 /* FirebaseMessaging in Frameworks */,
+				B6652A512D3DAA2E00B87D71 /* FirebaseAuth in Frameworks */,
 				B66529D82D3A81EC00B87D71 /* RNCryptor in Frameworks */,
 				B698AC6B2D3335110086AF8C /* PostgREST in Frameworks */,
 				B698AC692D3335110086AF8C /* Functions in Frameworks */,
 				B698AC7C2D3335F20086AF8C /* Supabase in Frameworks */,
-				B698AC672D3335110086AF8C /* Auth in Frameworks */,
 				B698AC6F2D3335110086AF8C /* Storage in Frameworks */,
+				B6B1D4CF2D3D434E00251542 /* FirebaseCore in Frameworks */,
 				B698AC6D2D3335110086AF8C /* Realtime in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -102,6 +121,7 @@
 		B698ABF22D330FC10086AF8C = {
 			isa = PBXGroup;
 			children = (
+				B6652B3F2D3E4E8C00B87D71 /* .swiftlint.yml */,
 				B698ABFD2D330FC10086AF8C /* CourtConnect */,
 				B698AC102D330FC30086AF8C /* CourtConnectTests */,
 				B698AC1A2D330FC30086AF8C /* CourtConnectUITests */,
@@ -141,19 +161,22 @@
 			buildRules = (
 			);
 			dependencies = (
+				B6652B3E2D3E4E1100B87D71 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				B698ABFD2D330FC10086AF8C /* CourtConnect */,
 			);
 			name = CourtConnect;
 			packageProductDependencies = (
-				B698AC662D3335110086AF8C /* Auth */,
 				B698AC682D3335110086AF8C /* Functions */,
 				B698AC6A2D3335110086AF8C /* PostgREST */,
 				B698AC6C2D3335110086AF8C /* Realtime */,
 				B698AC6E2D3335110086AF8C /* Storage */,
 				B698AC7B2D3335F20086AF8C /* Supabase */,
 				B66529D72D3A81EC00B87D71 /* RNCryptor */,
+				B6B1D4CC2D3D42A900251542 /* FirebaseMessaging */,
+				B6B1D4CE2D3D434E00251542 /* FirebaseCore */,
+				B6652A502D3DAA2E00B87D71 /* FirebaseAuth */,
 			);
 			productName = CourtConnect;
 			productReference = B698ABFB2D330FC10086AF8C /* CourtConnect.app */;
@@ -245,6 +268,8 @@
 			packageReferences = (
 				B698AC652D3335100086AF8C /* XCRemoteSwiftPackageReference "supabase-swift" */,
 				B66529D62D3A81EC00B87D71 /* XCRemoteSwiftPackageReference "RNCryptor" */,
+				B6B1D4CB2D3D42A900251542 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				B6652B2C2D3E411B00B87D71 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B698ABFC2D330FC10086AF8C /* Products */;
@@ -263,6 +288,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B6652B402D3E4E8C00B87D71 /* .swiftlint.yml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -307,6 +333,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		B6652B3E2D3E4E1100B87D71 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = B6652B3D2D3E4E1100B87D71 /* SwiftLintBuildToolPlugin */;
+		};
 		B698AC0F2D330FC30086AF8C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B698ABFA2D330FC10086AF8C /* CourtConnect */;
@@ -444,18 +474,19 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_ENTITLEMENTS = CourtConnect/CourtConnect.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = ZD275Y62U7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CourtConnect/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -463,10 +494,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = de.frederikkohler.CourtConnect;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -475,17 +509,19 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = CourtConnect/CourtConnect.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"CourtConnect/Resources/Preview Content\"";
 				DEVELOPMENT_TEAM = ZD275Y62U7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CourtConnect/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -493,9 +529,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = de.frederikkohler.CourtConnect;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -621,12 +661,28 @@
 				minimumVersion = 5.1.0;
 			};
 		};
+		B6652B2C2D3E411B00B87D71 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SimplyDanny/SwiftLintPlugins";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.58.2;
+			};
+		};
 		B698AC652D3335100086AF8C /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/supabase/supabase-swift.git";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 2.5.1;
+			};
+		};
+		B6B1D4CB2D3D42A900251542 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.7.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -637,10 +693,15 @@
 			package = B66529D62D3A81EC00B87D71 /* XCRemoteSwiftPackageReference "RNCryptor" */;
 			productName = RNCryptor;
 		};
-		B698AC662D3335110086AF8C /* Auth */ = {
+		B6652A502D3DAA2E00B87D71 /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B698AC652D3335100086AF8C /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = Auth;
+			package = B6B1D4CB2D3D42A900251542 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		B6652B3D2D3E4E1100B87D71 /* SwiftLintBuildToolPlugin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B6652B2C2D3E411B00B87D71 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */;
+			productName = "plugin:SwiftLintBuildToolPlugin";
 		};
 		B698AC682D3335110086AF8C /* Functions */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -686,6 +747,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B698AC652D3335100086AF8C /* XCRemoteSwiftPackageReference "supabase-swift" */;
 			productName = Supabase;
+		};
+		B6B1D4CC2D3D42A900251542 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B6B1D4CB2D3D42A900251542 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+		B6B1D4CE2D3D434E00251542 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B6B1D4CB2D3D42A900251542 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

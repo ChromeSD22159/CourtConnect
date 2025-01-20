@@ -6,15 +6,32 @@
 //
 
 import Foundation
+import SwiftData
 
-class Repository {
-    let userRepository: UserRepository
-   // let chatRepository: ChatRepository
+@MainActor class Repository {
+    var userRepository: UserRepository
+    let chatRepository: ChatRepository
+    let syncHistoryRepository: SyncHistoryRepository
+    let container: ModelContainer
     
-    @MainActor init(type: RepositoryType) {
-        self.userRepository = UserRepository(type: type)
-        // self.chatRepository = ChatRepository(type: type)
+    init(type: RepositoryType) {
+        let schema = Schema([
+            UserProfile.self,
+            Chat.self,
+            SyncHistory.self
+        ])
+        
+        do {
+            let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: type == .preview ? true : false )
+            
+            let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
+            self.container = container
+            
+            self.userRepository = UserRepository(container: container)
+            self.chatRepository = ChatRepository(container: container, type: type)
+            self.syncHistoryRepository = SyncHistoryRepository(container: container, type: type)
+        } catch {
+            fatalError("Cannot create Database \(error.localizedDescription)")
+        }
     }
 } 
-
-

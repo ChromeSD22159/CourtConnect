@@ -8,4 +8,6 @@
 enum DatabaseTables: String {
     case userProfile = "UserProfile"
     case userOnline = "UserOnline"
+    case chat = "Chat"
+    case syncHistory = "SyncHistory"
 }

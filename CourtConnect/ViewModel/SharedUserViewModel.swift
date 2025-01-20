@@ -4,15 +4,17 @@
 //
 //  Created by Frederik Kohler on 12.01.25.
 //
-import Supabase
 import Foundation
 import SwiftUI
+import FirebaseMessaging
+import FirebaseAuth
 
 @Observable
 class SharedUserViewModel: ObservableObject {
-    var user: User? = nil
-    var userProfile: UserProfile? = nil
+    var user: FirebaseAuth.User?
+    var userProfile: UserProfile?
     var showOnBoarding = false
+    var showDeleteConfirmMenu = false
     var editProfile: UserProfile = UserProfile(userId: "", firstName: "", lastName: "", roleString: UserRole.player.rawValue, birthday: "", createdAt: Date(), updatedAt: Date())
     var onlineUser: [UserOnline] = []
     var onlineUserCount: Int {
@@ -32,25 +34,13 @@ class SharedUserViewModel: ObservableObject {
 
     let repository: Repository
     
-    private var userRepository: UserRepository {
-        self.repository.userRepository
-    }
-    
-    init(repository: Repository) {
+    @MainActor init(repository: Repository) {
         self.repository = repository
-        if repository.userRepository.type == .preview {
-            let cal = Calendar.current 
-            let createdAt = cal.date(byAdding: .day, value: -10, to: Date())!
-            let updatedAt = cal.date(byAdding: .day, value: -1, to: Date())!
-            self.userProfile = UserProfile(userId: "", firstName: "", lastName: "", roleString: UserRole.player.rawValue, birthday: "", createdAt: createdAt, updatedAt: updatedAt)
-        }
     }
     
     func onAppDashboardAppear() {
         if userProfile == nil {
             showOnBoarding.toggle()
-        } else {
-            userIsOnline()
         }
     }
     
@@ -64,13 +54,13 @@ class SharedUserViewModel: ObservableObject {
     }
     
     func resetEditUserProfile() {
-        guard let uid = self.user?.id.uuidString else { return }
-        self.editProfile = UserProfile(userId: uid, firstName: "", lastName: "", roleString: UserRole.player.rawValue, birthday: "")
+        guard let user = user else { return }
+        self.editProfile = UserProfile(userId: user.uid, firstName: "", lastName: "", roleString: UserRole.player.rawValue, birthday: "", createdAt: Date(), updatedAt: Date())
     }
     
     func saveUserProfile() {
         guard
-            let user = user,
+            let user = self.user,
             !editProfile.firstName.isEmpty,
             !editProfile.lastName.isEmpty,
             !editProfile.roleString.isEmpty
@@ -78,12 +68,15 @@ class SharedUserViewModel: ObservableObject {
             return
         }
         
-        editProfile.userId = user.id.uuidString
+        editProfile.userId = user.uid
         editProfile.updatedAt = Date()
         
         Task {
             do { 
-                try await self.userRepository.sendUserProfileToBackend(profile: editProfile)
+                try await self.repository.userRepository.sendUserProfileToBackend(profile: editProfile)
+                
+                self.setUserOffline()
+                self.setUserOnline()
             } catch {
                 print(error.localizedDescription)
             }
@@ -93,26 +86,16 @@ class SharedUserViewModel: ObservableObject {
     func signOut() {
         Task {
             do {
-                if let user = user {
-                    try await userRepository.signOut(user: user)
-                }
+                try await self.repository.userRepository.signOut()
             } catch {
                 print(error.localizedDescription)
             }
         }
     }
     
-    private func userIsOnline() {
-        guard let userProfile = userProfile else { return }
-        userProfile.lastOnline = Date()
-        Task {
-            try await self.userRepository.sendUserProfileToBackend(profile: userProfile)
-        }
-    }
-    
     func isAuthendicated() {
         Task {
-            await repository.userRepository.isAuthendicated { (user: User?, userProfile: UserProfile?) in
+            if let user = try await self.repository.userRepository.isAuthendicated(), let userProfile = try await self.repository.userRepository.getUserProfileFromDatabase(userId: user.uid) {
                 withAnimation {
                     self.user = user
                     self.userProfile = userProfile
@@ -129,19 +112,20 @@ class SharedUserViewModel: ObservableObject {
     
     func setUserOnline() {
         guard let user = user, let userProfile = userProfile else { return }
+         
         Task {
             do {
-                let result = try await userRepository.setUserOnline(user: user, userProfile: userProfile)
-                
-                if result {
-                    print("User wurde Online gesetzt!")
-                } else {
-                    print("User konnte nicht Online gesetzt werden!")
+                userProfile.lastOnline = Date()
+                if let fcmToken = try? await Messaging.messaging().token() {
+                    userProfile.fcmToken = fcmToken
                 }
                 
-                self.onlineUser = try await userRepository.getOnlineUserList()
-            }
-            catch { print(error) }
+                _ = try await self.repository.userRepository.setUserOnline(user: user, userProfile: userProfile)
+                
+                self.onlineUser = try await self.repository.userRepository.getOnlineUserList()
+                
+                try await self.repository.userRepository.sendUserProfileToBackend(profile: userProfile)
+            } catch { print(error) }
         }
     }
     
@@ -149,32 +133,56 @@ class SharedUserViewModel: ObservableObject {
         guard let user = user else { return }
         Task {
             do {
-                let result = try await userRepository.setUserOffline(user: user)
-                
-                if result {
-                    print("User wurde Offline gesetzt!")
-                } else {
-                    print("User konnte nicht Offline gesetzt werden!")
-                }
-            }
-            catch { print(error) }
+                _ = try await self.repository.userRepository.setUserOffline(user: user)
+            } catch { print(error) }
         }
     } 
-    
-    func listenForOnlineUserComesOnline() {
+     
+    func getAllOnlineUser() {
         Task {
-            await repository.userRepository.listenForOnlineUserComesOnline() { onlineUserList in
-                self.onlineUser = onlineUserList 
+            do {
+                self.onlineUser = try await repository.userRepository.getOnlineUserList()
+            } catch {
+                print(error.localizedDescription)
             }
         }
     }
     
-    func listenForOnlineUserGoesOffline() {
+    func changeOnlineStatus(phase: ScenePhase) {
+        if phase == .active {
+            setUserOnline()
+        } else if phase == .background {
+            setUserOffline()
+        }
+    }
+    
+    func deleteUserAccount() {
         Task {
-            
-            await repository.userRepository.listenForOnlineUserGoesOffline() { onlineUserList in
+            do {
+                try await repository.userRepository.signOut()
+                try await repository.userRepository.deleteUserAccount()
+                
+                self.user = nil
+                self.userProfile = nil
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    private func listenForOnlineUserComesOnline() {
+        Task {
+            await self.repository.userRepository.listenForOnlineUserComesOnline { onlineUserList in
                 self.onlineUser = onlineUserList
             }
         }
-    } 
+    }
+    
+    private func listenForOnlineUserGoesOffline() {
+        Task {
+            await self.repository.userRepository.listenForOnlineUserGoesOffline { onlineUserList in
+                self.onlineUser = onlineUserList
+            }
+        }
+    }
 }

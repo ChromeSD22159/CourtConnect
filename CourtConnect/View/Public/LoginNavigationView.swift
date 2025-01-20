@@ -4,14 +4,13 @@
 //
 //  Created by Frederik Kohler on 11.01.25.
 //
-import SwiftUI
-import Supabase
+import SwiftUI 
 
 struct LoginNavigation: View {
     @State var navigationView: LoginNavigationView
     @State var userViewModel: SharedUserViewModel
      
-    init(repository: Repository) {
+    @MainActor init(repository: Repository) {
         self.navigationView = .login
         self.userViewModel = SharedUserViewModel(repository: repository)
     }
@@ -28,20 +27,18 @@ struct LoginNavigation: View {
                 }
             }
         }
-        .task {
+        .task {             
             userViewModel.isAuthendicated()
         }
         
     }
     
-    private func handleNavigate(to: LoginNavigationView) {
+    private func handleNavigate(toView: LoginNavigationView) {
         withAnimation {
-            self.navigationView = to
+            self.navigationView = toView
         }
     }
 }
-
-
 
 enum LoginNavigationView {
     case login, register, forget

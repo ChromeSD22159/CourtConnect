@@ -4,16 +4,23 @@
 //
 //  Created by Frederik Kohler on 16.01.25.
 //
-import SwiftUI
+import SwiftUI 
 
 struct DashboardView: View {
     @ObservedObject var userViewModel: SharedUserViewModel
+    @ObservedObject var networkMonitorViewModel: NetworkMonitorViewModel
     var body: some View {
         NavigationStack {
             VStack(spacing: 20) {
-                if let user = userViewModel.user, let email = user.email {
-                    BodyText(email)
+             
+                if !networkMonitorViewModel.isConnected {
+                    InternetUnavailableView()
+                } else {
+                    if let email = userViewModel.user?.email {
+                        BodyText(email)
+                    }
                 }
+                
             }
             .navigationTitle("Daskboard")
             .navigationBarTitleDisplayMode(.inline)
@@ -25,22 +32,16 @@ struct DashboardView: View {
                             .onTapGesture {
                                 userViewModel.openEditProfileSheet()
                             }
-                        
-                        Image(systemName: "rectangle.portrait.and.arrow.right")
-                            .padding(10)
-                            .onTapGesture {
-                                userViewModel.openEditProfileSheet()
-                            }
                     }
                 }
             }
             .onAppear {
                 userViewModel.onAppDashboardAppear()
             }
-        }
+        } 
     }
 }
-
+ 
 #Preview {
-    DashboardView(userViewModel: SharedUserViewModel(repository: Repository(type: .preview)))
+    DashboardView(userViewModel: SharedUserViewModel(repository: Repository(type: .preview)), networkMonitorViewModel: NetworkMonitorViewModel())
 }

@@ -4,70 +4,98 @@
 //
 //  Created by Frederik Kohler on 17.01.25.
 //
-import SwiftUI
-import Auth
+import SwiftUI 
 
 struct ChatView: View {
-    @ObservedObject var viewModel: ChatRoomViewModel
+    @State var viewModel: ChatRoomViewModel
     @State var scrollPosition = ScrollPosition()
-    let myUser: UserProfile
-    let otherUser: UserProfile
+    
+    init(repository: Repository, myUser: UserProfile, recipientUser: UserProfile) {
+        viewModel = ChatRoomViewModel(repository: repository, myUser: myUser, recipientUser: recipientUser)
+    }
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 20) {
-                ForEach(viewModel.messages) { message in
-                    MessageRow(message: message, myUserId: myUser.userId)
+        ZStack {
+            ScrollView(.vertical) {
+                LazyVStack(spacing: 20) {
+                    if !viewModel.messages.isEmpty {
+                        ForEach(viewModel.messages) { message in
+                            if let decrypted = message.decryptMessage() {
+                                MessageRow(message: decrypted, myUserId: viewModel.myUser.userId)
+                            }
+                        }
+                    } else {
+                        HStack {
+                            Spacer()
+                        }
+                    }
                 }
+                .padding()
+                .scrollTargetLayout()
             }
-            .padding()
+            .contentMargins(.bottom, 75)
+            .scrollPosition($scrollPosition)
+            .scrollIndicators(.hidden)
         }
-        .contentMargins(.bottom, 75)
-        .scrollPosition($scrollPosition)
-        .onAppear { scrollPosition.scrollTo(edge: .bottom) }
         .overlay(alignment: .bottom) {
-            InputField(viewModel: viewModel, scrollPosition: $scrollPosition, myUser: myUser, otherUser: otherUser)
+            InputField(viewModel: viewModel, scrollPosition: $scrollPosition) {
+                viewModel.addMessage(senderID: viewModel.myUser.userId, recipientId: viewModel.recipientUser.userId)
+            }
         }
+        .onAppear {
+            viewModel.getAllMessages()
+        }
+        .onChange(of: viewModel.messages, {
+            withAnimation {
+                scrollPosition.scrollTo(edge: .bottom)
+            }
+        })
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 HStack(spacing: 20) {
-                    Image(systemName: "figure")
-                        .font(.subheadline)
-                        .foregroundStyle(.white)
-                        .padding(10)
-                        .background {
-                            Circle()
-                                .background(Material.ultraThin)
+                    Menu {
+                        let cal = Calendar.current
+                        let string = cal.isDateInToday(viewModel.recipientUser.lastOnline) ? "heute, um" : "am " + viewModel.recipientUser.lastOnline.formattedDate()
+                        Text("Zuletzt Online, \(string + " " + viewModel.recipientUser.lastOnline.formattedTime()) Uhr")
+                            .font(.caption)
+                        
+                        Button("Reload Chat") {
+                            viewModel.getAllMessages()
                         }
-                        .padding(5)
+                        
+                        Button("Delete Local Chat") {
+                            viewModel.deleteAll() 
+                        }
+                    } label: {
+                        Text(viewModel.recipientUser.inizials)
+                            .font(.subheadline)
+                            .foregroundStyle(.white)
+                            .padding(10)
+                            .background {
+                                Circle().fill(Material.ultraThin)
+                            }
+                            .padding(5)
+                    }
                 }
             }
         }
-        .navigationTitle(otherUser.firstName + otherUser.lastName)
+        .navigationTitle(viewModel.recipientUser.fullName)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbarVisibility(.hidden, for: .tabBar)
     }
 }
 
 fileprivate struct InputField: View {
     @ObservedObject var viewModel: ChatRoomViewModel
     @Binding var scrollPosition: ScrollPosition
-    let myUser: UserProfile
-    let otherUser: UserProfile
+    let onPressSend: () -> Void
+    
     var body: some View {
         HStack {
-            RoundImageButton(systemName: "camera") {
-                
-            }
-            
-            TextField("", text: $viewModel.inputText, prompt: Text("Deine Nachricht"))
+            TextField("Deine Nachricht", text: $viewModel.inputText, prompt: Text("Deine Nachricht"))
                 .padding(.leading)
-            
-            RoundImageButton(systemName: "paperplane") {
-                withAnimation {
-                    viewModel.addMessage(senderID: myUser.userId, recipientId: otherUser.userId)
-                    
-                    scrollPosition.scrollTo(edge: .bottom)
-                }
+            RoundImageButton(viewModel: viewModel, systemName: "paperplane") {
+                onPressSend()
             }
         }
         .background(Material.ultraThin)
@@ -81,35 +109,53 @@ fileprivate struct MessageRow: View {
     let message: Chat
     let myUserId: String
     var body: some View {
-        VStack(spacing: 5) {
+        VStack(spacing: 8) {
             HStack {
                 if message.senderId == myUserId {
-                    Text(message.text)
-                    
+                    Text(message.message)
+                        .padding(.vertical, 5)
+                        .padding(.horizontal, 10)
+                        .background(.orange.opacity(0.5))
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
                     Spacer()
                 } else if message.recipientId == myUserId {
                     Spacer()
                     
-                    Text(message.text)
+                    Text(message.message)
+                        .padding(.vertical, 5)
+                        .padding(.horizontal, 10)
+                        .background(Material.thick)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
                 }
             }
-            .padding(.vertical, 5)
-            .padding(.horizontal, 15)
-            .background(Material.thick)
-            .clipShape(RoundedRectangle(cornerRadius: 10))
             
-            HStack {
-                Spacer()
-                Text(message.createdAt.formatted(.dateTime.hour().minute()) + " Uhr")
-                    .font(.caption)
+            HStack(spacing: 15) {
+                if message.senderId == myUserId {
+                    Text(message.createdAt.formatted(.dateTime.hour().minute()))
+                        .font(.caption)
+                    
+                    Image(systemName: "checkmark")
+                        .font(.caption)
+                        .foregroundStyle(message.readedAt != nil ? Color.primary : Color.gray)
+                    
+                    Spacer()
+                } else if message.recipientId == myUserId {
+                    Spacer()
+                    Text(message.createdAt.formatted(.dateTime.hour().minute()))
+                        .font(.caption)
+                    
+                    Image(systemName: "checkmark")
+                        .font(.caption)
+                        .foregroundStyle(message.readedAt != nil ? Color.primary : Color.gray)
+                        .padding(.trailing, 10)
+                }
             }
-            .padding(.horizontal, 5)
         }
     }
 }
-
-// TODO: REFACTOR
-struct RoundImageButton: View {
+ 
+fileprivate struct RoundImageButton: View {
+    @ObservedObject var viewModel: ChatRoomViewModel
     let systemName: String
     var onComplete: () -> Void
     var body: some View {
@@ -118,47 +164,25 @@ struct RoundImageButton: View {
             .foregroundStyle(.white)
             .padding(10)
             .background {
-                Circle().background(Material.ultraThin)
+                Circle().fill(
+                    withAnimation(.easeInOut) {
+                        viewModel.inputText.isEmpty ? .orange : .gray
+                    }
+                )
             }
             .padding(5)
             .onTapGesture {
-                onComplete()
+                if viewModel.inputText.isEmpty {
+                    onComplete()
+                }
             }
     }
 }
-
-#Preview {
-    Text("")
-}
-
-/*
  
- #Preview {
-     @Previewable @State var vm = ChatRoomViewModel(repository: Repository(type: .preview))
-     let myUser = UserProfile(userId: UUID().uuidString, firstName: "Frederik", lastName: "Kohler", roleString: "", birthday: "", createdAt: Date(), updatedAt: Date(), lastOnline: Date())
-     
-     let otherUser = UserProfile(userId: UUID().uuidString, firstName: "Sabina", lastName: "Hodel", roleString: "", birthday: "", createdAt: Date(), updatedAt: Date(), lastOnline: Date())
-     
-     NavigationStack {
-         ChatView(viewModel: vm, myUser: myUser, otherUser: otherUser)
-             .onAppear {
-                 let myId = myUser.userId
-                 let otherId = otherUser.userId
-                 vm.messages = [
-                     Chat(senderId: myId, recipientId: otherId, text: "Hallo wie gehts?", readedAt: nil),
-                     Chat(senderId: otherId, recipientId: myId, text: "hey gut und dir?", readedAt: nil),
-                     Chat(senderId: myId, recipientId: otherId, text: "ja mir auch! danke", readedAt: nil),
-                     Chat(senderId: myId, recipientId: otherId, text: "Hallo wie gehts?", readedAt: nil),
-                     Chat(senderId: otherId, recipientId: myId, text: "hey gut und dir?", readedAt: nil),
-                     Chat(senderId: myId, recipientId: otherId, text: "ja mir auch! danke", readedAt: nil),
-                     Chat(senderId: myId, recipientId: otherId, text: "Hallo wie gehts?", readedAt: nil),
-                     Chat(senderId: otherId, recipientId: myId, text: "hey gut und dir?", readedAt: nil),
-                     Chat(senderId: myId, recipientId: otherId, text: "ja mir auch! danke", readedAt: nil),
-                     Chat(senderId: myId, recipientId: otherId, text: "Hallo wie gehts?", readedAt: nil),
-                     Chat(senderId: otherId, recipientId: myId, text: "hey gut und dir?", readedAt: nil),
-                     Chat(senderId: myId, recipientId: otherId, text: "ja mir auch! danke", readedAt: nil)
-                 ]
-             }
-     }
+#Preview {
+    @Previewable @State var viewModel = ChatRoomViewModel(repository: Repository(type: .preview), myUser: MockUser.myUserProfile, recipientUser: MockUser.userList[1])
+  
+    NavigationStack {
+        ChatView(repository: Repository(type: .preview), myUser: viewModel.myUser, recipientUser: viewModel.recipientUser)
+    }
  }
- */

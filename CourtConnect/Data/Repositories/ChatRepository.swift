@@ -6,65 +6,51 @@
 //
 import Supabase
 import Foundation
-import SwiftData 
-
+import SwiftData
+ 
 @MainActor
-class ChatRepository: DatabaseProtocol {
+class ChatRepository {
     let type: RepositoryType
     let container: ModelContainer
-    var context: ModelContext { container.mainContext }
     let backendClient = BackendClient.shared
      
-    init(type: RepositoryType) {
+    init(container: ModelContainer, type: RepositoryType) {
         self.type = type
-         
-        let schema = Schema([
-            Chat.self
-        ])
-        
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: type == .preview ? true : false )
-        
-        do {
-            self.container = try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create User DataBase Container: \(error)")
-        }
+        self.container = container
     }
     
-    func getAllFromDatabase(senderId: String, recipientId: String) throws -> [Chat] {
+    func getAllFromDatabase(myUserId: String, recipientId: String) throws -> [Chat] {
         let predicate = #Predicate<Chat> { chat in
-            chat.senderId == senderId && chat.recipientId == recipientId
+            chat.senderId == myUserId && chat.recipientId == recipientId || chat.senderId == recipientId && chat.recipientId == myUserId
         }
         
-        let sortBy = [SortDescriptor(\Chat.createdAt, order: .reverse)]
+        let sortBy = [SortDescriptor(\Chat.createdAt, order: .forward)]
         
         let fetchDescriptor = FetchDescriptor<Chat>(predicate: predicate, sortBy: sortBy)
         
-        return try context.fetch(fetchDescriptor)
+        return try container.mainContext.fetch(fetchDescriptor)
     }
     
-    func syncChatFromBackend(senderId: String, recipientId: String, afterTimeStamp: Date? = nil, complete: @escaping ([Chat]) -> Void) async {
-        
-        let cal = Calendar.current
-        let defaultStartDate = cal.date(byAdding: .year, value: -10, to: Date())!
-        
+    func syncChatFromBackend(myUserId: String, recipientId: String, lastSync: Date ,complete: @escaping ([Chat]) -> Void) async {
         do {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ" // Passe das Format an
+            let formattedLastSync = dateFormatter.string(from: lastSync)
+            
             let response: [Chat] = try await backendClient.supabase.from("Messages")
-               .select("*")
-               //.eq("senderId", value: senderId)
-               //.eq("recipientId", value: recipientId)
-               //.greaterThan("timestamp", value: DateUtil.convertDateToString(date: timeStamp ?? defaultStartDate))
-               .or("senderId.eq.\(senderId), recipientId.eq.\(recipientId)") // OR-Bedingung
-               .greaterThan("createdAt", value: DateUtil.convertDateToString(date: afterTimeStamp ?? defaultStartDate)) // Zeitstempelvergleich
-               .order("createdAt", ascending: true) // Sortiere nach createdAt
+               .select()
+               .or("senderId.eq.\(myUserId), recipientId.eq.\(recipientId), createdAt.gt.\(formattedLastSync)")
+               .gte("createdAt", value: formattedLastSync)
+               .order("createdAt", ascending: true)
                .execute()
-               .value
+               .value 
 
             for chat in response {
-                context.insert(chat)
+                container.mainContext.insert(chat)
+                try container.mainContext.save()
             }
             
-            let all = try getAllFromDatabase(senderId: senderId, recipientId: recipientId)
+            let all = try getAllFromDatabase(myUserId: myUserId, recipientId: recipientId)
             
             complete(all)
         } catch {
@@ -73,33 +59,42 @@ class ChatRepository: DatabaseProtocol {
         }
     }
     
-    func sendMessageToBackend(senderId: String, recipientId: String, text: String, complete: @escaping ([Chat]) -> Void) async throws {
+    func sendMessageToBackend(message: Chat, lastDate: Date, complete: @escaping ([Chat]) -> Void) async throws {
+        guard type == .app else { return }
+        
         do {
-            let data = Chat(senderId: senderId, recipientId: recipientId, text: text, readedAt: nil).encryptMessage()
-            try await backendClient.supabase.from(SupabaseTable.messages.rawValue).insert(data).execute()
-            
-            await syncChatFromBackend(senderId: senderId, recipientId: recipientId) { chats in
-                complete(chats)
+            if let data = message.encryptMessage() {
+                try await backendClient.supabase.from(SupabaseTable.messages.rawValue).insert(data).execute()
+                
+                await syncChatFromBackend(myUserId: data.senderId, recipientId: data.recipientId, lastSync: lastDate) { chats in
+                    complete(chats)
+                }
+            } else {
+                throw CryptError.encrypt
             }
         } catch {
             throw error
         }
     }
     
-    func receiveMessages(senderId: String, recipientId: String, complete: @escaping ([Chat]) -> Void) {
+    func receiveMessages(myUserId: String, recipientId: String, complete: @escaping ([Chat]) -> Void) {
         let channel = backendClient.supabase.realtimeV2.channel("public:Messages")
-        let insertions = channel.postgresChange(InsertAction.self, table: "Messages")
+         
+        let inserts = channel.postgresChange(InsertAction.self, table: SupabaseTable.userOnline.rawValue)
         
         Task {
             await channel.subscribe()
             
-            for await insertion in insertions {
+            for await insertion in inserts {
+                print("NEW MESSAGE")
+                
                 if let message = await handleInsertedAndDecode(insertion) {
-                    context.insert(message)
+                    container.mainContext.insert(message)
+                    try container.mainContext.save()
                 }
             }
             
-            let all = try self.getAllFromDatabase(senderId: senderId, recipientId: recipientId)
+            let all = try self.getAllFromDatabase(myUserId: myUserId, recipientId: recipientId)
             
             complete(all)
         }
@@ -120,4 +115,12 @@ class ChatRepository: DatabaseProtocol {
             return nil
         }
     }
+    
+    func delete(message: Chat) {
+         container.mainContext.delete(message)
+    }
+} 
+
+enum CryptError: Error, LocalizedError {
+    case encrypt
 }

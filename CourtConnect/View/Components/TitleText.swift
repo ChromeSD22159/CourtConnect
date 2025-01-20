@@ -17,6 +17,4 @@ struct TitleText: View {
         Text(text)
             .font(.title.bold())
     }
-}
-
-
+} 

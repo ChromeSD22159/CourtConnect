@@ -12,14 +12,12 @@ struct UserProfileEditView: View {
     
     var body: some View {
         VStack {
-            Text(userViewModel.user?.id.uuidString ?? "")
+            Text(userViewModel.user?.uid ?? "")
             Text(userViewModel.editProfile.userId)
             
             TextField("Firstname", text: $userViewModel.editProfile.firstName)
             
             TextField("LastName", text: $userViewModel.editProfile.lastName)
-            
-            Text(userViewModel.editProfile.birthday)
 
             DatePicker("Birthday", selection: userViewModel.birthBinding, displayedComponents: .date)
             .datePickerStyle(.compact)

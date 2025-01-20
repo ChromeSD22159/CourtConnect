@@ -6,76 +6,57 @@
 // 
 import SwiftData
 import Foundation
-import Supabase 
+import Supabase
+import FirebaseAuth
 import UIKit
 
 @MainActor
-class UserRepository: DatabaseProtocol, SupabaseRepositoryProtocol {
-    let type: RepositoryType
+class UserRepository {
     let container: ModelContainer
-    let deviceToken = UIDevice.current.identifierForVendor!.uuidString
-    let backendClient = BackendClient.shared
-    
-    init(type: RepositoryType) {
-        self.type = type
-         
-        let schema = Schema([
-            UserProfile.self
-        ])
-        
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: type == .preview ? true : false )
-        
-        do {
-            self.container = try ModelContainer(for: schema, configurations: [modelConfiguration]) 
-        } catch {
-            fatalError("Could not create User DataBase Container: \(error)")
-        }
+    let deviceToken: String
+    let backendClient:BackendClient
+    let firebaseAuth: Auth
+     
+    init(container: ModelContainer) {
+        self.container = container
+        self.deviceToken = UIDevice.current.identifierForVendor!.uuidString
+        self.backendClient = BackendClient.shared
+        self.firebaseAuth = Auth.auth()
     }
        
     /// LOGIN INTO SUPABASE
-    func signIn(email:String, password: String) async throws -> User? {
-        let response = try await backendClient.supabase.auth.signIn(email: email, password: password)
-        return response.user
-    }
-    
-    /// REGISTER AND LOGIN INTO SUPABASE
-    func signUp(email:String, password: String) async throws -> User? {
-        let response = try await backendClient.supabase.auth.signUp(email: email, password: password)
-        return response.session?.user
-    }
-    
-    /// LOGOUT FROM SUPABASE
-    func signOut(user: User) async throws {
-        try await backendClient.supabase.auth.signOut()
-         
-        try removeUserProfile(user: user)
-    }
-    
-    /// CHECK IF LOGGEDIN AND SET USER / USERPROFILE
-    func isAuthendicated(isComplete: (User?, UserProfile?) -> Void) async {
-        for await state in backendClient.supabase.auth.authStateChanges {
-            if [.initialSession, .signedIn, .signedOut].contains(state.event) {
-                if let user = state.session?.user {
-                    do {
-                        
-                        try await syncUserProfile(user: user)
-                        
-                        let profile = try getUserProfileFromDatabase(user: user)
-                        
-                        isComplete( user, profile )
-                    } catch {
-                        isComplete( user, nil )
-                    }
-                } else {
-                    isComplete( nil, nil )
-                } 
-            }
+    func signIn(email:String, password: String) async throws -> FirebaseAuth.User {
+        do {
+            let result = try await firebaseAuth.signIn(withEmail: email, password: password)
+            return result.user
+        } catch {
+            throw error
         }
     }
     
-    func getUserProfileFromDatabase(user: User) throws -> UserProfile? {
+    /// REGISTER AND LOGIN INTO SUPABASE
+    func signUp(email:String, password: String) async throws -> FirebaseAuth.User {
+        do {
+            let result = try await firebaseAuth.createUser(withEmail: email, password: password)
+            return result.user
+        } catch {
+            throw error
+        }
+    }
+    
+    /// LOGOUT FROM SUPABASE
+    func signOut() async throws {
+        try await backendClient.supabase.auth.signOut() 
+    }
+    
+    /// CHECK IF LOGGEDIN AND SET USER / USERPROFILE
+    func isAuthendicated() async throws -> FirebaseAuth.User? {
+        return firebaseAuth.currentUser
+    }
+    
+    func getUserProfileFromDatabase(userId: String) throws -> UserProfile? {
         let predicate = #Predicate<UserProfile> {
-            $0.userId == user.id.uuidString
+            $0.userId == userId
         }
         
         let sortBy = [SortDescriptor(\UserProfile.createdAt, order: .reverse)]
@@ -85,11 +66,11 @@ class UserRepository: DatabaseProtocol, SupabaseRepositoryProtocol {
         return try container.mainContext.fetch(fetchDescriptor).first
     }
     
-    func syncUserProfile(user: User) async throws {
+    func syncUserProfile(userId: String) async throws {
         let date: [UserProfile] = try await backendClient.supabase
             .from(DatabaseTables.userProfile.rawValue)
             .select("*")
-            .eq("userId", value: user.id)
+            .eq("userId", value: userId)
             .execute()
             .value 
             
@@ -98,15 +79,13 @@ class UserRepository: DatabaseProtocol, SupabaseRepositoryProtocol {
         }
     }
     
-    private func insertOrUpdate(profile: UserProfile) throws {
+    func insertOrUpdate(profile: UserProfile) throws {
         container.mainContext.insert(profile)
         try container.mainContext.save()
     }
     
     /// SAVE CHANGES LOCAL AND SEND TO SUPABASE
     func sendUserProfileToBackend(profile: UserProfile) async throws {
-        guard type == .app else { return }
-        
         try insertOrUpdate(profile: profile)
         
         try await backendClient.supabase
@@ -115,9 +94,10 @@ class UserRepository: DatabaseProtocol, SupabaseRepositoryProtocol {
             .execute()
     }
     
-    func removeUserProfile(user: User) throws {
+    func removeUserProfile(user: FirebaseAuth.User) throws {
+        let userId = user.uid
         let predicate = #Predicate<UserProfile> {
-            $0.id == user.id
+            $0.userId == userId
         }
         
         let fetchDescriptor = FetchDescriptor<UserProfile>(
@@ -132,8 +112,8 @@ class UserRepository: DatabaseProtocol, SupabaseRepositoryProtocol {
         }
     }
     
-    func setUserOnline(user: User, userProfile: UserProfile) async throws -> Bool {
-        let userOnline = UserOnline(userId: user.id.uuidString, firstName: userProfile.firstName, lastName: userProfile.lastName, deviceToken: self.deviceToken)
+    func setUserOnline(user: FirebaseAuth.User, userProfile: UserProfile) async throws -> Bool {
+        let userOnline = UserOnline(userId: user.uid, firstName: userProfile.firstName, lastName: userProfile.lastName, deviceToken: self.deviceToken)
         
         try await backendClient.supabase
             .from(DatabaseTables.userOnline.rawValue)
@@ -143,11 +123,11 @@ class UserRepository: DatabaseProtocol, SupabaseRepositoryProtocol {
         return await isRequestSuccessful(statusCode: 201)
     }
     
-    func setUserOffline(user: User) async throws -> Bool {
+    func setUserOffline(user: FirebaseAuth.User) async throws -> Bool {
          let query = try await backendClient.supabase
            .from(DatabaseTables.userOnline.rawValue)
            .delete()
-           .match(["userId": user.id.uuidString, "deviceToken": self.deviceToken])
+           .match(["userId": user.uid, "deviceToken": self.deviceToken])
            .execute()
 
          // Check the response status code
@@ -206,4 +186,18 @@ class UserRepository: DatabaseProtocol, SupabaseRepositoryProtocol {
     func isRequestSuccessful(statusCode: Int) async -> Bool {
         return (200...299).contains(statusCode)
     }
-} 
+    
+    func deleteUserAccount() async throws { 
+        try await firebaseAuth.currentUser?.delete()
+    }
+}
+
+struct MockUser { 
+    static let myUserProfile = UserProfile(userId: UUID(uuidString: "00000000-0000-0000-0000-000000000000")!.uuidString, firstName: "Frederik", lastName: "Kohler", roleString: UserRole.player.rawValue, birthday: "22.11.1986")
+    
+    static let userList = [
+        myUserProfile,
+        UserProfile(userId: UUID(uuidString: "00000000-0000-0000-0000-000000000010")!.uuidString, firstName: "Sabina", lastName: "Hodel", roleString: UserRole.player.rawValue, birthday: "21.06.1995"),
+        UserProfile(userId: UUID(uuidString: "00000000-0000-0000-0000-000000000020")!.uuidString, firstName: "Nico", lastName: "Kohler", roleString: UserRole.player.rawValue, birthday: "08.01.2010")
+    ]
+}
