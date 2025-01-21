@@ -62,3 +62,4 @@ GoogleService-Info.plist
 /supabase/functions/.temp
 /supabase/functions/.env
 /supabase/functions/.service-account.json
+*.p8

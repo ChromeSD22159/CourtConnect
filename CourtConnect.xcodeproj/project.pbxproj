@@ -13,6 +13,8 @@
 		B66532592D3EC28500B87D71 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = B66532582D3EC28500B87D71 /* .gitignore */; };
 		B665325B2D3EC28F00B87D71 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B665325A2D3EC28F00B87D71 /* GoogleService-Info.plist */; };
 		B665325D2D3EC35300B87D71 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = B665325C2D3EC35300B87D71 /* README.md */; };
+		B66533A12D3F8E0A00B87D71 /* SwiftJWT in Frameworks */ = {isa = PBXBuildFile; productRef = B66533A02D3F8E0A00B87D71 /* SwiftJWT */; };
+		B66533A32D3F961B00B87D71 /* AuthKey_3297Y8FD2Z.p8 in Resources */ = {isa = PBXBuildFile; fileRef = B66533A22D3F961B00B87D71 /* AuthKey_3297Y8FD2Z.p8 */; };
 		B698AC692D3335110086AF8C /* Functions in Frameworks */ = {isa = PBXBuildFile; productRef = B698AC682D3335110086AF8C /* Functions */; };
 		B698AC6B2D3335110086AF8C /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = B698AC6A2D3335110086AF8C /* PostgREST */; };
 		B698AC6D2D3335110086AF8C /* Realtime in Frameworks */ = {isa = PBXBuildFile; productRef = B698AC6C2D3335110086AF8C /* Realtime */; };
@@ -49,6 +51,7 @@
 		B66532582D3EC28500B87D71 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		B665325A2D3EC28F00B87D71 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B665325C2D3EC35300B87D71 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		B66533A22D3F961B00B87D71 /* AuthKey_3297Y8FD2Z.p8 */ = {isa = PBXFileReference; lastKnownFileType = text; path = AuthKey_3297Y8FD2Z.p8; sourceTree = "<group>"; };
 		B698ABFB2D330FC10086AF8C /* CourtConnect.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CourtConnect.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B698AC0D2D330FC30086AF8C /* CourtConnectTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CourtConnectTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B698AC172D330FC30086AF8C /* CourtConnectUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CourtConnectUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -98,6 +101,7 @@
 				B698AC7C2D3335F20086AF8C /* Supabase in Frameworks */,
 				B698AC6F2D3335110086AF8C /* Storage in Frameworks */,
 				B6B1D4CF2D3D434E00251542 /* FirebaseCore in Frameworks */,
+				B66533A12D3F8E0A00B87D71 /* SwiftJWT in Frameworks */,
 				B698AC6D2D3335110086AF8C /* Realtime in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -130,6 +134,7 @@
 				B66532582D3EC28500B87D71 /* .gitignore */,
 				B665325A2D3EC28F00B87D71 /* GoogleService-Info.plist */,
 				B6652B3F2D3E4E8C00B87D71 /* .swiftlint.yml */,
+				B66533A22D3F961B00B87D71 /* AuthKey_3297Y8FD2Z.p8 */,
 				B665325C2D3EC35300B87D71 /* README.md */,
 				B698ABFD2D330FC10086AF8C /* CourtConnect */,
 				B698AC102D330FC30086AF8C /* CourtConnectTests */,
@@ -186,6 +191,7 @@
 				B6B1D4CC2D3D42A900251542 /* FirebaseMessaging */,
 				B6B1D4CE2D3D434E00251542 /* FirebaseCore */,
 				B6652A502D3DAA2E00B87D71 /* FirebaseAuth */,
+				B66533A02D3F8E0A00B87D71 /* SwiftJWT */,
 			);
 			productName = CourtConnect;
 			productReference = B698ABFB2D330FC10086AF8C /* CourtConnect.app */;
@@ -279,6 +285,7 @@
 				B66529D62D3A81EC00B87D71 /* XCRemoteSwiftPackageReference "RNCryptor" */,
 				B6B1D4CB2D3D42A900251542 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				B6652B2C2D3E411B00B87D71 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */,
+				B665339F2D3F8E0A00B87D71 /* XCRemoteSwiftPackageReference "Swift-JWT" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B698ABFC2D330FC10086AF8C /* Products */;
@@ -298,6 +305,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B665325B2D3EC28F00B87D71 /* GoogleService-Info.plist in Resources */,
+				B66533A32D3F961B00B87D71 /* AuthKey_3297Y8FD2Z.p8 in Resources */,
 				B665325D2D3EC35300B87D71 /* README.md in Resources */,
 				B66532592D3EC28500B87D71 /* .gitignore in Resources */,
 				B6652B402D3E4E8C00B87D71 /* .swiftlint.yml in Resources */,
@@ -494,6 +502,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CourtConnect/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = de.frederikkohler.CourtConnect;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -529,6 +538,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CourtConnect/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = de.frederikkohler.CourtConnect;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -681,6 +691,14 @@
 				minimumVersion = 0.58.2;
 			};
 		};
+		B665339F2D3F8E0A00B87D71 /* XCRemoteSwiftPackageReference "Swift-JWT" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Kitura/Swift-JWT.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.2;
+			};
+		};
 		B698AC652D3335100086AF8C /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/supabase/supabase-swift.git";
@@ -714,6 +732,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B6652B2C2D3E411B00B87D71 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */;
 			productName = "plugin:SwiftLintBuildToolPlugin";
+		};
+		B66533A02D3F8E0A00B87D71 /* SwiftJWT */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B665339F2D3F8E0A00B87D71 /* XCRemoteSwiftPackageReference "Swift-JWT" */;
+			productName = SwiftJWT;
 		};
 		B698AC682D3335110086AF8C /* Functions */ = {
 			isa = XCSwiftPackageProductDependency;

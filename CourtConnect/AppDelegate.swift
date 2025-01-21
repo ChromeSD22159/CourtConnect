@@ -7,26 +7,38 @@
 
 import UIKit
 import FirebaseCore
-import FirebaseMessaging
+import FirebaseMessaging 
 
 class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        FirebaseConfiguration.shared.setLoggerLevel(.min)
         FirebaseApp.configure()
+        
+        UIApplication.shared.registerForRemoteNotifications()
+        
         Messaging.messaging().delegate = self
-        UNUserNotificationCenter.current().delegate = self
-        application.registerForRemoteNotifications()
         return true
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        
+        let deviceTokenString = deviceToken.reduce("", { $0 + String(format: "%02X", $1) })
+        ApnsMessaging.shared.apnsToken = deviceTokenString
+         
+        // FIREBASE FCM
         Messaging.messaging().apnsToken = deviceToken
-    } 
+    }
+    
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        // Try again later.
+    }
 }
 
 extension AppDelegate: MessagingDelegate {
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-        /* if let _ = Messaging.messaging().fcmToken {
-            print("fcmToken:")
-        } */
+        if let fcmToken = Messaging.messaging().fcmToken {
+            print("fcmToken: \(fcmToken)")
+        }
     }
 } 

@@ -114,4 +114,4 @@ class ChatRepository {
 
 enum CryptError: Error, LocalizedError {
     case encrypt
-}
+} 

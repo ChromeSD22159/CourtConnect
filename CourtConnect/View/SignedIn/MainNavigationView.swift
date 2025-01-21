@@ -29,7 +29,7 @@ struct MainNavigationView: View {
             userViewModel.setUserOnline()
             if await !NotificationService.getAuthStatus() {
                 await NotificationService.request()
-            }
+            } 
         }
         .onChange(of: scenePhase) { _, newPhase in
             userViewModel.changeOnlineStatus(phase: newPhase)

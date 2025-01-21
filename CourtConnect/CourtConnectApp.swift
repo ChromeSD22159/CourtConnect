@@ -9,7 +9,7 @@ import SwiftUI
 @main
 struct CourtConnectApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-      
+    
     init() {
         loadRocketSimConnect()
     }
