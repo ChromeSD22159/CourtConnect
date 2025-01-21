@@ -9,6 +9,7 @@ import SwiftUI
 struct DashboardView: View {
     @ObservedObject var userViewModel: SharedUserViewModel
     @ObservedObject var networkMonitorViewModel: NetworkMonitorViewModel
+    @State @State var inAppMessagehandler = InAppMessagehandler.shared
     var body: some View {
         NavigationStack {
             VStack(spacing: 20) {
@@ -18,9 +19,11 @@ struct DashboardView: View {
                 } else {
                     if let email = userViewModel.user?.email {
                         BodyText(email)
-                    }
-                    
-                    SendNotificationToDevice()
+                    } 
+                }
+                
+                Button("Test Notification") {
+                    inAppMessagehandler.handleMessage(message: InAppMessage(title: "Neue Nachricht von Frederik", body: "Neue Nachricht von Frederik"))
                 }
                 
             }
@@ -43,39 +46,9 @@ struct DashboardView: View {
         } 
     }
 }
- 
-private struct SendNotificationToDevice: View {
-    @State var token = ""
-    @State var titelText = "Ich bin der Title"
-    @State var bodyText = "Dies ist eine Testnachricht"
-    var body: some View {
-        Form {
-            TextField("", text: $token, prompt: Text("DeviceToken"))
-                .textFieldStyle(.roundedBorder)
-            
-            TextField("", text: $titelText)
-                .textFieldStyle(.roundedBorder)
-            
-            TextField("", text: $bodyText)
-                .textFieldStyle(.roundedBorder)
-            
-            Button("Send", role: .destructive) {
-                do {
-                    try ApnsMessaging.sendAPNsNotification(deviceToken: token, title: titelText, body: bodyText, completion: {_ in
-                        
-                    })
-                } catch {
-                    print(error.localizedDescription)
-                }
-            }
-        }.onAppear {
-            if let token = ApnsMessaging.shared.apnsToken {
-                self.token = token
-            }
-        }
-    }
-}
 
 #Preview {
-    DashboardView(userViewModel: SharedUserViewModel(repository: Repository(type: .preview)), networkMonitorViewModel: NetworkMonitorViewModel())
+    MessageSheet {
+        DashboardView(userViewModel: SharedUserViewModel(repository: Repository(type: .preview)), networkMonitorViewModel: NetworkMonitorViewModel())
+    }
 }

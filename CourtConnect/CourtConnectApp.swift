@@ -16,7 +16,7 @@ struct CourtConnectApp: App {
     
     var body: some Scene {
         WindowGroup {
-            LoginNavigation(repository: Repository(type: .app))
+            LoginNavigation(repository: Repository(type: .app)) 
         }
     }
     

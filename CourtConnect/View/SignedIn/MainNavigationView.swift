@@ -14,12 +14,14 @@ struct MainNavigationView: View {
     @State var networkMonitorViewModel: NetworkMonitorViewModel = NetworkMonitorViewModel()
     
     var body: some View {
-        TabView {
-            Tab("Home", systemImage: "house.fill") {
-                DashboardView(userViewModel: userViewModel, networkMonitorViewModel: networkMonitorViewModel)
-            }
-            Tab("Settings", systemImage: "gear") {
-                SettingsView(userViewModel: userViewModel, networkMonitorViewModel: networkMonitorViewModel)
+        MessageSheet {
+            TabView {
+                Tab("Home", systemImage: "house.fill") {
+                    DashboardView(userViewModel: userViewModel, networkMonitorViewModel: networkMonitorViewModel)
+                }
+                Tab("Settings", systemImage: "gear") {
+                    SettingsView(userViewModel: userViewModel, networkMonitorViewModel: networkMonitorViewModel)
+                }
             }
         }
         .sheet(isPresented: $userViewModel.showOnBoarding, content: {

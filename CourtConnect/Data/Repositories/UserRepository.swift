@@ -13,12 +13,13 @@ import UIKit
 @MainActor
 class UserRepository {
     let container: ModelContainer
-   // let deviceToken: String
+    let deviceToken: String
     let backendClient:BackendClient
     let firebaseAuth: Auth
      
     init(container: ModelContainer) {
         self.container = container
+        self.deviceToken = UIDevice.current.identifierForVendor!.uuidString
         self.backendClient = BackendClient.shared
         self.firebaseAuth = Auth.auth()
     }
@@ -112,8 +113,7 @@ class UserRepository {
     }
     
     func setUserOnline(user: FirebaseAuth.User, userProfile: UserProfile) async throws -> Bool {
-        let apnsToken = ApnsMessaging.shared.apnsToken ?? ""
-        let userOnline = UserOnline(userId: user.uid, firstName: userProfile.firstName, lastName: userProfile.lastName, deviceToken: apnsToken)
+        let userOnline = UserOnline(userId: user.uid, firstName: userProfile.firstName, lastName: userProfile.lastName, deviceToken: self.deviceToken)
         
         try await backendClient.supabase
             .from(DatabaseTables.userOnline.rawValue)
@@ -124,12 +124,10 @@ class UserRepository {
     }
     
     func setUserOffline(user: FirebaseAuth.User) async throws -> Bool {
-         let apnsToken = ApnsMessaging.shared.apnsToken ?? ""
-        
          let query = try await backendClient.supabase
            .from(DatabaseTables.userOnline.rawValue)
            .delete()
-           .match(["userId": user.uid, "deviceToken": apnsToken])
+           .match(["userId": user.uid, "deviceToken": self.deviceToken])
            .execute()
 
          // Check the response status code

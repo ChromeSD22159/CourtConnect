@@ -65,3 +65,5 @@ GoogleService-Info.plist
 *.p8
 TokenService.swift
 AuthKey_3297Y8FD2Z.p8
+service-account.json
+config.toml

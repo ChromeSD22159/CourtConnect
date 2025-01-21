@@ -15,7 +15,7 @@ class Chat: Codable {
     @Attribute(.unique) var id: UUID
     var senderId: String
     var recipientId: String
-    var message: String
+    var message: String 
     var createdAt: Date
     var readedAt: Date?
     
@@ -30,14 +30,14 @@ class Chat: Codable {
         self.recipientId = recipientId
         self.createdAt = createdAt
         self.readedAt = readedAt
-    } 
+    }
     
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(UUID.self, forKey: .id)
         self.message = try container.decode(String.self, forKey: .message)
         self.senderId = try container.decode(String.self, forKey: .senderId)
-        self.recipientId = try container.decode(String.self, forKey: .recipientId) 
+        self.recipientId = try container.decode(String.self, forKey: .recipientId)
         self.createdAt = try container.decode(Date.self, forKey: .createdAt)
         self.readedAt = try? container.decode(Date.self, forKey: .readedAt)
     }
