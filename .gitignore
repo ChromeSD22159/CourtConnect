@@ -63,3 +63,5 @@ GoogleService-Info.plist
 /supabase/functions/.env
 /supabase/functions/.service-account.json
 *.p8
+TokenService.swift
+AuthKey_3297Y8FD2Z.p8

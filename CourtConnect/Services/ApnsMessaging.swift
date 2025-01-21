@@ -9,16 +9,7 @@ import CryptoKit
 import Foundation 
 import SwiftUI
 
-struct TokenService {
-    static let pemBasedPrivateKey = """
-    -----BEGIN PRIVATE KEY-----
-    MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgBybKyNRaPdPo2ANc
-    uvAFP9hOFLX3E5dSYz36yRkPDR+gCgYIKoZIzj0DAQehRANCAAQgWnaKHiiOgI9U
-    XjSRmZK5K1hFv50/kWzk082tbe6vJnRe5Kfg6ueE05afQqtQklozoY1w1sPr/yQw
-    UbV2tbAK
-    -----END PRIVATE KEY-----
-    """
-}
+
 
 struct ApnsMessaging {
     static var shared = ApnsMessaging()
