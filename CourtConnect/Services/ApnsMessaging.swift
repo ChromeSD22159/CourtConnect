@@ -6,11 +6,8 @@
 //
 import SwiftJWT
 import CryptoKit
-import Foundation 
-import SwiftUI
-
-
-
+import Foundation
+ 
 struct ApnsMessaging {
     static var shared = ApnsMessaging()
     
@@ -37,7 +34,7 @@ struct ApnsMessaging {
         request.httpBody = try JSONEncoder().encode(payload)
 
         let task = URLSession.shared.dataTask(with: request) { _, response, error in
-            if let error = error {
+            if (error != nil) {
                 completion(Result.failure(ApnsError.badRequest))
               return
             }
@@ -86,15 +83,11 @@ struct ApnsMessaging {
     private struct APNsJWTClaims: Claims {
         let iss: String
         let iat: Date
-    }
-    
-    // simulator 8022476D2AE82DF50D51C45290C65F64FA0B0B07DC1BA2FA572B0C18F3A08DF15C5F0D802F22E473131E7846B46E25558BC195188F62E5BD69415F5679000109172056BF0CAC1E6960A86888350EAA3B
-    
-    // iPhone 19977C84099BF7DCF390DE10C9670A0C22BAE872BC7248A142A576A7355C3AF7
+    } 
     
     /// curl -v -X POST \
     /// https://api.sandbox.push.apple.com/3/device/<Device> \
-    /// -H "Authorization: Bearer <Token>" \
+    /// -H "Authorization: Bearer <JWT>" \
     /// -H "Content-Type: application/json" \
     /// -H "apns-topic: de.frederikkohler.CourtConnect" \
     /// -d '{
@@ -112,11 +105,3 @@ struct ApnsMessaging {
         case invalidDeviceToken, badRequest
     }
 }
-
-#Preview {
-    SendNotificationToDevice()
-}
-
-
-
-

@@ -7,8 +7,8 @@
 import Foundation
 
 struct ApiClient {
-    static let host = "https://anwqiuyfuhaebycbblrc.supabase.co"
-    static let key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFud3FpdXlmdWhhZWJ5Y2JibHJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzY2MzY0MTcsImV4cCI6MjA1MjIxMjQxN30.JBCicVin0f56ZLj8BL7YEIMIETVxOF0I_dfbyMtx-R4"
+    static let host = TokenService.supabaseHost
+    static let key = TokenService.supabaseHost
     static func login(email: String, password: String) {
         let url =  URL(string: host + "/auth/v1/sign_in")!
         var request = URLRequest(url: url)
@@ -30,12 +30,10 @@ struct ApiClient {
     static func isPingTest() async throws -> Bool {
         let url = URL(string: "https://google.de")!
         
-        let (data, response) = try await URLSession.shared.data(from: url)
+        let (_, response) = try await URLSession.shared.data(from: url)
         
         return response.isRequestSuccessful()
     }
-    
-    
 }
 
 extension URLResponse {
