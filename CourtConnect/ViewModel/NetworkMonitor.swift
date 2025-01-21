@@ -18,25 +18,16 @@ class NetworkMonitorViewModel: ObservableObject {
         checkConnection()
     }
     
-    func checkConnection() {
-        /*
-        await self.isPingTest { result in
-            self.isConnected = result
-        }
-         */
+    func checkConnection() { 
         self.monitor = NWPathMonitor()
         self.queue = DispatchQueue(label: "Monitor")
         monitor.start(queue: queue)
         monitor.pathUpdateHandler = { path in
             if path.status == .satisfied {
-                print("We're connected!")
                 self.isConnected = true
             } else {
-                print("No connection.")
                 self.isConnected = false
             }
-
-            print(path.isExpensive)
         }
     }
     

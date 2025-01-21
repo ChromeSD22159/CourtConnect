@@ -48,7 +48,6 @@ struct DashboardView: View {
 }
 
 #Preview {
-    MessageSheet {
-        DashboardView(userViewModel: SharedUserViewModel(repository: Repository(type: .preview)), networkMonitorViewModel: NetworkMonitorViewModel())
-    }
+    DashboardView(userViewModel: SharedUserViewModel(repository: Repository(type: .preview)), networkMonitorViewModel: NetworkMonitorViewModel())
+        .messagePopover()
 }

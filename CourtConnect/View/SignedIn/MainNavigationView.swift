@@ -14,7 +14,7 @@ struct MainNavigationView: View {
     @State var networkMonitorViewModel: NetworkMonitorViewModel = NetworkMonitorViewModel()
     
     var body: some View {
-        MessageSheet {
+        MessagePopover {
             TabView {
                 Tab("Home", systemImage: "house.fill") {
                     DashboardView(userViewModel: userViewModel, networkMonitorViewModel: networkMonitorViewModel)

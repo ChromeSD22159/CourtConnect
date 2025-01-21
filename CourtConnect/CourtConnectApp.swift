@@ -22,7 +22,7 @@ struct CourtConnectApp: App {
     
     private func loadRocketSimConnect() {
         guard (Bundle(path: "/Applications/RocketSim.app/Contents/Frameworks/RocketSimConnectLinker.nocache.framework")?.load() == true) else {
-            print("Failed to load linker framework")
+            print("RocketSim: Failed to load linker framework")
             return
         }
         print("RocketSim Connect successfully linked")

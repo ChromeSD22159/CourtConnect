@@ -4,9 +4,23 @@
 //
 //  Created by Frederik Kohler on 21.01.25.
 //
-import SwiftUI 
+import SwiftUI
 
-struct MessageSheet<Content: View>: View {
+extension View {
+    func messagePopover() -> some View {
+        modifier(MessagePopoverViewModifier())
+    }
+}
+
+struct MessagePopoverViewModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        MessagePopover {
+            content
+        }
+    }
+}
+
+struct MessagePopover<Content: View>: View {
     @State var viewModel = InAppMessagehandler.shared
     
     @ViewBuilder var content: () -> Content
@@ -39,10 +53,8 @@ struct MessageSheet<Content: View>: View {
 #Preview {
     @Previewable @State var viewModel = InAppMessagehandler.shared
     ZStack {
-        MessageSheet {
-            Button("asdsad") {
-                viewModel.handleMessage(message: InAppMessage(title: "Neue Nachricht von Frederik", body: "Neue Nachricht von Frederik"))
-            }
+        Button("asdsad") {
+            viewModel.handleMessage(message: InAppMessage(title: "Neue Nachricht von Frederik", body: "Neue Nachricht von Frederik"))
         }
-    }
+    }.messagePopover()
 }
