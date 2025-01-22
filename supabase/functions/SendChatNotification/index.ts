@@ -76,18 +76,8 @@ Deno.serve(async (req) => {
                 token: recipient.fcmToken,
                 notification: {
                   title: "Neue Nachricht von " + sender.firstName,
-                  body: payload.record.message,
-                  icon: "your_icon_name" 
-                }, apns: {
-                  payload: {
-                    aps: {
-                      'mutable-content': 1
-                    }
-                  },
-                  fcm_options: {
-                    image: 'https://foo.bar.pizza-monster.png'
-                  }
-                },
+                  body: payload.record.message
+                }, 
               },
             }),
           }
