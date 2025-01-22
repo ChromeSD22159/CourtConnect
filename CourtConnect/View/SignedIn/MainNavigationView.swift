@@ -23,7 +23,7 @@ struct MainNavigationView: View {
                     SettingsView(userViewModel: userViewModel, networkMonitorViewModel: networkMonitorViewModel)
                 }
             }
-        }
+        } 
         .sheet(isPresented: $userViewModel.showOnBoarding, content: {
             UserProfileEditView(userViewModel: userViewModel)
         })

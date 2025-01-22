@@ -13,11 +13,13 @@ interface Apns {
     title: string
     body: string
   }
+  badge: number
   sound: string
 }
 
 interface ApnsNotification {
   aps: Apns
+  customKey: string
 }
 
 interface Messages {
@@ -75,6 +77,16 @@ Deno.serve(async (req) => {
                 notification: {
                   title: "Neue Nachricht von " + sender.firstName,
                   body: payload.record.message,
+                  icon: "your_icon_name" 
+                }, apns: {
+                  payload: {
+                    aps: {
+                      'mutable-content': 1
+                    }
+                  },
+                  fcm_options: {
+                    image: 'https://foo.bar.pizza-monster.png'
+                  }
                 },
               },
             }),

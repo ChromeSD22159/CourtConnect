@@ -8,7 +8,7 @@ import Foundation
 
 struct ApiClient {
     static let host = TokenService.supabaseHost
-    static let key = TokenService.supabaseHost
+    static let key = TokenService.supabasekey
     static func login(email: String, password: String) {
         let url =  URL(string: host + "/auth/v1/sign_in")!
         var request = URLRequest(url: url)
