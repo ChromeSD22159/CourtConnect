@@ -6,20 +6,6 @@
 //
 import SwiftUI
 
-extension View {
-    func messagePopover() -> some View {
-        modifier(MessagePopoverViewModifier())
-    }
-}
-
-struct MessagePopoverViewModifier: ViewModifier {
-    func body(content: Content) -> some View {
-        MessagePopover {
-            content
-        }
-    }
-}
-
 struct MessagePopover<Content: View>: View {
     @State var viewModel = InAppMessagehandler.shared
     

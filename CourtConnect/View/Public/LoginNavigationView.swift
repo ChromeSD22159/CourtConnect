@@ -26,8 +26,8 @@ struct LoginNavigation: View {
                 case .forget: EmptyView()
                 }
             }
-        }
-        .task {             
+        } 
+        .task {
             userViewModel.isAuthendicated()
         }
         
