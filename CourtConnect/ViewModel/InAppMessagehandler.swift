@@ -9,7 +9,7 @@ import Foundation
 @Observable class InAppMessagehandler: Observable {
     static let shared = InAppMessagehandler()
     
-    var message: InAppMessage? = nil
+    var message: InAppMessage?
     
     func handleMessage(message: InAppMessage) {
         self.message = message

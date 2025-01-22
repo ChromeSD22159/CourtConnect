@@ -20,9 +20,7 @@ struct UserToolBar: ViewModifier {
                             }
                         
                         MenuButton(icon: "figure") {
-                            // TODO: IF PLAYER ACCOUNT
                             Button("Player") {}
-                            // TODO: IF TRAINER ACCOUNT
                             Button("Trainer") {}
                         }
                     }

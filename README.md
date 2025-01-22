@@ -52,6 +52,34 @@ Die App verwendet das MVVM-Pattern kombiniert mit einem Repository-Pattern und S
 - [ ] Statitiken für Teams
 - [ ] Multi Membership pro User
 
+
+## Ordnerstruktur
+* **Data:**
+    * APIClients: Verwaltung der API-Interaktionen
+    * Models: Definition der Datenmodelle
+    * Repositories: Datenzugriffsschicht
+    * Resources: Zusätzliche Ressourcen (z.B. lokale Daten)
+* **Resources:**
+    * Assets: Bilder, Icons und andere Assets
+    * Theme: Gestaltungselemente (Farben, Schriftarten)
+* **Services:**
+    * NotificationService: Verwaltung von Push-Benachrichtigungen
+    * Util: Hilfsfunktionen und Erweiterungen
+* **View:**
+    * Components: Wiederverwendbare UI-Komponenten
+    * Public: Öffentliche Schnittstellen und APIs
+    * SignedIn: Ansichten für angemeldete Benutzer
+    * ViewModel: ViewModels zur Datenverwaltung
+* **CourtConnect:**
+    * AppDelegate: Anwendungskonfiguration
+    * CourtConnectApp: Haupt-App-Datei
+    * Info: App-Informationen (z.B. Bundle-ID)
+    * TokenService: Verwaltung von Authentifizierungstoken
+* **Tests:**
+    * CourtConnectTests: Unit-Tests
+    * CourtConnectUITests: UI-Tests 
+
+
 ## Installation
 
 ### Voraussetzungen

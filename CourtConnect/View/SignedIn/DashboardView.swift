@@ -16,8 +16,7 @@ struct DashboardView: View {
                 if !networkMonitorViewModel.isConnected {
                     InternetUnavailableView()
                 } else {
-                    
-                    
+                    EmptyView()
                 }
             } 
             .navigationTitle("Daskboard")
@@ -39,8 +38,3 @@ struct DashboardView: View {
     ) 
     .messagePopover()
 }
-
-
-
-// TODO: Activity Diagram Egde function -> Notifications
-// TODO: Activity Diagram Sync logic
