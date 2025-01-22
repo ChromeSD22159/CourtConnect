@@ -37,7 +37,7 @@ class ChatRepository {
             dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ" // Passe das Format an
             let formattedLastSync = dateFormatter.string(from: lastSync)
             
-            let response: [Chat] = try await backendClient.supabase.from("Messages")
+            let response: [ChatDTO] = try await backendClient.supabase.from(SupabaseTable.messages.rawValue)
                .select()
                .or("senderId.eq.\(myUserId), recipientId.eq.\(recipientId), createdAt.gt.\(formattedLastSync)")
                .gte("createdAt", value: formattedLastSync)
@@ -46,6 +46,7 @@ class ChatRepository {
                .value 
 
             for chat in response {
+                let chat = chat.toChat()
                 container.mainContext.insert(chat)
                 try container.mainContext.save()
             }
@@ -63,7 +64,7 @@ class ChatRepository {
         guard type == .app else { return }
         
         do {
-            try await backendClient.supabase.from(SupabaseTable.messages.rawValue).insert(message).execute()
+            try await backendClient.supabase.from(SupabaseTable.messages.rawValue).insert(message.toChat()).execute()
             
             await syncChatFromBackend(myUserId: message.senderId, recipientId: message.recipientId, lastSync: lastDate) { chats in
                 complete(chats)
@@ -82,9 +83,8 @@ class ChatRepository {
             await channel.subscribe()
             
             for await insertion in inserts {
-                
-                if let message = await handleInsertedAndDecode(insertion) {
-                    container.mainContext.insert(message)
+                if let message: ChatDTO = await insertion.decodeTo() {
+                    container.mainContext.insert(message.toChat())
                     try container.mainContext.save()
                     
                     let all = try self.getAllFromDatabase(myUserId: myUserId, recipientId: recipientId)
@@ -94,24 +94,21 @@ class ChatRepository {
             }
         }
     }
-    
-    private func handleInsertedAndDecode(_ action: HasRecord) async -> Chat? {
+     
+    func delete(message: Chat) {
+         container.mainContext.delete(message)
+    }
+}  
+
+extension InsertAction {
+    func decodeTo<T:Codable>() async -> T? {
         do {
             let decoder = JSONDecoder()
             decoder.dateDecodingStrategy = .iso8601
-            
-            let decodedMessage = try action.decodeRecord(decoder: decoder) as Chat
-            return decodedMessage
+             
+            return try self.decodeRecord(decoder: decoder) as T?
         } catch {
             return nil
         }
     }
-    
-    func delete(message: Chat) {
-         container.mainContext.delete(message)
-    }
-} 
-
-enum CryptError: Error, LocalizedError {
-    case encrypt
-} 
+}

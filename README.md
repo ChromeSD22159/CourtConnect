@@ -112,8 +112,8 @@ brew install supabase
 Stelle sicher, dass Docker installiert und betriebsbereit ist.
 
 #### Server Functions:
-Lade die JSON-Datei für Firebase Admin (service-account.json) herunter.
-Diese Datei muss sich im Ordner Functions auf dem Server befinden, um serverseitige Firebase-Funktionen korrekt auszuführen.
+Lade die JSON-Datei für Firebase Admin herunter und benenne sie in service-account.json, und füge diese in "supabase/functions/<EdgeFuncName>/service-account.json" ein.
+Diese Datei muss sich im Ordner Functions auf dem Server befinden, um serverseitige Edge-Funktionen korrekt auszuführen.
 
 ## Kontakt Informationen  
 **Frederik Kohler**  

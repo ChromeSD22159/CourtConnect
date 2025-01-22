@@ -10,6 +10,7 @@ import FirebaseMessaging
 import FirebaseAuth
 
 @Observable
+@MainActor
 class SharedUserViewModel: ObservableObject {
     var user: FirebaseAuth.User?
     var userProfile: UserProfile?
@@ -34,7 +35,7 @@ class SharedUserViewModel: ObservableObject {
 
     let repository: Repository
     
-    @MainActor init(repository: Repository) {
+   init(repository: Repository) {
         self.repository = repository
     }
     

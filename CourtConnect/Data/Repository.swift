@@ -22,14 +22,26 @@ import SwiftData
         ])
         
         do {
-            let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: type == .preview ? true : false )
+            #if targetEnvironment(simulator)
+                let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: type == .preview ? true : false )
+                
+                let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
+                self.container = container
+                
+                self.userRepository = UserRepository(container: container)
+                self.chatRepository = ChatRepository(container: container, type: type)
+                self.syncHistoryRepository = SyncHistoryRepository(container: container, type: type)
+            #else
+                let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: type == .preview ? true : false )
+                
+                let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
+                self.container = container
+                
+                self.userRepository = UserRepository(container: container)
+                self.chatRepository = ChatRepository(container: container, type: type)
+                self.syncHistoryRepository = SyncHistoryRepository(container: container, type: type)
+            #endif
             
-            let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
-            self.container = container
-            
-            self.userRepository = UserRepository(container: container)
-            self.chatRepository = ChatRepository(container: container, type: type)
-            self.syncHistoryRepository = SyncHistoryRepository(container: container, type: type)
         } catch {
             fatalError("Cannot create Database \(error.localizedDescription)")
         }
