@@ -11,6 +11,7 @@ import SwiftData
 @MainActor class Repository {
     var userRepository: UserRepository
     let chatRepository: ChatRepository
+    let accountRepository: AccountRepository
     let syncHistoryRepository: SyncHistoryRepository
     let container: ModelContainer
     
@@ -18,32 +19,22 @@ import SwiftData
         let schema = Schema([
             UserProfile.self,
             Chat.self,
-            SyncHistory.self
+            SyncHistory.self,
+            UserAccount.self
         ])
         
-        do {
-            #if targetEnvironment(simulator)
-                let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: type == .preview ? true : false )
-                
-                let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
-                self.container = container
-                
-                self.userRepository = UserRepository(container: container)
-                self.chatRepository = ChatRepository(container: container, type: type)
-                self.syncHistoryRepository = SyncHistoryRepository(container: container, type: type)
-            #else
-                let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: type == .preview ? true : false )
-                
-                let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
-                self.container = container
-                
-                self.userRepository = UserRepository(container: container)
-                self.chatRepository = ChatRepository(container: container, type: type)
-                self.syncHistoryRepository = SyncHistoryRepository(container: container, type: type)
-            #endif
+        do {  
+            let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: type == .preview ? true : false )
             
+            let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
+            self.container = container
+            
+            self.userRepository = UserRepository(container: container)
+            self.chatRepository = ChatRepository(container: container, type: type)
+            self.accountRepository = AccountRepository(container: container, type: type)
+            self.syncHistoryRepository = SyncHistoryRepository(container: container, type: type) 
         } catch {
             fatalError("Cannot create Database \(error.localizedDescription)")
         }
-    }
-} 
+    } 
+}

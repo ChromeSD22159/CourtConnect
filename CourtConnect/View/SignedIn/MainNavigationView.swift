@@ -12,12 +12,18 @@ struct MainNavigationView: View {
     @Environment(\.scenePhase) var scenePhase
     
     @State var networkMonitorViewModel: NetworkMonitorViewModel = NetworkMonitorViewModel()
+    @State var userAccountViewModel: UserAccountViewModel
+    
+    init(userViewModel: SharedUserViewModel) {
+        self.userViewModel = userViewModel
+        self.userAccountViewModel = UserAccountViewModel(repository: userViewModel.repository, userId: userViewModel.user?.uid)
+    }
     
     var body: some View {
         MessagePopover {
             TabView {
                 Tab("Home", systemImage: "house.fill") {
-                    DashboardView(userViewModel: userViewModel, networkMonitorViewModel: networkMonitorViewModel)
+                    DashboardView(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel, networkMonitorViewModel: networkMonitorViewModel)
                 }
                 Tab("Settings", systemImage: "gear") {
                     SettingsView(userViewModel: userViewModel, networkMonitorViewModel: networkMonitorViewModel)
@@ -27,8 +33,14 @@ struct MainNavigationView: View {
         .sheet(isPresented: $userViewModel.showOnBoarding, content: {
             UserProfileEditView(userViewModel: userViewModel) 
         })
+        .onAppear {
+            userAccountViewModel.syncAccounts()
+            
+            userViewModel.currentAccount = userAccountViewModel.getCurrentAccount()
+        }
         .task {
             userViewModel.setUserOnline()
+            
             if await !NotificationService.getAuthStatus() {
                 await NotificationService.request()
             } 
@@ -40,6 +52,7 @@ struct MainNavigationView: View {
 }
  
 #Preview {
-    @Previewable @State var viewModel = SharedUserViewModel(repository: Repository(type: .preview))
-    MainNavigationView(userViewModel: viewModel)
+    @Previewable @State var userViewModel = SharedUserViewModel(repository: Repository(type: .preview))
+    @Previewable @State var userAccountViewModel = UserAccountViewModel(repository: Repository(type: .preview), userId: nil)
+    MainNavigationView(userViewModel: userViewModel)
 }

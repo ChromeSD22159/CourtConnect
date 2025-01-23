@@ -18,7 +18,7 @@ class SyncHistoryRepository {
         self.container = container
     }
       
-    func getLastSyncDate(for table: DatabaseTables, userId: String) throws -> SyncHistory? {
+    func getLastSyncDate(for table: DatabaseTable, userId: String) throws -> SyncHistory? {
         let tableString: String = table.rawValue
         let predicate = #Predicate<SyncHistory> { histery in
             histery.userId == userId && histery.table == tableString
@@ -31,12 +31,17 @@ class SyncHistoryRepository {
         return try container.mainContext.fetch(fetchDescriptor).first
     }
     
-    func insertTimestamp(for table: DatabaseTables, userId: String) throws {
+    func insertTimestamp(for table: DatabaseTable, userId: String) throws {
         let new = SyncHistory(table: table.rawValue, userId: userId)
         container.mainContext.insert(new)
     }
     
     func insertTimestamp(timestamp: SyncHistory) throws { 
         container.mainContext.insert(timestamp)
+    }
+    
+    var defaultDate: Date {
+        let cal = Calendar.current
+        return cal.date(byAdding: .year, value: -30, to: Date())!
     }
 }

@@ -14,6 +14,7 @@ import FirebaseAuth
 class SharedUserViewModel: ObservableObject {
     var user: FirebaseAuth.User?
     var userProfile: UserProfile?
+    var currentAccount: UserAccount?
     var showOnBoarding = false
     var showDeleteConfirmMenu = false
     var editProfile: UserProfile = UserProfile(userId: "", firstName: "", lastName: "", roleString: UserRole.player.rawValue, birthday: "", createdAt: Date(), updatedAt: Date())
