@@ -14,7 +14,7 @@ import UIKit
 class UserRepository {
     let container: ModelContainer
     let deviceToken: String
-    let backendClient:BackendClient
+    let backendClient: BackendClient
     let firebaseAuth: Auth
      
     init(container: ModelContainer) {
@@ -66,6 +66,7 @@ class UserRepository {
         return try container.mainContext.fetch(fetchDescriptor).first
     }
     
+    // https://supabase.com/dashboard/project/anwqiuyfuhaebycbblrc/sql/new
     func syncUserProfile(userId: String) async throws {
         let date: [UserProfile] = try await backendClient.supabase
             .from(DatabaseTables.userProfile.rawValue)
@@ -134,7 +135,7 @@ class UserRepository {
          return await isRequestSuccessful(statusCode: query.response.statusCode)
     }
     
-    func listenForOnlineUserComesOnline(completion: @escaping ([UserOnline]) -> Void) {
+    func listenForOnlineUserComesOnline(completion: @escaping (Result<[UserOnline], Error>) -> Void) {
         let channelInsertUserOnline = backendClient.supabase.realtimeV2.channel("public:UserOnline:insert")
           
         let insertions = channelInsertUserOnline.postgresChange(InsertAction.self, table: SupabaseTable.userOnline.rawValue)
@@ -142,12 +143,12 @@ class UserRepository {
             await channelInsertUserOnline.subscribe()
             for await _ in insertions {
                 let list = try await getOnlineUserList()
-                completion(list)
+                completion(.success(list))
             }
         }
     }
     
-    func listenForOnlineUserGoesOffline(completion: @escaping ([UserOnline]) -> Void) {
+    func listenForOnlineUserGoesOffline(completion: @escaping (Result<[UserOnline], Error>) -> Void) {
         let channelDeleteUserOnline = backendClient.supabase.realtimeV2.channel("public:UserOnline:delete")
          
         let deletions = channelDeleteUserOnline.postgresChange(DeleteAction.self, table: SupabaseTable.userOnline.rawValue)
@@ -155,7 +156,7 @@ class UserRepository {
             await channelDeleteUserOnline.subscribe()
             for await _ in deletions {
                 let list = try await getOnlineUserList()
-                completion(list)
+                completion(.success(list))
             }
         }
     }

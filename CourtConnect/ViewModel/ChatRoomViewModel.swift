@@ -34,16 +34,24 @@ class ChatRoomViewModel: ObservableObject {
         Task {
             do {
                 if let lastSync = try lastSyncDate() {
-                    try await self.repository.chatRepository.sendMessageToBackend(message: new, lastDate: lastSync, complete: { messages in
-                        self.messages = messages
-                        self.resetInput()
+                    try await self.repository.chatRepository.sendMessageToBackend(message: new, lastDate: lastSync, complete: { result in
+                        switch result {
+                        case .success(let messages):
+                            self.messages = messages
+                            self.resetInput()
+                        case .failure: break
+                        }
                     })
                     try self.repository.syncHistoryRepository.insertTimestamp(for: .chat, userId: myUser.userId)
                 } else {
                     let lastSync = self.repository.syncHistoryRepository.defaultStartDate
-                    try await self.repository.chatRepository.sendMessageToBackend(message: new, lastDate: lastSync, complete: { messages in
-                        self.messages = messages
-                        self.resetInput()
+                    try await self.repository.chatRepository.sendMessageToBackend(message: new, lastDate: lastSync, complete: { result in
+                        switch result {
+                        case .success(let messages):
+                            self.messages = messages
+                            self.resetInput()
+                        case .failure: break
+                        }
                     })
                 }
                 
@@ -57,13 +65,23 @@ class ChatRoomViewModel: ObservableObject {
     func getAllMessages() {
         Task {
             if let lastSync = try lastSyncDate() {
-                await repository.chatRepository.syncChatFromBackend(myUserId: myUser.userId, recipientId: recipientUser.userId, lastSync: lastSync) { messages in
-                    self.messages = messages
+                await repository.chatRepository.syncChatFromBackend(myUserId: myUser.userId, recipientId: recipientUser.userId, lastSync: lastSync) { result in
+                    switch result {
+                    case .success(let messages):
+                        self.messages = messages
+                        self.resetInput()
+                    case .failure: break
+                    }
                 }
             } else {
                 let lastSync = self.repository.syncHistoryRepository.defaultStartDate
-                await repository.chatRepository.syncChatFromBackend(myUserId: myUser.userId, recipientId: recipientUser.userId, lastSync: lastSync) { messages in
-                    self.messages = messages
+                await repository.chatRepository.syncChatFromBackend(myUserId: myUser.userId, recipientId: recipientUser.userId, lastSync: lastSync) { result in
+                    switch result {
+                    case .success(let messages):
+                        self.messages = messages
+                        self.resetInput()
+                    case .failure: break
+                    }
                 }
             }
         }
@@ -71,8 +89,13 @@ class ChatRoomViewModel: ObservableObject {
     
     func startReceiveMessages() {
         Task {
-            repository.chatRepository.receiveMessages(myUserId: myUser.userId, recipientId: recipientUser.userId, complete: { messages in
-                self.messages = messages
+            repository.chatRepository.receiveMessages(myUserId: myUser.userId, recipientId: recipientUser.userId, complete: { result in
+                switch result {
+                case .success(let messages):
+                    self.messages = messages
+                    self.resetInput()
+                case .failure: break
+                }
             })
         }
     }

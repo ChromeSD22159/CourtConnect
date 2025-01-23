@@ -14,6 +14,7 @@
 		B665325B2D3EC28F00B87D71 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B665325A2D3EC28F00B87D71 /* GoogleService-Info.plist */; };
 		B665325D2D3EC35300B87D71 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = B665325C2D3EC35300B87D71 /* README.md */; };
 		B66533A12D3F8E0A00B87D71 /* SwiftJWT in Frameworks */ = {isa = PBXBuildFile; productRef = B66533A02D3F8E0A00B87D71 /* SwiftJWT */; };
+		B6653A982D4014BC00B87D71 /* TokenService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6653A972D4014B800B87D71 /* TokenService.swift */; };
 		B698AC692D3335110086AF8C /* Functions in Frameworks */ = {isa = PBXBuildFile; productRef = B698AC682D3335110086AF8C /* Functions */; };
 		B698AC6B2D3335110086AF8C /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = B698AC6A2D3335110086AF8C /* PostgREST */; };
 		B698AC6D2D3335110086AF8C /* Realtime in Frameworks */ = {isa = PBXBuildFile; productRef = B698AC6C2D3335110086AF8C /* Realtime */; };
@@ -50,6 +51,7 @@
 		B66532582D3EC28500B87D71 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		B665325A2D3EC28F00B87D71 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B665325C2D3EC35300B87D71 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		B6653A972D4014B800B87D71 /* TokenService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenService.swift; sourceTree = "<group>"; };
 		B698ABFB2D330FC10086AF8C /* CourtConnect.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CourtConnect.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B698AC0D2D330FC30086AF8C /* CourtConnectTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CourtConnectTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B698AC172D330FC30086AF8C /* CourtConnectUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CourtConnectUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -131,6 +133,7 @@
 			children = (
 				B66532582D3EC28500B87D71 /* .gitignore */,
 				B665325A2D3EC28F00B87D71 /* GoogleService-Info.plist */,
+				B6653A972D4014B800B87D71 /* TokenService.swift */,
 				B6652B3F2D3E4E8C00B87D71 /* .swiftlint.yml */,
 				B665325C2D3EC35300B87D71 /* README.md */,
 				B698ABFD2D330FC10086AF8C /* CourtConnect */,
@@ -329,6 +332,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B6653A982D4014BC00B87D71 /* TokenService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

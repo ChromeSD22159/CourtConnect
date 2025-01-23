@@ -119,4 +119,4 @@ struct LoginView: View {
 #Preview {
     let repo = Repository(type: .preview)
     LoginView(userViewModel: SharedUserViewModel(repository: repo))
-}
+} 

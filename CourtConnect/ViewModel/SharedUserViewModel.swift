@@ -35,7 +35,7 @@ class SharedUserViewModel: ObservableObject {
 
     let repository: Repository
     
-   init(repository: Repository) {
+    @MainActor init(repository: Repository) {
         self.repository = repository
     }
     
@@ -96,7 +96,7 @@ class SharedUserViewModel: ObservableObject {
     
     func isAuthendicated() {
         Task {
-            if let user = try await self.repository.userRepository.isAuthendicated(), let userProfile = try await self.repository.userRepository.getUserProfileFromDatabase(userId: user.uid) {
+            if let user = try await self.repository.userRepository.isAuthendicated(), let userProfile = try self.repository.userRepository.getUserProfileFromDatabase(userId: user.uid) {
                 withAnimation {
                     self.user = user
                     self.userProfile = userProfile
@@ -173,16 +173,22 @@ class SharedUserViewModel: ObservableObject {
     
     private func listenForOnlineUserComesOnline() {
         Task {
-            await self.repository.userRepository.listenForOnlineUserComesOnline { onlineUserList in
-                self.onlineUser = onlineUserList
+            self.repository.userRepository.listenForOnlineUserComesOnline { result in
+                switch result {
+                case .success(let userList): self.onlineUser = userList
+                case .failure: break
+                }
             }
         }
     }
     
     private func listenForOnlineUserGoesOffline() {
         Task {
-            await self.repository.userRepository.listenForOnlineUserGoesOffline { onlineUserList in
-                self.onlineUser = onlineUserList
+            self.repository.userRepository.listenForOnlineUserGoesOffline { result in
+                switch result {
+                case .success(let userList): self.onlineUser = userList
+                case .failure: break
+                }
             }
         }
     }

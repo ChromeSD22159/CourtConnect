@@ -31,7 +31,7 @@ class ChatRepository {
         return try container.mainContext.fetch(fetchDescriptor)
     }
     
-    func syncChatFromBackend(myUserId: String, recipientId: String, lastSync: Date ,complete: @escaping ([Chat]) -> Void) async {
+    func syncChatFromBackend(myUserId: String, recipientId: String, lastSync: Date, complete: @escaping (Result<[Chat], Error>) -> Void) async {
         do {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ" // Passe das Format an
@@ -53,28 +53,31 @@ class ChatRepository {
             
             let all = try getAllFromDatabase(myUserId: myUserId, recipientId: recipientId)
             
-            complete(all)
+            complete(.success(all))
         } catch {
             print("Fehler beim Abrufen von Nachrichten:", error)
-            complete([])
+            complete(.failure(error))
         }
     }
     
-    func sendMessageToBackend(message: Chat, lastDate: Date, complete: @escaping ([Chat]) -> Void) async throws {
+    func sendMessageToBackend(message: Chat, lastDate: Date, complete: @escaping (Result<[Chat], Error>) -> Void) async throws {
         guard type == .app else { return }
         
         do {
             try await backendClient.supabase.from(SupabaseTable.messages.rawValue).insert(message.toChat()).execute()
             
-            await syncChatFromBackend(myUserId: message.senderId, recipientId: message.recipientId, lastSync: lastDate) { chats in
-                complete(chats)
+            await syncChatFromBackend(myUserId: message.senderId, recipientId: message.recipientId, lastSync: lastDate) { result in
+                switch result {
+                case .success(let chats): complete(.success(chats))
+                case .failure(let error): complete(.failure(error))
+                }
             }
         } catch {
             throw error
         }
     }
     
-    func receiveMessages(myUserId: String, recipientId: String, complete: @escaping ([Chat]) -> Void) {
+    func receiveMessages(myUserId: String, recipientId: String, complete: @escaping (Result<[Chat], Error>) -> Void) {
         let channel = backendClient.supabase.realtimeV2.channel("public:Messages")
          
         let inserts = channel.postgresChange(InsertAction.self, table: SupabaseTable.messages.rawValue)
@@ -84,12 +87,13 @@ class ChatRepository {
             
             for await insertion in inserts {
                 if let message: ChatDTO = await insertion.decodeTo() {
+                    
                     container.mainContext.insert(message.toChat())
                     try container.mainContext.save()
                     
                     let all = try self.getAllFromDatabase(myUserId: myUserId, recipientId: recipientId)
                     
-                    complete(all)
+                    complete(.success(all))
                 }
             }
         }
@@ -98,7 +102,17 @@ class ChatRepository {
     func delete(message: Chat) {
          container.mainContext.delete(message)
     }
-}  
+}
+
+enum ChatError: Error, LocalizedError {
+    case whileSendindToServer
+    
+    var errorDescription: String? {
+        switch self {
+        case .whileSendindToServer: return "whileSendindToServer"
+        }
+    }
+}
 
 extension InsertAction {
     func decodeTo<T:Codable>() async -> T? {

@@ -65,7 +65,7 @@ Deno.serve(async (req) => {
         })
           
         const res = await fetch(
-          `https://fcm.googleapis.com/v1/projects/${serviceAccount.project_id}/messages:send`, {
+            `https://fcm.googleapis.com/v1/projects/${serviceAccount.project_id}/messages:send`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
