@@ -27,8 +27,10 @@ struct MainNavigationView: View {
                 }
                 Tab("Settings", systemImage: "gear") {
                     SettingsView(userViewModel: userViewModel, networkMonitorViewModel: networkMonitorViewModel)
+                        .environment(userAccountViewModel)
                 }
             }
+            .accentColor(Theme.lightOrange)
         }
         .sheet(isPresented: $userViewModel.showOnBoarding, content: {
             UserProfileEditView(userViewModel: userViewModel) 

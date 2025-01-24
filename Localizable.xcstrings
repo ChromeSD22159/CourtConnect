@@ -28,10 +28,10 @@
     "Daskboard" : {
 
     },
-    "DEBUG" : {
+    "DEBUG DELETE All UserAccounts" : {
 
     },
-    "DEBUG DELETE" : {
+    "DEBUG Options" : {
 
     },
     "Deine Nachricht" : {
@@ -47,6 +47,9 @@
 
     },
     "Delete your Account" : {
+
+    },
+    "Development" : {
 
     },
     "E-Mail" : {
@@ -71,6 +74,9 @@
 
     },
     "Home" : {
+
+    },
+    "isBackendLocal" : {
 
     },
     "Keep me signed in" : {

@@ -20,6 +20,7 @@ struct CourtConnectApp: App {
         #warning("RocketSim Connect successfully linked")
     }
     #endif
+    
     @State var isSlashScreen = true
     var body: some Scene {
         WindowGroup {
@@ -28,7 +29,7 @@ struct CourtConnectApp: App {
                     LoginNavigation(repository: Repository(type: .app))
                         .opacity(isSlashScreen ? 0 : 1)
                     
-                    SplashScreen(duration: 3.0, isVisible: $isSlashScreen) {
+                    SplashScreen(duration: 1.5, isVisible: $isSlashScreen) {
                         isSlashScreen.toggle()
                     }
                 }

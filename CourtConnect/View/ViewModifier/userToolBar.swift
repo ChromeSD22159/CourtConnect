@@ -14,12 +14,7 @@ struct UserToolBar: ViewModifier {
             .sheet(isPresented: $userAccountViewModel.isCreateRoleSheet, content: {
                 CreateUserAccountView(userAccountViewModel: userAccountViewModel, userViewModel: userViewModel) 
             })
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    NavigationLink("DEBUG") {
-                        DebugView(userAccountViewModel: userAccountViewModel, userViewModel: userViewModel)
-                    }
-                }
+            .toolbar { 
                 ToolbarItem(placement: .navigationBarTrailing) {
                     HStack {
                         Image(systemName: "person.fill")
@@ -51,27 +46,15 @@ struct UserToolBar: ViewModifier {
                                 } label: {
                                     Label("Create User Account", systemImage: "plus")
                                 }
+                                
                             }
                         }
                     }
-                    .foregroundStyle(.red)
+                    .foregroundStyle(Theme.lightOrange)
                 }
             } 
     }
-}
-
-struct DebugView: View {
-    @ObservedObject var userAccountViewModel: UserAccountViewModel
-    @ObservedObject var userViewModel: SharedUserViewModel
-    var body: some View {
-        Form {
-            Button("DEBUG DELETE") {
-                userAccountViewModel.debugdelete()
-                userViewModel.setCurrentAccount(newAccount: nil)
-            }.padding(.top, 50)
-        }
-    }
-}
+} 
 
 extension View {
     /// REQUIRE

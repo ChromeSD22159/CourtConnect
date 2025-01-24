@@ -8,8 +8,12 @@ import Foundation
 import SwiftUI
 
 struct SettingsView: View {
+    @Environment(UserAccountViewModel.self) var userAccountViewModel: UserAccountViewModel
     @ObservedObject var userViewModel: SharedUserViewModel
     @ObservedObject var networkMonitorViewModel: NetworkMonitorViewModel
+    
+    @AppStorage("isBackendLocal") var isBackendLocal = true
+    
     var body: some View {
         NavigationStack {
             List {
@@ -23,6 +27,17 @@ struct SettingsView: View {
 
                 } header: {
                     Text("Profile")
+                }
+                
+                Section {
+                    NavigationLink("DEBUG Options") {
+                        DebugView(userAccountViewModel: userAccountViewModel, userViewModel: userViewModel)
+                    }
+                    
+                    Toggle("isBackendLocal", isOn: $isBackendLocal)
+                        .tint(Theme.lightOrange)
+                } header: {
+                    Text("Development")
                 }
                 
                 Section {
@@ -61,7 +76,7 @@ struct SettingsView: View {
                             userViewModel.showDeleteConfirmMenu.toggle()
                         }
                         .foregroundStyle(.white)
-                        .listRowBackground(Color.red)
+                        .listRowBackground(Theme.lightOrange)
                         .confirmationDialog("Delete your Account", isPresented: $userViewModel.showDeleteConfirmMenu) {
                             Button("Delete", role: .destructive) {  userViewModel.deleteUserAccount() }
                             Button("Cancel", role: .cancel) { userViewModel.showDeleteConfirmMenu.toggle() }
@@ -76,7 +91,7 @@ struct SettingsView: View {
                             userViewModel.signOut()
                         }
                         .foregroundStyle(.white)
-                        .listRowBackground(Color.red)
+                        .listRowBackground(Theme.darkOrange)
                 }
             }
             .navigationTitle("Settings")
@@ -89,6 +104,19 @@ struct SettingsView: View {
     }
 }
  
+fileprivate struct DebugView: View {
+    @ObservedObject var userAccountViewModel: UserAccountViewModel
+    @ObservedObject var userViewModel: SharedUserViewModel
+    var body: some View {
+        Form {
+            Button("DEBUG DELETE All UserAccounts") {
+                userAccountViewModel.debugdelete()
+                userViewModel.setCurrentAccount(newAccount: nil)
+            }
+        }
+    }
+}
+
 fileprivate struct OnlineUserList: View {
     @ObservedObject var userViewModel: SharedUserViewModel
     @ObservedObject var networkMonitorViewModel: NetworkMonitorViewModel
@@ -126,4 +154,5 @@ fileprivate struct OnlineUserList: View {
 
 #Preview {
     SettingsView(userViewModel: SharedUserViewModel(repository: Repository(type: .preview)), networkMonitorViewModel: NetworkMonitorViewModel())
+        .environment(UserAccountViewModel(repository: Repository(type: .preview), userId: nil))
 }
