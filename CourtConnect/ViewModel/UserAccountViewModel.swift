@@ -5,17 +5,15 @@
 //  Created by Frederik Kohler on 23.01.25.
 //
 import FirebaseAuth
+
 @Observable
 @MainActor
-class UserAccountViewModel: ObservableObject {
-    private let repository: Repository
-    private var userId: String?
+class UserAccountViewModel: SyncronizationViewModelProtocol, ObservableObject {
     
+    var repository: Repository
+    var userId: String? 
     var accounts: [UserAccount] = []
-    
     var isCreateRoleSheet = false
-    
-    /// SHEET
     var role: UserRole = .player
     var position: BasketballPosition = .center
     
@@ -24,7 +22,7 @@ class UserAccountViewModel: ObservableObject {
         self.userId = userId
     }
     
-    private func getLastSyncDate(userId: String) throws -> Date {
+    func getLastSyncDate(userId: String) throws -> Date {
         return try repository.syncHistoryRepository.getLastSyncDate(for: .userAccount, userId: userId)?.timestamp ?? repository.syncHistoryRepository.defaultDate
     }
     
@@ -33,7 +31,7 @@ class UserAccountViewModel: ObservableObject {
         
         let account = UserAccount(userId: userId, teamId: "", position: position.rawValue, role: role.rawValue, createdAt: Date(), updatedAt: Date())
         
-        try repository.accountRepository.usert(account: account)
+        try repository.accountRepository.usert(item: account)
         
         self.getAllFromDatabase()
         
@@ -69,7 +67,7 @@ class UserAccountViewModel: ObservableObject {
     func deleteUserAccount(userAccount: UserAccount) { 
         Task {
             do {
-                try repository.accountRepository.softDelete(account: userAccount)
+                try repository.accountRepository.softDelete(item: userAccount)
                 
                 getAllFromDatabase()
             } catch {
@@ -90,7 +88,7 @@ class UserAccountViewModel: ObservableObject {
     
     // Remote
     func sendToServer(account: UserAccount) async throws {
-        try await repository.accountRepository.sendToBackend(account: account)
+        try await repository.accountRepository.sendToBackend(item: account)
     }
     
     func importAccountsAfterLastSyncFromBackend() {
@@ -101,7 +99,7 @@ class UserAccountViewModel: ObservableObject {
                 let result = try await repository.accountRepository.fetchFromServer(after: lastSync)
                 
                 for account in result {
-                    try repository.accountRepository.usert(account: account.toUserAccount())
+                    try repository.accountRepository.usert(item: account.toUserAccount())
                 }
                 
                 try self.repository.syncHistoryRepository.insertTimestamp(for: .userAccount, userId: userId)
@@ -124,4 +122,4 @@ class UserAccountViewModel: ObservableObject {
             }
         }
     }
-}
+} 

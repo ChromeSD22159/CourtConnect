@@ -16,6 +16,7 @@
 		B66533A12D3F8E0A00B87D71 /* SwiftJWT in Frameworks */ = {isa = PBXBuildFile; productRef = B66533A02D3F8E0A00B87D71 /* SwiftJWT */; };
 		B6653A982D4014BC00B87D71 /* TokenService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6653A972D4014B800B87D71 /* TokenService.swift */; };
 		B6653C592D42C00D00B87D71 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = B6653C582D42C00D00B87D71 /* Localizable.xcstrings */; };
+		B6653E262D43893400B87D71 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = B6653E252D43893400B87D71 /* Lottie */; };
 		B698AC692D3335110086AF8C /* Functions in Frameworks */ = {isa = PBXBuildFile; productRef = B698AC682D3335110086AF8C /* Functions */; };
 		B698AC6B2D3335110086AF8C /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = B698AC6A2D3335110086AF8C /* PostgREST */; };
 		B698AC6D2D3335110086AF8C /* Realtime in Frameworks */ = {isa = PBXBuildFile; productRef = B698AC6C2D3335110086AF8C /* Realtime */; };
@@ -101,6 +102,7 @@
 				B698AC6B2D3335110086AF8C /* PostgREST in Frameworks */,
 				B698AC692D3335110086AF8C /* Functions in Frameworks */,
 				B698AC7C2D3335F20086AF8C /* Supabase in Frameworks */,
+				B6653E262D43893400B87D71 /* Lottie in Frameworks */,
 				B698AC6F2D3335110086AF8C /* Storage in Frameworks */,
 				B6B1D4CF2D3D434E00251542 /* FirebaseCore in Frameworks */,
 				B66533A12D3F8E0A00B87D71 /* SwiftJWT in Frameworks */,
@@ -195,6 +197,7 @@
 				B6B1D4CE2D3D434E00251542 /* FirebaseCore */,
 				B6652A502D3DAA2E00B87D71 /* FirebaseAuth */,
 				B66533A02D3F8E0A00B87D71 /* SwiftJWT */,
+				B6653E252D43893400B87D71 /* Lottie */,
 			);
 			productName = CourtConnect;
 			productReference = B698ABFB2D330FC10086AF8C /* CourtConnect.app */;
@@ -290,6 +293,7 @@
 				B6B1D4CB2D3D42A900251542 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				B6652B2C2D3E411B00B87D71 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */,
 				B665339F2D3F8E0A00B87D71 /* XCRemoteSwiftPackageReference "Swift-JWT" */,
+				B6653E242D43893400B87D71 /* XCRemoteSwiftPackageReference "lottie-ios" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B698ABFC2D330FC10086AF8C /* Products */;
@@ -708,6 +712,14 @@
 				minimumVersion = 4.0.2;
 			};
 		};
+		B6653E242D43893400B87D71 /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.5.1;
+			};
+		};
 		B698AC652D3335100086AF8C /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/supabase/supabase-swift.git";
@@ -746,6 +758,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B665339F2D3F8E0A00B87D71 /* XCRemoteSwiftPackageReference "Swift-JWT" */;
 			productName = SwiftJWT;
+		};
+		B6653E252D43893400B87D71 /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B6653E242D43893400B87D71 /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			productName = Lottie;
 		};
 		B698AC682D3335110086AF8C /* Functions */ = {
 			isa = XCSwiftPackageProductDependency;

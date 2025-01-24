@@ -8,19 +8,19 @@
 import SwiftData
 import SwiftUI
 import FirebaseAuth
-
-@MainActor
-class AccountRepository {
-    let backendClient = BackendClient.shared
-    let container: ModelContainer
+ 
+class AccountRepository: SyncronizationProtocol {
+    
+    var backendClient = BackendClient.shared
+    var container: ModelContainer
     
     init(container: ModelContainer, type: RepositoryType) {
         self.container = container
     }
     
     // MARK: - Local
-    func usert(account: UserAccount) throws {
-        container.mainContext.insert(account)
+    func usert(item: UserAccount) throws {
+        container.mainContext.insert(item)
         try container.mainContext.save()
     }
     
@@ -57,11 +57,11 @@ class AccountRepository {
         return result
     }
     
-    func softDelete(account: UserAccount) throws {
-        account.updatedAt = Date()
-        account.deletedAt = Date()
+    func softDelete(item: UserAccount) throws {
+        item.updatedAt = Date()
+        item.deletedAt = Date()
         
-        try usert(account: account)
+        try usert(item: item)
     }
     
     func debugDelete() throws {
@@ -84,7 +84,7 @@ class AccountRepository {
                 let result = try container.mainContext.fetch(fetchDescriptor)
 
                 for account in result {
-                    try await self.sendToBackend(account: account)
+                    try await self.sendToBackend(item: account)
                 }
             } catch {
                 print("cannot send: \(error)")
@@ -92,10 +92,10 @@ class AccountRepository {
         }
     }
     
-    func sendToBackend(account: UserAccount) async throws { 
+    func sendToBackend(item: UserAccount) async throws {
         try await backendClient.supabase
             .from(DatabaseTable.userAccount.rawValue)
-            .upsert(account.toUserAccountDTO(), onConflict: "id")
+            .upsert(item.toUserAccountDTO(), onConflict: "id")
             .execute()
             .value
     }
@@ -108,4 +108,4 @@ class AccountRepository {
             .execute()
             .value
     }
-}
+} 
