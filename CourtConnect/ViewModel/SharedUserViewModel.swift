@@ -7,12 +7,23 @@
 import Foundation
 import SwiftUI
 import FirebaseMessaging
-import FirebaseAuth
+import Supabase
+ 
+struct SupabaseUser: Identifiable, Codable {
+    var id: UUID
+    var uid: String
+}
 
+extension User {
+    func toSupabaseUser() -> SupabaseUser {
+        return SupabaseUser(id: self.id, uid: self.id.uuidString)
+    }
+}
+ 
 @Observable
 @MainActor
 class SharedUserViewModel: ObservableObject {
-    var user: FirebaseAuth.User?
+    var user: SupabaseUser? = LocalStorageService.shared.user
     var userProfile: UserProfile?
     var currentAccount: UserAccount?
     var showOnBoarding = false
@@ -98,9 +109,9 @@ class SharedUserViewModel: ObservableObject {
     
     func isAuthendicated() {
         Task {
-            if let user = try await self.repository.userRepository.isAuthendicated(), let userProfile = try self.repository.userRepository.getUserProfileFromDatabase(userId: user.uid) {
+            if let user = try await self.repository.userRepository.isAuthendicated(), let userProfile = try self.repository.userRepository.getUserProfileFromDatabase(userId: user.id.uuidString) {
                 withAnimation {
-                    self.user = user
+                    self.user = SupabaseUser(id: user.id, uid: user.id.uuidString)
                     self.userProfile = userProfile
                 }
             }
@@ -123,7 +134,7 @@ class SharedUserViewModel: ObservableObject {
                     userProfile.fcmToken = fcmToken
                 }
                 
-                _ = try await self.repository.userRepository.setUserOnline(user: user, userProfile: userProfile)
+                _ = try await self.repository.userRepository.setUserOnline(userId: user.uid, userProfile: userProfile)
                 
                 self.onlineUser = try await self.repository.userRepository.getOnlineUserList()
                 
@@ -136,7 +147,7 @@ class SharedUserViewModel: ObservableObject {
         guard let user = user else { return }
         Task {
             do {
-                _ = try await self.repository.userRepository.setUserOffline(user: user)
+                _ = try await self.repository.userRepository.setUserOffline(userId: user.uid)
             } catch { print(error) }
         }
     } 
@@ -160,10 +171,11 @@ class SharedUserViewModel: ObservableObject {
     }
     
     func deleteUserAccount() {
+        guard let user = user else { return }
         Task {
             do {
                 try await repository.userRepository.signOut()
-                try await repository.userRepository.deleteUserAccount()
+                try await repository.userRepository.deleteUserAccount(userId: user.uid)
                 
                 self.user = nil
                 self.userProfile = nil

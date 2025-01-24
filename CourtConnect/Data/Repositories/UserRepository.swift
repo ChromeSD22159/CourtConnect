@@ -7,7 +7,6 @@
 import SwiftData
 import Foundation
 import Supabase
-import FirebaseAuth
 import UIKit
 
 @MainActor
@@ -15,19 +14,17 @@ class UserRepository {
     let container: ModelContainer
     let deviceToken: String
     let backendClient: BackendClient
-    let firebaseAuth: Auth
      
     init(container: ModelContainer) {
         self.container = container
         self.deviceToken = UIDevice.current.identifierForVendor!.uuidString
         self.backendClient = BackendClient.shared
-        self.firebaseAuth = Auth.auth()
     }
        
     /// LOGIN INTO SUPABASE
-    func signIn(email:String, password: String) async throws -> FirebaseAuth.User {
+    func signIn(email:String, password: String) async throws -> User {
         do {
-            let result = try await firebaseAuth.signIn(withEmail: email, password: password)
+            let result = try await backendClient.supabase.auth.signIn(email: email, password: password)
             return result.user
         } catch {
             throw error
@@ -35,9 +32,10 @@ class UserRepository {
     }
     
     /// REGISTER AND LOGIN INTO SUPABASE
-    func signUp(email:String, password: String) async throws -> FirebaseAuth.User {
+    func signUp(email:String, password: String) async throws -> User {
         do {
-            let result = try await firebaseAuth.createUser(withEmail: email, password: password)
+            let result = try await backendClient.supabase.auth.signUp(email: email, password: password)
+            
             return result.user
         } catch {
             throw error
@@ -50,8 +48,8 @@ class UserRepository {
     }
     
     /// CHECK IF LOGGEDIN AND SET USER / USERPROFILE
-    func isAuthendicated() async throws -> FirebaseAuth.User? {
-        return firebaseAuth.currentUser
+    func isAuthendicated() async throws -> User? {
+        return backendClient.supabase.auth.currentUser
     }
     
     func getUserProfileFromDatabase(userId: String) throws -> UserProfile? {
@@ -65,8 +63,7 @@ class UserRepository {
          
         return try container.mainContext.fetch(fetchDescriptor).first
     }
-    
-    // https://supabase.com/dashboard/project/anwqiuyfuhaebycbblrc/sql/new
+     
     func syncUserProfile(userId: String) async throws {
         let date: [UserProfile] = try await backendClient.supabase
             .from(DatabaseTable.userProfile.rawValue)
@@ -95,8 +92,8 @@ class UserRepository {
             .execute()
     }
     
-    func removeUserProfile(user: FirebaseAuth.User) throws {
-        let userId = user.uid
+    func removeUserProfile(user: User) throws {
+        let userId = user.id.uuidString
         let predicate = #Predicate<UserProfile> {
             $0.userId == userId
         }
@@ -113,8 +110,8 @@ class UserRepository {
         }
     }
     
-    func setUserOnline(user: FirebaseAuth.User, userProfile: UserProfile) async throws -> Bool {
-        let userOnline = UserOnline(userId: user.uid, firstName: userProfile.firstName, lastName: userProfile.lastName, deviceToken: self.deviceToken)
+    func setUserOnline(userId: String, userProfile: UserProfile) async throws -> Bool {
+        let userOnline = UserOnline(userId: userId, firstName: userProfile.firstName, lastName: userProfile.lastName, deviceToken: self.deviceToken)
         
         try await backendClient.supabase
             .from(DatabaseTable.userOnline.rawValue)
@@ -124,11 +121,11 @@ class UserRepository {
         return await isRequestSuccessful(statusCode: 201)
     }
     
-    func setUserOffline(user: FirebaseAuth.User) async throws -> Bool {
+    func setUserOffline(userId: String) async throws -> Bool {
          let query = try await backendClient.supabase
             .from(DatabaseTable.userOnline.rawValue)
            .delete()
-           .match(["userId": user.uid, "deviceToken": self.deviceToken])
+           .match(["userId": userId, "deviceToken": self.deviceToken])
            .execute()
 
          // Check the response status code
@@ -188,17 +185,7 @@ class UserRepository {
         return (200...299).contains(statusCode)
     }
     
-    func deleteUserAccount() async throws { 
-        try await firebaseAuth.currentUser?.delete()
+    func deleteUserAccount(userId: String) async throws {
+        try await backendClient.supabase.auth.admin.deleteUser(id: userId)
     }
-}
-
-struct MockUser { 
-    static let myUserProfile = UserProfile(userId: UUID(uuidString: "00000000-0000-0000-0000-000000000000")!.uuidString, firstName: "Frederik", lastName: "Kohler", roleString: UserRole.player.rawValue, birthday: "22.11.1986")
-    
-    static let userList = [
-        myUserProfile,
-        UserProfile(userId: UUID(uuidString: "00000000-0000-0000-0000-000000000010")!.uuidString, firstName: "Sabina", lastName: "Hodel", roleString: UserRole.player.rawValue, birthday: "21.06.1995"),
-        UserProfile(userId: UUID(uuidString: "00000000-0000-0000-0000-000000000020")!.uuidString, firstName: "Nico", lastName: "Kohler", roleString: UserRole.player.rawValue, birthday: "08.01.2010")
-    ]
 }

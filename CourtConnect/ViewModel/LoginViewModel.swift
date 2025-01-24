@@ -5,7 +5,7 @@
 //  Created by Frederik Kohler on 11.01.25.
 //
 import Foundation
-import FirebaseAuth
+import Supabase
 
 @Observable class LoginViewModel: ObservableObject {
     var repository: Repository
@@ -35,8 +35,8 @@ import FirebaseAuth
         
         let user = try await repository.userRepository.signIn(email: email, password: password)
          
-        try await repository.userRepository.syncUserProfile(userId: user.uid)
-        let userProfile = try await repository.userRepository.getUserProfileFromDatabase(userId: user.uid)
+        try await repository.userRepository.syncUserProfile(userId: user.id.uuidString)
+        let userProfile = try await repository.userRepository.getUserProfileFromDatabase(userId: user.id.uuidString)
         return ( user , userProfile )
     }
     

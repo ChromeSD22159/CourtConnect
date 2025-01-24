@@ -9,7 +9,7 @@ import Lottie
 
 struct SplashScreen: View {
     @State private var playbackMode: LottiePlaybackMode = LottiePlaybackMode.paused
-    var duration: Double
+    var duration: Double // 2
     @Binding var isVisible: Bool
     @State var logoVisibility = true
     @State var animationVisibility = true

@@ -5,6 +5,7 @@
 //  Created by Frederik Kohler on 11.01.25.
 //
 import SwiftUI 
+import Supabase
 
 struct LoginView: View {
     @State var viewModel: LoginViewModel
@@ -89,7 +90,10 @@ struct LoginView: View {
                     do {
                         let (user, userProfile) = try await viewModel.signIn()
                         
-                        userViewModel.user = user
+                        if let user = user {
+                            userViewModel.user = SupabaseUser(id: user.id, uid: user.id.uuidString)
+                        }
+                        
                         userViewModel.userProfile = userProfile
                     } catch {
                         

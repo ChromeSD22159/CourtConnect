@@ -8,8 +8,8 @@ import Foundation
 import SwiftData
 
 @MainActor protocol SyncronizationProtocol {
-    associatedtype LocalModel
-    associatedtype RemoteDTO
+    associatedtype LocalModel: PersistentModel
+    associatedtype RemoteDTO: Codable
     var backendClient: BackendClient { get set }
     var container: ModelContainer { get set }
     func usert(item: LocalModel) throws

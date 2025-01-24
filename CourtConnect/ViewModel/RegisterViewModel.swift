@@ -4,8 +4,8 @@
 //
 //  Created by Frederik Kohler on 11.01.25.
 //
-import Foundation 
-import FirebaseAuth
+import Foundation
+import Supabase
 
 @Observable class RegisterViewModel: ObservableObject {
     var repository: Repository
@@ -39,7 +39,7 @@ import FirebaseAuth
         do {
             let user = try await repository.userRepository.signUp(email: email, password: password)
             let date = Date()
-            let profile = UserProfile(userId: user.uid, firstName: firstName, lastName: lastName, roleString: role.rawValue, birthday: DateUtil.dateDDMMYYYYToString(date: birthday), createdAt: date, updatedAt: date, lastOnline: date)
+            let profile = UserProfile(userId: user.id.uuidString, firstName: firstName, lastName: lastName, roleString: role.rawValue, birthday: DateUtil.dateDDMMYYYYToString(date: birthday), createdAt: date, updatedAt: date, lastOnline: date)
             try await repository.userRepository.sendUserProfileToBackend(profile: profile)
             return ( user, profile )
         } catch {

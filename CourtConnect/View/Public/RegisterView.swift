@@ -135,7 +135,10 @@ struct RegisterView: View {
                 Task {
                     let (user, profile) = await viewModel.signUp()
                     
-                    userViewModel.user = user
+                    if let user = user {
+                        userViewModel.user = SupabaseUser(id: user.id, uid: user.id.uuidString)
+                    }
+                    
                     userViewModel.userProfile = profile
                 }
             }
