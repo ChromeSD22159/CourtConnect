@@ -1,0 +1,168 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Account Type:" : {
+
+    },
+    "App Status" : {
+
+    },
+    "Birthday" : {
+
+    },
+    "Cancel" : {
+
+    },
+    "Create" : {
+
+    },
+    "Create New Account or Switch to Existing Account" : {
+
+    },
+    "Create User Account" : {
+
+    },
+    "createdAt: %@" : {
+
+    },
+    "Daskboard" : {
+
+    },
+    "DEBUG" : {
+
+    },
+    "DEBUG DELETE" : {
+
+    },
+    "Deine Nachricht" : {
+
+    },
+    "Delete" : {
+
+    },
+    "Delete Local Chat" : {
+
+    },
+    "Delete User Account" : {
+
+    },
+    "Delete your Account" : {
+
+    },
+    "E-Mail" : {
+
+    },
+    "Edit User" : {
+
+    },
+    "Enter your E-Mail" : {
+
+    },
+    "Enter your Firstname" : {
+
+    },
+    "Enter your Lastname" : {
+
+    },
+    "Enter your Password" : {
+
+    },
+    "Firstname" : {
+
+    },
+    "Home" : {
+
+    },
+    "Keep me signed in" : {
+
+    },
+    "Kind" : {
+
+    },
+    "Lastname" : {
+
+    },
+    "LastName" : {
+
+    },
+    "lastOnline: %@" : {
+
+    },
+    "Logout" : {
+
+    },
+    "Niemand ist Online!" : {
+
+    },
+    "No Connection" : {
+
+    },
+    "Password" : {
+
+    },
+    "Position" : {
+
+    },
+    "Profile" : {
+
+    },
+    "Reload Chat" : {
+
+    },
+    "Repeat password" : {
+
+    },
+    "Repeat your password" : {
+
+    },
+    "Save Profile" : {
+
+    },
+    "Settings" : {
+
+    },
+    "Sign in" : {
+
+    },
+    "Sign Up" : {
+
+    },
+    "Total Online Users: %lld" : {
+
+    },
+    "Total Online: %lld" : {
+
+    },
+    "Try checking the Network Connection." : {
+
+    },
+    "updatedAt: %@" : {
+
+    },
+    "UserRole" : {
+
+    },
+    "Version: -" : {
+
+    },
+    "Version: %@" : {
+
+    },
+    "Your Birthday" : {
+
+    },
+    "Your Profile" : {
+
+    },
+    "Zuletzt Online, %@ Uhr" : {
+
+    },
+    "Zuletzt Online:" : {
+
+    },
+    "Zuletzt Online: -" : {
+
+    }
+  },
+  "version" : "1.0"
+}

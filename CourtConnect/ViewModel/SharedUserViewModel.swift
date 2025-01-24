@@ -89,6 +89,7 @@ class SharedUserViewModel: ObservableObject {
         Task {
             do {
                 try await self.repository.userRepository.signOut()
+                self.setCurrentAccount(newAccount: nil)
             } catch {
                 print(error.localizedDescription)
             }
@@ -171,6 +172,11 @@ class SharedUserViewModel: ObservableObject {
             }
         }
     }
+    
+    func setCurrentAccount(newAccount: UserAccount?) {
+        self.currentAccount = newAccount
+        LocalStorageService.shared.userAccountId = newAccount?.id.uuidString
+    } 
     
     private func listenForOnlineUserComesOnline() {
         Task {

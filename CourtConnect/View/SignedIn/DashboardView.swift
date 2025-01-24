@@ -20,8 +20,14 @@ struct DashboardView: View {
                     InternetUnavailableView()
                 } else {
                     if let currentAccount = userViewModel.currentAccount {
-                        Text(currentAccount.role)
-                    }
+                        Button(currentAccount.role) {
+                            userAccountViewModel.deleteUserAccount(userAccount: currentAccount)
+                            
+                            userAccountViewModel.sendUpdatedAfterLastSyncToBackend()
+                            
+                            userViewModel.setCurrentAccount(newAccount: nil)
+                        }
+                    } 
                 }
             } 
             .navigationTitle("Daskboard")

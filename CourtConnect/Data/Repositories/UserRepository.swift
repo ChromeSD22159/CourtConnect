@@ -46,9 +46,7 @@ class UserRepository {
     
     /// LOGOUT FROM SUPABASE
     func signOut() async throws {
-        try await backendClient.supabase.auth.signOut()
-        
-        LocalStorageService.shared.userAccountId = nil
+        try await backendClient.supabase.auth.signOut() 
     }
     
     /// CHECK IF LOGGEDIN AND SET USER / USERPROFILE

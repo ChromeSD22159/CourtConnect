@@ -14,10 +14,9 @@ struct UserAccountDTO: Codable {
     var role: String
     var createdAt: Date
     var updatedAt: Date
-    var isDeleted: Bool
-    var isBlocked: Bool
+    var deletedAt: Date?
     
-    init(id: UUID = UUID(), userId: String, teamId: String, position: String, role: String, createdAt: Date, updatedAt: Date, isDeleted: Bool = false, isBlocked: Bool = false) {
+    init(id: UUID = UUID(), userId: String, teamId: String, position: String, role: String, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil) {
         self.id = id
         self.userId = userId
         self.teamId = teamId
@@ -25,11 +24,10 @@ struct UserAccountDTO: Codable {
         self.role = role
         self.createdAt = createdAt
         self.updatedAt = updatedAt
-        self.isDeleted = isDeleted
-        self.isBlocked = isBlocked
+        self.deletedAt = deletedAt
     }
     
     func toUserAccount() -> UserAccount {
-        return UserAccount(id: id, userId: userId, teamId: teamId, position: position, role: role, createdAt: createdAt, updatedAt: updatedAt, isDeleted: isDeleted, isBlocked: isBlocked)
+        return UserAccount(id: id, userId: userId, teamId: teamId, position: position, role: role, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
 } 

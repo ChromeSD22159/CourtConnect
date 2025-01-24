@@ -37,11 +37,15 @@ struct CreateUserAccountView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Create") {
-                        userAccountViewModel.insertAccount { result in
-                            switch result {
-                            case .success(let account):
-                                userViewModel.currentAccount = account 
-                            case .failure(_): break
+                        Task {
+                            do {
+                                let newAccount = try userAccountViewModel.insertAccount() 
+                                if let newAccount = newAccount {
+                                    try await userAccountViewModel.sendToServer(account: newAccount)
+                                }
+                                userViewModel.setCurrentAccount(newAccount: newAccount)
+                            } catch {
+                                print(error.localizedDescription)
                             }
                         }
                     }

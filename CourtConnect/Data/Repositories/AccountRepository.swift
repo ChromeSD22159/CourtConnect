@@ -18,73 +18,94 @@ class AccountRepository {
         self.container = container
     }
     
-    // MARK: - SYNC LOGIC
-    func insertDatabaseAndSync(account: UserAccount, lastSync: Date) async throws {
-        account.updatedAt = Date()
+    // MARK: - Local
+    func usert(account: UserAccount) throws {
         container.mainContext.insert(account)
         try container.mainContext.save()
-         
-        let found = try getAllAccountsAfterUpdateFromDatabase(userId: account.userId, lastSync: lastSync)
-        
-        try await syncAllAfterTimeStamp(accounts: found, userId: account.userId, lastSync: lastSync)
     }
-     
-    // MARK: - REMOTE
-    func getAllAccountsAfterTimeStampFromBackend(userId: String, lastSync: Date) async throws -> [UserAccountDTO] {
-        let result: [UserAccountDTO] = try await backendClient
-            .supabase
-            .from(DatabaseTable.userAccount.rawValue)
-            .execute()
-            .value
-        
+    
+    func getAllAccounts(userId: String) throws -> [UserAccount] {
+        let predicate = #Predicate<UserAccount> { $0.userId == userId && $0.deletedAt == nil }
+        let fetchDescruptor = FetchDescriptor<UserAccount>(predicate: predicate)
+        let resul = try container.mainContext.fetch(fetchDescruptor)
+        return resul
+    }
+    
+    func getAccountsAfterTimeStamp(userId: String, lastSync: Date) throws -> [UserAccount] {
+        let predicate = #Predicate<UserAccount> { $0.userId == userId && $0.updatedAt > lastSync }
+        let fetchDescruptor = FetchDescriptor<UserAccount>(predicate: predicate)
+        let result = try container.mainContext.fetch(fetchDescruptor)
         return result
     }
-
-    func syncAllAfterTimeStamp(accounts: [UserAccount] = [], userId: String, lastSync: Date) async throws {
-        for account in accounts {
-            try await backendClient
-                .supabase
-                .from(DatabaseTable.userAccount.rawValue)
-                .upsert(account.toUserAccountDTO(), onConflict: "id")
-                .execute()
+    
+    func getAccount(userId: String) throws -> UserAccount? {
+        let predicate = #Predicate<UserAccount> { $0.userId == userId && $0.deletedAt == nil }
+        let fetchDescruptor = FetchDescriptor<UserAccount>(predicate: predicate)
+        let resul = try container.mainContext.fetch(fetchDescruptor).first
+        return resul
+    }
+    
+    func getAccount(id: UUID, ignoreSoftDelete: Bool = false) throws -> UserAccount? {
+        let predicate: Predicate<UserAccount>
+        if ignoreSoftDelete {
+            predicate = #Predicate<UserAccount> { $0.id == id }
+        } else {
+            predicate = #Predicate<UserAccount> { $0.id == id && $0.deletedAt == nil }
         }
+        let fetchDescruptor = FetchDescriptor<UserAccount>(predicate: predicate)
+        let result = try container.mainContext.fetch(fetchDescruptor).first
+        return result
+    }
+    
+    func softDelete(account: UserAccount) throws {
+        account.updatedAt = Date()
+        account.deletedAt = Date()
         
-        let result = try await getAllAccountsAfterTimeStampFromBackend(userId: "", lastSync: lastSync)
-        
-        try result.forEach { resultAcc in
-            container.mainContext.insert(resultAcc.toUserAccount())
+        try usert(account: account)
+    }
+    
+    func debugDelete() throws {
+        let fetchDescruptor = FetchDescriptor<UserAccount>()
+        let result = try container.mainContext.fetch(fetchDescruptor)
+        try result.forEach { item in
+            container.mainContext.delete(item)
             try container.mainContext.save()
         }
     }
     
-    // MARK: - LOCAL
-    func getAllAccountsFromDatabase(userId: String) throws -> [UserAccount] {
-        let predicate = #Predicate<UserAccount> { account in
-            account.userId == userId
+    // MARK: SYNCING
+    func sendUpdatedAfterLastSyncToBackend(userId: String, lastSync: Date) async { 
+        Task {
+            do {
+                try await Task.sleep(for: .seconds(1))
+                
+                let predicate = #Predicate<UserAccount> { $0.userId == userId && $0.updatedAt > lastSync }
+                let fetchDescriptor = FetchDescriptor<UserAccount>(predicate: predicate)
+                let result = try container.mainContext.fetch(fetchDescriptor)
+
+                for account in result {
+                    try await self.sendToBackend(account: account)
+                }
+            } catch {
+                print("cannot send: \(error)")
+            }
         }
-        
-        let fetchDescriptor = FetchDescriptor(predicate: predicate)
-        
-        return try container.mainContext.fetch(fetchDescriptor)
     }
     
-    func getAccountsFromDatabase(id: UUID) throws -> UserAccount? {
-        let predicate = #Predicate<UserAccount> { account in
-            account.id == id
-        }
-        
-        let fetchDescriptor = FetchDescriptor(predicate: predicate)
-        
-        return try container.mainContext.fetch(fetchDescriptor).first
+    func sendToBackend(account: UserAccount) async throws { 
+        try await backendClient.supabase
+            .from(DatabaseTable.userAccount.rawValue)
+            .upsert(account.toUserAccountDTO(), onConflict: "id")
+            .execute()
+            .value
     }
     
-    private func getAllAccountsAfterUpdateFromDatabase(userId: String, lastSync: Date) throws -> [UserAccount] {
-        let predicate = #Predicate<UserAccount> { account in
-            account.updatedAt > lastSync && account.userId == userId
-        }
-        
-        let fetchDescriptor = FetchDescriptor(predicate: predicate)
-        
-        return try container.mainContext.fetch(fetchDescriptor)
+    func fetchFromServer(after: Date) async throws -> [UserAccountDTO] {
+        return try await backendClient.supabase
+            .from(DatabaseTable.userAccount.rawValue)
+            .select()
+            .gte("updatedAt", value: after)
+            .execute()
+            .value
     }
-} 
+}

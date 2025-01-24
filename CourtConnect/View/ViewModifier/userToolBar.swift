@@ -15,6 +15,11 @@ struct UserToolBar: ViewModifier {
                 CreateUserAccountView(userAccountViewModel: userAccountViewModel, userViewModel: userViewModel) 
             })
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    NavigationLink("DEBUG") {
+                        DebugView(userAccountViewModel: userAccountViewModel, userViewModel: userViewModel)
+                    }
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     HStack {
                         Image(systemName: "person.fill")
@@ -23,18 +28,19 @@ struct UserToolBar: ViewModifier {
                                 userViewModel.openEditProfileSheet()
                             }
                         
-                        MenuButton(icon: "arrow.triangle.2.circlepath") {
+                        MenuButton(icon: "person.3.fill") {
+                            Text("Create New Account or Switch to Existing Account")
+                            
                             ForEach(userAccountViewModel.accounts) { account in
                                 Button {
-                                    userViewModel.currentAccount = account
-                                    LocalStorageService.shared.userAccountId = account.id.uuidString
+                                    userViewModel.setCurrentAccount(newAccount: account) 
                                 } label: {
                                     HStack {
                                         if userViewModel.currentAccount?.id == account.id {
                                             Image(systemName: "xmark")
                                         }
                                         
-                                        Text(account.role)
+                                        Text("\(account.role) \(account.isDeleted)")
                                     }
                                 }
                             }
@@ -50,13 +56,37 @@ struct UserToolBar: ViewModifier {
                     }
                     .foregroundStyle(.red)
                 }
-            }
+            } 
     }
-} 
+}
+
+struct DebugView: View {
+    @ObservedObject var userAccountViewModel: UserAccountViewModel
+    @ObservedObject var userViewModel: SharedUserViewModel
+    var body: some View {
+        Form {
+            Button("DEBUG DELETE") {
+                userAccountViewModel.debugdelete()
+                userViewModel.setCurrentAccount(newAccount: nil)
+            }.padding(.top, 50)
+        }
+    }
+}
 
 extension View {
     /// REQUIRE
     func userToolBar(userViewModel: SharedUserViewModel, userAccountViewModel: UserAccountViewModel) -> some View {
         modifier(UserToolBar(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel))
+    }
+}
+
+#Preview {
+    NavigationStack {
+        ZStack {
+            
+        }.userToolBar(
+            userViewModel: SharedUserViewModel(repository: Repository(type: .preview)),
+            userAccountViewModel: UserAccountViewModel(repository: Repository(type: .preview), userId: nil)
+        )
     }
 }

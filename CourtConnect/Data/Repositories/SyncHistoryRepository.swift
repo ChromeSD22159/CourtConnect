@@ -24,7 +24,7 @@ class SyncHistoryRepository {
             histery.userId == userId && histery.table == tableString
         }
         
-        let sortBy = [SortDescriptor(\SyncHistory.timestamp, order: .forward)]
+        let sortBy = [SortDescriptor(\SyncHistory.timestamp, order: .reverse)]
         
         let fetchDescriptor = FetchDescriptor(predicate: predicate, sortBy: sortBy)
         
@@ -34,10 +34,12 @@ class SyncHistoryRepository {
     func insertTimestamp(for table: DatabaseTable, userId: String) throws {
         let new = SyncHistory(table: table.rawValue, userId: userId)
         container.mainContext.insert(new)
+        try container.mainContext.save()
     }
     
     func insertTimestamp(timestamp: SyncHistory) throws { 
         container.mainContext.insert(timestamp)
+        try container.mainContext.save()
     }
     
     var defaultDate: Date {

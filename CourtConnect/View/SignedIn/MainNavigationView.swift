@@ -34,12 +34,12 @@ struct MainNavigationView: View {
             UserProfileEditView(userViewModel: userViewModel) 
         })
         .onAppear {
-            userAccountViewModel.syncAccounts()
-            
-            userViewModel.currentAccount = userAccountViewModel.getCurrentAccount()
-        }
+            userAccountViewModel.importAccountsAfterLastSyncFromBackend()
+        } 
         .task {
-            userViewModel.setUserOnline()
+            userViewModel.setUserOnline() 
+            
+            userViewModel.setCurrentAccount(newAccount: userAccountViewModel.getCurrentAccount())
             
             if await !NotificationService.getAuthStatus() {
                 await NotificationService.request()
