@@ -12,6 +12,7 @@ import SwiftData
     var userRepository: UserRepository
     let chatRepository: ChatRepository
     let accountRepository: AccountRepository
+    let teamRepository: TeamRepository
     let syncHistoryRepository: SyncHistoryRepository
     let container: ModelContainer
     
@@ -20,7 +21,8 @@ import SwiftData
             UserProfile.self,
             Chat.self,
             SyncHistory.self,
-            UserAccount.self
+            UserAccount.self,
+            Team.self
         ])
         
         do {  
@@ -32,7 +34,8 @@ import SwiftData
             self.userRepository = UserRepository(container: container)
             self.chatRepository = ChatRepository(container: container, type: type)
             self.accountRepository = AccountRepository(container: container, type: type)
-            self.syncHistoryRepository = SyncHistoryRepository(container: container, type: type) 
+            self.teamRepository = TeamRepository(container: container, type: type)
+            self.syncHistoryRepository = SyncHistoryRepository(container: container, type: type)
         } catch {
             fatalError("Cannot create Database \(error.localizedDescription)")
         }
