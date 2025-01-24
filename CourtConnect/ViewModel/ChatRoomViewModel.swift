@@ -29,7 +29,7 @@ class ChatRoomViewModel: ObservableObject {
     
     func addMessage(senderID: String, recipientId: String) {
         guard !inputText.isEmpty else { return }
-        let timestamp = SyncHistory(table: DatabaseTables.chat.rawValue, userId: myUser.userId)
+        let timestamp = SyncHistory(table: DatabaseTable.messages.rawValue, userId: myUser.userId)
         let new = Chat(senderId: senderID, recipientId: recipientId, message: inputText, createdAt: Date(), readedAt: nil)
         Task {
             do {
@@ -42,7 +42,7 @@ class ChatRoomViewModel: ObservableObject {
                         case .failure: break
                         }
                     })
-                    try self.repository.syncHistoryRepository.insertTimestamp(for: .chat, userId: myUser.userId)
+                    try self.repository.syncHistoryRepository.insertTimestamp(for: .messages, userId: myUser.userId)
                 } else {
                     let lastSync = self.repository.syncHistoryRepository.defaultStartDate
                     try await self.repository.chatRepository.sendMessageToBackend(message: new, lastDate: lastSync, complete: { result in
@@ -113,6 +113,6 @@ class ChatRoomViewModel: ObservableObject {
     }
     
     private func lastSyncDate() throws -> Date? {
-        return try repository.syncHistoryRepository.getLastSyncDate(for: .chat, userId: myUser.userId)?.timestamp
+        return try repository.syncHistoryRepository.getLastSyncDate(for: .messages, userId: myUser.userId)?.timestamp
     }
 }

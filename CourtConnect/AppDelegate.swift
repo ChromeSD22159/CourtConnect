@@ -51,4 +51,4 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
             print("Error: Could not extract title or body from alert dictionary")
         }
     }
-} 
+}  

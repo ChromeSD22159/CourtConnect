@@ -14,6 +14,7 @@ import FirebaseAuth
 class SharedUserViewModel: ObservableObject {
     var user: FirebaseAuth.User?
     var userProfile: UserProfile?
+    var currentAccount: UserAccount?
     var showOnBoarding = false
     var showDeleteConfirmMenu = false
     var editProfile: UserProfile = UserProfile(userId: "", firstName: "", lastName: "", roleString: UserRole.player.rawValue, birthday: "", createdAt: Date(), updatedAt: Date())
@@ -88,6 +89,7 @@ class SharedUserViewModel: ObservableObject {
         Task {
             do {
                 try await self.repository.userRepository.signOut()
+                self.setCurrentAccount(newAccount: nil)
             } catch {
                 print(error.localizedDescription)
             }
@@ -170,6 +172,11 @@ class SharedUserViewModel: ObservableObject {
             }
         }
     }
+    
+    func setCurrentAccount(newAccount: UserAccount?) {
+        self.currentAccount = newAccount
+        LocalStorageService.shared.userAccountId = newAccount?.id.uuidString
+    } 
     
     private func listenForOnlineUserComesOnline() {
         Task {

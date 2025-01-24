@@ -67,11 +67,11 @@ struct LoginView: View {
                 Toggle(isOn: $viewModel.keepSignededIn) {
                     Text("Keep me signed in")
                 }
-                .tint(Theme.accentColor)
+                .tint(Theme.darkOrange)
             }
             
             BodyText("Forgot password")
-                .foregroundStyle(Theme.accentColor)
+                .foregroundStyle(Theme.darkOrange)
                 .onTapGesture {
                     self.navigate(.forget)
                 }
@@ -82,7 +82,7 @@ struct LoginView: View {
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 7)
-            .background(Theme.accentColor)
+            .background(Theme.darkOrange)
             .clipShape(.rect(cornerRadius: 10))
             .onTapGesture {
                 Task {
@@ -100,7 +100,7 @@ struct LoginView: View {
             HStack {
                 BodyText("Don`t have an account?")
                 BodyText("SignUp here")
-                    .foregroundStyle(Theme.accentColor)
+                    .foregroundStyle(Theme.darkOrange)
                     .onTapGesture {
                         self.navigate(.register)
                     }

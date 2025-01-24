@@ -15,6 +15,8 @@
 		B665325D2D3EC35300B87D71 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = B665325C2D3EC35300B87D71 /* README.md */; };
 		B66533A12D3F8E0A00B87D71 /* SwiftJWT in Frameworks */ = {isa = PBXBuildFile; productRef = B66533A02D3F8E0A00B87D71 /* SwiftJWT */; };
 		B6653A982D4014BC00B87D71 /* TokenService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6653A972D4014B800B87D71 /* TokenService.swift */; };
+		B6653C592D42C00D00B87D71 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = B6653C582D42C00D00B87D71 /* Localizable.xcstrings */; };
+		B6653E262D43893400B87D71 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = B6653E252D43893400B87D71 /* Lottie */; };
 		B698AC692D3335110086AF8C /* Functions in Frameworks */ = {isa = PBXBuildFile; productRef = B698AC682D3335110086AF8C /* Functions */; };
 		B698AC6B2D3335110086AF8C /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = B698AC6A2D3335110086AF8C /* PostgREST */; };
 		B698AC6D2D3335110086AF8C /* Realtime in Frameworks */ = {isa = PBXBuildFile; productRef = B698AC6C2D3335110086AF8C /* Realtime */; };
@@ -52,6 +54,7 @@
 		B665325A2D3EC28F00B87D71 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B665325C2D3EC35300B87D71 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		B6653A972D4014B800B87D71 /* TokenService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenService.swift; sourceTree = "<group>"; };
+		B6653C582D42C00D00B87D71 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		B698ABFB2D330FC10086AF8C /* CourtConnect.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CourtConnect.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B698AC0D2D330FC30086AF8C /* CourtConnectTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CourtConnectTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B698AC172D330FC30086AF8C /* CourtConnectUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CourtConnectUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -99,6 +102,7 @@
 				B698AC6B2D3335110086AF8C /* PostgREST in Frameworks */,
 				B698AC692D3335110086AF8C /* Functions in Frameworks */,
 				B698AC7C2D3335F20086AF8C /* Supabase in Frameworks */,
+				B6653E262D43893400B87D71 /* Lottie in Frameworks */,
 				B698AC6F2D3335110086AF8C /* Storage in Frameworks */,
 				B6B1D4CF2D3D434E00251542 /* FirebaseCore in Frameworks */,
 				B66533A12D3F8E0A00B87D71 /* SwiftJWT in Frameworks */,
@@ -134,6 +138,7 @@
 				B66532582D3EC28500B87D71 /* .gitignore */,
 				B665325A2D3EC28F00B87D71 /* GoogleService-Info.plist */,
 				B6653A972D4014B800B87D71 /* TokenService.swift */,
+				B6653C582D42C00D00B87D71 /* Localizable.xcstrings */,
 				B6652B3F2D3E4E8C00B87D71 /* .swiftlint.yml */,
 				B665325C2D3EC35300B87D71 /* README.md */,
 				B698ABFD2D330FC10086AF8C /* CourtConnect */,
@@ -192,6 +197,7 @@
 				B6B1D4CE2D3D434E00251542 /* FirebaseCore */,
 				B6652A502D3DAA2E00B87D71 /* FirebaseAuth */,
 				B66533A02D3F8E0A00B87D71 /* SwiftJWT */,
+				B6653E252D43893400B87D71 /* Lottie */,
 			);
 			productName = CourtConnect;
 			productReference = B698ABFB2D330FC10086AF8C /* CourtConnect.app */;
@@ -277,6 +283,7 @@
 			knownRegions = (
 				en,
 				Base,
+				de,
 			);
 			mainGroup = B698ABF22D330FC10086AF8C;
 			minimizedProjectReferenceProxies = 1;
@@ -286,6 +293,7 @@
 				B6B1D4CB2D3D42A900251542 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				B6652B2C2D3E411B00B87D71 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */,
 				B665339F2D3F8E0A00B87D71 /* XCRemoteSwiftPackageReference "Swift-JWT" */,
+				B6653E242D43893400B87D71 /* XCRemoteSwiftPackageReference "lottie-ios" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B698ABFC2D330FC10086AF8C /* Products */;
@@ -306,6 +314,7 @@
 			files = (
 				B665325B2D3EC28F00B87D71 /* GoogleService-Info.plist in Resources */,
 				B665325D2D3EC35300B87D71 /* README.md in Resources */,
+				B6653C592D42C00D00B87D71 /* Localizable.xcstrings in Resources */,
 				B66532592D3EC28500B87D71 /* .gitignore in Resources */,
 				B6652B402D3E4E8C00B87D71 /* .swiftlint.yml in Resources */,
 			);
@@ -375,6 +384,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -429,6 +439,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -438,6 +449,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -485,6 +497,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -699,6 +712,14 @@
 				minimumVersion = 4.0.2;
 			};
 		};
+		B6653E242D43893400B87D71 /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.5.1;
+			};
+		};
 		B698AC652D3335100086AF8C /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/supabase/supabase-swift.git";
@@ -737,6 +758,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B665339F2D3F8E0A00B87D71 /* XCRemoteSwiftPackageReference "Swift-JWT" */;
 			productName = SwiftJWT;
+		};
+		B6653E252D43893400B87D71 /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B6653E242D43893400B87D71 /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			productName = Lottie;
 		};
 		B698AC682D3335110086AF8C /* Functions */ = {
 			isa = XCSwiftPackageProductDependency;

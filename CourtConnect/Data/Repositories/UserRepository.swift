@@ -69,7 +69,7 @@ class UserRepository {
     // https://supabase.com/dashboard/project/anwqiuyfuhaebycbblrc/sql/new
     func syncUserProfile(userId: String) async throws {
         let date: [UserProfile] = try await backendClient.supabase
-            .from(DatabaseTables.userProfile.rawValue)
+            .from(DatabaseTable.userProfile.rawValue)
             .select("*")
             .eq("userId", value: userId)
             .execute()
@@ -90,7 +90,7 @@ class UserRepository {
         try insertOrUpdate(profile: profile)
         
         try await backendClient.supabase
-            .from(DatabaseTables.userProfile.rawValue)
+            .from(DatabaseTable.userProfile.rawValue)
             .upsert(profile, onConflict: "userId")
             .execute()
     }
@@ -117,7 +117,7 @@ class UserRepository {
         let userOnline = UserOnline(userId: user.uid, firstName: userProfile.firstName, lastName: userProfile.lastName, deviceToken: self.deviceToken)
         
         try await backendClient.supabase
-            .from(DatabaseTables.userOnline.rawValue)
+            .from(DatabaseTable.userOnline.rawValue)
             .insert(userOnline)
             .execute()
         
@@ -126,7 +126,7 @@ class UserRepository {
     
     func setUserOffline(user: FirebaseAuth.User) async throws -> Bool {
          let query = try await backendClient.supabase
-           .from(DatabaseTables.userOnline.rawValue)
+            .from(DatabaseTable.userOnline.rawValue)
            .delete()
            .match(["userId": user.uid, "deviceToken": self.deviceToken])
            .execute()
@@ -138,7 +138,7 @@ class UserRepository {
     func listenForOnlineUserComesOnline(completion: @escaping (Result<[UserOnline], Error>) -> Void) {
         let channelInsertUserOnline = backendClient.supabase.realtimeV2.channel("public:UserOnline:insert")
           
-        let insertions = channelInsertUserOnline.postgresChange(InsertAction.self, table: SupabaseTable.userOnline.rawValue)
+        let insertions = channelInsertUserOnline.postgresChange(InsertAction.self, table: DatabaseTable.userOnline.rawValue)
         Task {
             await channelInsertUserOnline.subscribe()
             for await _ in insertions {
@@ -151,7 +151,7 @@ class UserRepository {
     func listenForOnlineUserGoesOffline(completion: @escaping (Result<[UserOnline], Error>) -> Void) {
         let channelDeleteUserOnline = backendClient.supabase.realtimeV2.channel("public:UserOnline:delete")
          
-        let deletions = channelDeleteUserOnline.postgresChange(DeleteAction.self, table: SupabaseTable.userOnline.rawValue)
+        let deletions = channelDeleteUserOnline.postgresChange(DeleteAction.self, table: DatabaseTable.userOnline.rawValue)
         Task {
             await channelDeleteUserOnline.subscribe()
             for await _ in deletions {
@@ -163,7 +163,7 @@ class UserRepository {
     
     func getOnlineUserList() async throws -> [UserOnline] {
         let list: [UserOnline] = try await backendClient.supabase
-            .from(DatabaseTables.userOnline.rawValue)
+            .from(DatabaseTable.userOnline.rawValue)
             .select()
             .execute()
             .value

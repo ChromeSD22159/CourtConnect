@@ -7,7 +7,8 @@
 import SwiftUI
 
 struct Theme {
-    static let accentColor: Color = .orange
+    static let darkOrange: Color = Color(.darkOrange)
+    static let lightOrange: Color = Color(.lightOrange)
     static let gray: Color = .gray
     static let white: Color = .white
 }

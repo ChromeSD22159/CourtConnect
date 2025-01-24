@@ -7,7 +7,7 @@
 
 enum UserRole: String, CaseIterable, Codable, Identifiable {
     case player = "Spieler"
-    case parent = "Eltern"
+    // case parent = "Eltern"
     case trainer = "Trainer"
     case admin = "Super-Admin"
     
@@ -16,6 +16,6 @@ enum UserRole: String, CaseIterable, Codable, Identifiable {
     }
     
     static var registerRoles: [UserRole] {
-        [.player, .parent, .trainer]
+        [.player, .trainer /* , .parent */ ]
     }
 }

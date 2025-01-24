@@ -18,12 +18,11 @@ Coming soon ...
 
 ## Features 
 
-- [ ] User-Registrierung und Login: Für Trainer, Spieler und Eltern.
+- [ ] User-Registrierung und Login: Für Trainer und Spieler.
 - [ ] Vereinsverwaltung: Trainer können Vereine erstellen und Mitglieder hinzufügen.
 - [ ] Terminverwaltung: Trainings und Events erstellen, verwalten und anzeigen lassen.
 - [ ] Anwesenheit: Trainer können Teilnehmerlisten erstellen; Spieler und Eltern können Zu- oder Absagen senden.
-- [ ] Benachrichtigungen: Spieler werden über Trainings und Änderungen direkt informiert. 
-
+- [ ] Benachrichtigungen: Spieler werden über Trainings und Änderungen direkt informiert.  
 
 ## Technischer Aufbau
 
@@ -39,6 +38,8 @@ Die App verwendet das MVVM-Pattern kombiniert mit einem Repository-Pattern und S
 - Supabase wird zusätzlich als API genutzt, z. B. für einen Ping-Test zur Erreichbarkeitsprüfung.
 - API-Keys werden von einem privaten Server geladen, um Sicherheit und Flexibilität zu gewährleisten.
 - https://api.sandbox.push.apple.com/3/device/<Device> für APNS Notifications
+- Supabase Api
+- Google Cloud / Firebase Api
 
 #### 3rd-Party Frameworks
 - Supabase
@@ -50,7 +51,8 @@ Die App verwendet das MVVM-Pattern kombiniert mit einem Repository-Pattern und S
 ## Ausblick 
 - [ ] Statitiken für Spieler
 - [ ] Statitiken für Teams
-- [ ] Multi Membership pro User
+- [ ] User-Registrierung und Login: Für Eltern.
+- [ ] Dokumentate Verwaltung und Bereitstellung für Teams.
 
 
 ## Ordnerstruktur

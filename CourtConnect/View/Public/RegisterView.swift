@@ -129,7 +129,7 @@ struct RegisterView: View {
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 7)
-            .background(Theme.accentColor)
+            .background(Theme.darkOrange)
             .clipShape(.rect(cornerRadius: 10))
             .onTapGesture {
                 Task {
@@ -143,7 +143,7 @@ struct RegisterView: View {
             HStack {
                 BodyText("You have an account?")
                 BodyText("Sign In here")
-                    .foregroundStyle(Theme.accentColor)
+                    .foregroundStyle(Theme.darkOrange)
                     .onTapGesture {
                         self.navigate(.login)
                     }

@@ -73,6 +73,8 @@ struct UserProfileEditView: View {
                     .tint(.primary)
                 }
             }
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle("Edit User")
         }
         .padding()
         .onAppear {
