@@ -88,15 +88,11 @@ Die App verwendet das MVVM-Pattern kombiniert mit einem Repository-Pattern und S
 
 #### iOS-App: 
 Füge die Datei GoogleService-Info.plist in dein Projekt ein. Diese wird für die Integration von Firebase benötigt. 
-
-Füge die Datei im Root-Verzeichniss hinzu und kontrolliere die .gitignore, das diese Date nicht mit gepushed wird!
-```swift
-TokenService {
-    static let pemBasedPrivateKey: String: String = <Inhalt des .p8 Zertificates>
-    static let supabaseHost: String = <host>
-    static let supabaseKey: String = <Key>
-}
-``` 
+In deine Info.plist:
+```
+SupabaseUrl: String = <host>
+SupabaseKey: String = <Key>
+```
 
 #### Supabase:
 Installiere Supabase entweder mit NPM:  

@@ -15,7 +15,8 @@ import Supabase
     var showPassword = false
     var keepSignededIn = true
     var focus: Field?
-     
+    var error: Error?
+    
     init(repository: Repository) {
         self.repository = repository
     }
@@ -29,15 +30,27 @@ import Supabase
     }
     
     func signIn() async throws -> (User?, UserProfile?) {
-        guard !email.isEmpty, !password.isEmpty else {
-            return (nil , nil)
+        do {
+            guard !email.isEmpty else {
+                throw LoginError.emailIsEmpty
+            }
+                    
+            guard !password.isEmpty else {
+                throw LoginError.passwordIsEmpty
+            }
+            
+            let user = try await repository.userRepository.signIn(email: email, password: password)
+             
+            if keepSignededIn {
+                LocalStorageService.shared.user = user
+            }
+            
+            try await repository.userRepository.syncUserProfile(userId: user.id.uuidString)
+            let userProfile = try await repository.userRepository.getUserProfileFromDatabase(userId: user.id.uuidString)
+            return ( user , userProfile )
+        } catch {
+            throw error
         }
-        
-        let user = try await repository.userRepository.signIn(email: email, password: password)
-         
-        try await repository.userRepository.syncUserProfile(userId: user.id.uuidString)
-        let userProfile = try await repository.userRepository.getUserProfileFromDatabase(userId: user.id.uuidString)
-        return ( user , userProfile )
     }
     
     enum Field {

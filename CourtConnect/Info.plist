@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>SupabaseKey</key>
+	<string>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFud3FpdXlmdWhhZWJ5Y2JibHJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzY2MzY0MTcsImV4cCI6MjA1MjIxMjQxN30.JBCicVin0f56ZLj8BL7YEIMIETVxOF0I_dfbyMtx-R4</string>
+	<key>SupabaseUrl</key>
+	<string>https://anwqiuyfuhaebycbblrc.supabase.co</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<false/>
 	<key>UIBackgroundModes</key>

@@ -23,33 +23,29 @@ class UserRepository {
        
     /// LOGIN INTO SUPABASE
     func signIn(email:String, password: String) async throws -> User {
-        do {
-            let result = try await backendClient.supabase.auth.signIn(email: email, password: password)
-            return result.user
-        } catch {
-            throw error
-        }
+        let result = try await backendClient.supabase.auth.signIn(email: email, password: password)
+        return result.user
     }
     
     /// REGISTER AND LOGIN INTO SUPABASE
     func signUp(email:String, password: String) async throws -> User {
-        do {
-            let result = try await backendClient.supabase.auth.signUp(email: email, password: password)
-            
-            return result.user
-        } catch {
-            throw error
-        }
+        let result = try await backendClient.supabase.auth.signUp(email: email, password: password)
+        return result.user
     }
     
     /// LOGOUT FROM SUPABASE
     func signOut() async throws {
-        try await backendClient.supabase.auth.signOut() 
+        try await backendClient.supabase.auth.signOut()
+        LocalStorageService.shared.user = nil
     }
     
     /// CHECK IF LOGGEDIN AND SET USER / USERPROFILE
-    func isAuthendicated() async throws -> User? {
-        return backendClient.supabase.auth.currentUser
+    func isAuthendicated() async -> User? {
+        do {
+            return try await backendClient.supabase.auth.user()
+        } catch {
+            return LocalStorageService.shared.user
+        }
     }
     
     func getUserProfileFromDatabase(userId: String) throws -> UserProfile? {
@@ -185,7 +181,10 @@ class UserRepository {
         return (200...299).contains(statusCode)
     }
     
-    func deleteUserAccount(userId: String) async throws {
-        try await backendClient.supabase.auth.admin.deleteUser(id: userId)
+    func deleteUserAccount(user: User) async throws {
+        try await backendClient.supabase
+            .from(DatabaseTable.deletionRequest.rawValue)
+            .upsert(DeletionRequestDTO(userId: user.id), onConflict: "userId")
+            .execute()
     }
 }

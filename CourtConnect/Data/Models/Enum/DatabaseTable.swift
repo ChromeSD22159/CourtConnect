@@ -10,6 +10,7 @@ enum DatabaseTable: String {
     case userOnline = "UserOnline" 
     case messages = "Messages"
     case userAccount = "UserAccount"
+    case deletionRequest = "DeletionRequest"
     
     case syncHistory = "SyncHistory"
-}
+} 

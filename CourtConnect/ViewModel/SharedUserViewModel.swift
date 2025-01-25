@@ -7,23 +7,12 @@
 import Foundation
 import SwiftUI
 import FirebaseMessaging
-import Supabase
- 
-struct SupabaseUser: Identifiable, Codable {
-    var id: UUID
-    var uid: String
-}
-
-extension User {
-    func toSupabaseUser() -> SupabaseUser {
-        return SupabaseUser(id: self.id, uid: self.id.uuidString)
-    }
-}
+import Supabase 
  
 @Observable
 @MainActor
 class SharedUserViewModel: ObservableObject {
-    var user: SupabaseUser? = LocalStorageService.shared.user
+    var user: User? = LocalStorageService.shared.user
     var userProfile: UserProfile?
     var currentAccount: UserAccount?
     var showOnBoarding = false
@@ -51,12 +40,6 @@ class SharedUserViewModel: ObservableObject {
         self.repository = repository
     }
     
-    func onAppDashboardAppear() {
-        if userProfile == nil {
-            showOnBoarding.toggle()
-        }
-    }
-    
     func startListeners() {
         self.listenForOnlineUserComesOnline()
         self.listenForOnlineUserGoesOffline() 
@@ -68,7 +51,7 @@ class SharedUserViewModel: ObservableObject {
     
     func resetEditUserProfile() {
         guard let user = user else { return }
-        self.editProfile = UserProfile(userId: user.uid, firstName: "", lastName: "", roleString: UserRole.player.rawValue, birthday: "", createdAt: Date(), updatedAt: Date())
+        self.editProfile = UserProfile(userId: user.id.uuidString, firstName: "", lastName: "", roleString: UserRole.player.rawValue, birthday: "", createdAt: Date(), updatedAt: Date())
     }
     
     func saveUserProfile() {
@@ -81,7 +64,7 @@ class SharedUserViewModel: ObservableObject {
             return
         }
         
-        editProfile.userId = user.uid
+        editProfile.userId = user.id.uuidString
         editProfile.updatedAt = Date()
         
         Task {
@@ -109,9 +92,11 @@ class SharedUserViewModel: ObservableObject {
     
     func isAuthendicated() {
         Task {
-            if let user = try await self.repository.userRepository.isAuthendicated(), let userProfile = try self.repository.userRepository.getUserProfileFromDatabase(userId: user.id.uuidString) {
+            if let user = await self.repository.userRepository.isAuthendicated(),
+               let userProfile = try self.repository.userRepository.getUserProfileFromDatabase(userId: user.id.uuidString) {
+                
                 withAnimation {
-                    self.user = SupabaseUser(id: user.id, uid: user.id.uuidString)
+                    self.user = user
                     self.userProfile = userProfile
                 }
             }
@@ -134,7 +119,7 @@ class SharedUserViewModel: ObservableObject {
                     userProfile.fcmToken = fcmToken
                 }
                 
-                _ = try await self.repository.userRepository.setUserOnline(userId: user.uid, userProfile: userProfile)
+                _ = try await self.repository.userRepository.setUserOnline(userId: user.id.uuidString, userProfile: userProfile)
                 
                 self.onlineUser = try await self.repository.userRepository.getOnlineUserList()
                 
@@ -147,7 +132,7 @@ class SharedUserViewModel: ObservableObject {
         guard let user = user else { return }
         Task {
             do {
-                _ = try await self.repository.userRepository.setUserOffline(userId: user.uid)
+                _ = try await self.repository.userRepository.setUserOffline(userId: user.id.uuidString)
             } catch { print(error) }
         }
     } 
@@ -174,8 +159,9 @@ class SharedUserViewModel: ObservableObject {
         guard let user = user else { return }
         Task {
             do {
+                
+                try await repository.userRepository.deleteUserAccount(user: user)
                 try await repository.userRepository.signOut()
-                try await repository.userRepository.deleteUserAccount(userId: user.uid)
                 
                 self.user = nil
                 self.userProfile = nil

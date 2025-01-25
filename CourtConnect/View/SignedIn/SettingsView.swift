@@ -20,7 +20,7 @@ struct SettingsView: View {
                 Section {
                     // MARK: - Edit Profile
                     NavigationLink {
-                        UserProfileEditView(userViewModel: userViewModel)
+                        UserProfileEditView(userViewModel: userViewModel, isSheet: false)
                     } label: {
                         Text("Your Profile")
                     }
@@ -68,21 +68,6 @@ struct SettingsView: View {
                     }
                 } header: {
                     Text("App Status")
-                }
-                
-                Section {
-                    Text("Delete User Account")
-                        .onTapGesture {
-                            userViewModel.showDeleteConfirmMenu.toggle()
-                        }
-                        .foregroundStyle(.white)
-                        .listRowBackground(Theme.lightOrange)
-                        .confirmationDialog("Delete your Account", isPresented: $userViewModel.showDeleteConfirmMenu) {
-                            Button("Delete", role: .destructive) {  userViewModel.deleteUserAccount() }
-                            Button("Cancel", role: .cancel) { userViewModel.showDeleteConfirmMenu.toggle() }
-                        } message: {
-                            Text("Delete your Account")
-                        }
                 }
                 
                 Section {

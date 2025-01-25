@@ -8,8 +8,10 @@ import SwiftUI
 
 struct RegisterView: View {
     @State var viewModel: RegisterViewModel
+    @State var errorHanler = ErrorHandlerViewModel.shared
+    
     @ObservedObject var userViewModel: SharedUserViewModel
-    @FocusState var focus: LoginViewModel.Field?
+    @FocusState var focus: RegisterViewModel.Field?
     
     let navigate: (LoginNavigationView) -> Void
     
@@ -43,8 +45,7 @@ struct RegisterView: View {
                 VStack(alignment: .leading, spacing: 5) {
                     SmallText("Firstname")
                     TextField("Firstname", text: $viewModel.firstName, prompt: Text("Enter your Firstname"))
-                        .keyboardType(.emailAddress)
-                        .focused($focus, equals: .email)
+                        .focused($focus, equals: .firstName)
                         .submitLabel(.next)
                         .textFieldStyle(.roundedBorder)
                 }
@@ -52,8 +53,7 @@ struct RegisterView: View {
                 VStack(alignment: .leading, spacing: 5) {
                     SmallText("Lastname")
                     TextField("Lastname", text: $viewModel.lastName, prompt: Text("Enter your Lastname"))
-                        .keyboardType(.emailAddress)
-                        .focused($focus, equals: .email)
+                        .focused($focus, equals: .lastName)
                         .submitLabel(.next)
                         .textFieldStyle(.roundedBorder)
                 }
@@ -75,7 +75,6 @@ struct RegisterView: View {
                     SmallText("Password")
                     if viewModel.showPassword {
                         TextField("Password", text: $viewModel.password, prompt: Text("Enter your Password"))
-                            .keyboardType(.default)
                             .focused($focus, equals: .password)
                             .submitLabel(.done)
                             .textFieldStyle(.roundedBorder)
@@ -84,7 +83,6 @@ struct RegisterView: View {
                             }
                     } else {
                         SecureField("Password", text: $viewModel.password, prompt: Text("Enter your Password"))
-                            .keyboardType(.default)
                             .focused($focus, equals: .password)
                             .submitLabel(.done)
                             .textFieldStyle(.roundedBorder)
@@ -98,8 +96,7 @@ struct RegisterView: View {
                     SmallText("Repeat password")
                     if viewModel.showPassword {
                         TextField("Repeat password", text: $viewModel.repeatPassword, prompt: Text("Repeat your password"))
-                            .keyboardType(.default)
-                            .focused($focus, equals: .password)
+                            .focused($focus, equals: .repeatPassword)
                             .submitLabel(.done)
                             .textFieldStyle(.roundedBorder)
                             .overlay(alignment: .trailing) {
@@ -107,8 +104,7 @@ struct RegisterView: View {
                             }
                     } else {
                         SecureField("Repeat password", text: $viewModel.repeatPassword, prompt: Text("Repeat your password"))
-                            .keyboardType(.default)
-                            .focused($focus, equals: .password)
+                            .focused($focus, equals: .repeatPassword)
                             .submitLabel(.done)
                             .textFieldStyle(.roundedBorder)
                             .overlay(alignment: .trailing) {
@@ -123,25 +119,26 @@ struct RegisterView: View {
                     self.navigate(.forget)
                 }
             
-            HStack {
-                Text("Sign Up")
-                    .foregroundStyle(Theme.white)
+            Button("Sign up") {
+                Task {
+                    do {
+                        let (user, profile) = try await viewModel.signUp()
+                        
+                        if let user = user {
+                            userViewModel.user = user
+                        }
+                        
+                        userViewModel.userProfile = profile
+                    } catch {
+                        errorHanler.handleError(error: error)
+                    }
+                }
             }
+            .foregroundStyle(Theme.white)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 7)
             .background(Theme.darkOrange)
             .clipShape(.rect(cornerRadius: 10))
-            .onTapGesture {
-                Task {
-                    let (user, profile) = await viewModel.signUp()
-                    
-                    if let user = user {
-                        userViewModel.user = SupabaseUser(id: user.id, uid: user.id.uuidString)
-                    }
-                    
-                    userViewModel.userProfile = profile
-                }
-            }
             
             HStack {
                 BodyText("You have an account?")
@@ -155,6 +152,7 @@ struct RegisterView: View {
             
             Spacer()
         }
+        .errorPopover()
         .padding()
         .onSubmit {
             viewModel.changeFocus()

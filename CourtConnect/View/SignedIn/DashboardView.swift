@@ -15,7 +15,8 @@ struct DashboardView: View {
     
     var body: some View {
         NavigationStack {
-            VStack(spacing: 20) {
+            VStack(spacing: 20) { 
+                
                 if !networkMonitorViewModel.isConnected {
                     InternetUnavailableView()
                 } else {
@@ -33,9 +34,6 @@ struct DashboardView: View {
             .navigationTitle("Daskboard")
             .navigationBarTitleDisplayMode(.inline)
             .userToolBar(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel)
-            .onAppear {
-                userViewModel.onAppDashboardAppear()
-            }
         } 
     }
 }

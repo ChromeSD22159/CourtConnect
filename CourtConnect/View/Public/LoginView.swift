@@ -9,6 +9,7 @@ import Supabase
 
 struct LoginView: View {
     @State var viewModel: LoginViewModel
+    @State var errorHanler = ErrorHandlerViewModel.shared
     @ObservedObject var userViewModel: SharedUserViewModel
     @FocusState var focus: LoginViewModel.Field?
     
@@ -45,7 +46,6 @@ struct LoginView: View {
                     SmallText("Password")
                     if viewModel.showPassword {
                         TextField("Password", text: $viewModel.password, prompt: Text("Enter your Password"))
-                            .keyboardType(.default)
                             .focused($focus, equals: .password)
                             .submitLabel(.done)
                             .textFieldStyle(.roundedBorder)
@@ -77,29 +77,26 @@ struct LoginView: View {
                     self.navigate(.forget)
                 }
             
-            HStack {
-                Text("Sign in")
-                    .foregroundStyle(Theme.white)
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 7)
-            .background(Theme.darkOrange)
-            .clipShape(.rect(cornerRadius: 10))
-            .onTapGesture {
+            Button("Sign in") {
                 Task {
                     do {
                         let (user, userProfile) = try await viewModel.signIn()
                         
                         if let user = user {
-                            userViewModel.user = SupabaseUser(id: user.id, uid: user.id.uuidString)
+                            userViewModel.user = user
                         }
                         
                         userViewModel.userProfile = userProfile
-                    } catch {
-                        
+                    } catch { 
+                        errorHanler.handleError(error: error)
                     }
                 }
             }
+            .foregroundStyle(Theme.white)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 7)
+            .background(Theme.darkOrange)
+            .clipShape(.rect(cornerRadius: 10))
           
             HStack {
                 BodyText("Don`t have an account?")
@@ -113,6 +110,7 @@ struct LoginView: View {
             
             Spacer()
         }
+        .errorPopover()
         .padding()
         .onSubmit {
             viewModel.changeFocus()
