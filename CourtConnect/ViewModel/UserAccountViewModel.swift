@@ -30,7 +30,7 @@ class UserAccountViewModel: SyncronizationViewModelProtocol, ObservableObject {
     func insertAccount() throws -> UserAccount? {
         guard let userId = userId else { return nil }
         
-        let account = UserAccount(userId: userId, teamId: "", position: position.rawValue, role: role.rawValue, createdAt: Date(), updatedAt: Date())
+        let account = UserAccount(userId: userId, teamId: "", position: position.rawValue, role: role.rawValue, displayName: role.rawValue, createdAt: Date(), updatedAt: Date())
         
         try repository.accountRepository.usert(item: account)
         

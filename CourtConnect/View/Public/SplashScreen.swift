@@ -46,7 +46,7 @@ struct SplashScreen: View {
         }
     }
 }
-
+ 
 #Preview {
     @Previewable @State var isSlashScreen = true
     SplashScreen(duration: 3.0, isVisible: $isSlashScreen) {
