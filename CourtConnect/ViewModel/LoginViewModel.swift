@@ -45,8 +45,8 @@ import Supabase
                 LocalStorageService.shared.user = user
             }
             
-            try await repository.userRepository.syncUserProfile(userId: user.id.uuidString)
-            let userProfile = try await repository.userRepository.getUserProfileFromDatabase(userId: user.id.uuidString)
+            try await repository.userRepository.syncUserProfile(userId: user.id)
+            let userProfile = try await repository.userRepository.getUserProfileFromDatabase(userId: user.id)
             return ( user , userProfile )
         } catch {
             throw error

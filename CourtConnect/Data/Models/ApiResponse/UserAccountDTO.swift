@@ -8,7 +8,7 @@ import Foundation
 
 struct UserAccountDTO: Codable {
     var id: UUID // PK
-    var userId: String
+    var userId: UUID
     var teamId: String
     var position: String
     var role: String
@@ -16,7 +16,7 @@ struct UserAccountDTO: Codable {
     var updatedAt: Date
     var deletedAt: Date?
     
-    init(id: UUID = UUID(), userId: String, teamId: String, position: String, role: String, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil) {
+    init(id: UUID = UUID(), userId: UUID, teamId: String, position: String, role: String, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil) {
         self.id = id
         self.userId = userId
         self.teamId = teamId

@@ -16,7 +16,7 @@ struct MainNavigationView: View {
     
     init(userViewModel: SharedUserViewModel) {
         self.userViewModel = userViewModel
-        self.userAccountViewModel = UserAccountViewModel(repository: userViewModel.repository, userId: userViewModel.user?.id.uuidString)
+        self.userAccountViewModel = UserAccountViewModel(repository: userViewModel.repository, userId: userViewModel.user?.id)
     }
     
     var body: some View {

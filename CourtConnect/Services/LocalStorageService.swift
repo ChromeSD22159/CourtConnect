@@ -34,31 +34,3 @@ struct LocalStorageService {
         }
     }
 }
- 
-/*
- struct SupabaseUser: Identifiable, Codable {
-     var id: UUID
-     var uid: String
- }
-
- extension User {
-     func toSupabaseUser() -> SupabaseUser {
-         return SupabaseUser(id: self.id, uid: self.id.uuidString)
-     }
- }
- 
- var user: SupabaseUser? {
-     get {
-        guard let data = UserDefaults.standard.data(forKey: "SupabaseUser") else { return nil }
-        return try? JSONDecoder().decode(SupabaseUser.self, from: data)
-     }
-     set {
-        if let newValue = newValue {
-            let data = try? JSONEncoder().encode(newValue)
-            UserDefaults.standard.set(data, forKey: "SupabaseUser")
-        } else {
-            UserDefaults.standard.removeObject(forKey: "SupabaseUser")
-        }
-     }
- }
- */

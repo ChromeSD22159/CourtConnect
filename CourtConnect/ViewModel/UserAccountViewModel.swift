@@ -4,25 +4,26 @@
 //
 //  Created by Frederik Kohler on 23.01.25.
 //
-import FirebaseAuth
+import Supabase
+import Foundation
 
 @Observable
 @MainActor
 class UserAccountViewModel: SyncronizationViewModelProtocol, ObservableObject {
     
     var repository: Repository
-    var userId: String? 
+    var userId: UUID?
     var accounts: [UserAccount] = []
     var isCreateRoleSheet = false
     var role: UserRole = .player
     var position: BasketballPosition = .center
     
-    init(repository: Repository, userId: String?) {
+    init(repository: Repository, userId: UUID?) {
         self.repository = repository
         self.userId = userId
     }
     
-    func getLastSyncDate(userId: String) throws -> Date {
+    func getLastSyncDate(userId: UUID) throws -> Date {
         return try repository.syncHistoryRepository.getLastSyncDate(for: .userAccount, userId: userId)?.timestamp ?? repository.syncHistoryRepository.defaultDate
     }
     
@@ -51,9 +52,9 @@ class UserAccountViewModel: SyncronizationViewModelProtocol, ObservableObject {
     
     func getCurrentAccount() -> UserAccount? {
         do {
-            guard let userAccountId = LocalStorageService.shared.userAccountId, let id = UUID(uuidString: userAccountId) else { return nil }
+            guard let userAccount = LocalStorageService.shared.user else { return nil }
             
-            return try repository.accountRepository.getAccount(id: id)
+            return try repository.accountRepository.getAccount(id: userAccount.id)
         } catch {
             return nil
         }

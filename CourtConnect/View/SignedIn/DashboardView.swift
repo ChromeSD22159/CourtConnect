@@ -40,7 +40,7 @@ struct DashboardView: View {
  
 #Preview {
     @Previewable @State var userViewModel = SharedUserViewModel(repository: Repository(type: .preview))
-    @Previewable @State var userAccountViewModel = UserAccountViewModel(repository: Repository(type: .preview), userId: "nil")
+    @Previewable @State var userAccountViewModel = UserAccountViewModel(repository: Repository(type: .preview), userId: nil)
     @Previewable @State var networkMonitorViewModel = NetworkMonitorViewModel()
     
     DashboardView(

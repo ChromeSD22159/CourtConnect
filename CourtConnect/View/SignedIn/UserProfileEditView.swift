@@ -30,19 +30,7 @@ struct UserProfileEditView: View {
                     .textFieldStyle(.roundedBorder)
                 
                 DatePicker("Birthday", selection: userViewModel.birthBinding, displayedComponents: .date)
-                .datePickerStyle(.compact)
-                
-                HStack {
-                    Text("Account Type:")
-                    Spacer()
-                    Picker("Account Type:", selection: $userViewModel.editProfile.roleString, content: {
-                        ForEach(UserRole.registerRoles, id: \.rawValue) { role in
-                            Text(role.rawValue).tag(role.rawValue)
-                        }
-                    })
-                    .pickerStyle(.menu)
-                    .tint(.primary)
-                }
+                .datePickerStyle(.compact) 
                 
                 if !isSheet {
                     HStack {

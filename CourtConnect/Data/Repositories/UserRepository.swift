@@ -48,7 +48,7 @@ class UserRepository {
         }
     }
     
-    func getUserProfileFromDatabase(userId: String) throws -> UserProfile? {
+    func getUserProfileFromDatabase(userId: UUID) throws -> UserProfile? {
         let predicate = #Predicate<UserProfile> {
             $0.userId == userId
         }
@@ -60,7 +60,7 @@ class UserRepository {
         return try container.mainContext.fetch(fetchDescriptor).first
     }
      
-    func syncUserProfile(userId: String) async throws {
+    func syncUserProfile(userId: UUID) async throws {
         let date: [UserProfile] = try await backendClient.supabase
             .from(DatabaseTable.userProfile.rawValue)
             .select("*")
@@ -89,9 +89,8 @@ class UserRepository {
     }
     
     func removeUserProfile(user: User) throws {
-        let userId = user.id.uuidString
         let predicate = #Predicate<UserProfile> {
-            $0.userId == userId
+            $0.userId == user.id
         }
         
         let fetchDescriptor = FetchDescriptor<UserProfile>(
@@ -106,7 +105,7 @@ class UserRepository {
         }
     }
     
-    func setUserOnline(userId: String, userProfile: UserProfile) async throws -> Bool {
+    func setUserOnline(userId: UUID, userProfile: UserProfile) async throws -> Bool {
         let userOnline = UserOnline(userId: userId, firstName: userProfile.firstName, lastName: userProfile.lastName, deviceToken: self.deviceToken)
         
         try await backendClient.supabase
@@ -117,11 +116,11 @@ class UserRepository {
         return await isRequestSuccessful(statusCode: 201)
     }
     
-    func setUserOffline(userId: String) async throws -> Bool {
+    func setUserOffline(userId: UUID) async throws -> Bool {
          let query = try await backendClient.supabase
             .from(DatabaseTable.userOnline.rawValue)
            .delete()
-           .match(["userId": userId, "deviceToken": self.deviceToken])
+           .match(["userId": userId.uuidString, "deviceToken": self.deviceToken])
            .execute()
 
          // Check the response status code

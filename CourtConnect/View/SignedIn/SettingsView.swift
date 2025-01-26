@@ -12,8 +12,6 @@ struct SettingsView: View {
     @ObservedObject var userViewModel: SharedUserViewModel
     @ObservedObject var networkMonitorViewModel: NetworkMonitorViewModel
     
-    @AppStorage("isBackendLocal") var isBackendLocal = true
-    
     var body: some View {
         NavigationStack {
             List {
@@ -33,9 +31,6 @@ struct SettingsView: View {
                     NavigationLink("DEBUG Options") {
                         DebugView(userAccountViewModel: userAccountViewModel, userViewModel: userViewModel)
                     }
-                    
-                    Toggle("isBackendLocal", isOn: $isBackendLocal)
-                        .tint(Theme.lightOrange)
                 } header: {
                     Text("Development")
                 }
@@ -71,12 +66,11 @@ struct SettingsView: View {
                 }
                 
                 Section {
-                    Text("Logout")
-                        .onTapGesture {
-                            userViewModel.signOut()
-                        }
-                        .foregroundStyle(.white)
-                        .listRowBackground(Theme.darkOrange)
+                    Button("Logout") {
+                        userViewModel.signOut()
+                    }
+                    .foregroundStyle(.white)
+                    .listRowBackground(Theme.darkOrange)
                 }
             }
             .navigationTitle("Settings")

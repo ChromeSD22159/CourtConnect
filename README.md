@@ -90,8 +90,27 @@ Die App verwendet das MVVM-Pattern kombiniert mit einem Repository-Pattern und S
 Füge die Datei GoogleService-Info.plist in dein Projekt ein. Diese wird für die Integration von Firebase benötigt. 
 In deine Info.plist:
 ```
-SupabaseUrl: String = <host>
-SupabaseKey: String = <Key>
+    <key>DefaultEnvironment</key>
+    <string>Local</string>
+    <key>SupabaseEnvironments</key>
+    <array>
+        <dict>
+            <key>Name</key>
+            <string>Local</string>
+            <key>SupabaseKey</key>
+            <string>ey...</string>
+            <key>SupabaseUrl</key>
+            <string>http://192.168.0.178:54321</string>
+        </dict>
+        <dict>
+            <key>Name</key>
+            <string>Remote</string>
+            <key>SupabaseKey</key>
+            <string>ey...</string>
+            <key>SupabaseUrl</key>
+            <string>https://......supabase.co</string>
+        </dict>
+    </array>
 ```
 
 #### Supabase:

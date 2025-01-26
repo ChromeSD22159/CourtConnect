@@ -62,16 +62,6 @@ struct RegisterView: View {
                     .datePickerStyle(.compact)
                 
                 VStack(alignment: .leading, spacing: 5) {
-                    SmallText("Which position?")
-                    Picker("UserRole", selection: $viewModel.role) {
-                        ForEach(UserRole.registerRoles) { role in
-                            Text(role.rawValue).tag(role)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                }
-                
-                VStack(alignment: .leading, spacing: 5) {
                     SmallText("Password")
                     if viewModel.showPassword {
                         TextField("Password", text: $viewModel.password, prompt: Text("Enter your Password"))

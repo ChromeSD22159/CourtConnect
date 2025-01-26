@@ -1,9 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "Account Type:" : {
-
-    },
     "App Status" : {
 
     },
@@ -79,9 +76,6 @@
     "Home" : {
 
     },
-    "isBackendLocal" : {
-
-    },
     "Keep me signed in" : {
 
     },
@@ -146,9 +140,6 @@
 
     },
     "updatedAt: %@" : {
-
-    },
-    "UserRole" : {
 
     },
     "Version: -" : {

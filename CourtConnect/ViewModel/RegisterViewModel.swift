@@ -12,8 +12,7 @@ import Supabase
     
     var email: String = ""
     var firstName: String = ""
-    var lastName: String = ""
-    var role: UserRole = .player
+    var lastName: String = "" 
     var birthday: Date = Date()
     var password: String = ""
     var repeatPassword: String = ""
@@ -47,7 +46,7 @@ import Supabase
         LocalStorageService.shared.user = user
         
         let date = Date()
-        let profile = UserProfile(userId: user.id.uuidString, firstName: firstName, lastName: lastName, roleString: role.rawValue, birthday: DateUtil.dateDDMMYYYYToString(date: birthday), createdAt: date, updatedAt: date, lastOnline: date)
+        let profile = UserProfile(userId: user.id, firstName: firstName, lastName: lastName, birthday: DateUtil.dateDDMMYYYYToString(date: birthday), createdAt: date, updatedAt: date, lastOnline: date)
         
         try await repository.userRepository.sendUserProfileToBackend(profile: profile)
         return ( user, profile )

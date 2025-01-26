@@ -17,7 +17,7 @@ class SharedUserViewModel: ObservableObject {
     var currentAccount: UserAccount?
     var showOnBoarding = false
     var showDeleteConfirmMenu = false
-    var editProfile: UserProfile = UserProfile(userId: "", firstName: "", lastName: "", roleString: UserRole.player.rawValue, birthday: "", createdAt: Date(), updatedAt: Date())
+    var editProfile: UserProfile = UserProfile(userId: UUID(), firstName: "", lastName: "", birthday: "", createdAt: Date(), updatedAt: Date())
     var onlineUser: [UserOnline] = []
     var onlineUserCount: Int {
         self.onlineUser.count
@@ -51,20 +51,19 @@ class SharedUserViewModel: ObservableObject {
     
     func resetEditUserProfile() {
         guard let user = user else { return }
-        self.editProfile = UserProfile(userId: user.id.uuidString, firstName: "", lastName: "", roleString: UserRole.player.rawValue, birthday: "", createdAt: Date(), updatedAt: Date())
+        self.editProfile = UserProfile(userId: user.id, firstName: "", lastName: "", birthday: "", createdAt: Date(), updatedAt: Date())
     }
     
     func saveUserProfile() {
         guard
             let user = self.user,
             !editProfile.firstName.isEmpty,
-            !editProfile.lastName.isEmpty,
-            !editProfile.roleString.isEmpty
+            !editProfile.lastName.isEmpty
         else {
             return
         }
         
-        editProfile.userId = user.id.uuidString
+        editProfile.userId = user.id
         editProfile.updatedAt = Date()
         
         Task {
@@ -84,6 +83,9 @@ class SharedUserViewModel: ObservableObject {
             do {
                 try await self.repository.userRepository.signOut()
                 self.setCurrentAccount(newAccount: nil)
+                
+                user = nil
+                userProfile = nil
             } catch {
                 print(error.localizedDescription)
             }
@@ -93,7 +95,7 @@ class SharedUserViewModel: ObservableObject {
     func isAuthendicated() {
         Task {
             if let user = await self.repository.userRepository.isAuthendicated(),
-               let userProfile = try self.repository.userRepository.getUserProfileFromDatabase(userId: user.id.uuidString) {
+               let userProfile = try self.repository.userRepository.getUserProfileFromDatabase(userId: user.id) {
                 
                 withAnimation {
                     self.user = user
@@ -119,7 +121,7 @@ class SharedUserViewModel: ObservableObject {
                     userProfile.fcmToken = fcmToken
                 }
                 
-                _ = try await self.repository.userRepository.setUserOnline(userId: user.id.uuidString, userProfile: userProfile)
+                _ = try await self.repository.userRepository.setUserOnline(userId: user.id, userProfile: userProfile)
                 
                 self.onlineUser = try await self.repository.userRepository.getOnlineUserList()
                 
@@ -132,7 +134,7 @@ class SharedUserViewModel: ObservableObject {
         guard let user = user else { return }
         Task {
             do {
-                _ = try await self.repository.userRepository.setUserOffline(userId: user.id.uuidString)
+                _ = try await self.repository.userRepository.setUserOffline(userId: user.id)
             } catch { print(error) }
         }
     } 
@@ -174,7 +176,9 @@ class SharedUserViewModel: ObservableObject {
     func setCurrentAccount(newAccount: UserAccount?) {
         self.currentAccount = newAccount
         LocalStorageService.shared.userAccountId = newAccount?.id.uuidString
-    } 
+        
+        isAuthendicated()
+    }
     
     private func listenForOnlineUserComesOnline() {
         Task {
