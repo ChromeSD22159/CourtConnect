@@ -5,7 +5,7 @@
 //  Created by Frederik Kohler on 16.01.25.
 //
 import SwiftUI 
-import FirebaseAuth
+
 struct DashboardView: View {
     @ObservedObject var userViewModel: SharedUserViewModel
     @ObservedObject var userAccountViewModel: UserAccountViewModel

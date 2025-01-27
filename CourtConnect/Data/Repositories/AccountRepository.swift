@@ -6,8 +6,7 @@
 //
 
 import SwiftData
-import SwiftUI
-import FirebaseAuth
+import SwiftUI 
  
 class AccountRepository: SyncronizationProtocol {
     
