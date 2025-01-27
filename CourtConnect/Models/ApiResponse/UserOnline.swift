@@ -10,7 +10,7 @@ import UIKit
 
 class UserOnline: Identifiable, Codable {
     var id: UUID
-    var userId: String
+    var userId: UUID
     var firstName: String
     var lastName: String
     var deviceToken: String
@@ -20,7 +20,7 @@ class UserOnline: Identifiable, Codable {
         case id, userId, firstName, lastName, deviceToken, timestamp
     }
     
-    init(id: UUID = UUID(), userId: String, firstName: String, lastName: String, deviceToken: String, timestamp: Date = Date()) {
+    init(id: UUID = UUID(), userId: UUID, firstName: String, lastName: String, deviceToken: String, timestamp: Date = Date()) {
         self.id = id
         self.userId = userId
         self.firstName = firstName
@@ -32,7 +32,7 @@ class UserOnline: Identifiable, Codable {
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(UUID.self, forKey: .id)
-        self.userId = try container.decode(String.self, forKey: .userId)
+        self.userId = try container.decode(UUID.self, forKey: .userId)
         self.firstName = try container.decode(String.self, forKey: .firstName)
         self.lastName = try container.decode(String.self, forKey: .lastName)
         self.deviceToken = try container.decode(String.self, forKey: .deviceToken)
@@ -51,6 +51,6 @@ class UserOnline: Identifiable, Codable {
 
 extension UserOnline {
     func toUserProfile() -> UserProfile {
-        return UserProfile(userId: self.userId, firstName: self.firstName, lastName: self.lastName, roleString: "", birthday: "")
+        return UserProfile(userId: self.userId, firstName: self.firstName, lastName: self.lastName, birthday: "")
     }
 }

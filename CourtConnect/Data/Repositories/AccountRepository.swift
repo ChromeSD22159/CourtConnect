@@ -24,21 +24,21 @@ class AccountRepository: SyncronizationProtocol {
         try container.mainContext.save()
     }
     
-    func getAllAccounts(userId: String) throws -> [UserAccount] {
+    func getAllAccounts(userId: UUID) throws -> [UserAccount] {
         let predicate = #Predicate<UserAccount> { $0.userId == userId && $0.deletedAt == nil }
         let fetchDescruptor = FetchDescriptor<UserAccount>(predicate: predicate)
         let resul = try container.mainContext.fetch(fetchDescruptor)
         return resul
     }
     
-    func getAccountsAfterTimeStamp(userId: String, lastSync: Date) throws -> [UserAccount] {
+    func getAccountsAfterTimeStamp(userId: UUID, lastSync: Date) throws -> [UserAccount] {
         let predicate = #Predicate<UserAccount> { $0.userId == userId && $0.updatedAt > lastSync }
         let fetchDescruptor = FetchDescriptor<UserAccount>(predicate: predicate)
         let result = try container.mainContext.fetch(fetchDescruptor)
         return result
     }
     
-    func getAccount(userId: String) throws -> UserAccount? {
+    func getAccount(userId: UUID) throws -> UserAccount? {
         let predicate = #Predicate<UserAccount> { $0.userId == userId && $0.deletedAt == nil }
         let fetchDescruptor = FetchDescriptor<UserAccount>(predicate: predicate)
         let resul = try container.mainContext.fetch(fetchDescruptor).first
@@ -74,7 +74,7 @@ class AccountRepository: SyncronizationProtocol {
     }
     
     // MARK: SYNCING
-    func sendUpdatedAfterLastSyncToBackend(userId: String, lastSync: Date) async { 
+    func sendUpdatedAfterLastSyncToBackend(userId: UUID, lastSync: Date) async { 
         Task {
             do {
                 try await Task.sleep(for: .seconds(1))

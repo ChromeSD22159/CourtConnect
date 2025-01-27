@@ -66,7 +66,7 @@ struct CreateUserAccountView: View {
     }
     .sheet(isPresented: .constant(true)) {
         CreateUserAccountView(
-            userAccountViewModel: UserAccountViewModel(repository: Repository(type: .preview), userId: "nil"),
+            userAccountViewModel: UserAccountViewModel(repository: Repository(type: .preview), userId: nil),
             userViewModel: SharedUserViewModel(repository: Repository(type: .preview)))
             .shadow(radius: 5)
     }

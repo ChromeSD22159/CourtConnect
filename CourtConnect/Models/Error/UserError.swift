@@ -7,4 +7,5 @@
  
 enum UserError: Error {
     case userIdNotFound
+    case signInFailed
 }

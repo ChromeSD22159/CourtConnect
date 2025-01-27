@@ -15,7 +15,8 @@ struct DashboardView: View {
     
     var body: some View {
         NavigationStack {
-            VStack(spacing: 20) {
+            VStack(spacing: 20) { 
+                
                 if !networkMonitorViewModel.isConnected {
                     InternetUnavailableView()
                 } else {
@@ -33,16 +34,13 @@ struct DashboardView: View {
             .navigationTitle("Daskboard")
             .navigationBarTitleDisplayMode(.inline)
             .userToolBar(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel)
-            .onAppear {
-                userViewModel.onAppDashboardAppear()
-            }
         } 
     }
 }
  
 #Preview {
     @Previewable @State var userViewModel = SharedUserViewModel(repository: Repository(type: .preview))
-    @Previewable @State var userAccountViewModel = UserAccountViewModel(repository: Repository(type: .preview), userId: "nil")
+    @Previewable @State var userAccountViewModel = UserAccountViewModel(repository: Repository(type: .preview), userId: nil)
     @Previewable @State var networkMonitorViewModel = NetworkMonitorViewModel()
     
     DashboardView(

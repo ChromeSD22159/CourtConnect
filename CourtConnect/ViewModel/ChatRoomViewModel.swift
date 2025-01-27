@@ -27,10 +27,10 @@ class ChatRoomViewModel: ObservableObject {
         self.recipientUser = recipientUser 
     }
     
-    func addMessage(senderID: String, recipientId: String) {
+    func addMessage(senderID: UUID, recipientId: UUID) {
         guard !inputText.isEmpty else { return }
         let timestamp = SyncHistory(table: DatabaseTable.messages.rawValue, userId: myUser.userId)
-        let new = Chat(senderId: senderID, recipientId: recipientId, message: inputText, createdAt: Date(), readedAt: nil)
+        let new = Chat(senderId: senderID.uuidString, recipientId: recipientId.uuidString, message: inputText, createdAt: Date(), readedAt: nil)
         Task {
             do {
                 if let lastSync = try lastSyncDate() {
@@ -65,7 +65,7 @@ class ChatRoomViewModel: ObservableObject {
     func getAllMessages() {
         Task {
             if let lastSync = try lastSyncDate() {
-                await repository.chatRepository.syncChatFromBackend(myUserId: myUser.userId, recipientId: recipientUser.userId, lastSync: lastSync) { result in
+                await repository.chatRepository.syncChatFromBackend(myUserId: myUser.userId.uuidString, recipientId: recipientUser.userId.uuidString, lastSync: lastSync) { result in
                     switch result {
                     case .success(let messages):
                         self.messages = messages
@@ -75,7 +75,7 @@ class ChatRoomViewModel: ObservableObject {
                 }
             } else {
                 let lastSync = self.repository.syncHistoryRepository.defaultStartDate
-                await repository.chatRepository.syncChatFromBackend(myUserId: myUser.userId, recipientId: recipientUser.userId, lastSync: lastSync) { result in
+                await repository.chatRepository.syncChatFromBackend(myUserId: myUser.userId.uuidString, recipientId: recipientUser.userId.uuidString, lastSync: lastSync) { result in
                     switch result {
                     case .success(let messages):
                         self.messages = messages
@@ -89,7 +89,7 @@ class ChatRoomViewModel: ObservableObject {
     
     func startReceiveMessages() {
         Task {
-            repository.chatRepository.receiveMessages(myUserId: myUser.userId, recipientId: recipientUser.userId, complete: { result in
+            repository.chatRepository.receiveMessages(myUserId: myUser.userId.uuidString, recipientId: recipientUser.userId.uuidString, complete: { result in
                 switch result {
                 case .success(let messages):
                     self.messages = messages

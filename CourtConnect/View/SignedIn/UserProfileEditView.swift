@@ -10,6 +10,12 @@ struct UserProfileEditView: View {
     @ObservedObject var userViewModel: SharedUserViewModel
     @Environment(\.dismiss) var dismiss
     @FocusState var focus: Field?
+    let isSheet: Bool
+    
+    init(userViewModel: SharedUserViewModel, isSheet: Bool) {
+        self.userViewModel = userViewModel
+        self.isSheet = isSheet
+    }
     
     var body: some View {
         NavigationStack {
@@ -24,18 +30,24 @@ struct UserProfileEditView: View {
                     .textFieldStyle(.roundedBorder)
                 
                 DatePicker("Birthday", selection: userViewModel.birthBinding, displayedComponents: .date)
-                .datePickerStyle(.compact)
+                .datePickerStyle(.compact) 
                 
-                HStack {
-                    Text("Account Type:")
-                    Spacer()
-                    Picker("Account Type:", selection: $userViewModel.editProfile.roleString, content: {
-                        ForEach(UserRole.registerRoles, id: \.rawValue) { role in
-                            Text(role.rawValue).tag(role.rawValue)
+                if !isSheet {
+                    HStack {
+                        Button("Cancel") {
+                            dismiss()
                         }
-                    })
-                    .pickerStyle(.menu)
-                    .tint(.primary)
+                        .buttonStyle(RoundedFilledButtonStlye())
+                        
+                        Button("Save Profile", role: .destructive) {
+                            if (userViewModel.user != nil) {
+                                userViewModel.saveUserProfile()
+                                dismiss()
+                            }
+                        }
+                        .buttonStyle(RoundedFilledButtonStlye())
+   
+                    }
                 }
                 
                 Spacer()
@@ -52,25 +64,38 @@ struct UserProfileEditView: View {
                     if let lastOnline = userViewModel.userProfile?.lastOnline {
                         Text("lastOnline: \(lastOnline.formatted(date: .long, time: .shortened))").font(.caption)
                     }
+                    
+                    Button("Delete User Account") {
+                        userViewModel.showDeleteConfirmMenu.toggle()
+                    }
+                    .buttonStyle(RoundedFilledButtonStlye())
+                    .confirmationDialog("Delete your Account", isPresented: $userViewModel.showDeleteConfirmMenu) {
+                        Button("Delete", role: .destructive) {  userViewModel.deleteUserAccount() }
+                        Button("Cancel", role: .cancel) { userViewModel.showDeleteConfirmMenu.toggle() }
+                    } message: {
+                        Text("Delete your Account")
+                    }
                 }
             }
             .presentationDetents([.medium])
             .presentationDragIndicator(.visible)
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel") {
-                        dismiss()
-                    }
-                    .tint(.primary)
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Save Profile", role: .destructive) {
-                        if (userViewModel.user != nil) {
-                            userViewModel.saveUserProfile()
+                if isSheet {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button("Cancel") {
                             dismiss()
                         }
+                        .tint(.primary)
                     }
-                    .tint(.primary)
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button("Save Profile", role: .destructive) {
+                            if (userViewModel.user != nil) {
+                                userViewModel.saveUserProfile()
+                                dismiss()
+                            }
+                        }
+                        .tint(.primary)
+                    }
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
@@ -89,8 +114,8 @@ struct UserProfileEditView: View {
     enum Field {
         case firstName, lastName
     }
-}
+} 
 
 #Preview {
-    UserProfileEditView(userViewModel: SharedUserViewModel(repository: Repository(type: .preview)))
+    UserProfileEditView(userViewModel: SharedUserViewModel(repository: Repository(type: .preview)), isSheet: true)
 }

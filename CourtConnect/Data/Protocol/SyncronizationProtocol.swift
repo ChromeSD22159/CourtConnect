@@ -8,13 +8,13 @@ import Foundation
 import SwiftData
 
 @MainActor protocol SyncronizationProtocol {
-    associatedtype LocalModel
-    associatedtype RemoteDTO
+    associatedtype LocalModel: PersistentModel
+    associatedtype RemoteDTO: Codable
     var backendClient: BackendClient { get set }
     var container: ModelContainer { get set }
     func usert(item: LocalModel) throws
     func softDelete(item: UserAccount) throws
-    func sendUpdatedAfterLastSyncToBackend(userId: String, lastSync: Date) async
+    func sendUpdatedAfterLastSyncToBackend(userId: UUID, lastSync: Date) async
     func sendToBackend(item: LocalModel) async throws
     func fetchFromServer(after: Date) async throws -> [RemoteDTO]
 }
