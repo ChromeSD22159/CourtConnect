@@ -55,7 +55,7 @@ struct ChatView: View {
                     Menu {
                         let cal = Calendar.current
                         let string = cal.isDateInToday(viewModel.recipientUser.lastOnline) ? "heute, um" : "am " + viewModel.recipientUser.lastOnline.formattedDate()
-                        Text("Zuletzt Online, \(string + " " + viewModel.recipientUser.lastOnline.formattedTime()) Uhr")
+                        Text("Last online, \(string + " " + viewModel.recipientUser.lastOnline.formattedTime()) Uhr")
                             .font(.caption)
                         
                         Button("Reload Chat") {
@@ -91,7 +91,7 @@ fileprivate struct InputField: View {
     
     var body: some View {
         HStack {
-            TextField("Deine Nachricht", text: $viewModel.inputText, prompt: Text("Deine Nachricht"))
+            TextField("Your Message", text: $viewModel.inputText, prompt: Text("Your Message"))
                 .padding(.leading)
             RoundImageButton(viewModel: viewModel, systemName: "paperplane") {
                 onPressSend()

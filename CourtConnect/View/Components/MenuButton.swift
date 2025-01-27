@@ -31,7 +31,7 @@ struct MenuButton<Content: View>: View {
                 MenuButton(icon: "figure") {
                     Button("Player") {}
                     
-                    Button("Trainer") {}
+                    Button("Coach") {}
                 }
                 .foregroundStyle(.red)
             }

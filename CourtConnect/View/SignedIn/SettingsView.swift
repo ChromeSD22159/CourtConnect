@@ -47,12 +47,12 @@ struct SettingsView: View {
                     // MARK: - LastOnline
                     if let date = userViewModel.userProfile?.lastOnline {
                         HStack {
-                            Text("Zuletzt Online:")
+                            Text("Last online:")
                             Spacer()
                             Text(date.formattedDate() + " " + date.formattedTime() + " Uhr")
                         }
                     } else {
-                        Text("Zuletzt Online: -")
+                        Text("Last online: -")
                     }
                     
                     // MARK: - Version
@@ -110,7 +110,7 @@ fileprivate struct OnlineUserList: View {
                         Image(systemName: networkMonitorViewModel.isConnected ? "wifi" : "wifi.exclamationmark")
                     }
                 } else if userViewModel.onlineUser.isEmpty {
-                    Text("Niemand ist Online!")
+                    Text("Nobody is online!")
                 } else {
                     ForEach(userViewModel.onlineUser, id: \.id) { onlineUser in
                         HStack {

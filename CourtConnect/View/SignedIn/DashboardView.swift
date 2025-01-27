@@ -36,7 +36,7 @@ struct DashboardView: View {
                     }
                 }
             }
-            .navigationTitle("Daskboard")
+            .navigationTitle("Dashboard")
             .navigationBarTitleDisplayMode(.inline)
             .userToolBar(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel)
         } 
