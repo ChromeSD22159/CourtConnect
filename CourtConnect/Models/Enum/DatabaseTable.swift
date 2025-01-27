@@ -10,7 +10,7 @@ enum DatabaseTable: String, CaseIterable {
     
     case userProfile = "UserProfile"
     case userOnline = "UserOnline"
-    case messages = "Messages"
+    case chat = "Chat"
     case userAccount = "UserAccount"
     case team = "Team"
     case deletionRequest = "DeletionRequest"
@@ -20,7 +20,7 @@ enum DatabaseTable: String, CaseIterable {
         switch self {
         case .userProfile: return UserProfileDTO.self
         case .userOnline: return UserAccountDTO.self
-        case .messages: return ChatDTO.self
+        case .chat: return ChatDTO.self
         case .userAccount: return UserAccountDTO.self
         case .team: return TeamDTO.self
         case .deletionRequest: return TeamDTO.self
@@ -32,11 +32,23 @@ enum DatabaseTable: String, CaseIterable {
         switch self {
         case .userProfile: return UserProfile.self
         case .userOnline: return UserAccount.self
-        case .messages: return Chat.self
+        case .chat: return Chat.self
         case .userAccount: return UserAccount.self
         case .team: return Team.self
         case .deletionRequest: return Team.self
         case .updateHistory: return Team.self
+        }
+    }
+    
+    var onConflict: String {
+        switch self {
+        case .userProfile: return "id"
+        case .userOnline: return "id"
+        case .chat: return "id"
+        case .userAccount: return "id"
+        case .team: return "id"
+        case .deletionRequest: return "id"
+        case .updateHistory: return "id"
         }
     }
 }

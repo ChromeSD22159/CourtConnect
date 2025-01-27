@@ -37,7 +37,7 @@ class ChatRepository {
             dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ" // Passe das Format an
             let formattedLastSync = dateFormatter.string(from: lastSync)
             
-            let response: [ChatDTO] = try await backendClient.supabase.from(DatabaseTable.messages.rawValue)
+            let response: [ChatDTO] = try await backendClient.supabase.from(DatabaseTable.chat.rawValue)
                .select()
                .or("senderId.eq.\(myUserId), recipientId.eq.\(recipientId), createdAt.gt.\(formattedLastSync)")
                .gte("createdAt", value: formattedLastSync)
@@ -64,7 +64,7 @@ class ChatRepository {
         guard type == .app else { return }
         
         do {
-            try await backendClient.supabase.from(DatabaseTable.messages.rawValue).insert(message.toDTO()).execute()
+            try await backendClient.supabase.from(DatabaseTable.chat.rawValue).insert(message.toDTO()).execute()
             
             await syncChatFromBackend(myUserId: message.senderId, recipientId: message.recipientId, lastSync: lastDate) { result in
                 switch result {
@@ -80,7 +80,7 @@ class ChatRepository {
     func receiveMessages(myUserId: String, recipientId: String, complete: @escaping (Result<[Chat], Error>) -> Void) {
         let channel = backendClient.supabase.realtimeV2.channel("public:Messages")
          
-        let inserts = channel.postgresChange(InsertAction.self, table: DatabaseTable.messages.rawValue)
+        let inserts = channel.postgresChange(InsertAction.self, table: DatabaseTable.chat.rawValue)
         
         Task {
             await channel.subscribe()

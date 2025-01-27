@@ -42,7 +42,7 @@ class ChatRoomViewModel: ObservableObject {
                     case .failure: break
                     }
                 })
-                try self.repository.syncHistoryRepository.insertLastSyncTimestamp(for: .messages, userId: myUser.userId)
+                try self.repository.syncHistoryRepository.insertLastSyncTimestamp(for: .chat, userId: myUser.userId)
             } catch {
                 print(error.localizedDescription)
             }
@@ -91,6 +91,6 @@ class ChatRoomViewModel: ObservableObject {
     }
     
     private func lastSyncDate() throws -> Date {
-        return try repository.syncHistoryRepository.getLastSyncDate(for: .messages, userId: myUser.userId).timestamp
+        return try repository.syncHistoryRepository.getLastSyncDate(for: .chat, userId: myUser.userId).timestamp
     }
 }

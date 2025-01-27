@@ -5,6 +5,7 @@
 //  Created by Frederik Kohler on 27.01.25.
 //
 
+import Foundation
 
 protocol DatabaseHistoryProtocol {
     var id: UUID { get set }

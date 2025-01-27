@@ -20,6 +20,4 @@ struct LocationDTO: DTOProtocol {
     func toModel() -> Location {
         return Location(id: id, name: name, street: street, number: number, zip: zip, city: city, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
-}
-
-
+} 

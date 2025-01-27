@@ -54,7 +54,7 @@ struct MessagePopover<Content: View>: View {
 #Preview {
     @Previewable @State var viewModel = InAppMessagehandler.shared
     ZStack {
-        Button("asdsad") {
+        Button("Handle Message") {
             viewModel.handleMessage(message: InAppMessage(title: "Neue Nachricht von Frederik", body: "Neue Nachricht von Frederik"))
         }
     }.messagePopover()

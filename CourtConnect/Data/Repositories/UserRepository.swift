@@ -84,7 +84,7 @@ class UserRepository {
         
         try await backendClient.supabase
             .from(DatabaseTable.userProfile.rawValue)
-            .upsert(profile.toDTO(), onConflict: "userId")
+            .upsert(profile.toDTO(), onConflict: "id")
             .execute()
     }
     

@@ -68,8 +68,8 @@ import Foundation
         
         try await backendClient.supabase
             .from(DatabaseTable.updateHistory.rawValue)
-            .upsert(entry, onConflict: "tableString, userId")
-            .execute() 
+            .upsert(entry, onConflict: "id")
+            .execute()
     }
 
     func databasesToSync(userId: UUID) async throws -> [(DatabaseTable, Date)] {
@@ -121,7 +121,7 @@ import Foundation
     func sendUpdatesToServer<T: DTOProtocol & Decodable>(for table: DatabaseTable, data: T) async throws {
         return try await self.backendClient.supabase
             .from(table.rawValue)
-            .upsert(data, onConflict: "")
+            .upsert(data, onConflict: "id")
             .execute()
             .value
     }

@@ -38,7 +38,7 @@ struct ErrorPopover<Content: View>: View {
 #Preview {
     @Previewable @State var viewModel = ErrorHandlerViewModel.shared
     ZStack {
-        Button("asdsad") {
+        Button("Handle Error") {
             viewModel.handleError(error: UserError.userIdNotFound)
         }
     }.errorPopover()
