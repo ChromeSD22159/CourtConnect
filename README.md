@@ -131,6 +131,11 @@ Stelle sicher, dass Docker installiert und betriebsbereit ist.
 Lade die JSON-Datei für Firebase Admin herunter und benenne sie in service-account.json, und füge diese in "supabase/functions/<EdgeFuncName>/service-account.json" ein.
 Diese Datei muss sich im Ordner Functions auf dem Server befinden, um serverseitige Edge-Funktionen korrekt auszuführen.
 
+Usert für mehrere Unique identifier:
+```sql
+ALTER TABLE public."<TABLE_NAME>" ADD CONSTRAINT "<TABLE_NAME>_<ROW1>_<ROW2>_unique" UNIQUE ("<ROW1>", "<ROW2>");
+```
+
 ## Kontakt Informationen  
 **Frederik Kohler**  
 ✉️ [info@frederikkohler.de](mailto:info@frederikkohler.de)

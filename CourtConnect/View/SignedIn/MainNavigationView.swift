@@ -13,10 +13,12 @@ struct MainNavigationView: View {
     
     @State var networkMonitorViewModel: NetworkMonitorViewModel = NetworkMonitorViewModel()
     @State var userAccountViewModel: UserAccountViewModel
+    @State var syncServiceViewModel: SyncServiceViewModel
     
     init(userViewModel: SharedUserViewModel) {
         self.userViewModel = userViewModel
         self.userAccountViewModel = UserAccountViewModel(repository: userViewModel.repository, userId: userViewModel.user?.id)
+        self.syncServiceViewModel = SyncServiceViewModel(repository: userViewModel.repository)
     }
     
     var body: some View {
@@ -35,9 +37,20 @@ struct MainNavigationView: View {
         .sheet(isPresented: $userViewModel.showOnBoarding, content: {
             UserProfileEditView(userViewModel: userViewModel, isSheet: true)
         })
+        .onChange(of: userViewModel.user, {
+            Task {
+                if let userId = userViewModel.userProfile?.userId {
+                    do {
+                        try await syncServiceViewModel.syncAllTables(userId: userId)
+                    } catch {
+                        print(error.localizedDescription)
+                    }
+                }
+            }
+        })
         .onAppear {
             userAccountViewModel.importAccountsAfterLastSyncFromBackend()
-        } 
+        }
         .task {
             userViewModel.setUserOnline() 
             
@@ -45,7 +58,7 @@ struct MainNavigationView: View {
             
             if await !NotificationService.getAuthStatus() {
                 await NotificationService.request()
-            } 
+            }
         }
         .onChange(of: scenePhase) { _, newPhase in
             userViewModel.changeOnlineStatus(phase: newPhase)

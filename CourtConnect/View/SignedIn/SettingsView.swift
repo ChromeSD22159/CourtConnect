@@ -112,7 +112,7 @@ fileprivate struct OnlineUserList: View {
                 } else if userViewModel.onlineUser.isEmpty {
                     Text("Niemand ist Online!")
                 } else {
-                    ForEach(userViewModel.onlineUser) { onlineUser in
+                    ForEach(userViewModel.onlineUser, id: \.id) { onlineUser in
                         HStack {
                             if let myUser: UserProfile = userViewModel.userProfile {
                                 NavigationLink { 

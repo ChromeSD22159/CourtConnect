@@ -94,7 +94,7 @@ class AccountRepository: SyncronizationProtocol {
     func sendToBackend(item: UserAccount) async throws {
         try await backendClient.supabase
             .from(DatabaseTable.userAccount.rawValue)
-            .upsert(item.toUserAccountDTO(), onConflict: "id")
+            .upsert(item.toDTO(), onConflict: "id")
             .execute()
             .value
     }

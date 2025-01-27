@@ -46,7 +46,7 @@ class ChatRepository {
                .value 
 
             for chat in response {
-                let chat = chat.toChat()
+                let chat = chat.toModel()
                 container.mainContext.insert(chat)
                 try container.mainContext.save()
             }
@@ -64,7 +64,7 @@ class ChatRepository {
         guard type == .app else { return }
         
         do {
-            try await backendClient.supabase.from(DatabaseTable.messages.rawValue).insert(message.toChat()).execute()
+            try await backendClient.supabase.from(DatabaseTable.messages.rawValue).insert(message.toDTO()).execute()
             
             await syncChatFromBackend(myUserId: message.senderId, recipientId: message.recipientId, lastSync: lastDate) { result in
                 switch result {
@@ -88,7 +88,7 @@ class ChatRepository {
             for await insertion in inserts {
                 if let message: ChatDTO = await insertion.decodeTo() {
                     
-                    container.mainContext.insert(message.toChat())
+                    container.mainContext.insert(message.toModel())
                     try container.mainContext.save()
                     
                     let all = try self.getAllFromDatabase(myUserId: myUserId, recipientId: recipientId)

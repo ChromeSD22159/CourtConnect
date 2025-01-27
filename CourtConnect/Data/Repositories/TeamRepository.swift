@@ -61,7 +61,7 @@ import Foundation
     func sendToBackend(item: Team) async throws { 
          try await backendClient.supabase
             .from(DatabaseTable.team.rawValue)
-            .upsert(item.toTeamDTO(), onConflict: "id")
+            .upsert(item.toDTO(), onConflict: "id")
             .execute()
             .value
     }
@@ -73,5 +73,10 @@ import Foundation
             .gte("updatedAt", value: after)
             .execute()
             .value
+    }
+    
+    /// TEST
+    func fetchTeamFromServer() {
+        
     }
 }

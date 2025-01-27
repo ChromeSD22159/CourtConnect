@@ -15,6 +15,7 @@ struct SplashScreen: View {
     @State var animationVisibility = true
     
     let onComplete: () -> Void
+    
     var body: some View {
         if isVisible {
             VStack(spacing: 0) {

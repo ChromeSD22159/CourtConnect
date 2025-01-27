@@ -61,7 +61,7 @@ class UserRepository {
     }
      
     func syncUserProfile(userId: UUID) async throws {
-        let date: [UserProfile] = try await backendClient.supabase
+        let date: [UserProfileDTO] = try await backendClient.supabase
             .from(DatabaseTable.userProfile.rawValue)
             .select("*")
             .eq("userId", value: userId)
@@ -69,7 +69,7 @@ class UserRepository {
             .value 
             
         if let newProfile = date.first {
-            try insertOrUpdate(profile: newProfile)
+            try insertOrUpdate(profile: newProfile.toModel())
         }
     }
     
@@ -84,7 +84,7 @@ class UserRepository {
         
         try await backendClient.supabase
             .from(DatabaseTable.userProfile.rawValue)
-            .upsert(profile, onConflict: "userId")
+            .upsert(profile.toDTO(), onConflict: "userId")
             .execute()
     }
     
@@ -106,7 +106,7 @@ class UserRepository {
     }
     
     func setUserOnline(userId: UUID, userProfile: UserProfile) async throws -> Bool {
-        let userOnline = UserOnline(userId: userId, firstName: userProfile.firstName, lastName: userProfile.lastName, deviceToken: self.deviceToken)
+        let userOnline = UserOnlineDTO(userId: userId, firstName: userProfile.firstName, lastName: userProfile.lastName, deviceToken: self.deviceToken)
         
         try await backendClient.supabase
             .from(DatabaseTable.userOnline.rawValue)
@@ -127,7 +127,7 @@ class UserRepository {
          return await isRequestSuccessful(statusCode: query.response.statusCode)
     }
     
-    func listenForOnlineUserComesOnline(completion: @escaping (Result<[UserOnline], Error>) -> Void) {
+    func listenForOnlineUserComesOnline(completion: @escaping (Result<[UserOnlineDTO], Error>) -> Void) {
         let channelInsertUserOnline = backendClient.supabase.realtimeV2.channel("public:UserOnline:insert")
           
         let insertions = channelInsertUserOnline.postgresChange(InsertAction.self, table: DatabaseTable.userOnline.rawValue)
@@ -140,7 +140,7 @@ class UserRepository {
         }
     }
     
-    func listenForOnlineUserGoesOffline(completion: @escaping (Result<[UserOnline], Error>) -> Void) {
+    func listenForOnlineUserGoesOffline(completion: @escaping (Result<[UserOnlineDTO], Error>) -> Void) {
         let channelDeleteUserOnline = backendClient.supabase.realtimeV2.channel("public:UserOnline:delete")
          
         let deletions = channelDeleteUserOnline.postgresChange(DeleteAction.self, table: DatabaseTable.userOnline.rawValue)
@@ -153,14 +153,14 @@ class UserRepository {
         }
     }
     
-    func getOnlineUserList() async throws -> [UserOnline] {
-        let list: [UserOnline] = try await backendClient.supabase
+    func getOnlineUserList() async throws -> [UserOnlineDTO] {
+        let list: [UserOnlineDTO] = try await backendClient.supabase
             .from(DatabaseTable.userOnline.rawValue)
             .select()
             .execute()
             .value
         
-        var uniqueUsers: [UserOnline] = []
+        var uniqueUsers: [UserOnlineDTO] = []
         
         list.forEach { user in
             let result = uniqueUsers.filter {
@@ -169,7 +169,7 @@ class UserRepository {
             }
             
             if result.isEmpty {
-                uniqueUsers.append(UserOnline(userId: user.userId, firstName: user.firstName, lastName: user.lastName, deviceToken: user.deviceToken, timestamp: user.timestamp))
+                uniqueUsers.append(UserOnlineDTO(userId: user.userId, firstName: user.firstName, lastName: user.lastName, deviceToken: user.deviceToken, timestamp: user.timestamp))
             }
         }
         
@@ -183,7 +183,7 @@ class UserRepository {
     func deleteUserAccount(user: User) async throws {
         try await backendClient.supabase
             .from(DatabaseTable.deletionRequest.rawValue)
-            .upsert(DeletionRequestDTO(userId: user.id), onConflict: "userId")
+            .upsert(DeletionRequestDTO(userId: user.id, createdAt: Date(), updatedAt: Date()), onConflict: "userId")
             .execute()
     }
 }

@@ -7,7 +7,7 @@
 import SwiftData
 import Foundation
 
-@Model class Team {
+@Model class Team: ModelProtocol { 
     var id: UUID
     var teamName: String
     var createdBy: String
@@ -26,7 +26,7 @@ import Foundation
         self.deletedAt = deletedAt
     }
     
-    func toTeamDTO() -> TeamDTO {
+    func toDTO() -> TeamDTO {
         return TeamDTO(id: id, teamName: teamName, createdBy: createdBy, headcoach: headcoach, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
 } 

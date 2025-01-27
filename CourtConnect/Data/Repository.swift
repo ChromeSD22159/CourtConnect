@@ -13,7 +13,7 @@ import SwiftData
     let chatRepository: ChatRepository
     let accountRepository: AccountRepository
     let teamRepository: TeamRepository
-    let syncHistoryRepository: SyncHistoryRepository
+    let syncHistoryRepository: SyncServiceRepository
     let container: ModelContainer
     
     init(type: RepositoryType) {
@@ -35,7 +35,7 @@ import SwiftData
             self.chatRepository = ChatRepository(container: container, type: type)
             self.accountRepository = AccountRepository(container: container, type: type)
             self.teamRepository = TeamRepository(container: container, type: type)
-            self.syncHistoryRepository = SyncHistoryRepository(container: container, type: type)
+            self.syncHistoryRepository = SyncServiceRepository(container: container, type: type)
         } catch {
             fatalError("Cannot create Database \(error.localizedDescription)")
         }

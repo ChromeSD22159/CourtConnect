@@ -8,7 +8,7 @@ import SwiftData
 import Foundation
 
 @Model
-class UserAccount: Identifiable, SupabaseEntitiy {
+class UserAccount: ModelProtocol { 
     @Attribute(.unique) var id: UUID
     var userId: UUID
     var teamId: String
@@ -31,7 +31,7 @@ class UserAccount: Identifiable, SupabaseEntitiy {
         self.deletedAt = deletedAt
     }
     
-    func toUserAccountDTO() -> UserAccountDTO {
+    func toDTO() -> UserAccountDTO {
         return UserAccountDTO(id: id, userId: userId, teamId: teamId, position: position, role: role, displayName: displayName, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
 }

@@ -18,7 +18,7 @@ class SharedUserViewModel: ObservableObject {
     var showOnBoarding = false
     var showDeleteConfirmMenu = false
     var editProfile: UserProfile = UserProfile(userId: UUID(), firstName: "", lastName: "", birthday: "", createdAt: Date(), updatedAt: Date())
-    var onlineUser: [UserOnline] = []
+    var onlineUser: [UserOnlineDTO] = []
     var onlineUserCount: Int {
         self.onlineUser.count
     }
@@ -70,10 +70,12 @@ class SharedUserViewModel: ObservableObject {
             do { 
                 try await self.repository.userRepository.sendUserProfileToBackend(profile: editProfile)
                 
+                try await self.repository.syncHistoryRepository.insertUpdateTimestampTable(for: .userProfile, userId: user.id)
+                
                 self.setUserOffline()
                 self.setUserOnline()
             } catch {
-                print(error.localizedDescription)
+                print("UserVM: " + error.localizedDescription)
             }
         }
     }

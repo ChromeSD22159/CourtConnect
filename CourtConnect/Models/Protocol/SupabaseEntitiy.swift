@@ -8,7 +8,8 @@
 import Foundation
  
 protocol SupabaseEntitiy {
+    var id: UUID { get set }
     var createdAt: Date { get set }
     var updatedAt: Date { get set }
     var deletedAt: Date? { get set }
-}
+}  

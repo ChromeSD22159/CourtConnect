@@ -24,7 +24,7 @@ class UserAccountViewModel: SyncronizationViewModelProtocol, ObservableObject {
     }
     
     func getLastSyncDate(userId: UUID) throws -> Date {
-        return try repository.syncHistoryRepository.getLastSyncDate(for: .userAccount, userId: userId)?.timestamp ?? repository.syncHistoryRepository.defaultDate
+        return try repository.syncHistoryRepository.getLastSyncDate(for: .userAccount, userId: userId).timestamp
     }
     
     func insertAccount() throws -> UserAccount? {
@@ -100,10 +100,10 @@ class UserAccountViewModel: SyncronizationViewModelProtocol, ObservableObject {
                 let result = try await repository.accountRepository.fetchFromServer(after: lastSync)
                 
                 for account in result {
-                    try repository.accountRepository.usert(item: account.toUserAccount())
+                    try repository.accountRepository.usert(item: account.toModel())
                 }
                 
-                try self.repository.syncHistoryRepository.insertTimestamp(for: .userAccount, userId: userId)
+                try self.repository.syncHistoryRepository.insertLastSyncTimestamp(for: .userAccount, userId: userId)
                 
                 self.getAllFromDatabase()
             } catch {
