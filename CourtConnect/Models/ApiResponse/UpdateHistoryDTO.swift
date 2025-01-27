@@ -5,7 +5,7 @@
 //  Created by Frederik Kohler on 27.01.25.
 //
 import Foundation
-// UpdateHistory
+
 struct UpdateHistoryDTO: Codable, DatabaseHistoryProtocol {
     var id: UUID
     var tableString: String
@@ -24,11 +24,4 @@ struct UpdateHistoryDTO: Codable, DatabaseHistoryProtocol {
         self.updatedAt = updatedAt
         self.deletedAt = deletedAt
     }
-}
-
-protocol DatabaseHistoryProtocol {
-    var id: UUID { get set }
-    var tableString: String { get set }
-    var userId: UUID { get set }
-    var timestamp: Date { get set }
-}
+} 

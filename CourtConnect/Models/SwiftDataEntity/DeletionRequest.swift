@@ -1,12 +1,14 @@
 //
-//  DeletionRequests.swift
+//  DeletionRequest.swift
 //  CourtConnect
 //
-//  Created by Frederik Kohler on 25.01.25.
+//  Created by Frederik Kohler on 27.01.25.
 //
+import SwiftData
 import Foundation
 
-struct DeletionRequestDTO: DTOProtocol {
+@Model
+class DeletionRequest: ModelProtocol {
     var id: UUID
     var userId: UUID
     var createdAt: Date
@@ -21,7 +23,7 @@ struct DeletionRequestDTO: DTOProtocol {
         self.deletedAt = deletedAt
     }
     
-    func toModel() -> DeletionRequest {
-        return DeletionRequest(id: id, userId: userId, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
+    func toDTO() -> DeletionRequestDTO {
+        return DeletionRequestDTO(id: id, userId: userId, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
 }
