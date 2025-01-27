@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%@" : {
+
+    },
     "App Status" : {
 
     },
@@ -103,6 +106,9 @@
     "Password" : {
 
     },
+    "Player" : {
+
+    },
     "Position" : {
 
     },
@@ -130,10 +136,16 @@
     "Sign up" : {
 
     },
+    "Termine" : {
+
+    },
     "Total Online Users: %lld" : {
 
     },
     "Total Online: %lld" : {
+
+    },
+    "Trainer" : {
 
     },
     "Try checking the Network Connection." : {

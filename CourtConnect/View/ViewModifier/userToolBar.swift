@@ -33,9 +33,10 @@ struct UserToolBar: ViewModifier {
                                     HStack {
                                         if userViewModel.currentAccount?.id == account.id {
                                             Image(systemName: "xmark")
+                                                .font(.callout)
                                         }
                                         
-                                        Text("\(account.role) \(account.isDeleted)")
+                                        Text("\(account.displayName)")
                                     }
                                 }
                             }

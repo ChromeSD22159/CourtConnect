@@ -178,8 +178,16 @@ class SharedUserViewModel: ObservableObject {
     func setCurrentAccount(newAccount: UserAccount?) {
         self.currentAccount = newAccount
         LocalStorageService.shared.userAccountId = newAccount?.id.uuidString
-        
         isAuthendicated()
+    }
+    
+    func getCurrentAccount() {
+        guard let id = LocalStorageService.shared.userAccountId else { return }
+        do { 
+            currentAccount = try repository.accountRepository.getAccount(id: UUID(uuidString: id)!)
+        } catch {
+            print(error.localizedDescription)
+        }
     }
     
     private func listenForOnlineUserComesOnline() {

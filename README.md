@@ -133,7 +133,7 @@ Diese Datei muss sich im Ordner Functions auf dem Server befinden, um serverseit
 
 Usert für mehrere Unique identifier:
 ```sql
-ALTER TABLE public."<TABLE_NAME>" ADD CONSTRAINT "<TABLE_NAME>_<ROW1>_<ROW2>_unique" UNIQUE ("<ROW1>", "<ROW2>");
+ALTER TABLE public."<UserOnline>" ADD CONSTRAINT "<UserOnline>_<UserOnline>_<deviceToken>_unique" UNIQUE ("<userId>", "<deviceToken>");
 ```
 
 ## Kontakt Informationen  

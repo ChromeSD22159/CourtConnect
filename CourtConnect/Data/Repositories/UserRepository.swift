@@ -106,11 +106,11 @@ class UserRepository {
     }
     
     func setUserOnline(userId: UUID, userProfile: UserProfile) async throws -> Bool {
-        let userOnline = UserOnlineDTO(userId: userId, firstName: userProfile.firstName, lastName: userProfile.lastName, deviceToken: self.deviceToken)
+        let userOnline = UserOnlineDTO(userId: userId, firstName: userProfile.firstName, lastName: userProfile.lastName, deviceToken: self.deviceToken, timestamp: Date())
         
         try await backendClient.supabase
             .from(DatabaseTable.userOnline.rawValue)
-            .insert(userOnline)
+            .upsert(userOnline, onConflict: "userId, deviceToken")
             .execute()
         
         return await isRequestSuccessful(statusCode: 201)

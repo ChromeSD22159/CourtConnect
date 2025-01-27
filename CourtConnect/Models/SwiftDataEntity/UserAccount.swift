@@ -34,4 +34,8 @@ class UserAccount: ModelProtocol {
     func toDTO() -> UserAccountDTO {
         return UserAccountDTO(id: id, userId: userId, teamId: teamId, position: position, role: role, displayName: displayName, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
+    
+    var roleEnum: UserRole {
+        UserRole(rawValue: self.role)!
+    }
 }

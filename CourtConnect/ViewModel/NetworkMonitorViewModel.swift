@@ -1,5 +1,5 @@
 //
-//  NetworkMonitor.swift
+//  NetworkMonitorViewModel.swift
 //  CourtConnect
 //
 //  Created by Frederik Kohler on 19.01.25.
@@ -9,6 +9,8 @@ import Network
 
 @Observable
 class NetworkMonitorViewModel: ObservableObject {
+    
+    static let shared = NetworkMonitorViewModel()
     
     var monitor: NWPathMonitor = NWPathMonitor()
     var queue: DispatchQueue = DispatchQueue(label: "Monitor")

@@ -9,7 +9,7 @@ import SwiftUI
 struct DashboardView: View {
     @ObservedObject var userViewModel: SharedUserViewModel
     @ObservedObject var userAccountViewModel: UserAccountViewModel
-    @ObservedObject var networkMonitorViewModel: NetworkMonitorViewModel
+    @State var networkMonitorViewModel: NetworkMonitorViewModel = NetworkMonitorViewModel.shared
     
     @State var inAppMessagehandler = InAppMessagehandler.shared
     
@@ -17,20 +17,25 @@ struct DashboardView: View {
         NavigationStack {
             VStack(spacing: 20) { 
                 
-                if !networkMonitorViewModel.isConnected {
-                    InternetUnavailableView()
-                } else {
-                    if let currentAccount = userViewModel.currentAccount {
-                        Button(currentAccount.role) {
-                            userAccountViewModel.deleteUserAccount(userAccount: currentAccount)
-                            
-                            userAccountViewModel.sendUpdatedAfterLastSyncToBackend()
-                            
-                            userViewModel.setCurrentAccount(newAccount: nil)
-                        }
-                    } 
+                InternetUnavailableView()
+                
+                if let currentAccount = userViewModel.currentAccount, let role = UserRole(rawValue: currentAccount.role) {
+                    
+                    switch role {
+                    case .player: PlayerDashboard(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel)
+                    case .trainer: TrainerDashboard(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel)
+                    case .admin: EmptyView()
+                    }
+                    
+                    Button(currentAccount.role) {
+                        userAccountViewModel.deleteUserAccount(userAccount: currentAccount)
+                        
+                        userAccountViewModel.sendUpdatedAfterLastSyncToBackend()
+                        
+                        userViewModel.setCurrentAccount(newAccount: nil)
+                    }
                 }
-            } 
+            }
             .navigationTitle("Daskboard")
             .navigationBarTitleDisplayMode(.inline)
             .userToolBar(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel)
@@ -41,7 +46,7 @@ struct DashboardView: View {
 #Preview {
     @Previewable @State var userViewModel = SharedUserViewModel(repository: Repository(type: .preview))
     @Previewable @State var userAccountViewModel = UserAccountViewModel(repository: Repository(type: .preview), userId: nil)
-    @Previewable @State var networkMonitorViewModel = NetworkMonitorViewModel()
+    @Previewable @State var networkMonitorViewModel = NetworkMonitorViewModel.shared
     
     DashboardView(
         userViewModel: userViewModel,

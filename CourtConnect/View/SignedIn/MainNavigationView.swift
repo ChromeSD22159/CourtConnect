@@ -11,7 +11,7 @@ struct MainNavigationView: View {
     @ObservedObject var userViewModel: SharedUserViewModel
     @Environment(\.scenePhase) var scenePhase
     
-    @State var networkMonitorViewModel: NetworkMonitorViewModel = NetworkMonitorViewModel()
+    @State var networkMonitorViewModel: NetworkMonitorViewModel = NetworkMonitorViewModel.shared
     @State var userAccountViewModel: UserAccountViewModel
     @State var syncServiceViewModel: SyncServiceViewModel
     
@@ -25,8 +25,23 @@ struct MainNavigationView: View {
         MessagePopover {
             TabView {
                 Tab("Home", systemImage: "house.fill") {
-                    DashboardView(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel, networkMonitorViewModel: networkMonitorViewModel)
+                    DashboardView(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel)
                 }
+                
+                if self.userViewModel.currentAccount?.roleEnum == .player {
+                    Tab("Player", systemImage: "basketball.fill") {
+                        DashboardView(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel)
+                    }
+                } else if self.userViewModel.currentAccount?.roleEnum == .trainer {
+                    Tab("Trainer", systemImage: "basketball.fill") {
+                        DashboardView(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel)
+                    }
+                }
+                
+                Tab("Termine", systemImage: "gear") {
+                    EmptyView()
+                }
+                
                 Tab("Settings", systemImage: "gear") {
                     SettingsView(userViewModel: userViewModel, networkMonitorViewModel: networkMonitorViewModel)
                         .environment(userAccountViewModel)
@@ -53,8 +68,7 @@ struct MainNavigationView: View {
         }
         .task {
             userViewModel.setUserOnline() 
-            
-            userViewModel.setCurrentAccount(newAccount: userAccountViewModel.getCurrentAccount())
+            userViewModel.getCurrentAccount() 
             
             if await !NotificationService.getAuthStatus() {
                 await NotificationService.request()
