@@ -12,15 +12,13 @@ struct SettingsView: View {
     @ObservedObject var userViewModel: SharedUserViewModel
     @ObservedObject var networkMonitorViewModel: NetworkMonitorViewModel
     
-    @AppStorage("isBackendLocal") var isBackendLocal = true
-    
     var body: some View {
         NavigationStack {
             List {
                 Section {
                     // MARK: - Edit Profile
                     NavigationLink {
-                        UserProfileEditView(userViewModel: userViewModel)
+                        UserProfileEditView(userViewModel: userViewModel, isSheet: false)
                     } label: {
                         Text("Your Profile")
                     }
@@ -33,9 +31,6 @@ struct SettingsView: View {
                     NavigationLink("DEBUG Options") {
                         DebugView(userAccountViewModel: userAccountViewModel, userViewModel: userViewModel)
                     }
-                    
-                    Toggle("isBackendLocal", isOn: $isBackendLocal)
-                        .tint(Theme.lightOrange)
                 } header: {
                     Text("Development")
                 }
@@ -71,27 +66,11 @@ struct SettingsView: View {
                 }
                 
                 Section {
-                    Text("Delete User Account")
-                        .onTapGesture {
-                            userViewModel.showDeleteConfirmMenu.toggle()
-                        }
-                        .foregroundStyle(.white)
-                        .listRowBackground(Theme.lightOrange)
-                        .confirmationDialog("Delete your Account", isPresented: $userViewModel.showDeleteConfirmMenu) {
-                            Button("Delete", role: .destructive) {  userViewModel.deleteUserAccount() }
-                            Button("Cancel", role: .cancel) { userViewModel.showDeleteConfirmMenu.toggle() }
-                        } message: {
-                            Text("Delete your Account")
-                        }
-                }
-                
-                Section {
-                    Text("Logout")
-                        .onTapGesture {
-                            userViewModel.signOut()
-                        }
-                        .foregroundStyle(.white)
-                        .listRowBackground(Theme.darkOrange)
+                    Button("Logout") {
+                        userViewModel.signOut()
+                    }
+                    .foregroundStyle(.white)
+                    .listRowBackground(Theme.darkOrange)
                 }
             }
             .navigationTitle("Settings")

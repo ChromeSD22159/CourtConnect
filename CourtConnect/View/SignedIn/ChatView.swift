@@ -20,7 +20,7 @@ struct ChatView: View {
                 LazyVStack(spacing: 20) {
                     if !viewModel.messages.isEmpty {
                         ForEach(viewModel.messages) { message in
-                            MessageRow(message: message, myUserId: viewModel.myUser.userId)
+                            MessageRow(message: message, myUserId: viewModel.myUser.userId.uuidString)
                         }
                     } else {
                         HStack {

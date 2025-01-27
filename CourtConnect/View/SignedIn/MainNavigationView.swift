@@ -16,7 +16,7 @@ struct MainNavigationView: View {
     
     init(userViewModel: SharedUserViewModel) {
         self.userViewModel = userViewModel
-        self.userAccountViewModel = UserAccountViewModel(repository: userViewModel.repository, userId: userViewModel.user?.uid)
+        self.userAccountViewModel = UserAccountViewModel(repository: userViewModel.repository, userId: userViewModel.user?.id)
     }
     
     var body: some View {
@@ -33,7 +33,7 @@ struct MainNavigationView: View {
             .accentColor(Theme.lightOrange)
         }
         .sheet(isPresented: $userViewModel.showOnBoarding, content: {
-            UserProfileEditView(userViewModel: userViewModel) 
+            UserProfileEditView(userViewModel: userViewModel, isSheet: true)
         })
         .onAppear {
             userAccountViewModel.importAccountsAfterLastSyncFromBackend()

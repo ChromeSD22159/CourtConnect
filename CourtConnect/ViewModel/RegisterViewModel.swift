@@ -4,16 +4,15 @@
 //
 //  Created by Frederik Kohler on 11.01.25.
 //
-import Foundation 
-import FirebaseAuth
+import Foundation
+import Supabase
 
 @Observable class RegisterViewModel: ObservableObject {
     var repository: Repository
     
     var email: String = ""
     var firstName: String = ""
-    var lastName: String = ""
-    var role: UserRole = .player
+    var lastName: String = "" 
     var birthday: Date = Date()
     var password: String = ""
     var repeatPassword: String = ""
@@ -28,26 +27,32 @@ import FirebaseAuth
     func changeFocus() {
         guard let currentFocus = focus else { return }
         switch currentFocus {
-        case .email: focus = .password
-        case .password: focus = nil
+        case .email: focus = .firstName
+        case .firstName: focus = .lastName
+        case .lastName: focus = .password
+        case .password: focus = .repeatPassword
+        case .repeatPassword: focus = nil
         }
     }
     
-    func signUp() async -> (User?, UserProfile?) {
-        guard !email.isEmpty, !password.isEmpty else { return ( nil, nil ) }
+    func signUp() async throws -> (User?, UserProfile?) {
+        guard !email.isEmpty else { throw RegisterError.emailIsEmpty }
+        guard !password.isEmpty else { throw RegisterError.passwordIsEmpty }
+        guard !repeatPassword.isEmpty else { throw RegisterError.passwordIsEmpty }
+        guard password == repeatPassword else { throw RegisterError.passwordsNotTheSame }
         
-        do {
-            let user = try await repository.userRepository.signUp(email: email, password: password)
-            let date = Date()
-            let profile = UserProfile(userId: user.uid, firstName: firstName, lastName: lastName, roleString: role.rawValue, birthday: DateUtil.dateDDMMYYYYToString(date: birthday), createdAt: date, updatedAt: date, lastOnline: date)
-            try await repository.userRepository.sendUserProfileToBackend(profile: profile)
-            return ( user, profile )
-        } catch {
-            return ( nil, nil )
-        }
+        let user = try await repository.userRepository.signUp(email: email, password: password)
+        
+        LocalStorageService.shared.user = user
+        
+        let date = Date()
+        let profile = UserProfile(userId: user.id, firstName: firstName, lastName: lastName, birthday: DateUtil.dateDDMMYYYYToString(date: birthday), createdAt: date, updatedAt: date, lastOnline: date)
+        
+        try await repository.userRepository.sendUserProfileToBackend(profile: profile)
+        return ( user, profile )
     }
     
     enum Field {
-        case email ,password
+        case email, firstName, lastName, password, repeatPassword
     }
-}
+} 

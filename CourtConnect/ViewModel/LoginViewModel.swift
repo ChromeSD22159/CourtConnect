@@ -5,7 +5,7 @@
 //  Created by Frederik Kohler on 11.01.25.
 //
 import Foundation
-import FirebaseAuth
+import Supabase
 
 @Observable class LoginViewModel: ObservableObject {
     var repository: Repository
@@ -15,7 +15,8 @@ import FirebaseAuth
     var showPassword = false
     var keepSignededIn = true
     var focus: Field?
-     
+    var error: Error?
+    
     init(repository: Repository) {
         self.repository = repository
     }
@@ -29,15 +30,27 @@ import FirebaseAuth
     }
     
     func signIn() async throws -> (User?, UserProfile?) {
-        guard !email.isEmpty, !password.isEmpty else {
-            return (nil , nil)
+        do {
+            guard !email.isEmpty else {
+                throw LoginError.emailIsEmpty
+            }
+                    
+            guard !password.isEmpty else {
+                throw LoginError.passwordIsEmpty
+            }
+            
+            let user = try await repository.userRepository.signIn(email: email, password: password)
+             
+            if keepSignededIn {
+                LocalStorageService.shared.user = user
+            }
+            
+            try await repository.userRepository.syncUserProfile(userId: user.id)
+            let userProfile = try await repository.userRepository.getUserProfileFromDatabase(userId: user.id)
+            return ( user , userProfile )
+        } catch {
+            throw error
         }
-        
-        let user = try await repository.userRepository.signIn(email: email, password: password)
-         
-        try await repository.userRepository.syncUserProfile(userId: user.uid)
-        let userProfile = try await repository.userRepository.getUserProfileFromDatabase(userId: user.uid)
-        return ( user , userProfile )
     }
     
     enum Field {

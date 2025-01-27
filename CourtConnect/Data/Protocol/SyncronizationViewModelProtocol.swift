@@ -8,8 +8,8 @@ import Foundation
  
 @MainActor protocol SyncronizationViewModelProtocol {
     var repository: Repository { get set}
-    var userId: String? { get set}
-    func getLastSyncDate(userId: String) throws -> Date
+    var userId: UUID? { get set}
+    func getLastSyncDate(userId: UUID) throws -> Date
     func sendToServer(account: UserAccount) async throws
     func importAccountsAfterLastSyncFromBackend()
     func sendUpdatedAfterLastSyncToBackend()

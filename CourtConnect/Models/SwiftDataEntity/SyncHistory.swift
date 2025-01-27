@@ -10,10 +10,10 @@ import Foundation
 @Model class SyncHistory: Identifiable {
     @Attribute(.unique) var id: UUID
     var table: String
-    var userId: String
+    var userId: UUID
     var timestamp: Date
     
-    init(id: UUID = UUID(), table: String, userId: String, timestamp: Date = Date()) {
+    init(id: UUID = UUID(), table: String, userId: UUID, timestamp: Date = Date()) {
         self.id = id
         self.table = table
         self.userId = userId

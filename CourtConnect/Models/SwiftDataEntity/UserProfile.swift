@@ -10,10 +10,9 @@ import SwiftData
 @Model
 class UserProfile: Codable {
     @Attribute(.unique) var id: UUID
-    var userId: String
+    var userId: UUID
     var firstName: String
     var lastName: String
-    var roleString: String
     var birthday: String
     var fcmToken: String?
     var createdAt: Date
@@ -21,18 +20,17 @@ class UserProfile: Codable {
     var lastOnline: Date
     
     enum CodingKeys: String, CodingKey {
-        case id, firstName, lastName, birthday, roleString, userId, fcmToken, updatedAt, lastOnline
+        case id, firstName, lastName, birthday, userId, fcmToken, updatedAt, lastOnline
         case createdAt = "created_at"
     }
     
-    init(id: UUID = UUID(), userId: String, fcmToken: String? = nil, firstName: String, lastName: String, roleString: String, birthday: String, createdAt: Date = Date(), updatedAt: Date = Date(), lastOnline: Date = Date()) {
+    init(id: UUID = UUID(), userId: UUID, fcmToken: String? = nil, firstName: String, lastName: String, birthday: String, createdAt: Date = Date(), updatedAt: Date = Date(), lastOnline: Date = Date()) {
         self.id = id
         self.userId = userId
         self.fcmToken = fcmToken
         self.firstName = firstName
         self.lastName = lastName
         self.birthday = birthday
-        self.roleString = roleString
         self.createdAt = createdAt
         self.updatedAt = updatedAt
         self.lastOnline = lastOnline
@@ -41,11 +39,10 @@ class UserProfile: Codable {
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(UUID.self, forKey: .id)
-        self.userId = try container.decode(String.self, forKey: .userId)
+        self.userId = try container.decode(UUID.self, forKey: .userId)
         self.fcmToken = try container.decode(String?.self, forKey: .fcmToken)
         self.firstName = try container.decode(String.self, forKey: .firstName)
         self.lastName = try container.decode(String.self, forKey: .lastName)
-        self.roleString = try container.decode(String.self, forKey: .roleString)
         self.birthday = try container.decode(String.self, forKey: .birthday)
         self.createdAt = try container.decode(Date.self, forKey: .createdAt)
         self.updatedAt = try container.decode(Date.self, forKey: .updatedAt)
@@ -58,7 +55,6 @@ class UserProfile: Codable {
         try container.encode(fcmToken, forKey: .fcmToken)
         try container.encode(firstName, forKey: .firstName)
         try container.encode(lastName, forKey: .lastName)
-        try container.encode(roleString, forKey: .roleString) 
         try container.encode(birthday, forKey: .birthday)
         try container.encode(createdAt, forKey: .createdAt)
         try container.encode(updatedAt, forKey: .updatedAt)
@@ -66,10 +62,7 @@ class UserProfile: Codable {
     }
 } 
 
-extension UserProfile {
-    var role: UserRole? {
-        UserRole(rawValue: self.roleString)
-    }
+extension UserProfile { 
     
     func toUserOnline() -> UserOnline {
         return UserOnline(userId: userId, firstName: firstName, lastName: lastName, deviceToken: "asds")
