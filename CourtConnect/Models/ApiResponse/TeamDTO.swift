@@ -1,13 +1,12 @@
 //
-//  Team.swift
+//  TeamDTO.swift
 //  CourtConnect
 //
-//  Created by Frederik Kohler on 24.01.25.
+//  Created by Frederik Kohler on 27.01.25.
 //
-import SwiftData
 import Foundation
 
-@Model class Team {
+struct TeamDTO: Codable {
     var id: UUID
     var teamName: String
     var createdBy: String
@@ -29,4 +28,4 @@ import Foundation
     func toTeamDTO() -> TeamDTO {
         return TeamDTO(id: id, teamName: teamName, createdBy: createdBy, headcoach: headcoach, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
-} 
+}

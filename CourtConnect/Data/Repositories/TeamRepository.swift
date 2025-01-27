@@ -59,7 +59,7 @@ import Foundation
     }
     
     func sendToBackend(item: Team) async throws { 
-        try await backendClient.supabase
+         try await backendClient.supabase
             .from(DatabaseTable.team.rawValue)
             .upsert(item.toTeamDTO(), onConflict: "id")
             .execute()

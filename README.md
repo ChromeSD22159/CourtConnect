@@ -10,9 +10,8 @@ Die App bietet Funktionen wie Terminverwaltung, Anwesenheitsmanagement und Benac
 Coming soon ...
 
 <p>
-  <img src="./img/screen1.png" width="200">
-  <img src="./img/screen2.png" width="200">
-  <img src="./img/screen3.png" width="200">
+  <img src="./images/ActivityDiagrammEdgeFunction.png" width="200">
+  <img src="./images/ActivityDiagrammSyncronization.png" width="200"> 
 </p>
 
 
