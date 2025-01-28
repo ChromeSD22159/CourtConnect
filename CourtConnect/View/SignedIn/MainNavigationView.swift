@@ -24,13 +24,16 @@ struct MainNavigationView: View {
     
     var body: some View {
         MessagePopover {
-            NavigationTabBar(navViewModel: navViewModel) {
-                switch navViewModel.current {
-                case .home: DashboardView(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel, syncServiceViewmodel: syncServiceViewModel)
-                case .settings: SettingsView(userViewModel: userViewModel, networkMonitorViewModel: networkMonitorViewModel)
-                        .environment(userAccountViewModel)
-                }
-            } 
+            NavigationStack {
+                NavigationTabBar(navViewModel: navViewModel) {
+                    switch navViewModel.current {
+                    case .home: DashboardView(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel, syncServiceViewmodel: syncServiceViewModel)
+                    case .trainer: EmptyView()
+                    case .player: EmptyView()
+                    case .settings: SettingsView(userViewModel: userViewModel, networkMonitorViewModel: networkMonitorViewModel).environment(userAccountViewModel)
+                    }
+                } 
+            }
         }
         .sheet(isPresented: $userViewModel.showUserEditSheet, content: {
             UserProfileEditView(userViewModel: userViewModel, isSheet: true)

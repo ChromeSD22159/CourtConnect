@@ -14,6 +14,8 @@ import Foundation
     func handleError(error: Error) {
         self.error = error
         
+        print(error.localizedDescription)
+        
         Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: { _ in
             self.error = nil
         })

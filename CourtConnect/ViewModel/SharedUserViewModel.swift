@@ -216,4 +216,16 @@ class SharedUserViewModel: ObservableObject {
     func setOnBooarding() {
         userProfile?.onBoardingAt = Date()
     }
+    
+    func onDismissOnBoarding(onComplete: @escaping (UUID?, Error?) -> Void) {
+        Task {
+            do {
+                setOnBooarding()
+                guard let userId = user?.id else { throw UserError.userIdNotFound }
+                onComplete(userId, nil)
+            } catch {
+                onComplete(nil, error)
+            }
+        }
+    }
 }

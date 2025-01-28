@@ -13,69 +13,68 @@ struct SettingsView: View {
     @ObservedObject var networkMonitorViewModel: NetworkMonitorViewModel
     
     var body: some View {
-        NavigationStack {
-            List {
-                Section {
-                    // MARK: - Edit Profile
-                    NavigationLink {
-                        UserProfileEditView(userViewModel: userViewModel, isSheet: false)
-                    } label: {
-                        Text("Your Profile")
-                    }
+        List {
+            Section {
+                // MARK: - Edit Profile
+                NavigationLink {
+                    UserProfileEditView(userViewModel: userViewModel, isSheet: false)
+                } label: {
+                    Text("Your Profile")
+                }
 
-                } header: {
-                    Text("Profile")
-                }
-                
-                Section {
-                    NavigationLink("DEBUG Options") {
-                        DebugView(userAccountViewModel: userAccountViewModel, userViewModel: userViewModel)
-                    }
-                } header: {
-                    Text("Development")
-                }
-                
-                Section {
-                    
-                    // MARK: - Total Online Users
-                    NavigationLink {
-                        OnlineUserList(userViewModel: userViewModel, networkMonitorViewModel: networkMonitorViewModel)
-                    } label: {
-                        Text("Total Online Users: \(userViewModel.onlineUserCount)")
-                    }
-                    
-                    // MARK: - LastOnline
-                    if let date = userViewModel.userProfile?.lastOnline {
-                        HStack {
-                            Text("Last online:")
-                            Spacer()
-                            Text(date.formattedDate() + " " + date.formattedTime() + " Uhr")
-                        }
-                    } else {
-                        Text("Last online: -")
-                    }
-                    
-                    // MARK: - Version
-                    if let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
-                        Text("Version: \(appVersion)")
-                    } else {
-                        Text("Version: -")
-                    }
-                } header: {
-                    Text("App Status")
-                }
-                
-                Section {
-                    Button("Logout") {
-                        userViewModel.signOut()
-                    }
-                    .foregroundStyle(.white)
-                    .listRowBackground(Theme.darkOrange)
-                }
+            } header: {
+                Text("Profile")
             }
-            .navigationTitle("Settings")
-            .navigationBarTitleDisplayMode(.inline)
+            
+            Section {
+                NavigationLink("DEBUG Options") {
+                    DebugView(userAccountViewModel: userAccountViewModel, userViewModel: userViewModel)
+                }
+            } header: {
+                Text("Development")
+            }
+            
+            Section {
+                
+                // MARK: - Total Online Users
+                NavigationLink {
+                    OnlineUserList(userViewModel: userViewModel, networkMonitorViewModel: networkMonitorViewModel)
+                } label: {
+                    Text("Total Online Users: \(userViewModel.onlineUserCount)")
+                }
+                
+                // MARK: - LastOnline
+                if let date = userViewModel.userProfile?.lastOnline {
+                    HStack {
+                        Text("Last online:")
+                        Spacer()
+                        Text(date.formattedDate() + " " + date.formattedTime() + " Uhr")
+                    }
+                } else {
+                    Text("Last online: -")
+                }
+                
+                // MARK: - Version
+                if let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
+                    Text("Version: \(appVersion)")
+                } else {
+                    Text("Version: -")
+                }
+            } header: {
+                Text("App Status")
+            }
+            
+            Section {
+                Button("Logout") {
+                    userViewModel.signOut()
+                }
+                .foregroundStyle(.white)
+                .listRowBackground(Theme.darkOrange)
+            }
         }
+        .scrollContentBackground(.hidden)
+        .navigationTitle("Settings")
+        .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             userViewModel.getAllOnlineUser()
             userViewModel.startListeners()

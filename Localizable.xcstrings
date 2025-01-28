@@ -240,9 +240,6 @@
         }
       }
     },
-    "Handle Message" : {
-
-    },
     "Home" : {
       "localizations" : {
         "de" : {
@@ -377,7 +374,6 @@
       }
     },
     "Player" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -458,6 +454,7 @@
       }
     },
     "Sign in" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -468,6 +465,7 @@
       }
     },
     "Sign up" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {

@@ -14,7 +14,7 @@ struct NavigationTabBar<Content: View>: View {
     
     var body: some View {
         ZStack {
-            Theme.background
+            Theme.background.ignoresSafeArea()
             
             content()
         }
@@ -24,45 +24,44 @@ struct NavigationTabBar<Content: View>: View {
                     tabItem(item: item)
                 }
             }
+            .padding(5)
             .frame(maxWidth: .infinity)
             .background(Material.ultraThinMaterial)
             .clipShape(Capsule())
             .padding([.horizontal, .bottom], 20)
             .shadow(color: .black.opacity(0.2), radius: 5, y: 5)
         })
-        .ignoresSafeArea()
     }
     
     @ViewBuilder func tabItem(item: NavigationTab) -> some View {
-            let isActive = navViewModel.current == item
+        let isActive = navViewModel.current == item
+        
+        VStack(spacing: 4) {
+            Image(systemName: item.images)
             
-            VStack(spacing: 4) {
-                Image(systemName: item.images)
-                
-                Text(item.name)
-                    .font(.caption2)
-                    .fontWeight(isActive ? .bold : .regular)
-                    .lineLimit(1)
-                    .truncationMode(.tail)
-                
-                if isActive {
-                    Rectangle()
-                        .fill(Theme.darkOrange)
-                        .matchedGeometryEffect(id: "state", in: animation)
-                        .frame(height: 5)
-                } else {
-                    Color.clear.frame(height: 5)
-                }
-            }
-            .frame(width: 60, height: 60)
-            .contentShape(Rectangle())
-            .onTapGesture {
-                withAnimation(.easeInOut) {
-                    navViewModel.navigateTo(item)
-                }
+            Text(item.name)
+                .font(.caption2)
+                .lineLimit(1)
+                .truncationMode(.tail)
+            
+            if isActive {
+                Rectangle()
+                    .fill(Theme.darkOrange)
+                    .matchedGeometryEffect(id: "state", in: animation)
+                    .frame(height: 5)
+            } else {
+                Color.clear.frame(height: 5)
             }
         }
-} 
+        .frame(width: 60, height: 60)
+        .contentShape(Rectangle())
+        .onTapGesture {
+            withAnimation(.easeInOut) {
+                navViewModel.navigateTo(item)
+            }
+        }
+    }
+}
 
 #Preview {
     @Previewable @State var navViewModel = NavigationViewModel()

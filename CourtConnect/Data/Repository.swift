@@ -18,11 +18,20 @@ import SwiftData
     
     init(type: RepositoryType) {
         let schema = Schema([
-            UserProfile.self,
+            Attendance.self,
             Chat.self,
+            Document.self,
+            Interest.self,
+            Location.self,
+            Requests.self,
+            Statistic.self,
             SyncHistory.self,
+            Team.self,
+            TeamAdmin.self,
+            TeamMember.self,
+            Termine.self,
             UserAccount.self,
-            Team.self
+            UserProfile.self
         ])
         
         do {  

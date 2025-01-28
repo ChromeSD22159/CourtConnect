@@ -16,54 +16,43 @@ struct DashboardView: View {
     @State var inAppMessagehandler = InAppMessagehandler.shared
     
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(spacing: 20) {
-                    
-                    InternetUnavailableView()
-                    
-                    if let currentAccount = userViewModel.currentAccount, let role = UserRole(rawValue: currentAccount.role) {
-                        switch role {
-                        case .player: PlayerDashboard(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel)
-                        case .trainer: TrainerDashboard(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel)
-                        case .admin: EmptyView()
-                        }
-                        
-                        Button(currentAccount.role) {
-                            userAccountViewModel.deleteUserAccount(userAccount: currentAccount)
-                            
-                            userAccountViewModel.sendUpdatedAfterLastSyncToBackend()
-                            
-                            userViewModel.setCurrentAccount(newAccount: nil)
-                        }
-                    } 
-                    
+        ScrollView(.vertical) {
+            InternetUnavailableView()
+            
+            if let currentAccount = userViewModel.currentAccount, let role = UserRole(rawValue: currentAccount.role) {
+                switch role {
+                case .player: PlayerDashboard(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel)
+                case .trainer: TrainerDashboard(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel)
+                case .admin: EmptyView()
                 }
             }
-            .errorPopover()
-            .navigationTitle("Dashboard")
-            .navigationBarTitleDisplayMode(.inline)
-            .userToolBar(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel)
-            .fullScreenCover(
-                isPresented: $userViewModel.showOnBoarding,
-                onDismiss: {
-                    Task {
-                        do {
-                            userViewModel.setOnBooarding()
-                            guard let userId = userViewModel.user?.id else { throw UserError.userIdNotFound }
-                            try await syncServiceViewmodel.sendAllData(userId: userId)
-                        } catch {
-                            errorHanler.handleError(error: error)
-                        }
-                    }
-                },
-                content: {
-                    if let userProfile = userViewModel.userProfile {
-                        OnBoardingView(firstName: userProfile.firstName)
-                    }
-                }
-            )
         }
+        .errorPopover()
+        .navigationTitle("Dashboard")
+        .navigationBarTitleDisplayMode(.inline)
+        .userToolBar(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel)
+        .fullScreenCover(
+            isPresented: $userViewModel.showOnBoarding,
+            onDismiss: { sync() },
+            content: {
+                if let userProfile = userViewModel.userProfile {
+                    OnBoardingView(firstName: userProfile.firstName)
+                }
+            }
+        )
+    }
+    
+    func sync() {
+        userViewModel.onDismissOnBoarding(onComplete: { userId, error in
+            if let error = error {
+                errorHanler.handleError(error: error) 
+            }
+            if let userId = userId {
+                Task {
+                    try await syncServiceViewmodel.sendAllData(userId: userId)
+                }
+            }
+        })
     }
 }
  
@@ -73,11 +62,13 @@ struct DashboardView: View {
     @Previewable @State var userAccountViewModel = UserAccountViewModel(repository: Repository(type: .preview), userId: nil)
     @Previewable @State var networkMonitorViewModel = NetworkMonitorViewModel.shared
     
-    DashboardView(
-        userViewModel: userViewModel,
-        userAccountViewModel: userAccountViewModel,
-        syncServiceViewmodel: syncServiceViewmodel,
-        networkMonitorViewModel: networkMonitorViewModel
-    ) 
-    .messagePopover()
+    NavigationStack {
+        DashboardView(
+            userViewModel: userViewModel,
+            userAccountViewModel: userAccountViewModel,
+            syncServiceViewmodel: syncServiceViewmodel,
+            networkMonitorViewModel: networkMonitorViewModel
+        )
+        .messagePopover()
+    }
 }
