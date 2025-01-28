@@ -17,8 +17,9 @@ class UserProfileDTO: DTOProtocol {
     var createdAt: Date
     var updatedAt: Date
     var deletedAt: Date?
+    var onBoardingAt: Date?
      
-    init(id: UUID = UUID(), userId: UUID, fcmToken: String? = nil, firstName: String, lastName: String, birthday: String, lastOnline: Date = Date(), createdAt: Date = Date(), updatedAt: Date = Date(), deletedAt: Date? = nil) {
+    init(id: UUID = UUID(), userId: UUID, fcmToken: String? = nil, firstName: String, lastName: String, birthday: String, lastOnline: Date = Date(), createdAt: Date = Date(), updatedAt: Date = Date(), deletedAt: Date? = nil, onBoardingAt: Date? = nil) {
         self.id = id
         self.userId = userId
         self.fcmToken = fcmToken
@@ -29,9 +30,10 @@ class UserProfileDTO: DTOProtocol {
         self.createdAt = createdAt
         self.updatedAt = updatedAt
         self.deletedAt = deletedAt
+        self.onBoardingAt = onBoardingAt
     }
     
     func toModel() -> UserProfile {
-        UserProfile(id: id, userId: userId, firstName: firstName, lastName: lastName, birthday: birthday, lastOnline: lastOnline, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
+        UserProfile(id: id, userId: userId, firstName: firstName, lastName: lastName, birthday: birthday, lastOnline: lastOnline, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt, onBoardingAt: onBoardingAt)
     }
 }

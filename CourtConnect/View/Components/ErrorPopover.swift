@@ -5,6 +5,7 @@
 //  Created by Frederik Kohler on 25.01.25.
 //
 import SwiftUI
+import Lottie
 
 struct ErrorPopover<Content: View>: View {
     @State var errorHanler = ErrorHandlerViewModel.shared
@@ -33,8 +34,8 @@ struct ErrorPopover<Content: View>: View {
        }
         .animation(.easeInOut, value: errorHanler.error != nil)
     }
-}
- 
+} 
+
 #Preview {
     @Previewable @State var viewModel = ErrorHandlerViewModel.shared
     ZStack {

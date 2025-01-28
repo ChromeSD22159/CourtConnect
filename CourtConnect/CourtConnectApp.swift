@@ -11,27 +11,39 @@ import Lottie
 struct CourtConnectApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
       
-    #if targetEnvironment(simulator)
+    let repository: Repository
+    @State var syncServiceViewModel: SyncServiceViewModel
+    @State var userViewModel: SharedUserViewModel
+    
     init() {
+        repository = Repository(type: .app)
+        userViewModel = SharedUserViewModel(repository: repository)
+        syncServiceViewModel = SyncServiceViewModel(repository: repository)
+        #if targetEnvironment(simulator)
         guard (Bundle(path: "/Applications/RocketSim.app/Contents/Frameworks/RocketSimConnectLinker.nocache.framework")?.load() == true) else {
             print("RocketSim: Failed to load linker framework")
             return
         }
         #warning("RocketSim Connect successfully linked")
+        #endif
     }
-    #endif
-    
+     
     @State var isSlashScreen = true
+    
     var body: some Scene {
         WindowGroup {
             AppBackground {
                 ZStack {
-                    LoginNavigation(repository: Repository(type: .app))
+                    LoginNavigation(userViewModel: userViewModel)
                         .opacity(isSlashScreen ? 0 : 1)
                     
-                    SplashScreen(duration: 1.5, isVisible: $isSlashScreen) {
+                    SplashScreen(isVisible: $isSlashScreen, syncServiceViewModel: syncServiceViewModel, duration: 1.5, userId: userViewModel.user?.id, onComplete: {
                         isSlashScreen.toggle()
-                    }
+                        
+                        if userViewModel.userProfile?.onBoardingAt == nil {
+                            userViewModel.showOnBoarding = true
+                        }
+                    })
                 }
             }
         }

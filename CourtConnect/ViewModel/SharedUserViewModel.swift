@@ -16,6 +16,7 @@ class SharedUserViewModel: ObservableObject {
     var userProfile: UserProfile?
     var currentAccount: UserAccount?
     var showOnBoarding = false
+    var showUserEditSheet = false
     var showDeleteConfirmMenu = false
     var editProfile: UserProfile = UserProfile(userId: UUID(), firstName: "", lastName: "", birthday: "", createdAt: Date(), updatedAt: Date())
     var onlineUser: [UserOnlineDTO] = []
@@ -110,7 +111,7 @@ class SharedUserViewModel: ObservableObject {
     func openEditProfileSheet() {
         guard let profile = userProfile else { return }
         self.setEditUserProfile(userProfile: profile)
-        self.showOnBoarding.toggle()
+        self.showUserEditSheet.toggle()
     }
     
     func setUserOnline() {
@@ -210,5 +211,9 @@ class SharedUserViewModel: ObservableObject {
                 }
             }
         }
+    }
+    
+    func setOnBooarding() {
+        userProfile?.onBoardingAt = Date()
     }
 }

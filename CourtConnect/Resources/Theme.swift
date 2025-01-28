@@ -9,6 +9,10 @@ import SwiftUI
 struct Theme {
     static let darkOrange: Color = Color(.darkOrange)
     static let lightOrange: Color = Color(.lightOrange)
-    static let gray: Color = .gray
     static let white: Color = .white
+    
+    // BG
+    static let background: Color = Color(.background)
+    static let onBackground: Color = Color(.onBackground)
+    static let myGray: Color = Color(.myGray)
 }

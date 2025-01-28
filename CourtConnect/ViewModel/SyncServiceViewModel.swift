@@ -7,9 +7,15 @@
 import Foundation
 
 @MainActor
-struct SyncServiceViewModel {
+@Observable
+class SyncServiceViewModel: ObservableObject {
     var backendClient = BackendClient.shared
     let repository: Repository
+    
+    init(backendClient: BackendClient = BackendClient.shared, repository: Repository) {
+        self.backendClient = backendClient
+        self.repository = repository
+    }
     
     func syncAllTables(userId: UUID) async throws {
         let databasesToSync: [(DatabaseTable, Date)] = try await repository.syncHistoryRepository.databasesToSync(userId: userId)

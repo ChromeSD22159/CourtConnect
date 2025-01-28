@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "**Wilkommen** \n%@!" : {
+
+    },
     "%@" : {
       "localizations" : {
         "de" : {
@@ -21,6 +24,9 @@
         }
       }
     },
+    "Bereit für den Sprung? Lass uns starten! Melde dich an, um loszulegen und teil der Community zu werden." : {
+
+    },
     "Birthday" : {
       "localizations" : {
         "de" : {
@@ -40,6 +46,9 @@
           }
         }
       }
+    },
+    "continue" : {
+
     },
     "Create" : {
       "localizations" : {
@@ -324,6 +333,9 @@
         }
       }
     },
+    "Loading..." : {
+
+    },
     "Logout" : {
       "localizations" : {
         "de" : {
@@ -365,6 +377,7 @@
       }
     },
     "Player" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -464,7 +477,10 @@
         }
       }
     },
-    "Termine" : {
+    "SignIn" : {
+
+    },
+    "SignUp" : {
 
     },
     "Total Online Users: %lld" : {
@@ -566,6 +582,9 @@
           }
         }
       }
+    },
+    "Your Team. \nYour connection. \nYour success." : {
+
     }
   },
   "version" : "1.0"

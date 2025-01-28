@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct MainNavigationView: View {
+    @State var navViewModel = NavigationViewModel.shared
     @ObservedObject var userViewModel: SharedUserViewModel
     @Environment(\.scenePhase) var scenePhase
     
@@ -23,45 +24,16 @@ struct MainNavigationView: View {
     
     var body: some View {
         MessagePopover {
-            TabView {
-                Tab("Home", systemImage: "house.fill") {
-                    DashboardView(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel)
-                }
-                
-                if self.userViewModel.currentAccount?.roleEnum == .player {
-                    Tab("Player", systemImage: "basketball.fill") {
-                        DashboardView(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel)
-                    }
-                } else if self.userViewModel.currentAccount?.roleEnum == .trainer {
-                    Tab("Trainer", systemImage: "basketball.fill") {
-                        DashboardView(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel)
-                    }
-                }
-                
-                Tab("Termine", systemImage: "gear") {
-                    EmptyView()
-                }
-                
-                Tab("Settings", systemImage: "gear") {
-                    SettingsView(userViewModel: userViewModel, networkMonitorViewModel: networkMonitorViewModel)
+            NavigationTabBar(navViewModel: navViewModel) {
+                switch navViewModel.current {
+                case .home: DashboardView(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel, syncServiceViewmodel: syncServiceViewModel)
+                case .settings: SettingsView(userViewModel: userViewModel, networkMonitorViewModel: networkMonitorViewModel)
                         .environment(userAccountViewModel)
                 }
-            }
-            .accentColor(Theme.lightOrange)
+            } 
         }
-        .sheet(isPresented: $userViewModel.showOnBoarding, content: {
+        .sheet(isPresented: $userViewModel.showUserEditSheet, content: {
             UserProfileEditView(userViewModel: userViewModel, isSheet: true)
-        })
-        .onChange(of: userViewModel.user, {
-            Task {
-                if let userId = userViewModel.userProfile?.userId {
-                    do {
-                        try await syncServiceViewModel.syncAllTables(userId: userId)
-                    } catch {
-                        print(error.localizedDescription)
-                    }
-                }
-            }
         })
         .onAppear {
             userAccountViewModel.importAccountsAfterLastSyncFromBackend()
