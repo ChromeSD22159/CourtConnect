@@ -1,13 +1,13 @@
 //
-//  UpdateHistoryDTO.swift
+//  UpdateHistory.swift
 //  CourtConnect
 //
-//  Created by Frederik Kohler on 27.01.25.
+//  Created by Frederik Kohler on 29.01.25.
 //
-import Foundation
 import SwiftData
+import Foundation
 
-struct UpdateHistoryDTO: DTOProtocol {
+@Model class UpdateHistory: ModelProtocol {
     var id: UUID
     var tableString: String
     var userId: UUID
@@ -26,7 +26,7 @@ struct UpdateHistoryDTO: DTOProtocol {
         self.deletedAt = deletedAt
     }
     
-    func toModel() -> UpdateHistory {
-        UpdateHistory(id: id, tableString: tableString, userId: userId, timestamp: timestamp, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
+    func toDTO() -> UpdateHistoryDTO {
+        UpdateHistoryDTO(id: id, tableString: tableString, userId: userId, timestamp: timestamp, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
-} 
+}

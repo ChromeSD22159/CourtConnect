@@ -71,8 +71,8 @@ class SharedUserViewModel: ObservableObject {
             do { 
                 try await self.repository.userRepository.sendUserProfileToBackend(profile: editProfile)
                 
-                try await self.repository.syncHistoryRepository.insertUpdateTimestampTable(for: .userProfile, userId: user.id)
-                
+                let _ = try await self.repository.syncHistoryRepository.insertUpdateTimestampTable(for: .userProfile, userId: user.id)
+
                 self.setUserOffline()
                 self.setUserOnline()
             } catch {

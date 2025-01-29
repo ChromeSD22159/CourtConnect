@@ -127,12 +127,7 @@ struct TeamList: View {
             })
         }
         .alert("Dem Team beitreten?", isPresented: $teamViewModel.showJoinTeamAlert) {
-                    Button("Beitreten", role: .destructive) {
-                        // Send join team request here
-                        //guard let selectedTeam = selectedTeam else { return }
-                        // Call your ViewModel's function to handle the join request
-                        //teamViewModel.joinTeam(team: selectedTeam)
-                    }
+                    Button("Beitreten", role: .destructive) { }
                     Button("Abbrechen", role: .cancel) { }
                 } message: {
                     Text("Möchtest du dem Team \(teamViewModel.selectedTeam?.teamName ?? "") beitreten?")

@@ -43,11 +43,11 @@ class SyncServiceViewModel {
             let allLocalChange = try repository.syncHistoryRepository.getAllItems(for: table, lastSync: lastSync, type: table.localModel)
             
             for item in allLocalChange {
-                try await repository.syncHistoryRepository.sendUpdatesToServer(for: table, data: item.toDTO())
+                let _ = try await repository.syncHistoryRepository.sendUpdatesToServer(for: table, data: item.toDTO())
             }
             
             if !allLocalChange.isEmpty {
-                try await repository.syncHistoryRepository.insertUpdateTimestampTable(for: table, userId: userId)
+                let _ = try await repository.syncHistoryRepository.insertUpdateTimestampTable(for: table, userId: userId)
                 print("\(table.rawValue) - send \(allLocalChange.count)")
             }
         }

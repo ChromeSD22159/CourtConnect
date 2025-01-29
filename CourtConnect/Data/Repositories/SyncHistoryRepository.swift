@@ -65,13 +65,10 @@ import Foundation
     }
     
     /// BACKEND
-    func insertUpdateTimestampTable(for table: DatabaseTable, userId: UUID) async throws {
-        let entry = UpdateHistoryDTO(tableString: table.rawValue, userId: userId, timestamp: Date()) 
+    func insertUpdateTimestampTable(for table: DatabaseTable, userId: UUID) async throws -> UpdateHistoryDTO {
+        let entry = UpdateHistoryDTO(tableString: table.rawValue, userId: userId, timestamp: Date())
         
-        try await backendClient.supabase
-            .from(DatabaseTable.updateHistory.rawValue)
-            .upsert(entry, onConflict: "tableString, userId")
-            .execute()
+        return try await SupabaseService.upsert<UpdateHistoryDTO>(item: entry, table: .updateHistory, onConflict: "tableString, userId")
     }
 
     func databasesToSync(userId: UUID) async throws -> [(DatabaseTable, Date)] {
@@ -113,20 +110,11 @@ import Foundation
         try container.mainContext.save()
     }
     
-    func getUpdatedRows<T: DTOProtocol & Decodable>(for table: DatabaseTable, lastSync: Date, type: T.Type) async throws -> [T] {
-        return try await self.backendClient.supabase
-            .from(table.rawValue)
-            .select()
-            .gte("updatedAt", value: lastSync)
-            .execute()
-            .value
+    func getUpdatedRows<T: DTOProtocol & Decodable>(for table: DatabaseTable, lastSync: Date, type: T.Type) async throws -> [T] { 
+        return try await SupabaseService.getGreaterThan(table: table, lastSync: lastSync)
     }
     
-    func sendUpdatesToServer<T: DTOProtocol & Decodable>(for table: DatabaseTable, data: T) async throws {
-        return try await self.backendClient.supabase
-            .from(table.rawValue)
-            .upsert(data, onConflict: "id")
-            .execute()
-            .value
+    func sendUpdatesToServer<T: DTOProtocol & Decodable>(for table: DatabaseTable, data: T) async throws -> T {
+        return try await SupabaseService.upsert(item: data, table: table, onConflict: "id")
     }
 }  

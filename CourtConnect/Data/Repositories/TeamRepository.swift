@@ -9,26 +9,14 @@ import SwiftData
 import Foundation
 
 @MainActor class TeamRepository {
-    
-    var backendClient = BackendClient.shared
     var container: ModelContainer
     
     init(container: ModelContainer, type: RepositoryType) {
         self.container = container
     }
-    
+     
     // MARK: - Local
-    private func usertLocal(item: Team) throws {
-        container.mainContext.insert(item)
-        try container.mainContext.save()
-    }
-    
-    private func usertLocal(item: TeamMember) throws {
-        container.mainContext.insert(item)
-        try container.mainContext.save()
-    }
-    
-    private func usertLocal(item: TeamAdmin) throws {
+    func upsertLocal<T: ModelProtocol>(item: T) throws {
         container.mainContext.insert(item)
         try container.mainContext.save()
     }
@@ -91,72 +79,41 @@ import Foundation
      
     // MARK: - REMOTE
     func getTeamRemote(code: String) async throws -> TeamDTO? {
-        return try await backendClient.supabase
-            .from(DatabaseTable.team.rawValue)
-            .select()
-            .eq("joinCode", value: code)
-            .execute()
-            .value
-            
+        return try await SupabaseService.getEquals(value: code, table: .team, column: "joinCode")
     }
     
     func joinTeamWithCode(_ code: String, userAccount: UserAccount) async throws {
         if let foundTeamDTO = try await getTeamRemote(code: code) {
             let newMember = TeamMemberDTO(userId: userAccount.userId, teamId: foundTeamDTO.id, role: userAccount.role, createdAt: Date(), updatedAt: Date())
             
-            let entry: TeamMemberDTO = try await backendClient.supabase
-                .from(DatabaseTable.teamMember.rawValue)
-                .insert(newMember)
-                .single()
-                .execute()
-                .value
+            let entry: TeamMemberDTO = try await SupabaseService.insert(item: newMember, table: .teamMember)
             
-            try self.usertLocal(item: entry.toModel())
+            try self.upsertLocal(item: entry.toModel())
         }
     }
     
     func insertTeam(newTeam: Team) async throws {
-        let entry: TeamDTO = try await backendClient.supabase
-            .from(DatabaseTable.teamMember.rawValue)
-            .insert(newTeam.toDTO())
-            .single()
-            .execute()
-            .value
+        let entry: TeamDTO = try await SupabaseService.insert(item: newTeam.toDTO(), table: .team)
         
-        try self.usertLocal(item: entry.toModel())
+        try self.upsertLocal(item: entry.toModel())
     }
     
     func insertTeamMember(newMember: TeamMember) async throws {
-        let entry: TeamMemberDTO = try await backendClient.supabase
-            .from(DatabaseTable.teamMember.rawValue)
-            .insert(newMember.toDTO())
-            .single()
-            .execute()
-            .value
+        let entry: TeamMemberDTO = try await SupabaseService.insert(item: newMember.toDTO(), table: .teamMember)
         
-        try self.usertLocal(item: entry.toModel())
+        try self.upsertLocal(item: entry.toModel())
     }
     
     func insertTeamAdmin(newAdmin: TeamAdmin) async throws {
-        let entry: TeamAdminDTO = try await backendClient.supabase
-            .from(DatabaseTable.teamAdmin.rawValue)
-            .insert(newAdmin.toDTO())
-            .single()
-            .execute()
-            .value
+        let entry: TeamAdminDTO = try await SupabaseService.insert(item: newAdmin.toDTO(), table: .teamAdmin)
         
-        try self.usertLocal(item: entry.toModel())
+        try self.upsertLocal(item: entry.toModel())
     }
     
     func searchTeamByName(name: String) async throws -> [TeamDTO] {
-        return try await backendClient.supabase
-            .from(DatabaseTable.team.rawValue)
-            .select()
-            .like("teamName", pattern: "%" + name + "%") 
-            .execute()
-            .value
+        return try await SupabaseService.search(name: name, table: DatabaseTable.team, column: "teamName")
     }
-}
+} 
 
 @MainActor
 @Observable class TeamViewModel {
@@ -192,6 +149,8 @@ import Foundation
     func joinTeamWithCode(code: String, userAccount: UserAccount) throws {
         Task {
             try await repository.teamRepository.joinTeamWithCode(code, userAccount: userAccount)
+            
+            try repository.syncHistoryRepository.insertLastSyncTimestamp(for: .teamMember, userId: userAccount.userId)
         }
     }
     

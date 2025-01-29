@@ -64,7 +64,7 @@ class ChatRepository {
         guard type == .app else { return }
         
         do {
-            try await backendClient.supabase.from(DatabaseTable.chat.rawValue).insert(message.toDTO()).execute()
+            let _ = try await SupabaseService.insert(item: message.toDTO(), table: .chat).toModel()
             
             await syncChatFromBackend(myUserId: message.senderId, recipientId: message.recipientId, lastSync: lastDate) { result in
                 switch result {
@@ -72,7 +72,7 @@ class ChatRepository {
                 case .failure(let error): complete(.failure(error))
                 }
             }
-        } catch {
+        } catch { 
             throw error
         }
     }
