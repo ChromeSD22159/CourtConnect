@@ -10,7 +10,7 @@ import Lottie
 struct SplashScreen: View {
     
     @Binding var isVisible: Bool
-    @ObservedObject var syncServiceViewModel: SyncServiceViewModel
+    @Environment(SyncServiceViewModel.self) private var syncServiceViewModel
     
     let duration: Double // 2
     let userId: UUID?
@@ -64,7 +64,8 @@ struct SplashScreen: View {
 #Preview {
     @Previewable @State var isSlashScreen = true
     
-    SplashScreen(isVisible: $isSlashScreen, syncServiceViewModel: SyncServiceViewModel(repository: Repository(type: .preview)), duration: 3.0, userId: nil, onComplete: {
+    SplashScreen(isVisible: $isSlashScreen, duration: 3.0, userId: nil, onComplete: {
         isSlashScreen.toggle()
     })
+    .environment(SyncServiceViewModel(repository: Repository(type: .preview)))
 }

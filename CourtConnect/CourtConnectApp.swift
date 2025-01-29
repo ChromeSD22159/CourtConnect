@@ -19,6 +19,7 @@ struct CourtConnectApp: App {
         repository = Repository(type: .app)
         userViewModel = SharedUserViewModel(repository: repository)
         syncServiceViewModel = SyncServiceViewModel(repository: repository)
+        
         #if targetEnvironment(simulator)
         guard (Bundle(path: "/Applications/RocketSim.app/Contents/Frameworks/RocketSimConnectLinker.nocache.framework")?.load() == true) else {
             print("RocketSim: Failed to load linker framework")
@@ -37,7 +38,7 @@ struct CourtConnectApp: App {
                     LoginNavigation(userViewModel: userViewModel)
                         .opacity(isSlashScreen ? 0 : 1)
                     
-                    SplashScreen(isVisible: $isSlashScreen, syncServiceViewModel: syncServiceViewModel, duration: 1.5, userId: userViewModel.user?.id, onComplete: {
+                    SplashScreen(isVisible: $isSlashScreen, duration: 1.5, userId: userViewModel.user?.id, onComplete: {
                         isSlashScreen.toggle()
                         
                         if userViewModel.userProfile?.onBoardingAt == nil {
@@ -46,6 +47,7 @@ struct CourtConnectApp: App {
                     })
                 }
             }
+            .environment(syncServiceViewModel)
         }
     }
 }  

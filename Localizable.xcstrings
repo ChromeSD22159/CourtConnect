@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    " " : {
+
+    },
     "**Wilkommen** \n%@!" : {
 
     },
@@ -14,6 +17,15 @@
         }
       }
     },
+    "%lld" : {
+
+    },
+    "0" : {
+
+    },
+    "Abbrechen" : {
+
+    },
     "App Status" : {
       "localizations" : {
         "de" : {
@@ -23,6 +35,9 @@
           }
         }
       }
+    },
+    "Beitreten" : {
+
     },
     "Bereit für den Sprung? Lass uns starten! Melde dich an, um loszulegen und teil der Community zu werden." : {
 
@@ -48,6 +63,9 @@
       }
     },
     "continue" : {
+
+    },
+    "Copy" : {
 
     },
     "Create" : {
@@ -160,6 +178,9 @@
         }
       }
     },
+    "Dem Team beitreten?" : {
+
+    },
     "Development" : {
       "localizations" : {
         "de" : {
@@ -189,6 +210,12 @@
           }
         }
       }
+    },
+    "Enter Code" : {
+
+    },
+    "Enter Team's Code" : {
+
     },
     "Enter your E-Mail" : {
       "localizations" : {
@@ -240,6 +267,12 @@
         }
       }
     },
+    "Generate Code" : {
+
+    },
+    "Handle Message" : {
+
+    },
     "Home" : {
       "localizations" : {
         "de" : {
@@ -250,6 +283,9 @@
         }
       }
     },
+    "Join" : {
+
+    },
     "Keep me signed in" : {
       "localizations" : {
         "de" : {
@@ -259,6 +295,9 @@
           }
         }
       }
+    },
+    "Kein Team gefunden!" : {
+
     },
     "Kind" : {
       "localizations" : {
@@ -342,6 +381,9 @@
           }
         }
       }
+    },
+    "Möchtest du dem Team %@ beitreten?" : {
+
     },
     "No Connection" : {
       "localizations" : {
@@ -479,6 +521,9 @@
 
     },
     "SignUp" : {
+
+    },
+    "Teams: %lld" : {
 
     },
     "Total Online Users: %lld" : {

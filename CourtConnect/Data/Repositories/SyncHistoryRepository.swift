@@ -46,6 +46,8 @@ import Foundation
     func getLastSyncTimestampsForAllTables(userId: UUID) throws -> [(DatabaseTable, Date)] {
         var list: [(DatabaseTable, Date)] = []
         for table in DatabaseTable.allCases {
+            if table == .updateHistory || table == .userOnline || table == .userProfile { continue }
+            
             let entry = try getLastSyncDate(for: table, userId: userId)
             list.append((entry.table, entry.timestamp))
         }
@@ -68,7 +70,7 @@ import Foundation
         
         try await backendClient.supabase
             .from(DatabaseTable.updateHistory.rawValue)
-            .upsert(entry, onConflict: "id")
+            .upsert(entry, onConflict: "tableString, userId")
             .execute()
     }
 
@@ -76,6 +78,8 @@ import Foundation
         var tablesToSync: [(DatabaseTable, Date)] = []
 
         for table in DatabaseTable.allCases {
+            if table == .updateHistory || table == .userOnline || table == .userProfile { continue }
+            
             let lastLocalSync = try self.getLastSyncDate(for: table, userId: userId)
             
             if let lastUpdateOnRemote = try await self.getUpdatesTablesAfter(for: table, userId: userId) {

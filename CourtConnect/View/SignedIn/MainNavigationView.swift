@@ -27,12 +27,12 @@ struct MainNavigationView: View {
             NavigationStack {
                 NavigationTabBar(navViewModel: navViewModel) {
                     switch navViewModel.current {
-                    case .home: DashboardView(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel, syncServiceViewmodel: syncServiceViewModel)
+                    case .home: DashboardView(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel)
                     case .trainer: EmptyView()
                     case .player: EmptyView()
                     case .settings: SettingsView(userViewModel: userViewModel, networkMonitorViewModel: networkMonitorViewModel).environment(userAccountViewModel)
                     }
-                } 
+                }
             }
         }
         .sheet(isPresented: $userViewModel.showUserEditSheet, content: {
@@ -51,6 +51,14 @@ struct MainNavigationView: View {
         }
         .onChange(of: scenePhase) { _, newPhase in
             userViewModel.changeOnlineStatus(phase: newPhase)
+            
+            if newPhase == .background {
+                Task {
+                    print("disappear")
+                    guard let userId = userViewModel.user?.id else { return }
+                    try await syncServiceViewModel.sendAllData(userId: userId)
+                }
+            }
         }
     }
 }

@@ -9,7 +9,7 @@ import SwiftUI
 struct DashboardView: View {
     @ObservedObject var userViewModel: SharedUserViewModel
     @ObservedObject var userAccountViewModel: UserAccountViewModel
-    @ObservedObject var syncServiceViewmodel: SyncServiceViewModel
+    @Environment(SyncServiceViewModel.self) private var syncServiceViewModel
     
     @State var networkMonitorViewModel: NetworkMonitorViewModel = NetworkMonitorViewModel.shared
     @State var errorHanler = ErrorHandlerViewModel.shared
@@ -27,6 +27,7 @@ struct DashboardView: View {
                 }
             }
         }
+        .contentMargins(.top, 20)
         .errorPopover()
         .navigationTitle("Dashboard")
         .navigationBarTitleDisplayMode(.inline)
@@ -49,7 +50,7 @@ struct DashboardView: View {
             }
             if let userId = userId {
                 Task {
-                    try await syncServiceViewmodel.sendAllData(userId: userId)
+                    try await syncServiceViewModel.sendAllData(userId: userId)
                 }
             }
         })
@@ -57,8 +58,7 @@ struct DashboardView: View {
 }
  
 #Preview { 
-    @Previewable @State var userViewModel = SharedUserViewModel(repository: Repository(type: .preview))
-    @Previewable @State var syncServiceViewmodel = SyncServiceViewModel(repository: Repository(type: .preview))
+    @Previewable @State var userViewModel = SharedUserViewModel(repository: Repository(type: .preview)) 
     @Previewable @State var userAccountViewModel = UserAccountViewModel(repository: Repository(type: .preview), userId: nil)
     @Previewable @State var networkMonitorViewModel = NetworkMonitorViewModel.shared
     
@@ -66,9 +66,9 @@ struct DashboardView: View {
         DashboardView(
             userViewModel: userViewModel,
             userAccountViewModel: userAccountViewModel,
-            syncServiceViewmodel: syncServiceViewmodel,
             networkMonitorViewModel: networkMonitorViewModel
         )
         .messagePopover()
     }
+    .environment(SyncServiceViewModel(repository: Repository(type: .preview)))
 }

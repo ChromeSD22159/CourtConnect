@@ -1,14 +1,14 @@
 //
-//  UserOnlineDTO.swift
+//  UserOnline.swift
 //  CourtConnect
 //
-//  Created by Frederik Kohler on 17.01.25.
+//  Created by Frederik Kohler on 28.01.25.
 //
 import SwiftData
 import Foundation
-import UIKit
 
-struct UserOnlineDTO: DTOProtocol {
+@Model
+class UserOnline: ModelProtocol {
     var id: UUID
     var userId: UUID
     var firstName: String
@@ -31,13 +31,7 @@ struct UserOnlineDTO: DTOProtocol {
         self.deletedAt = deletedAt
     }
     
-    func toModel() -> UserOnline {
-        return UserOnline(id: id, userId: userId, firstName: firstName, lastName: lastName, deviceToken: deviceToken)
-    }
-} 
-
-extension UserOnlineDTO {
-    func toUserProfile() -> UserProfile {
-        return UserProfile(userId: self.userId, firstName: self.firstName, lastName: self.lastName, birthday: "")
+    func toDTO() -> UserOnlineDTO {
+        return UserOnlineDTO(id: id, userId: userId, firstName: firstName, lastName: lastName, deviceToken: deviceToken)
     }
 }
