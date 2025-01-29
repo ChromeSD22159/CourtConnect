@@ -4,6 +4,8 @@
 //
 //  Created by Frederik Kohler on 11.01.25.
 //
+//  xcrun simctl --set previews delete all
+
 import Foundation
 import SwiftData
 import SwiftUICore
@@ -50,7 +52,9 @@ import SwiftUICore
             UserProfile.self
         ])
         
-        let modelConfiguration = ModelConfiguration(isStoredInMemoryOnly: type == .app ? false : true)
+        let modelConfiguration = ModelConfiguration(isStoredInMemoryOnly: type == .preview)
+        
+        print("isStoredInMemoryOnly: \(type == .preview)")
         
         do {
             let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
@@ -63,9 +67,9 @@ import SwiftUICore
             self.syncHistoryRepository = SyncServiceRepository(container: container)
         } catch {
             if type == .app {
-                fatalError("Cannot create Database \(error.localizedDescription)")
+                fatalError("Cannot create Database \(error)")
             } else {
-                fatalError("Cannot create Preview Database \(error.localizedDescription)")
+                fatalError("Cannot create Preview Database \(error)")
             }
         }
     }
