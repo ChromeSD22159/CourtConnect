@@ -10,15 +10,14 @@ import Lottie
 @main
 struct CourtConnectApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-      
-    let repository: Repository
-    @State var syncServiceViewModel: SyncServiceViewModel
-    @State var userViewModel: SharedUserViewModel
+    
+    @State var syncServiceViewModel: SyncServiceViewModel 
+    @State var userViewModel: SharedUserViewModel = SharedUserViewModel(repository: Repository.shared)
     
     init() {
-        repository = Repository(type: .app)
-        userViewModel = SharedUserViewModel(repository: repository)
-        syncServiceViewModel = SyncServiceViewModel(repository: repository)
+        let repo = Repository.shared
+        userViewModel = SharedUserViewModel(repository: repo)
+        syncServiceViewModel = SyncServiceViewModel(repository: repo)
         
         #if targetEnvironment(simulator)
         guard (Bundle(path: "/Applications/RocketSim.app/Contents/Frameworks/RocketSimConnectLinker.nocache.framework")?.load() == true) else {
@@ -50,4 +49,28 @@ struct CourtConnectApp: App {
             .environment(syncServiceViewModel)
         }
     }
-}  
+}
+
+extension View {
+    func previewEnvirments() -> some View {
+        modifier(PreviewEnvirments())
+    }
+}
+
+struct PreviewEnvirments: ViewModifier {
+    @State var errorHandlerViewModel = ErrorHandlerViewModel.shared
+    @State var inAppMessagehandlerViewModel = InAppMessagehandlerViewModel.shared
+    let repo = RepositoryPreview.shared
+    func body(content: Content) -> some View {
+        content
+            .environment(UserAccountViewModel(repository: repo, userId: nil))
+            .environment(SyncServiceViewModel(repository: repo))
+            .environment(\.messagehandler, InAppMessagehandlerViewModel())
+            .environment(\.networkMonitor, NetworkMonitorViewModel())
+            .environment(\.errorHandler, errorHandlerViewModel)
+            .errorPopover()
+            .messagePopover()
+        
+    }
+}
+   

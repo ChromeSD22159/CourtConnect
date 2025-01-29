@@ -18,6 +18,7 @@ struct SettingsView: View {
                 // MARK: - Edit Profile
                 NavigationLink {
                     UserProfileEditView(userViewModel: userViewModel, isSheet: false)
+                        .background(Theme.background)
                 } label: {
                     Text("Your Profile")
                 }
@@ -35,7 +36,6 @@ struct SettingsView: View {
             }
             
             Section {
-                
                 // MARK: - Total Online Users
                 NavigationLink {
                     OnlineUserList(userViewModel: userViewModel)
@@ -92,12 +92,14 @@ fileprivate struct DebugView: View {
                 userViewModel.setCurrentAccount(newAccount: nil)
             }
         }
+        .listBackground()
     }
 }
 
 fileprivate struct OnlineUserList: View {
     @ObservedObject var userViewModel: SharedUserViewModel
     @Environment(\.networkMonitor) var networkMonitor
+    
     var body: some View {
         List {
             Section {
@@ -113,24 +115,31 @@ fileprivate struct OnlineUserList: View {
                 } else {
                     ForEach(userViewModel.onlineUser, id: \.id) { onlineUser in
                         HStack {
+                            
                             if let myUser: UserProfile = userViewModel.userProfile {
-                                NavigationLink { 
-                                    ChatView(repository: userViewModel.repository, myUser: myUser, recipientUser: onlineUser.toUserProfile())
+                                NavigationLink {
+                                    ChatView(myUser: myUser, recipientUser: onlineUser.toUserProfile())
                                 } label: {
                                     Text(onlineUser.firstName + " " + onlineUser.lastName)
                                 }
-                            } 
+                            }
                             
                             Spacer()
                         }
                     }
                 }
             }
-        } 
+        }
+        .listBackground()
     }
 }
 
 #Preview {
-    SettingsView(userViewModel: SharedUserViewModel(repository: Repository(type: .preview)))
-        .environment(UserAccountViewModel(repository: Repository(type: .preview), userId: nil))
+    @Previewable @State var userViewModel = SharedUserViewModel(repository: RepositoryPreview.shared)
+    @Previewable @State var userAccountViewModel = UserAccountViewModel(repository: RepositoryPreview.shared, userId: nil)
+    NavigationStack {
+        SettingsView(userViewModel: userViewModel)
+    }
+    .previewEnvirments()
+    .navigationStackTint()
 }

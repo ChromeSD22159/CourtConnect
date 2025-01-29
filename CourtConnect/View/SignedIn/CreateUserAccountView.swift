@@ -57,17 +57,22 @@ struct CreateUserAccountView: View {
                 }
             }
         }
+        .navigationStackTint()
         .presentationDetents([.height(300)])
     }
 }
  
 #Preview {
-    ZStack { 
+    @Previewable @State var userAccountViewModel = UserAccountViewModel(repository: RepositoryPreview.shared, userId: nil)
+    @Previewable @State var userViewModel = SharedUserViewModel(repository: RepositoryPreview.shared)
+    ZStack {
     }
     .sheet(isPresented: .constant(true)) {
         CreateUserAccountView(
-            userAccountViewModel: UserAccountViewModel(repository: Repository(type: .preview), userId: nil),
-            userViewModel: SharedUserViewModel(repository: Repository(type: .preview)))
-            .shadow(radius: 5)
+            userAccountViewModel: userAccountViewModel,
+            userViewModel: userViewModel
+        )
+        .shadow(radius: 5)
+        .previewEnvirments()
     }
 }

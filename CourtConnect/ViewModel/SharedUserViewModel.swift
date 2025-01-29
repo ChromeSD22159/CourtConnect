@@ -35,9 +35,9 @@ class SharedUserViewModel: ObservableObject {
         }
     }
 
-    let repository: Repository
+    let repository: BaseRepository
     
-    @MainActor init(repository: Repository) {
+    @MainActor init(repository: BaseRepository) {
         self.repository = repository
     }
     

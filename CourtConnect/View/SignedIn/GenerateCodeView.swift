@@ -70,6 +70,7 @@ struct GenerateCodeView: View {
                     Button("Cancel") {
                         dismiss()
                     }
+                    .foregroundStyle(Theme.text)
                 })
                 
                 ToolbarItem(placement: .navigationBarTrailing, content: {
@@ -77,19 +78,21 @@ struct GenerateCodeView: View {
                         viewModel.copy()
                         dismiss()
                     }
+                    .foregroundStyle(Theme.text)
                 })
             }
-        }
+        }.navigationStackTint()
     }
 }
 
 #Preview("Generate") {
-    GenerateCodeView()
+    EmptyView()
         .sheet(isPresented: .constant(true), content: {
             ZStack {
                 Theme.background.ignoresSafeArea()
                 
                 GenerateCodeView()
+                    .previewEnvirments()
             }
         })
 }

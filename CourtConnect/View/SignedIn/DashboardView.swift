@@ -14,6 +14,14 @@ struct DashboardView: View {
     @Environment(\.errorHandler) var errorHanler
     @Environment(\.networkMonitor) var networkMonitor
     
+    @State var teamViewModel: TeamViewModel
+    
+    init(userViewModel: SharedUserViewModel, userAccountViewModel: UserAccountViewModel) {
+        self.userViewModel = userViewModel
+        self.userAccountViewModel = userAccountViewModel
+        self.teamViewModel = TeamViewModel(repository: userViewModel.repository)
+    }
+    
     var body: some View {
         ScrollView(.vertical) {
             InternetUnavailableView()
@@ -21,7 +29,7 @@ struct DashboardView: View {
             if let currentAccount = userViewModel.currentAccount, let role = UserRole(rawValue: currentAccount.role) {
                 switch role {
                 case .player: PlayerDashboard(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel)
-                case .trainer: TrainerDashboard(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel)
+                case .trainer: TrainerDashboard(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel, teamViewModel: teamViewModel)
                 case .admin: EmptyView()
                 }
             }
@@ -31,6 +39,15 @@ struct DashboardView: View {
         .navigationTitle("Dashboard")
         .navigationBarTitleDisplayMode(.inline)
         .userToolBar(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel)
+        .task {
+            if let userId = userViewModel.user?.id {
+                do {
+                    try await syncServiceViewModel.syncAllTables(userId: userId)
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
+        }
         .fullScreenCover(
             isPresented: $userViewModel.showOnBoarding,
             onDismiss: { sync() },
@@ -57,8 +74,8 @@ struct DashboardView: View {
 }
  
 #Preview { 
-    @Previewable @State var userViewModel = SharedUserViewModel(repository: Repository(type: .preview)) 
-    @Previewable @State var userAccountViewModel = UserAccountViewModel(repository: Repository(type: .preview), userId: nil)
+    @Previewable @State var userViewModel = SharedUserViewModel(repository: RepositoryPreview.shared)
+    @Previewable @State var userAccountViewModel = UserAccountViewModel(repository: RepositoryPreview.shared, userId: nil)
     @Previewable @State var networkMonitorViewModel = NetworkMonitorViewModel.shared
     
     NavigationStack {
@@ -68,5 +85,6 @@ struct DashboardView: View {
         )
         .messagePopover()
     }
-    .environment(SyncServiceViewModel(repository: Repository(type: .preview)))
+    .navigationStackTint()
+    .previewEnvirments()
 }

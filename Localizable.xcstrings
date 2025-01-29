@@ -4,6 +4,12 @@
     " " : {
 
     },
+    "(Optimal)" : {
+
+    },
+    "* Required" : {
+
+    },
     "**Wilkommen** \n%@!" : {
 
     },
@@ -42,6 +48,9 @@
     "Bereit für den Sprung? Lass uns starten! Melde dich an, um loszulegen und teil der Community zu werden." : {
 
     },
+    "Bild auswählen" : {
+
+    },
     "Birthday" : {
       "localizations" : {
         "de" : {
@@ -61,6 +70,9 @@
           }
         }
       }
+    },
+    "Choose Image" : {
+
     },
     "continue" : {
 
@@ -90,6 +102,9 @@
           }
         }
       }
+    },
+    "Create Team" : {
+
     },
     "Create User Account" : {
       "localizations" : {
@@ -270,7 +285,16 @@
         }
       }
     },
+    "Found New Team" : {
+
+    },
     "Generate Code" : {
+
+    },
+    "Generate Code Neu" : {
+
+    },
+    "Headcoach" : {
 
     },
     "Home" : {
@@ -529,6 +553,9 @@
     "Team" : {
 
     },
+    "Team Name" : {
+
+    },
     "TeamName" : {
 
     },
@@ -584,6 +611,9 @@
           }
         }
       }
+    },
+    "Verbands E-Mail" : {
+
     },
     "Version: -" : {
       "localizations" : {

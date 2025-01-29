@@ -11,7 +11,7 @@ import Foundation
 @MainActor class TeamRepository {
     var container: ModelContainer
     
-    init(container: ModelContainer, type: RepositoryType) {
+    init(container: ModelContainer) {
         self.container = container
     }
      
@@ -116,35 +116,17 @@ import Foundation
 } 
 
 @MainActor
-@Observable class TeamViewModel {
+@Observable class TeamViewModel: ObservableObject {
     var teamName = ""
     
     var searchTeamName = ""
     var foundTeams: [TeamDTO] = []
     
-    let repository: Repository
+    let repository: BaseRepository
     
-    init(repository: Repository) {
+    init(repository: BaseRepository) {
         self.repository = repository
-    }
-    
-    func createTeam(userAccount: UserAccount, userProfile: UserProfile) async throws {
-        let generatedCode = CodeGeneratorHelper.generateCode().map { String($0) }.joined()
-        let now = Date()
-        
-        let newTeam = Team(teamName: teamName, createdBy: userProfile.fullName, headcoach: "", joinCode: generatedCode, createdAt: now, updatedAt: now)
-        let newMember = TeamMember(userId: userAccount.id, teamId: newTeam.id, role: userAccount.role, createdAt: now, updatedAt: now)
-        let newAdmin = TeamAdmin(teamId: newTeam.id, userId: userAccount.id, role: userAccount.role, createdAt: now, updatedAt: now)
-        
-        try await repository.teamRepository.insertTeam(newTeam: newTeam)
-        try repository.syncHistoryRepository.insertLastSyncTimestamp(for: .team, userId: userAccount.userId)
-        
-        try await repository.teamRepository.insertTeamMember(newMember: newMember)
-        try repository.syncHistoryRepository.insertLastSyncTimestamp(for: .team, userId: userAccount.userId)
-        
-        try await repository.teamRepository.insertTeamAdmin(newAdmin: newAdmin)
-        try repository.syncHistoryRepository.insertLastSyncTimestamp(for: .team, userId: userAccount.userId)
-    }
+    } 
     
     func joinTeamWithCode(code: String, userAccount: UserAccount) throws {
         Task {

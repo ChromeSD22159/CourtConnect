@@ -32,16 +32,7 @@ struct SplashScreen: View {
                 LottieView(animation: .named("basketballLoading"))
                     .playbackMode(playbackMode)
                     .frame(width: 400, height: 400)
-            }
-            .task {
-                if let userId = userId {
-                    do {
-                        try await syncServiceViewModel.syncAllTables(userId: userId)
-                    } catch {
-                        print(error.localizedDescription)
-                    }
-                }
-            }
+            } 
             .onAppear {
                 playbackMode = .playing(.fromFrame(1, toFrame: 48, loopMode: .loop))
                 
@@ -67,5 +58,5 @@ struct SplashScreen: View {
     SplashScreen(isVisible: $isSlashScreen, duration: 3.0, userId: nil, onComplete: {
         isSlashScreen.toggle()
     })
-    .environment(SyncServiceViewModel(repository: Repository(type: .preview)))
+    .previewEnvirments()
 }

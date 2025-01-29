@@ -52,4 +52,5 @@ struct OnBoardingView: View {
 
 #Preview {
     OnBoardingView(firstName: "Frederik")
+        .previewEnvirments()
 }

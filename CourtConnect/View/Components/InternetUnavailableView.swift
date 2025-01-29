@@ -21,4 +21,5 @@ struct InternetUnavailableView: View {
 
 #Preview {
     InternetUnavailableView()
+        .previewEnvirments()
 }

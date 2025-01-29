@@ -12,15 +12,15 @@ import Supabase
 @Model
 class Chat: ModelProtocol {  
     @Attribute(.unique) var id: UUID
-    var senderId: String
-    var recipientId: String
-    var message: String 
+    var senderId: UUID
+    var recipientId: UUID
+    var message: String
     var createdAt: Date
     var updatedAt: Date
     var deletedAt: Date?
     var readedAt: Date?
      
-    init(id: UUID = UUID(), senderId: String, recipientId: String, message: String, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil, readedAt: Date? = nil) {
+    init(id: UUID = UUID(), senderId: UUID, recipientId: UUID, message: String, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil, readedAt: Date? = nil) {
         self.id = id
         self.senderId = senderId
         self.recipientId = recipientId
@@ -32,12 +32,6 @@ class Chat: ModelProtocol {
     }
     
     func toDTO() -> some DTOProtocol {
-        do {
-            let decryptedMessage = try EncryptionHelper.toEncryptedString(senderId: id.uuidString, text: message)
-             
-            return ChatDTO(id: self.id, senderId: self.senderId, recipientId: self.recipientId, message: decryptedMessage, readedAt: self.readedAt, createdAt: self.createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
-        } catch {
-            return ChatDTO(id: self.id, senderId: self.senderId, recipientId: self.recipientId, message: self.message, readedAt: self.readedAt, createdAt: self.createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
-        }
-    } 
+        return ChatDTO(id: id, senderId: senderId, recipientId: recipientId, message: message, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
+    }
 }

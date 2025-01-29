@@ -100,24 +100,30 @@ struct EnterCodeView: View {
                 ToolbarItem(placement: .navigationBarLeading, content: {
                     Button("Cancel") {
                         dismiss()
-                    }
+                    }.foregroundStyle(Theme.text)
                 })
                 
                 ToolbarItem(placement: .navigationBarTrailing, content: {
-                    Button("Join") {}
+                    Button("Join") {
+                        
+                    }
+                    .foregroundStyle(Theme.text)
                 })
             }
-        }
+        }.navigationStackTint()
     }
 }
 
 #Preview("EnterCode") {
-    EnterCodeView()
-        .sheet(isPresented: .constant(false), content: {
-            ZStack {
-                Theme.background.ignoresSafeArea()
-                
-                EnterCodeView()
-            }
-        })
-} 
+    ZStack {
+        EnterCodeView()
+            .sheet(isPresented: .constant(false), content: {
+                ZStack {
+                    Theme.background.ignoresSafeArea()
+                    
+                    EnterCodeView()
+                }
+            })
+    }
+    .previewEnvirments() 
+}

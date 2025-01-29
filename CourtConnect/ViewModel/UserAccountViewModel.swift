@@ -6,19 +6,18 @@
 //
 import Supabase
 import Foundation
-
-@Observable
+ 
 @MainActor
-class UserAccountViewModel: SyncronizationViewModelProtocol, ObservableObject {
+@Observable class UserAccountViewModel: ObservableObject {
     
-    var repository: Repository
+    var repository: BaseRepository
     var userId: UUID?
     var accounts: [UserAccount] = []
     var isCreateRoleSheet = false
     var role: UserRole = .player
     var position: BasketballPosition = .center
     
-    init(repository: Repository, userId: UUID?) {
+    init(repository: BaseRepository, userId: UUID?) {
         self.repository = repository
         self.userId = userId
     }

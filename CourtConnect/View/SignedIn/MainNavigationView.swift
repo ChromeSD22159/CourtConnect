@@ -8,19 +8,12 @@
 import SwiftUI
 
 struct MainNavigationView: View {
+    @Environment(\.scenePhase) var scenePhase
+    @Environment(\.networkMonitor) var networkMonitor
+    @Environment(SyncServiceViewModel.self) private var syncServiceViewModel
     @State var navViewModel = NavigationViewModel.shared
     @ObservedObject var userViewModel: SharedUserViewModel
-    @Environment(\.scenePhase) var scenePhase
-    
-    @Environment(\.networkMonitor) var networkMonitor
-    @State var userAccountViewModel: UserAccountViewModel
-    @State var syncServiceViewModel: SyncServiceViewModel
-    
-    init(userViewModel: SharedUserViewModel) {
-        self.userViewModel = userViewModel
-        self.userAccountViewModel = UserAccountViewModel(repository: userViewModel.repository, userId: userViewModel.user?.id)
-        self.syncServiceViewModel = SyncServiceViewModel(repository: userViewModel.repository)
-    }
+    @ObservedObject var userAccountViewModel: UserAccountViewModel 
     
     var body: some View {
         MessagePopover {
@@ -33,7 +26,7 @@ struct MainNavigationView: View {
                     case .settings: SettingsView(userViewModel: userViewModel).environment(userAccountViewModel)
                     }
                 }
-            }
+            }.navigationStackTint()
         }
         .sheet(isPresented: $userViewModel.showUserEditSheet, content: {
             UserProfileEditView(userViewModel: userViewModel, isSheet: true)
@@ -64,7 +57,8 @@ struct MainNavigationView: View {
 }
  
 #Preview {
-    @Previewable @State var userViewModel = SharedUserViewModel(repository: Repository(type: .preview))
-    @Previewable @State var userAccountViewModel = UserAccountViewModel(repository: Repository(type: .preview), userId: nil)
-    MainNavigationView(userViewModel: userViewModel)
+    @Previewable @State var userViewModel = SharedUserViewModel(repository: RepositoryPreview.shared)
+    @Previewable @State var userAccountViewModel = UserAccountViewModel(repository: RepositoryPreview.shared, userId: nil)
+    MainNavigationView(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel)
+        .previewEnvirments()
 }

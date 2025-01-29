@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct NavigationTabBar<Content: View>: View {
-    @Bindable var navViewModel: NavigationViewModel
+    @ObservedObject var navViewModel: NavigationViewModel
     @Namespace private var animation
     
     @ViewBuilder var content: () -> Content

@@ -37,12 +37,16 @@ struct LoginEntryView: View {
                 isTextShowing.toggle()
             }
         }
-        .sheet(isPresented: $isSignInSheet, content: {
-            SignInSheet(isSignInSheet: $isSignInSheet, userViewModel: userViewModel)
-        })
-        .sheet(isPresented: $isSignUpSheet, content: {
-            SignUpSheet(isSignUpSheet: $isSignUpSheet, userViewModel: userViewModel)
-        })
+        .sheet(isPresented: $isSignInSheet) {
+            SignInSheet(isSignInSheet: $isSignInSheet, userViewModel: userViewModel, loginViewModel: LoginViewModel(repository: userViewModel.repository)) {
+                
+            }
+        }
+        .sheet(isPresented: $isSignUpSheet) {
+            SignUpSheet(isSignUpSheet: $isSignUpSheet, userViewModel: userViewModel, registerViewModel: RegisterViewModel(repository: userViewModel.repository)) {
+                
+            }
+        }
     }
     
     @ViewBuilder func buttonRow() -> some View {
@@ -84,26 +88,14 @@ struct LoginEntryView: View {
 private struct SignInSheet: View {
     @Binding var isSignInSheet: Bool
     @ObservedObject var userViewModel: SharedUserViewModel
+    @ObservedObject var loginViewModel: LoginViewModel
     
-    @State var viewModel: LoginViewModel
     @Environment(\.errorHandler) var errorHanler
     @State var isLoadingAnimation = false
     
     @FocusState var focus: LoginViewModel.Field?
     
-    private let navigate: () -> Void
-    
-    init(
-        isSignInSheet: Binding<Bool>,
-        @ObservedObject userViewModel: SharedUserViewModel,
-        navigate: @escaping () -> Void = { }
-    ) {
-        self._isSignInSheet = isSignInSheet
-        self.viewModel = LoginViewModel(repository: userViewModel.repository)
-        self.userViewModel = userViewModel
-        self.navigate = navigate
-        self.focus = nil
-    }
+    let navigate: () -> Void
     
     var body: some View {
         NavigationStack {
@@ -111,7 +103,7 @@ private struct SignInSheet: View {
                 VStack(spacing: 20) {
                     VStack(alignment: .leading, spacing: 5) {
                         SmallText("E-Mail")
-                        TextField("E-Mail", text: $viewModel.email, prompt: Text("Enter your E-Mail"))
+                        TextField("E-Mail", text: $loginViewModel.email, prompt: Text("Enter your E-Mail"))
                             .keyboardType(.emailAddress)
                             .focused($focus, equals: .email)
                             .submitLabel(.next)
@@ -120,27 +112,27 @@ private struct SignInSheet: View {
                     
                     VStack(alignment: .leading, spacing: 5) {
                         SmallText("Password")
-                        if viewModel.showPassword {
-                            TextField("Password", text: $viewModel.password, prompt: Text("Enter your Password"))
+                        if loginViewModel.showPassword {
+                            TextField("Password", text: $loginViewModel.password, prompt: Text("Enter your Password"))
                                 .focused($focus, equals: .password)
                                 .submitLabel(.done)
                                 .textFieldStyle(.roundedBorder)
                                 .overlay(alignment: .trailing) {
-                                    ShowPasswordButton(showPassword: $viewModel.showPassword)
+                                    ShowPasswordButton(showPassword: $loginViewModel.showPassword)
                                 }
                         } else {
-                            SecureField("Password", text: $viewModel.password, prompt: Text("Enter your Password"))
+                            SecureField("Password", text: $loginViewModel.password, prompt: Text("Enter your Password"))
                                 .keyboardType(.default)
                                 .focused($focus, equals: .password)
                                 .submitLabel(.done)
                                 .textFieldStyle(.roundedBorder)
                                 .overlay(alignment: .trailing) {
-                                    ShowPasswordButton(showPassword: $viewModel.showPassword)
+                                    ShowPasswordButton(showPassword: $loginViewModel.showPassword)
                                 }
                         }
                     }
                     
-                    Toggle(isOn: $viewModel.keepSignededIn) {
+                    Toggle(isOn: $loginViewModel.keepSignededIn) {
                         Text("Keep me signed in")
                     }
                     .tint(Theme.darkOrange)
@@ -173,7 +165,7 @@ private struct SignInSheet: View {
                                 
                                 try await Task.sleep(for: .seconds(1))
                                 
-                                let (user, userProfile) = try await viewModel.signIn()
+                                let (user, userProfile) = try await loginViewModel.signIn()
                                 
                                 if let user = user {
                                     userViewModel.user = user
@@ -204,26 +196,13 @@ private struct SignInSheet: View {
 private struct SignUpSheet: View {
     @Binding var isSignUpSheet: Bool
     @ObservedObject var userViewModel: SharedUserViewModel
+    @ObservedObject var registerViewModel: RegisterViewModel
     
-    @State var viewModel: RegisterViewModel
-    @Environment(\.errorHandler) var errorHanler 
+    @Environment(\.errorHandler) var errorHanler
     @State var isLoadingAnimation = false
-    
     @FocusState var focus: RegisterViewModel.Field?
     
-    private let navigate: () -> Void
-    
-    init(
-        isSignUpSheet: Binding<Bool>,
-        @ObservedObject userViewModel: SharedUserViewModel,
-        navigate: @escaping () -> Void = { }
-    ) {
-        self._isSignUpSheet = isSignUpSheet
-        self.viewModel = RegisterViewModel(repository: userViewModel.repository)
-        self.userViewModel = userViewModel
-        self.navigate = navigate
-        self.focus = nil
-    }
+    let navigate: () -> Void 
     
     var body: some View {
         NavigationStack {
@@ -231,7 +210,7 @@ private struct SignUpSheet: View {
                 VStack(spacing: 20) {
                     VStack(alignment: .leading, spacing: 5) {
                         SmallText("E-Mail")
-                        TextField("E-Mail", text: $viewModel.email, prompt: Text("Enter your E-Mail"))
+                        TextField("E-Mail", text: $registerViewModel.email, prompt: Text("Enter your E-Mail"))
                             .keyboardType(.emailAddress)
                             .focused($focus, equals: .email)
                             .submitLabel(.next)
@@ -240,7 +219,7 @@ private struct SignUpSheet: View {
                     
                     VStack(alignment: .leading, spacing: 5) {
                         SmallText("Firstname")
-                        TextField("Firstname", text: $viewModel.firstName, prompt: Text("Enter your Firstname"))
+                        TextField("Firstname", text: $registerViewModel.firstName, prompt: Text("Enter your Firstname"))
                             .focused($focus, equals: .firstName)
                             .submitLabel(.next)
                             .textFieldStyle(.roundedBorder)
@@ -248,53 +227,53 @@ private struct SignUpSheet: View {
                     
                     VStack(alignment: .leading, spacing: 5) {
                         SmallText("Lastname")
-                        TextField("Lastname", text: $viewModel.lastName, prompt: Text("Enter your Lastname"))
+                        TextField("Lastname", text: $registerViewModel.lastName, prompt: Text("Enter your Lastname"))
                             .focused($focus, equals: .lastName)
                             .submitLabel(.next)
                             .textFieldStyle(.roundedBorder)
                     }
                     
-                    DatePicker("Your Birthday", selection: $viewModel.birthday, displayedComponents: .date)
+                    DatePicker("Your Birthday", selection: $registerViewModel.birthday, displayedComponents: .date)
                         .datePickerStyle(.compact)
                     
                     VStack(alignment: .leading, spacing: 5) {
                         SmallText("Password")
-                        if viewModel.showPassword {
-                            TextField("Password", text: $viewModel.password, prompt: Text("Enter your Password"))
+                        if registerViewModel.showPassword {
+                            TextField("Password", text: $registerViewModel.password, prompt: Text("Enter your Password"))
                                 .focused($focus, equals: .password)
                                 .submitLabel(.done)
                                 .textFieldStyle(.roundedBorder)
                                 .overlay(alignment: .trailing) {
-                                    ShowPasswordButton(showPassword: $viewModel.showPassword)
+                                    ShowPasswordButton(showPassword: $registerViewModel.showPassword)
                                 }
                         } else {
-                            SecureField("Password", text: $viewModel.password, prompt: Text("Enter your Password"))
+                            SecureField("Password", text: $registerViewModel.password, prompt: Text("Enter your Password"))
                                 .focused($focus, equals: .password)
                                 .submitLabel(.done)
                                 .textFieldStyle(.roundedBorder)
                                 .overlay(alignment: .trailing) {
-                                    ShowPasswordButton(showPassword: $viewModel.showPassword)
+                                    ShowPasswordButton(showPassword: $registerViewModel.showPassword)
                                 }
                         }
                     }
                     
                     VStack(alignment: .leading, spacing: 5) {
                         SmallText("Repeat password")
-                        if viewModel.showPassword {
-                            TextField("Repeat password", text: $viewModel.repeatPassword, prompt: Text("Repeat your password"))
+                        if registerViewModel.showPassword {
+                            TextField("Repeat password", text: $registerViewModel.repeatPassword, prompt: Text("Repeat your password"))
                                 .focused($focus, equals: .repeatPassword)
                                 .submitLabel(.done)
                                 .textFieldStyle(.roundedBorder)
                                 .overlay(alignment: .trailing) {
-                                    ShowPasswordButton(showPassword: $viewModel.showRepeatPassword)
+                                    ShowPasswordButton(showPassword: $registerViewModel.showRepeatPassword)
                                 }
                         } else {
-                            SecureField("Repeat password", text: $viewModel.repeatPassword, prompt: Text("Repeat your password"))
+                            SecureField("Repeat password", text: $registerViewModel.repeatPassword, prompt: Text("Repeat your password"))
                                 .focused($focus, equals: .repeatPassword)
                                 .submitLabel(.done)
                                 .textFieldStyle(.roundedBorder)
                                 .overlay(alignment: .trailing) {
-                                    ShowPasswordButton(showPassword: $viewModel.showRepeatPassword)
+                                    ShowPasswordButton(showPassword: $registerViewModel.showRepeatPassword)
                                 }
                         }
                     }
@@ -326,7 +305,7 @@ private struct SignUpSheet: View {
                             try await Task.sleep(for: .seconds(1))
                             
                             do {
-                                let (user, profile) = try await viewModel.signUp()
+                                let (user, profile) = try await registerViewModel.signUp()
                                 
                                 if let user = user {
                                     userViewModel.user = user
@@ -356,11 +335,13 @@ private struct SignUpSheet: View {
 }
 
 #Preview("Light") {
-    LoginEntryView(userViewModel: SharedUserViewModel(repository: Repository(type: .preview)) )
+    LoginEntryView(userViewModel: SharedUserViewModel(repository: RepositoryPreview.shared) )
         .preferredColorScheme(.light)
+        .previewEnvirments()
 }
 
 #Preview("Dark") {
-    LoginEntryView(userViewModel: SharedUserViewModel(repository: Repository(type: .preview)) )
+    LoginEntryView(userViewModel: SharedUserViewModel(repository: RepositoryPreview.shared) )
         .preferredColorScheme(.dark)
+        .previewEnvirments()
 }

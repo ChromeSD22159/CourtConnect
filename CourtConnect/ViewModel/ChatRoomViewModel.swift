@@ -6,12 +6,12 @@
 //
 import Observation
 import Foundation
-
-@Observable
+import SwiftUICore
+ 
 @MainActor
-class ChatRoomViewModel: ObservableObject {
+@Observable class ChatRoomViewModel: ObservableObject {
     private let supabase = BackendClient.shared
-    let repository: Repository
+    let repository: BaseRepository
     
     var myUser: UserProfile
     
@@ -21,60 +21,57 @@ class ChatRoomViewModel: ObservableObject {
     
     var inputText: String = ""
     
-    init(repository: Repository, myUser: UserProfile, recipientUser: UserProfile) {
+    var scrollPosition = ScrollPosition()
+    
+    init(repository: BaseRepository, myUser: UserProfile, recipientUser: UserProfile) {
         self.repository = repository
         self.myUser = myUser
         self.recipientUser = recipientUser 
     }
     
     func addMessage(senderID: UUID, recipientId: UUID) {
-        guard !inputText.isEmpty else { return }
-        // let timestamp = SyncHistory(table: DatabaseTable.messages, userId: myUser.userId)
-        let new = Chat(senderId: senderID.uuidString, recipientId: recipientId.uuidString, message: inputText, createdAt: Date(), updatedAt: Date(), readedAt: nil)
+        guard !inputText.isEmpty else { return } 
+        let new = Chat(senderId: senderID, recipientId: recipientId, message: inputText, createdAt: Date(), updatedAt: Date(), readedAt: nil)
         Task {
             do {
-                let lastSync = try lastSyncDate()
-                try await self.repository.chatRepository.sendMessageToBackend(message: new, lastDate: lastSync, complete: { result in
-                    switch result {
-                    case .success(let messages):
-                        self.messages = messages
-                        self.resetInput()
-                    case .failure: break
-                    }
-                })
+                try self.repository.chatRepository.upsertLocal(message: new)
                 try self.repository.syncHistoryRepository.insertLastSyncTimestamp(for: .chat, userId: myUser.userId)
+                 
+                try await self.repository.chatRepository.sendMessageToBackend(message: new) {
+                    Task {
+                        try await self.repository.syncHistoryRepository.insertUpdateTimestampTable(for: .chat, userId: senderID)
+                    }
+                }
+                
+                self.getAllLocalMessages()
+                
+                inputText = ""
             } catch {
-                print(error.localizedDescription)
+                print("asdasd \(error.localizedDescription)")
             }
         }
     }
     
-    func getAllMessages() {
-        Task {
-            
-            let lastSync = try lastSyncDate()
-             
-            await repository.chatRepository.syncChatFromBackend(myUserId: myUser.userId.uuidString, recipientId: recipientUser.userId.uuidString, lastSync: lastSync) { result in
-                switch result {
-                case .success(let messages):
-                    self.messages = messages
-                    self.resetInput()
-                case .failure: break
-                }
-            }
+    func getAllLocalMessages() {
+        do {
+            messages = try self.repository.chatRepository.getAllMessagesLocal(myUserId: myUser.userId, recipientId: recipientUser.userId)
+        } catch {
+            print(error.localizedDescription)
         }
     }
     
     func startReceiveMessages() {
         Task {
-            repository.chatRepository.receiveMessages(myUserId: myUser.userId.uuidString, recipientId: recipientUser.userId.uuidString, complete: { result in
-                switch result {
-                case .success(let messages):
-                    self.messages = messages
-                    self.resetInput()
-                case .failure: break
+            repository.chatRepository.receiveMessageAndInsertLocal(myUserId: myUser.userId, recipientId: recipientUser.userId) {
+                Task {
+                    do {
+                        try self.repository.syncHistoryRepository.insertLastSyncTimestamp(for: .chat, userId: self.myUser.userId)
+                        self.getAllLocalMessages()
+                    } catch {
+                        print(error.localizedDescription)
+                    }
                 }
-            })
+            }
         }
     }
     
@@ -92,5 +89,5 @@ class ChatRoomViewModel: ObservableObject {
     
     private func lastSyncDate() throws -> Date {
         return try repository.syncHistoryRepository.getLastSyncDate(for: .chat, userId: myUser.userId).timestamp
-    }
+    }  
 }

@@ -57,5 +57,5 @@ struct MessagePopover<Content: View>: View {
         Button("Handle Message") {
             viewModel.handleMessage(message: InAppMessage(title: "Neue Nachricht von Frederik", body: "Neue Nachricht von Frederik"))
         }
-    }.messagePopover()
+    }.previewEnvirments()
 }

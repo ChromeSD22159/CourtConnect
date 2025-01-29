@@ -8,10 +8,14 @@ import SwiftUI
 
 struct ChatView: View {
     @State var viewModel: ChatRoomViewModel
-    @State var scrollPosition = ScrollPosition()
     
-    init(repository: Repository, myUser: UserProfile, recipientUser: UserProfile) {
-        viewModel = ChatRoomViewModel(repository: repository, myUser: myUser, recipientUser: recipientUser)
+    let myUser: UserProfile
+    let recipientUser: UserProfile
+    
+    init(myUser: UserProfile, recipientUser: UserProfile) {
+        self.viewModel = ChatRoomViewModel(repository: Repository.shared, myUser: myUser, recipientUser: recipientUser)
+        self.myUser = myUser
+        self.recipientUser = recipientUser
     }
     
     var body: some View {
@@ -20,7 +24,7 @@ struct ChatView: View {
                 LazyVStack(spacing: 20) {
                     if !viewModel.messages.isEmpty {
                         ForEach(viewModel.messages) { message in
-                            MessageRow(message: message, myUserId: viewModel.myUser.userId.uuidString)
+                            MessageRow(message: message, myUserId: viewModel.myUser.userId)
                         }
                     } else {
                         HStack {
@@ -31,23 +35,22 @@ struct ChatView: View {
                 .padding()
                 .scrollTargetLayout()
             }
-            .contentMargins(.bottom, 75)
-            .scrollPosition($scrollPosition)
+            .scrollPosition($viewModel.scrollPosition)
             .scrollIndicators(.hidden)
+            .defaultScrollAnchor(.bottom)
+            .padding(.bottom, 75)
         }
         .overlay(alignment: .bottom) {
-            InputField(viewModel: viewModel, scrollPosition: $scrollPosition) {
+            InputField(viewModel: viewModel) {
                 viewModel.addMessage(senderID: viewModel.myUser.userId, recipientId: viewModel.recipientUser.userId)
             }
         }
         .onAppear {
-            viewModel.getAllMessages()
+            viewModel.getAllLocalMessages()
             viewModel.startReceiveMessages()
         }
         .onChange(of: viewModel.messages, {
-            withAnimation {
-                scrollPosition.scrollTo(edge: .bottom)
-            }
+            viewModel.scrollPosition.scrollTo(edge: .bottom)
         })
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -59,7 +62,7 @@ struct ChatView: View {
                             .font(.caption)
                         
                         Button("Reload Chat") {
-                            viewModel.getAllMessages()
+                            viewModel.getAllLocalMessages()
                         }
                         
                         Button("Delete Local Chat") {
@@ -86,7 +89,6 @@ struct ChatView: View {
 
 fileprivate struct InputField: View {
     @ObservedObject var viewModel: ChatRoomViewModel
-    @Binding var scrollPosition: ScrollPosition
     let onPressSend: () -> Void
     
     var body: some View {
@@ -106,7 +108,7 @@ fileprivate struct InputField: View {
 
 fileprivate struct MessageRow: View {
     let message: Chat
-    let myUserId: String
+    let myUserId: UUID
     var body: some View {
         VStack(spacing: 8) {
             HStack {
@@ -179,9 +181,11 @@ fileprivate struct RoundImageButton: View {
 }
  
 #Preview {
-    @Previewable @State var viewModel = ChatRoomViewModel(repository: Repository(type: .preview), myUser: MockUser.myUserProfile, recipientUser: MockUser.userList[1])
+    @Previewable @State var viewModel = ChatRoomViewModel(repository: RepositoryPreview.shared, myUser: MockUser.myUserProfile, recipientUser: MockUser.userList[1])
   
     NavigationStack {
-        ChatView(repository: Repository(type: .preview), myUser: viewModel.myUser, recipientUser: viewModel.recipientUser)
+        ChatView(myUser: viewModel.myUser, recipientUser: viewModel.recipientUser)
     }
+    .previewEnvirments()
+    .navigationStackTint()
  }

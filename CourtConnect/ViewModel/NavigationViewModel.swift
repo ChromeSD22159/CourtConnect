@@ -6,7 +6,7 @@
 //
 import Foundation
 
-@Observable class NavigationViewModel {
+@Observable class NavigationViewModel: ObservableObject {
     static let shared = NavigationViewModel()
     
     var current: NavigationTab = .home

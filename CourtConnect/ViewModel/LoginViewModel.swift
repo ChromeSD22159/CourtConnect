@@ -8,7 +8,7 @@ import Foundation
 import Supabase
 
 @Observable class LoginViewModel: ObservableObject {
-    var repository: Repository
+    var repository: BaseRepository
     
     var email: String = ""
     var password: String = ""
@@ -17,7 +17,7 @@ import Supabase
     var focus: Field?
     var error: Error?
     
-    init(repository: Repository) {
+    init(repository: BaseRepository) {
         self.repository = repository
     }
     

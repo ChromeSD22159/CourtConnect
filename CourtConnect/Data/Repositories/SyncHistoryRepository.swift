@@ -7,8 +7,7 @@
 import SwiftData
 import Foundation
 
-@MainActor struct SyncServiceRepository {
-    let type: RepositoryType
+@MainActor struct SyncServiceRepository { 
     var backendClient = BackendClient.shared
     let container: ModelContainer
     let defaultSyncDate: Date = Calendar.current.date(byAdding: .year, value: -10, to: Date())!
@@ -18,8 +17,7 @@ import Foundation
         return cal.date(byAdding: .year, value: -30, to: Date())!
     }
     
-    init(container: ModelContainer, type: RepositoryType) {
-        self.type = type
+    init(container: ModelContainer) {
         self.container = container
     }
     
@@ -46,7 +44,7 @@ import Foundation
     func getLastSyncTimestampsForAllTables(userId: UUID) throws -> [(DatabaseTable, Date)] {
         var list: [(DatabaseTable, Date)] = []
         for table in DatabaseTable.allCases {
-            if table == .updateHistory || table == .userOnline || table == .userProfile { continue }
+            if table == .updateHistory || table == .userOnline || table == .userProfile || table == .deletionRequest { continue }
             
             let entry = try getLastSyncDate(for: table, userId: userId)
             list.append((entry.table, entry.timestamp))
@@ -75,7 +73,7 @@ import Foundation
         var tablesToSync: [(DatabaseTable, Date)] = []
 
         for table in DatabaseTable.allCases {
-            if table == .updateHistory || table == .userOnline || table == .userProfile { continue }
+            if table == .updateHistory || table == .userOnline || table == .userProfile || table == .deletionRequest { continue }
             
             let lastLocalSync = try self.getLastSyncDate(for: table, userId: userId)
             

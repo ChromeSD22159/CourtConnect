@@ -7,16 +7,16 @@
 import Foundation
 
 @MainActor
-@Observable class TeamListViewModel {
+@Observable class TeamListViewModel: ObservableObject {
     var showJoinTeamAlert: Bool = false
     var searchTeamName: String = ""
     var isSearchBar: Bool  = false
     var foundTeams: [TeamDTO] = []
     var selectedTeam: TeamDTO?
     
-    let repository: Repository
+    let repository: BaseRepository
     
-    init(repository: Repository) {
+    init(repository: BaseRepository) {
         self.repository = repository
     }
     

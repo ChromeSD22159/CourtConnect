@@ -42,5 +42,6 @@ struct ErrorPopover<Content: View>: View {
         Button("Handle Error") {
             viewModel.handleError(error: UserError.userIdNotFound)
         }
-    }.errorPopover()
+    }
+    .errorPopover()
 }

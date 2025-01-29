@@ -7,12 +7,11 @@
 import Foundation
 
 @MainActor
-@Observable
-class SyncServiceViewModel {
+@Observable class SyncServiceViewModel {
     var backendClient = BackendClient.shared
-    let repository: Repository
+    let repository: BaseRepository
     
-    init(backendClient: BackendClient = BackendClient.shared, repository: Repository) {
+    init(backendClient: BackendClient = BackendClient.shared, repository: BaseRepository) {
         self.backendClient = backendClient
         self.repository = repository
     }

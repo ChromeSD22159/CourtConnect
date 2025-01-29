@@ -20,11 +20,21 @@ struct SupabaseService {
     
     static func insert<T: DTOProtocol>(item: T, table: DatabaseTable) async throws -> T {
         return try await BackendClient.shared.supabase
-            .from(DatabaseTable.teamAdmin.rawValue)
+            .from(table.rawValue)
             .insert(item)
+            .select()
             .single()
             .execute()
             .value
+    }
+    
+    static func insert<T: DTOProtocol>(item: T, table: DatabaseTable) async throws -> Bool {
+        let response = try await BackendClient.shared.supabase
+            .from(table.rawValue)
+            .insert(item)
+            .execute()
+        
+        return isRequestSuccessful(statusCode: response.response.statusCode)
     }
     
     static func getEquals<T: DTOProtocol>(value: String, table: DatabaseTable, column: String) async throws -> T? {

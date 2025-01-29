@@ -17,8 +17,7 @@ struct TeamView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Menu {
-                    Text("TeamName")
+                IconMenuButton(icon: "info.bubble", description: "TeamName") {
                     Button {
                         ClipboardHelper.copy(text: teamJoinCode)
                         
@@ -27,15 +26,12 @@ struct TeamView: View {
                         Label("Copy Team ID", systemImage: "arrow.right.doc.on.clipboard")
                     }
                     ShareLink(item: "TeamID: \(teamJoinCode)")
-                } label: {
-                    Image(systemName: "figure")
-                        .foregroundStyle(Theme.lightOrange)
                 }
 
             }
         }
     }
-}
+} 
 
 #Preview {
     NavigationStack {
@@ -43,4 +39,6 @@ struct TeamView: View {
             TeamView()
         }
     }
+    .previewEnvirments()
+    .navigationStackTint()
 }

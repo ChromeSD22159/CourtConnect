@@ -13,7 +13,7 @@ class AccountRepository: SyncronizationProtocol {
     var backendClient = BackendClient.shared
     var container: ModelContainer
     
-    init(container: ModelContainer, type: RepositoryType) {
+    init(container: ModelContainer) {
         self.container = container
     }
     

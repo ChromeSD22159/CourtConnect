@@ -8,15 +8,15 @@ import Foundation
  
 class ChatDTO: DTOProtocol {
     var id: UUID
-    var senderId: String
-    var recipientId: String
+    var senderId: UUID
+    var recipientId: UUID
     var message: String
     var readedAt: Date?
     var createdAt: Date
     var updatedAt: Date
     var deletedAt: Date?
     
-    init(id: UUID, senderId: String, recipientId: String, message: String, readedAt: Date? = nil, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil) {
+    init(id: UUID, senderId: UUID, recipientId: UUID, message: String, readedAt: Date? = nil, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil) {
         self.id = id
         self.senderId = senderId
         self.recipientId = recipientId

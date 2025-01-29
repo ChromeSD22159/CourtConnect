@@ -9,22 +9,32 @@ import SwiftUI
 struct TrainerDashboard: View {
     @ObservedObject var userViewModel: SharedUserViewModel
     @ObservedObject var userAccountViewModel: UserAccountViewModel
-    @State var teamViewModel: TeamViewModel
+    @ObservedObject var teamViewModel: TeamViewModel
+    
     @State var isGenerateCode = false
     @State var isEnterCode = false
     
-    init(userViewModel: SharedUserViewModel, userAccountViewModel: UserAccountViewModel) {
+    @State var foundNewTeamViewModel: FoundNewTeamViewModel
+    @State var teamListViewModel: TeamListViewModel
+    
+    init(userViewModel: SharedUserViewModel, userAccountViewModel: UserAccountViewModel, teamViewModel: TeamViewModel) {
         self.userViewModel = userViewModel
         self.userAccountViewModel = userAccountViewModel
-        self.teamViewModel = TeamViewModel(repository: userViewModel.repository)
+        self.teamViewModel = teamViewModel
+        self.foundNewTeamViewModel = FoundNewTeamViewModel(repository: userViewModel.repository)
+        self.teamListViewModel = TeamListViewModel(repository: userViewModel.repository)
     }
     
     var body: some View {
-        VStack(spacing: 15) {
-            Card(icon: "person.crop.circle.badge.plus", title: "Found team now!", description: "Start your own team and manage players and training sessions.")
+        VStack(spacing: 15) { 
+            NavigationLink {
+                FoundNewTeamView(viewModel: foundNewTeamViewModel)
+            } label: {
+                Card(icon: "person.crop.circle.badge.plus", title: "Found team now!", description: "Start your own team and manage players and training sessions.")
+            }
             
             NavigationLink {
-                TeamList(repository: userViewModel.repository)
+                SearchTeam(teamListViewModel: teamListViewModel)
             } label: {
                 Card(icon: "person.badge.plus", title: "Join a Team!", description: "Send a request to join a team as a trainer and start managing players and training sessions.")
             }
@@ -33,7 +43,7 @@ struct TrainerDashboard: View {
                 isEnterCode.toggle()
             }
             
-            Button("Generate Code") {
+            Button("Generate Code Neu") {
                 isGenerateCode.toggle()
             }
         }
@@ -70,6 +80,7 @@ private struct Card: View {
             
             VStack(alignment: .leading) {
                 Text(title)
+                    .multilineTextAlignment(.leading)
                     .foregroundStyle(Theme.headline)
                 
                 Text(description)
@@ -94,7 +105,7 @@ private struct Card: View {
             Card(icon: "person.crop.circle.badge.plus", title: "Found team now!", description: "Start your own team and manage players and training sessions.")
             
             NavigationLink {
-                TeamList(repository: Repository(type: .preview))
+                SearchTeam(teamListViewModel: TeamListViewModel(repository: RepositoryPreview.shared))
             } label: {
                 Card(icon: "person.badge.plus", title: "Join a Team!", description: "Send a request to join a team as a trainer and start managing players and training sessions.")
             }
@@ -102,4 +113,6 @@ private struct Card: View {
             Card(icon: "qrcode.viewfinder", title: "Join with Team ID!", description: "Enter a Team ID to instantly join an existing team and start managing players and training sessions.")
         }
     }
+    .previewEnvirments()
+    .navigationStackTint()
 }

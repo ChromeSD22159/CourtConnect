@@ -8,7 +8,7 @@ import Foundation
 import Supabase
 
 @Observable class RegisterViewModel: ObservableObject {
-    var repository: Repository
+    var repository: BaseRepository
     
     var email: String = ""
     var firstName: String = ""
@@ -20,7 +20,7 @@ import Supabase
     var showRepeatPassword = false
     var focus: Field?
     
-    init(repository: Repository) {
+    init(repository: BaseRepository) {
         self.repository = repository
     }
     

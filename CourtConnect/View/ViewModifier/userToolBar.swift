@@ -23,12 +23,10 @@ struct UserToolBar: ViewModifier {
                                 userViewModel.openEditProfileSheet()
                             }
                         
-                        MenuButton(icon: "person.3.fill") {
-                            Text("Create New Account or Switch to Existing Account")
-                            
+                        IconMenuButton(icon: "person.3.fill", description: "Create New Account or Switch to Existing Account") { 
                             ForEach(userAccountViewModel.accounts) { account in
                                 Button {
-                                    userViewModel.setCurrentAccount(newAccount: account) 
+                                    userViewModel.setCurrentAccount(newAccount: account)
                                 } label: {
                                     HStack {
                                         if userViewModel.currentAccount?.id == account.id {
@@ -49,7 +47,7 @@ struct UserToolBar: ViewModifier {
                                 }
                                 
                             }
-                        }
+                        } 
                     }
                     .foregroundStyle(Theme.lightOrange)
                 }
@@ -58,19 +56,22 @@ struct UserToolBar: ViewModifier {
 } 
 
 extension View {
-    /// REQUIRE
     func userToolBar(userViewModel: SharedUserViewModel, userAccountViewModel: UserAccountViewModel) -> some View {
         modifier(UserToolBar(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel))
     }
 }
 
 #Preview {
+    @Previewable @State var userViewModel = SharedUserViewModel(repository: RepositoryPreview.shared)
+    @Previewable @State var userAccountViewModel = UserAccountViewModel(repository: RepositoryPreview.shared, userId: nil)
     NavigationStack {
         ZStack {
             
         }.userToolBar(
-            userViewModel: SharedUserViewModel(repository: Repository(type: .preview)),
-            userAccountViewModel: UserAccountViewModel(repository: Repository(type: .preview), userId: nil)
+            userViewModel: userViewModel,
+            userAccountViewModel: userAccountViewModel
         )
     }
+    .previewEnvirments()
+    .navigationStackTint()
 }
