@@ -15,4 +15,7 @@ struct Theme {
     static let background: Color = Color(.background)
     static let onBackground: Color = Color(.onBackground)
     static let myGray: Color = Color(.myGray)
+    
+    static let text: Color = Color(.text)
+    static let headline: Color = Color(.headline)
 }

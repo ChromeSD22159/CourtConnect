@@ -9,8 +9,8 @@ import SwiftUI
 
 struct SettingsView: View {
     @Environment(UserAccountViewModel.self) var userAccountViewModel: UserAccountViewModel
+    @Environment(\.networkMonitor) var networkMonitor
     @ObservedObject var userViewModel: SharedUserViewModel
-    @ObservedObject var networkMonitorViewModel: NetworkMonitorViewModel
     
     var body: some View {
         List {
@@ -38,7 +38,7 @@ struct SettingsView: View {
                 
                 // MARK: - Total Online Users
                 NavigationLink {
-                    OnlineUserList(userViewModel: userViewModel, networkMonitorViewModel: networkMonitorViewModel)
+                    OnlineUserList(userViewModel: userViewModel)
                 } label: {
                     Text("Total Online Users: \(userViewModel.onlineUserCount)")
                 }
@@ -97,16 +97,16 @@ fileprivate struct DebugView: View {
 
 fileprivate struct OnlineUserList: View {
     @ObservedObject var userViewModel: SharedUserViewModel
-    @ObservedObject var networkMonitorViewModel: NetworkMonitorViewModel
+    @Environment(\.networkMonitor) var networkMonitor
     var body: some View {
         List {
             Section {
                 Text("Total Online: \(userViewModel.onlineUserCount)")
             }
             Section {
-                if networkMonitorViewModel.isConnected == false {
+                if networkMonitor.isConnected == false {
                     HStack {
-                        Image(systemName: networkMonitorViewModel.isConnected ? "wifi" : "wifi.exclamationmark")
+                        Image(systemName: networkMonitor.isConnected ? "wifi" : "wifi.exclamationmark")
                     }
                 } else if userViewModel.onlineUser.isEmpty {
                     Text("Nobody is online!")
@@ -131,6 +131,6 @@ fileprivate struct OnlineUserList: View {
 }
 
 #Preview {
-    SettingsView(userViewModel: SharedUserViewModel(repository: Repository(type: .preview)), networkMonitorViewModel: NetworkMonitorViewModel())
+    SettingsView(userViewModel: SharedUserViewModel(repository: Repository(type: .preview)))
         .environment(UserAccountViewModel(repository: Repository(type: .preview), userId: nil))
 }

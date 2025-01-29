@@ -8,7 +8,7 @@ import SwiftUI
 import Lottie
 
 struct ErrorPopover<Content: View>: View {
-    @State var errorHanler = ErrorHandlerViewModel.shared
+    @Environment(\.errorHandler) var errorHanler 
     @ViewBuilder var content: () -> Content
     
     var body: some View {

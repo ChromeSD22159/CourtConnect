@@ -68,6 +68,9 @@
     "Copy" : {
 
     },
+    "Copy Team ID" : {
+
+    },
     "Create" : {
       "localizations" : {
         "de" : {
@@ -521,6 +524,12 @@
 
     },
     "SignUp" : {
+
+    },
+    "Team" : {
+
+    },
+    "TeamName" : {
 
     },
     "Teams: %lld" : {

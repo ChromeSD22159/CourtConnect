@@ -54,7 +54,7 @@ struct TrainerDashboard: View {
         })
     }
 }
-
+ 
 private struct Card: View {
     let icon: String
     let title: String
@@ -64,17 +64,20 @@ private struct Card: View {
             Image(systemName: icon)
                 .font(.largeTitle)
                 .padding(10)
-                .background(Theme.darkOrange)
+                .background(Theme.headline)
                 .foregroundStyle(.white)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
             
             VStack(alignment: .leading) {
                 Text(title)
+                    .foregroundStyle(Theme.headline)
                 
                 Text(description)
                     .lineLimit(2, reservesSpace: true)
                     .font(.caption)
+                    .foregroundStyle(Theme.text)
             }
+         
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -82,91 +85,7 @@ private struct Card: View {
         .clipShape(RoundedRectangle(cornerRadius: 15))
         .padding(.horizontal)
     }
-}
-
-struct TeamList: View {
-    @State var teamViewModel: TeamListViewModel
-    
-    init(repository: Repository) {
-        teamViewModel = TeamListViewModel(repository: repository)
-    }
-    
-    var body: some View {
-        List {
-            Section {
-                Text("Teams: \(teamViewModel.foundTeams.count)")
-            }
-            
-            ForEach(teamViewModel.foundTeams, id: \.id) { team in
-                Section {
-                    if teamViewModel.foundTeams.isEmpty {
-                        Text("Kein Team gefunden!")
-                    } else {
-                        HStack {
-                            Text(team.teamName)
-                            
-                            Button(action: {
-                                teamViewModel.selectedTeam = team
-                                teamViewModel.showJoinTeamAlert = true
-                            }) {
-                                Image(systemName: "person.badge.plus")
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        .searchable(text: $teamViewModel.searchTeamName, isPresented: $teamViewModel.isSearchBar)
-        .onSubmit(of: .search) {
-            guard !teamViewModel.searchTeamName.isEmpty else { return }
-            teamViewModel.searchTeam()
-        }
-        .onAppear {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0 , execute: {
-                teamViewModel.isSearchBar.toggle()
-            })
-        }
-        .alert("Dem Team beitreten?", isPresented: $teamViewModel.showJoinTeamAlert) {
-                    Button("Beitreten", role: .destructive) { }
-                    Button("Abbrechen", role: .cancel) { }
-                } message: {
-                    Text("Möchtest du dem Team \(teamViewModel.selectedTeam?.teamName ?? "") beitreten?")
-                }
-    }
-}
-
-@MainActor
-@Observable class TeamListViewModel {
-    var showJoinTeamAlert: Bool = false
-    var searchTeamName: String = ""
-    var isSearchBar: Bool  = false
-    var foundTeams: [TeamDTO] = []
-    var selectedTeam: TeamDTO?
-    
-    let repository: Repository
-    
-    init(repository: Repository) {
-        self.repository = repository
-    }
-    
-    func searchTeam() {
-        Task {
-            do {
-                foundTeams = try await repository.teamRepository.searchTeamByName(name: searchTeamName)
-                print(foundTeams.count)
-            } catch {
-                print(error.localizedDescription)
-            }
-        }
-    }
-    
-    func resetFoundTeams() {
-        foundTeams = []
-    }
-    
-    func joinTeam(team: TeamDTO) {
-    }
-}
+} 
 
 #Preview {
     NavigationStack {

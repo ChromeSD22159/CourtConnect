@@ -7,5 +7,5 @@
  
 struct InAppMessage {
     var title: String
-    var body: String
+    var body: String?
 }

@@ -41,3 +41,14 @@ class NetworkMonitorViewModel: ObservableObject {
         }.resume()
     } 
 }
+
+struct NetworkMonitorKey: EnvironmentKey {
+    static let defaultValue: NetworkMonitorViewModel = NetworkMonitorViewModel.shared
+}
+
+extension EnvironmentValues {
+    var networkMonitor: NetworkMonitorViewModel {
+        get { self[NetworkMonitorKey.self] }
+        set { self[NetworkMonitorKey.self] = newValue }
+    }
+}

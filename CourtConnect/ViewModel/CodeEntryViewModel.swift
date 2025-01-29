@@ -4,8 +4,7 @@
 //
 //  Created by Frederik Kohler on 29.01.25.
 //
-import Foundation
-import UIKit
+import Foundation 
 
 @Observable class CodeEntryViewModel {
     var code: [Character] = []
@@ -49,17 +48,15 @@ import UIKit
             return
         }
         
-        let pasteboard = UIPasteboard.general
-        pasteboard.string = codeString.joined()
-        print(codeString.joined())
+        ClipboardHelper.copy(text: codeString.joined())
     }
     
     func past() {
         code = []
-        if let pasteboard = UIPasteboard.general.string {
+        if let pasteboard = ClipboardHelper.past() {
             for char in pasteboard {
                 code.append(char)
             }
         }
     }
-}
+} 

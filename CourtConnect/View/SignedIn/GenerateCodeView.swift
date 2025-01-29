@@ -59,9 +59,7 @@ struct GenerateCodeView: View {
                         Text(viewModel.message)
                             .font(.callout)
                             .foregroundStyle(.red)
-                  
                     }
-                    
                 }
                 
             }

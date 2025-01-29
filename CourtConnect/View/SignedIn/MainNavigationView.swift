@@ -12,7 +12,7 @@ struct MainNavigationView: View {
     @ObservedObject var userViewModel: SharedUserViewModel
     @Environment(\.scenePhase) var scenePhase
     
-    @State var networkMonitorViewModel: NetworkMonitorViewModel = NetworkMonitorViewModel.shared
+    @Environment(\.networkMonitor) var networkMonitor
     @State var userAccountViewModel: UserAccountViewModel
     @State var syncServiceViewModel: SyncServiceViewModel
     
@@ -28,9 +28,9 @@ struct MainNavigationView: View {
                 NavigationTabBar(navViewModel: navViewModel) {
                     switch navViewModel.current {
                     case .home: DashboardView(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel)
-                    case .trainer: EmptyView()
+                    case .team: TeamView()
                     case .player: EmptyView()
-                    case .settings: SettingsView(userViewModel: userViewModel, networkMonitorViewModel: networkMonitorViewModel).environment(userAccountViewModel)
+                    case .settings: SettingsView(userViewModel: userViewModel).environment(userAccountViewModel)
                     }
                 }
             }

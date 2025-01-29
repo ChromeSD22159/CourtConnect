@@ -6,6 +6,7 @@
 //
 import Observation
 import Foundation
+import SwiftUI
 
 @Observable class ErrorHandlerViewModel: Observable {
     static let shared = ErrorHandlerViewModel()
@@ -19,5 +20,16 @@ import Foundation
         Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: { _ in
             self.error = nil
         })
+    }
+}
+ 
+struct ErrorHandlerKey: EnvironmentKey {
+    static let defaultValue: ErrorHandlerViewModel = ErrorHandlerViewModel.shared
+}
+
+extension EnvironmentValues {
+    var errorHandler: ErrorHandlerViewModel {
+        get { self[ErrorHandlerKey.self] }
+        set { self[ErrorHandlerKey.self] = newValue }
     }
 }

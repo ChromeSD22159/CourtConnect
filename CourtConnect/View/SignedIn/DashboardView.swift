@@ -10,10 +10,9 @@ struct DashboardView: View {
     @ObservedObject var userViewModel: SharedUserViewModel
     @ObservedObject var userAccountViewModel: UserAccountViewModel
     @Environment(SyncServiceViewModel.self) private var syncServiceViewModel
-    
-    @State var networkMonitorViewModel: NetworkMonitorViewModel = NetworkMonitorViewModel.shared
-    @State var errorHanler = ErrorHandlerViewModel.shared
-    @State var inAppMessagehandler = InAppMessagehandler.shared
+    @Environment(\.messagehandler) var messagehandler
+    @Environment(\.errorHandler) var errorHanler
+    @Environment(\.networkMonitor) var networkMonitor
     
     var body: some View {
         ScrollView(.vertical) {
@@ -65,8 +64,7 @@ struct DashboardView: View {
     NavigationStack {
         DashboardView(
             userViewModel: userViewModel,
-            userAccountViewModel: userAccountViewModel,
-            networkMonitorViewModel: networkMonitorViewModel
+            userAccountViewModel: userAccountViewModel
         )
         .messagePopover()
     }

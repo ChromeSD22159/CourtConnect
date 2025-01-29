@@ -86,7 +86,7 @@ private struct SignInSheet: View {
     @ObservedObject var userViewModel: SharedUserViewModel
     
     @State var viewModel: LoginViewModel
-    @State var errorHanler = ErrorHandlerViewModel.shared
+    @Environment(\.errorHandler) var errorHanler
     @State var isLoadingAnimation = false
     
     @FocusState var focus: LoginViewModel.Field?
@@ -206,7 +206,7 @@ private struct SignUpSheet: View {
     @ObservedObject var userViewModel: SharedUserViewModel
     
     @State var viewModel: RegisterViewModel
-    @State var errorHanler = ErrorHandlerViewModel.shared
+    @Environment(\.errorHandler) var errorHanler 
     @State var isLoadingAnimation = false
     
     @FocusState var focus: RegisterViewModel.Field?
