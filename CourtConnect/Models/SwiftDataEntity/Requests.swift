@@ -9,16 +9,16 @@ import SwiftData
 
 @Model
 class Requests: ModelProtocol {
-    var id: UUID
-    var memberId: UUID
+    @Attribute(.unique) var id: UUID
+    var accountId: UUID
     var teamId: UUID
     var createdAt: Date
     var updatedAt: Date
     var deletedAt: Date?
     
-    init(id: UUID = UUID(), memberId: UUID, teamId: UUID, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil) {
+    init(id: UUID = UUID(), accountId: UUID, teamId: UUID, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil) {
         self.id = id
-        self.memberId = memberId
+        self.accountId = accountId
         self.teamId = teamId
         self.createdAt = createdAt
         self.updatedAt = updatedAt
@@ -26,6 +26,6 @@ class Requests: ModelProtocol {
     }
     
     func toDTO() -> RequestsDTO {
-        return RequestsDTO(id: id, memberId: memberId, teamId: teamId, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
+        return RequestsDTO(id: id, accountId: accountId, teamId: teamId, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
 }

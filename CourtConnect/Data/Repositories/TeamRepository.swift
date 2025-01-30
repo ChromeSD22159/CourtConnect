@@ -19,11 +19,20 @@ import Foundation
     func upsertLocal<T: ModelProtocol>(item: T) throws {
         container.mainContext.insert(item)
         try container.mainContext.save()
-    }
+    } 
  
     func getTeam(for teamId: UUID) throws -> Team? {
         let redicate = #Predicate<Team> { team in
             team.id == teamId && team.deletedAt == nil
+        }
+        let fetchDescriptor = FetchDescriptor(predicate: redicate)
+        
+        return try container.mainContext.fetch(fetchDescriptor).first
+    }
+    
+    func getUserProfile(for userId: UUID) throws -> UserProfile? {
+        let redicate = #Predicate<UserProfile> { user in
+            user.id == userId
         }
         let fetchDescriptor = FetchDescriptor(predicate: redicate)
         
@@ -87,14 +96,19 @@ import Foundation
     }
     
     func getAdmin(for userAccountId: UUID) throws -> TeamAdmin? {
-        let redicate = #Predicate<TeamAdmin> { teamMember in
+        let predicate = #Predicate<TeamAdmin> { teamMember in
             teamMember.userAccountId == userAccountId && teamMember.deletedAt == nil
         }
-        let fetchDescriptor = FetchDescriptor(predicate: redicate)
-        
+        let fetchDescriptor = FetchDescriptor(predicate: predicate)
         return try container.mainContext.fetch(fetchDescriptor).first
     }
      
+    func getTeamRequests(teamId: UUID) throws -> [Requests] {
+        let predicate = #Predicate<Requests> { $0.teamId == teamId && $0.deletedAt == nil }
+        let fetchDescriptor = FetchDescriptor(predicate: predicate)
+        return try container.mainContext.fetch(fetchDescriptor)
+    } 
+    
     func deleteLocalTeam(for team: Team) {
         container.mainContext.delete(team)
     }

@@ -9,7 +9,7 @@ import Foundation
 
 @Model
 class Attendance: ModelProtocol {
-    var id: UUID
+    @Attribute(.unique) var id: UUID
     var trainerId: UUID
     var terminId: UUID
     var startTime: Date

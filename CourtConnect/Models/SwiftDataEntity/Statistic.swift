@@ -9,7 +9,7 @@ import Foundation
 
 @Model
 class Statistic: ModelProtocol {
-    var id: UUID
+    @Attribute(.unique) var id: UUID
     var userId: UUID
     var fouls: Int
     var twoPointAttempts: Int

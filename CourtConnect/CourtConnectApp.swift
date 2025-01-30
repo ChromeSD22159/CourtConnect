@@ -18,7 +18,7 @@ struct CourtConnectApp: App {
         let repo = Repository.shared
         userViewModel = SharedUserViewModel(repository: repo)
         syncServiceViewModel = SyncServiceViewModel(repository: repo)
-        
+         
         #if targetEnvironment(simulator)
         guard (Bundle(path: "/Applications/RocketSim.app/Contents/Frameworks/RocketSimConnectLinker.nocache.framework")?.load() == true) else {
             print("RocketSim: Failed to load linker framework")

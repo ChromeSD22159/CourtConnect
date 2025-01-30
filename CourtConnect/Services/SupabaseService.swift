@@ -90,6 +90,16 @@ struct SupabaseService {
             .value
     }
     
+    static func getAllFromTable<T: DTOProtocol>(table: DatabaseTable, match: [String:String]) async throws -> [T] {
+        var query = BackendClient.shared.supabase.from(table.rawValue).select()
+
+        for (key, value) in match {
+            query = query.eq(key, value: value) 
+        }
+
+        return try await query.execute().value
+    }
+    
     static func insertUpdateTimestampTable(for table: DatabaseTable, userId: UUID) async throws {
         let entry = UpdateHistoryDTO(tableString: table.rawValue, userId: userId, timestamp: Date())
         try await BackendClient.shared.supabase

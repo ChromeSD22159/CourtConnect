@@ -8,7 +8,7 @@ import SwiftData
 import Foundation
 
 @Model class Interest: ModelProtocol {
-    var id: UUID
+    @Attribute(.unique) var id: UUID
     var memberId: UUID
     var terminId: UUID
     var willParticipate: Bool

@@ -9,7 +9,7 @@ import Foundation
 
 @Model
 class UserOnline: ModelProtocol {
-    var id: UUID
+    @Attribute(.unique) var id: UUID
     var userId: UUID
     var firstName: String
     var lastName: String

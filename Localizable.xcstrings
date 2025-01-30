@@ -23,6 +23,9 @@
         }
       }
     },
+    "%@ wants to join your team. Would you like to accept the request?" : {
+
+    },
     "%lld" : {
 
     },
@@ -125,6 +128,9 @@
           }
         }
       }
+    },
+    "Currently no Requests!" : {
+
     },
     "Dashboard" : {
       "localizations" : {
@@ -297,6 +303,9 @@
     "Generate Code Neu" : {
 
     },
+    "Grant" : {
+
+    },
     "Handle Message" : {
 
     },
@@ -314,6 +323,9 @@
       }
     },
     "Join" : {
+
+    },
+    "Join Requests" : {
 
     },
     "Keep me signed in" : {
@@ -484,6 +496,9 @@
         }
       }
     },
+    "Reject" : {
+
+    },
     "Reload Chat" : {
       "localizations" : {
         "de" : {
@@ -513,6 +528,9 @@
           }
         }
       }
+    },
+    "Requests" : {
+
     },
     "Save Profile" : {
       "localizations" : {
@@ -566,6 +584,9 @@
 
     },
     "Team Name" : {
+
+    },
+    "Team request from %@" : {
 
     },
     "Teams: %lld" : {

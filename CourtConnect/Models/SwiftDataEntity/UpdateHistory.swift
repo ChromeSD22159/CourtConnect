@@ -8,7 +8,7 @@ import SwiftData
 import Foundation
 
 @Model class UpdateHistory: ModelProtocol {
-    var id: UUID
+    @Attribute(.unique) var id: UUID
     var tableString: String
     var userId: UUID
     var timestamp: Date

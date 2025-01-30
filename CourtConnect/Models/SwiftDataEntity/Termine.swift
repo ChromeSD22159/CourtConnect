@@ -9,7 +9,7 @@ import SwiftData
 
 @Model
 class Termine: ModelProtocol {
-    var id: UUID
+    @Attribute(.unique) var id: UUID
     var locationId: UUID
     var createdAt: Date
     var updatedAt: Date

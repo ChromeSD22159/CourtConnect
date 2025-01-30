@@ -9,7 +9,7 @@ import Foundation
 
 @Model
 class Location: ModelProtocol {
-    var id: UUID
+    @Attribute(.unique) var id: UUID
     var name: String
     var street: String
     var number: String

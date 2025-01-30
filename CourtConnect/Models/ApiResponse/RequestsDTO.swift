@@ -9,15 +9,15 @@ import SwiftData
 
 struct RequestsDTO: DTOProtocol {
     var id: UUID
-    var memberId: UUID
+    var accountId: UUID
     var teamId: UUID
     var createdAt: Date
     var updatedAt: Date
     var deletedAt: Date?
     
-    init(id: UUID = UUID(), memberId: UUID, teamId: UUID, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil) {
+    init(id: UUID = UUID(), accountId: UUID, teamId: UUID, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil) {
         self.id = id
-        self.memberId = memberId
+        self.accountId = accountId
         self.teamId = teamId
         self.createdAt = createdAt
         self.updatedAt = updatedAt
@@ -25,6 +25,6 @@ struct RequestsDTO: DTOProtocol {
     }
     
     func toModel() -> Requests {
-        return Requests(id: id, memberId: memberId, teamId: teamId, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
+        return Requests(id: id, accountId: accountId, teamId: teamId, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
 } 

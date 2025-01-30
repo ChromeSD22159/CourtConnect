@@ -92,7 +92,6 @@ struct EnterCodeView: View {
                     }
                     .padding(.top, 30)
                 }
-                
             }
             .navigationTitle("Enter Code")
             .navigationBarTitleDisplayMode(.inline)
@@ -105,8 +104,8 @@ struct EnterCodeView: View {
                 
                 ToolbarItem(placement: .navigationBarTrailing, content: {
                     Button("Join") {
-                        // TODO: TODO
-                        // viewModel.joinTeamWithCode(code: <#T##String#>, userAccount: <#T##UserAccount#>)
+                        #warning("joinTeamWithCode")
+                        // viewModel.joinTeamWithCode(code: String, userAccount: UserAccount)
                     }
                     .foregroundStyle(Theme.text)
                 })

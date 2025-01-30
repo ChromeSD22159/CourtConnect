@@ -8,7 +8,7 @@ import SwiftData
 import Foundation
 
 @Model class Team: ModelProtocol { 
-    var id: UUID
+    @Attribute(.unique) var id: UUID
     var teamName: String
     var createdBy: String
     var headcoach: String

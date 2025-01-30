@@ -14,13 +14,13 @@ class UserRepository {
     let container: ModelContainer
     let deviceToken: String
     let backendClient: BackendClient
-     
+    
     init(container: ModelContainer) {
         self.container = container
         self.deviceToken = UIDevice.current.identifierForVendor!.uuidString
         self.backendClient = BackendClient.shared
     }
-       
+    
     /// LOGIN INTO SUPABASE
     func signIn(email:String, password: String) async throws -> User {
         let result = try await backendClient.supabase.auth.signIn(email: email, password: password)
@@ -52,14 +52,25 @@ class UserRepository {
         let predicate = #Predicate<UserProfile> {
             $0.userId == userId
         }
-        
-        let sortBy = [SortDescriptor(\UserProfile.createdAt, order: .reverse)]
-        
-        let fetchDescriptor = FetchDescriptor<UserProfile>(predicate: predicate, sortBy: sortBy)
-         
+        let fetchDescriptor = FetchDescriptor<UserProfile>(predicate: predicate)
         return try container.mainContext.fetch(fetchDescriptor).first
     }
      
+    func getRequestedUser(accountId: UUID) async throws -> (UserAccount?, UserProfile?) {
+        let accountPredicate = #Predicate<UserAccount> { $0.id == accountId }
+        let userAccount = try container.mainContext.fetch(FetchDescriptor<UserAccount>(predicate: accountPredicate)).first
+
+        guard let userAccount = userAccount else { return (nil, nil) }
+
+        let userId = userAccount.userId
+        let profilePredicate = #Predicate<UserProfile> { $0.userId == userId }
+        let userProfile = try container.mainContext.fetch(FetchDescriptor<UserProfile>(predicate: profilePredicate)).first
+
+        guard let userProfile = userProfile else { return (nil, nil)  }
+
+        return (userAccount, userProfile)
+    }
+    
     func syncUserProfile(userId: UUID) async throws {
         let date: [UserProfileDTO] = try await backendClient.supabase
             .from(DatabaseTable.userProfile.rawValue)

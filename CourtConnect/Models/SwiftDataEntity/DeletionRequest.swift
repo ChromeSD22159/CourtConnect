@@ -9,7 +9,7 @@ import Foundation
 
 @Model
 class DeletionRequest: ModelProtocol {
-    var id: UUID
+    @Attribute(.unique) var id: UUID
     var userId: UUID
     var createdAt: Date
     var updatedAt: Date

@@ -9,7 +9,7 @@ import SwiftData
 
 @Model
 class TeamMember: ModelProtocol {
-    var id: UUID
+    @Attribute(.unique) var id: UUID
     var userAccountId: UUID
     var teamId: UUID
     var role: String
