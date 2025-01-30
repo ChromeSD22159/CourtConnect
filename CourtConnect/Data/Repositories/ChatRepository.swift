@@ -34,11 +34,11 @@ class ChatRepository {
         return try container.mainContext.fetch(fetchDescriptor)
     }
   
-    func sendMessageToBackend(message: Chat, complete: @escaping () -> Void) async throws {
+    func sendMessageToBackend(message: Chat, complete: @escaping (Bool) -> Void) async throws {
         do {
             let result: Bool = try await SupabaseService.insert(item: message.toDTO(), table: .chat)
              
-            complete()
+            complete(result)
         } catch {
             print(error.localizedDescription)
         }

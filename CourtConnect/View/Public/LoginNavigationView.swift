@@ -9,17 +9,14 @@ import SwiftUI
 struct LoginNavigation: View {
     @ObservedObject var userViewModel: SharedUserViewModel
     
-    @State var userAccountViewModel: UserAccountViewModel
-    
     init(userViewModel: SharedUserViewModel) {
         self.userViewModel = userViewModel
-        self.userAccountViewModel = UserAccountViewModel(repository: userViewModel.repository, userId: userViewModel.user?.id)
     }
     
     var body: some View {
         ZStack {
             if userViewModel.user != nil {
-                MainNavigationView(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel)
+                MainNavigationView(userViewModel: userViewModel)
             } else {
                 LoginEntryView(userViewModel: userViewModel)
             }

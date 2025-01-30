@@ -8,7 +8,7 @@ import SwiftUI
 
 struct EnterCodeView: View {
     @Environment(\.dismiss) var dismiss
-    @State private var viewModel = CodeEntryViewModel()
+    @State private var viewModel = CodeEntryViewModel(repository: Repository.shared)
     
     var body: some View {
         NavigationStack {
@@ -105,7 +105,8 @@ struct EnterCodeView: View {
                 
                 ToolbarItem(placement: .navigationBarTrailing, content: {
                     Button("Join") {
-                        
+                        // TODO: TODO
+                        // viewModel.joinTeamWithCode(code: <#T##String#>, userAccount: <#T##UserAccount#>)
                     }
                     .foregroundStyle(Theme.text)
                 })

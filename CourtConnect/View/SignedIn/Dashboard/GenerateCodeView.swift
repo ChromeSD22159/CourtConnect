@@ -8,7 +8,7 @@ import SwiftUI
 
 struct GenerateCodeView: View {
     @Environment(\.dismiss) var dismiss
-    @State private var viewModel = CodeEntryViewModel()
+    @State private var viewModel = GenerateCodeViewModel(repository: Repository.shared)
     
     var body: some View {
         NavigationStack {

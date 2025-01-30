@@ -4,7 +4,7 @@
 //
 //  Created by Frederik Kohler on 28.01.25.
 //
-import SwiftUI 
+import SwiftUI
 
 struct LoginEntryView: View {
     @ObservedObject var userViewModel: SharedUserViewModel
@@ -84,14 +84,14 @@ struct LoginEntryView: View {
         .lineSpacing(5)
     }
 }
-
+ 
 private struct SignInSheet: View {
     @Binding var isSignInSheet: Bool
     @ObservedObject var userViewModel: SharedUserViewModel
     @ObservedObject var loginViewModel: LoginViewModel
     
     @Environment(\.errorHandler) var errorHanler
-    @State var isLoadingAnimation = false
+    @State var isLoadingAnimation: Bool = false
     
     @FocusState var focus: LoginViewModel.Field?
     
@@ -140,9 +140,7 @@ private struct SignInSheet: View {
                 .blur(radius: isLoadingAnimation ? 2.5 : 0)
                 .animation(.easeInOut, value: isLoadingAnimation)
                 
-                LoadingCard()
-                    .opacity( isLoadingAnimation ? 1 : 0)
-                    .animation(.easeInOut, value: isLoadingAnimation)
+                LoadingCard(isLoading: $isLoadingAnimation)
             }
             .padding()
             .navigationTitle("SignIn")
@@ -180,6 +178,7 @@ private struct SignInSheet: View {
                                 isSignInSheet.toggle()
                             } catch {
                                 errorHanler.handleError(error: error)
+                                isLoadingAnimation.toggle()
                             }
                         }
                     }
@@ -187,6 +186,7 @@ private struct SignInSheet: View {
                 })
             }
         }
+        .errorAlert()
         .presentationDragIndicator(.visible)
         .presentationBackground(Material.ultraThinMaterial)
         .shadow(radius: 20)
@@ -202,7 +202,7 @@ private struct SignUpSheet: View {
     @State var isLoadingAnimation = false
     @FocusState var focus: RegisterViewModel.Field?
     
-    let navigate: () -> Void 
+    let navigate: () -> Void
     
     var body: some View {
         NavigationStack {
@@ -280,10 +280,8 @@ private struct SignUpSheet: View {
                 }
                 .blur(radius: isLoadingAnimation ? 2.5 : 0)
                 .animation(.easeInOut, value: isLoadingAnimation)
-                
-                LoadingCard()
-                    .opacity( isLoadingAnimation ? 1 : 0)
-                    .animation(.easeInOut, value: isLoadingAnimation)
+                 
+                LoadingCard(isLoading: $isLoadingAnimation)
             }
             .padding()
             .navigationTitle("SignUp")
@@ -328,12 +326,13 @@ private struct SignUpSheet: View {
                 })
             }
         }
+        .errorAlert()
         .presentationDragIndicator(.visible)
         .presentationBackground(Material.ultraThinMaterial)
         .shadow(radius: 20)
     }
-}
-
+} 
+                   
 #Preview("Light") {
     LoginEntryView(userViewModel: SharedUserViewModel(repository: RepositoryPreview.shared) )
         .preferredColorScheme(.light)

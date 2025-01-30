@@ -11,7 +11,7 @@ import Foundation
 class UserAccount: ModelProtocol { 
     @Attribute(.unique) var id: UUID
     var userId: UUID
-    var teamId: String
+    var teamId: UUID?
     var position: String
     var role: String
     var displayName: String
@@ -19,7 +19,7 @@ class UserAccount: ModelProtocol {
     var updatedAt: Date
     var deletedAt: Date?
     
-    init(id: UUID = UUID(), userId: UUID, teamId: String, position: String, role: String, displayName: String, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil) {
+    init(id: UUID = UUID(), userId: UUID, teamId: UUID?, position: String, role: String, displayName: String, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil) {
         self.id = id
         self.userId = userId
         self.teamId = teamId

@@ -275,6 +275,9 @@
         }
       }
     },
+    "Error" : {
+
+    },
     "Firstname" : {
       "localizations" : {
         "de" : {
@@ -292,6 +295,9 @@
 
     },
     "Generate Code Neu" : {
+
+    },
+    "Handle Message" : {
 
     },
     "Headcoach" : {
@@ -393,6 +399,9 @@
         }
       }
     },
+    "Leave Team" : {
+
+    },
     "Loading..." : {
 
     },
@@ -428,6 +437,9 @@
           }
         }
       }
+    },
+    "OK" : {
+
     },
     "Password" : {
       "localizations" : {
@@ -554,9 +566,6 @@
 
     },
     "Team Name" : {
-
-    },
-    "TeamName" : {
 
     },
     "Teams: %lld" : {

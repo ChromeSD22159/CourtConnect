@@ -5,8 +5,14 @@
 //  Created by Frederik Kohler on 29.01.25.
 //
 import Foundation 
-
+ 
 @Observable class CodeEntryViewModel {
+    let repository: BaseRepository
+    
+    init(repository: BaseRepository) {
+        self.repository = repository
+    }
+    
     var code: [Character] = []
     
     var message: String = " "
@@ -26,31 +32,7 @@ import Foundation
             code.removeLast()
         }
     }
-    
-    func generateCode() {
-        Task {
-            code = []
-            let generated = CodeGeneratorHelper.generateCode()
-            for char in generated {
-                code.append(char)
-                try await Task.sleep(for: .seconds(0.1))
-            }
-        }
-    }
-    
-    func copy() {
-        guard !code.isEmpty else {
-            message = "No Code generated"
-            
-            Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false , block: { [self]_ in 
-                message = ""
-            })
-            return
-        }
-        
-        ClipboardHelper.copy(text: codeString.joined())
-    }
-    
+      
     func past() {
         code = []
         if let pasteboard = ClipboardHelper.past() {
@@ -59,4 +41,12 @@ import Foundation
             }
         }
     }
-} 
+    
+    func joinTeamWithCode(code: String, userAccount: UserAccount) async throws {
+        Task {
+            try await repository.teamRepository.joinTeamWithCode(code, userAccount: userAccount)
+            
+            try await repository.syncHistoryRepository.insertLastSyncTimestamp(for: .teamMember, userId: userAccount.userId)
+        }
+    }
+}

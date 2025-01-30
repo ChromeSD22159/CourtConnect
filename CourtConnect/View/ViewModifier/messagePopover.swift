@@ -16,7 +16,7 @@ struct MessagePopoverViewModifier: ViewModifier {
 
 struct ErrorPopoverViewModifier: ViewModifier {
     func body(content: Content) -> some View {
-        MessagePopover {
+        ErrorPopover {
             content
         }
     }
@@ -28,6 +28,6 @@ extension View {
     }
     
     func errorPopover() -> some View {
-        modifier(MessagePopoverViewModifier())
+        modifier(ErrorPopoverViewModifier())
     }
 }

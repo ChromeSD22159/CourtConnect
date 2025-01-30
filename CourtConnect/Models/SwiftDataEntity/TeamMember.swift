@@ -10,16 +10,16 @@ import SwiftData
 @Model
 class TeamMember: ModelProtocol {
     var id: UUID
-    var userId: UUID
+    var userAccountId: UUID
     var teamId: UUID
     var role: String
     var createdAt: Date
     var updatedAt: Date
     var deletedAt: Date?
     
-    init(id: UUID = UUID(), userId: UUID, teamId: UUID, role: String, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil) {
+    init(id: UUID = UUID(), userAccountId: UUID, teamId: UUID, role: String, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil) {
         self.id = id
-        self.userId = userId
+        self.userAccountId = userAccountId
         self.teamId = teamId
         self.role = role
         self.createdAt = createdAt
@@ -28,6 +28,6 @@ class TeamMember: ModelProtocol {
     }
     
     func toDTO() -> TeamMemberDTO {
-        return TeamMemberDTO(id: id, userId: userId, teamId: teamId, role: role, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
+        return TeamMemberDTO(id: id, userAccountId: userAccountId, teamId: teamId, role: role, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
 }

@@ -3,8 +3,7 @@
 //  CourtConnect
 //
 //  Created by Frederik Kohler on 25.01.25.
-//
-
+// 
 import Foundation
  
 enum LoginError: Error, LocalizedError {

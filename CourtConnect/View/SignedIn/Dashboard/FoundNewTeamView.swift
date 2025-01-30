@@ -8,7 +8,12 @@ import SwiftUI
 import PhotosUI
 
 struct FoundNewTeamView: View {
+    @Environment(\.errorHandler) var errorHandler
+    @Environment(\.dismiss) var dismiss
     @ObservedObject var viewModel: FoundNewTeamViewModel
+  
+    let userAccount: UserAccount
+    let userProfile: UserProfile
     
     var body: some View {
         ZStack {
@@ -78,12 +83,20 @@ struct FoundNewTeamView: View {
                 
                 VStack(alignment: .leading) {
                     Text("* Required").font(.caption2)
-                    TextField("Verbands E-Mail", text: $viewModel.headcoach, prompt: Text("Headcoach"))
+                    TextField("Verbands E-Mail", text: $viewModel.email, prompt: Text("Verbands E-Mail"))
                         .textFieldStyle(.roundedBorder)
                 }
                 
                 Button("Create Team") {
-                    //viewModel.createTeam()
+                    Task {
+                        do {
+                            try await viewModel.createTeam(userAccount: userAccount, userProfile: userProfile)
+                            
+                            dismiss() 
+                        } catch {
+                            errorHandler.handleError(error: error)
+                        }
+                    }
                 }
                 .tint(Theme.darkOrange)
                 .buttonStyle(.borderedProminent)
@@ -97,7 +110,7 @@ struct FoundNewTeamView: View {
                 viewModel.changeImage()
             }
             
-            animationOverlay()
+            LoadingCard(isLoading: $viewModel.isLoading)
             
         }
         .toolbar {
@@ -109,20 +122,15 @@ struct FoundNewTeamView: View {
         .navigationBarTitleDisplayMode(.inline)
         .contentMargins(.top, 20)
     }
-    
-    @ViewBuilder func animationOverlay() -> some View {
-        if viewModel.isLoading {
-            LoadingCard()
-                .opacity(viewModel.isLoading ? 1 : 0)
-                .animation(.easeInOut.delay(0.5), value: viewModel.isLoading)
-        }
-    }
 }
 
 #Preview {
     @Previewable @State var viewModel = FoundNewTeamViewModel(repository: RepositoryPreview.shared)
+    @Previewable @State var userProfile = UserProfile(userId: UUID(), firstName: "Spieler", lastName: "Spieler", birthday: "22.11.1986")
+    @Previewable @State var userAccount = UserAccount(userId: UUID(), teamId: UUID(), position: UserRole.player.rawValue, role: UserRole.player.rawValue, displayName: "Spieler", createdAt: Date(), updatedAt: Date())
+    
     NavigationStack {
-        FoundNewTeamView(viewModel: viewModel)
+        FoundNewTeamView(viewModel: viewModel, userAccount: userAccount, userProfile: userProfile)
     }
     .previewEnvirments()
     .navigationStackTint()

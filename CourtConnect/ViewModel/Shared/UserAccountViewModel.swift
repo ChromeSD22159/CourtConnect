@@ -7,37 +7,22 @@
 import Supabase
 import Foundation
  
+/*
 @MainActor
 @Observable class UserAccountViewModel: ObservableObject {
-    
     var repository: BaseRepository
     var userId: UUID?
     var accounts: [UserAccount] = []
-    var isCreateRoleSheet = false
-    var role: UserRole = .player
-    var position: BasketballPosition = .center
+    var isCreateRoleSheet = false 
     
     init(repository: BaseRepository, userId: UUID?) {
         self.repository = repository
         self.userId = userId
     }
     
-    func getLastSyncDate(userId: UUID) throws -> Date {
+
+    private func getLastSyncDate(userId: UUID) throws -> Date {
         return try repository.syncHistoryRepository.getLastSyncDate(for: .userAccount, userId: userId).timestamp
-    }
-    
-    func insertAccount() throws -> UserAccount? {
-        guard let userId = userId else { return nil }
-        
-        let account = UserAccount(userId: userId, teamId: "", position: position.rawValue, role: role.rawValue, displayName: role.rawValue, createdAt: Date(), updatedAt: Date())
-        
-        try repository.accountRepository.usert(item: account)
-        
-        self.getAllFromDatabase()
-        
-        isCreateRoleSheet.toggle()
-        
-        return account
     }
      
     func getAllFromDatabase() {
@@ -123,3 +108,4 @@ import Foundation
         }
     }
 } 
+*/

@@ -23,7 +23,7 @@ import Foundation
  
     func getTeam(for teamId: UUID) throws -> Team? {
         let redicate = #Predicate<Team> { team in
-             team.id == teamId
+            team.id == teamId && team.deletedAt == nil
         }
         let fetchDescriptor = FetchDescriptor(predicate: redicate)
         
@@ -40,8 +40,8 @@ import Foundation
     }
     
     func getTeamMembers(for teamId: UUID) throws -> [TeamMember] {
-        let redicate = #Predicate<TeamMember> { team in
-             team.id == teamId
+        let redicate = #Predicate<TeamMember> { teamMember in
+            teamMember.teamId == teamId
         }
         let fetchDescriptor = FetchDescriptor(predicate: redicate)
         
@@ -51,7 +51,7 @@ import Foundation
     func getTeamMembers(for teamId: UUID, role: UserRole) throws -> [TeamMember] {
         let roleString = role.rawValue
         let redicate = #Predicate<TeamMember> { teamMember in
-            teamMember.id == teamId && teamMember.role == roleString && teamMember.deletedAt == nil
+            teamMember.teamId == teamId && teamMember.role == roleString && teamMember.deletedAt == nil
         }
         let fetchDescriptor = FetchDescriptor(predicate: redicate)
         
@@ -59,8 +59,8 @@ import Foundation
     }
     
     func getTeamAdmins(for teamId: UUID) throws -> [TeamAdmin] {
-        let redicate = #Predicate<TeamAdmin> { team in
-             team.id == teamId
+        let redicate = #Predicate<TeamAdmin> { admin in
+            admin.teamId == teamId
         }
         let fetchDescriptor = FetchDescriptor(predicate: redicate)
         
@@ -70,13 +70,61 @@ import Foundation
     func getMembers(for teamId: UUID, role: UserRole) throws -> [TeamAdmin] {
         let roleString = role.rawValue
         let redicate = #Predicate<TeamAdmin> { teamMember in
-            teamMember.id == teamId && teamMember.role == roleString && teamMember.deletedAt == nil
+            teamMember.teamId == teamId && teamMember.role == roleString && teamMember.deletedAt == nil
         }
         let fetchDescriptor = FetchDescriptor(predicate: redicate)
         
         return try container.mainContext.fetch(fetchDescriptor)
     }
+    
+    func getMember(for userAccountId: UUID) throws -> TeamMember? {
+        let redicate = #Predicate<TeamMember> { teamMember in
+            teamMember.userAccountId == userAccountId && teamMember.deletedAt == nil
+        }
+        let fetchDescriptor = FetchDescriptor(predicate: redicate)
+        
+        return try container.mainContext.fetch(fetchDescriptor).first
+    }
+    
+    func getAdmin(for userAccountId: UUID) throws -> TeamAdmin? {
+        let redicate = #Predicate<TeamAdmin> { teamMember in
+            teamMember.userAccountId == userAccountId && teamMember.deletedAt == nil
+        }
+        let fetchDescriptor = FetchDescriptor(predicate: redicate)
+        
+        return try container.mainContext.fetch(fetchDescriptor).first
+    }
      
+    func deleteLocalTeam(for team: Team) {
+        container.mainContext.delete(team)
+    }
+    
+    func softDelete(teamMember: TeamMember) throws {
+        teamMember.updatedAt = Date()
+        teamMember.deletedAt = Date()
+        
+        try upsertLocal(item: teamMember)
+    }
+    
+    func softDelete(teamAdmin: TeamAdmin) throws {
+        teamAdmin.updatedAt = Date()
+        teamAdmin.deletedAt = Date()
+        
+        try upsertLocal(item: teamAdmin)
+    }
+    
+    func softDelete(team: Team) throws {
+        team.updatedAt = Date()
+        team.deletedAt = Date()
+        
+        try upsertLocal(item: team)
+    }
+    
+    func removeTeamFromUserAccount(for userAccount: UserAccount) {
+        userAccount.teamId = nil
+        userAccount.updatedAt = Date()
+    }
+    
     // MARK: - REMOTE
     func getTeamRemote(code: String) async throws -> TeamDTO? {
         return try await SupabaseService.getEquals(value: code, table: .team, column: "joinCode")
@@ -84,28 +132,41 @@ import Foundation
     
     func joinTeamWithCode(_ code: String, userAccount: UserAccount) async throws {
         if let foundTeamDTO = try await getTeamRemote(code: code) {
-            let newMember = TeamMemberDTO(userId: userAccount.userId, teamId: foundTeamDTO.id, role: userAccount.role, createdAt: Date(), updatedAt: Date())
+            // CREATE MEMBER
+            let newMember = TeamMember(userAccountId: userAccount.userId, teamId: foundTeamDTO.id, role: userAccount.role, createdAt: Date(), updatedAt: Date())
+            // INSER MEMBER REMOTE
+            let supabaseMember: TeamMemberDTO = try await SupabaseService.insert(item: newMember.toDTO(), table: .teamMember)
+            // SET UPDATE REMOTE TIMESTAMP
+            try await SupabaseService.insertUpdateTimestampTable(for: .teamMember, userId: userAccount.userId)
+            // UPDATE LOCAL CURRENTUSERACCOUNT
+            userAccount.teamId = newMember.teamId
+            userAccount.updatedAt = Date()
             
-            let entry: TeamMemberDTO = try await SupabaseService.insert(item: newMember, table: .teamMember)
-            
-            try self.upsertLocal(item: entry.toModel())
+            // INSERT LOCAL MEMBER
+            try self.upsertLocal(item: supabaseMember.toModel())
         }
     }
     
-    func insertTeam(newTeam: Team) async throws {
+    func insertTeam(newTeam: Team, userId: UUID) async throws {
         let entry: TeamDTO = try await SupabaseService.insert(item: newTeam.toDTO(), table: .team)
         
-        try self.upsertLocal(item: entry.toModel())
-    }
-    
-    func insertTeamMember(newMember: TeamMember) async throws {
-        let entry: TeamMemberDTO = try await SupabaseService.insert(item: newMember.toDTO(), table: .teamMember)
+        try await SupabaseService.insertUpdateTimestampTable(for: .team, userId: userId)
         
         try self.upsertLocal(item: entry.toModel())
     }
     
-    func insertTeamAdmin(newAdmin: TeamAdmin) async throws {
+    func insertTeamMember(newMember: TeamMember, userId: UUID) async throws {
+        let entry: TeamMemberDTO = try await SupabaseService.insert(item: newMember.toDTO(), table: .teamMember)
+        
+        try await SupabaseService.insertUpdateTimestampTable(for: .teamMember, userId: userId)
+        
+        try self.upsertLocal(item: entry.toModel())
+    }
+    
+    func insertTeamAdmin(newAdmin: TeamAdmin, userId: UUID) async throws {
         let entry: TeamAdminDTO = try await SupabaseService.insert(item: newAdmin.toDTO(), table: .teamAdmin)
+        
+         try await SupabaseService.insertUpdateTimestampTable(for: .teamMember, userId: userId)
         
         try self.upsertLocal(item: entry.toModel())
     }
@@ -114,39 +175,3 @@ import Foundation
         return try await SupabaseService.search(name: name, table: DatabaseTable.team, column: "teamName")
     }
 } 
-
-@MainActor
-@Observable class TeamViewModel: ObservableObject {
-    var teamName = ""
-    
-    var searchTeamName = ""
-    var foundTeams: [TeamDTO] = []
-    
-    let repository: BaseRepository
-    
-    init(repository: BaseRepository) {
-        self.repository = repository
-    } 
-    
-    func joinTeamWithCode(code: String, userAccount: UserAccount) throws {
-        Task {
-            try await repository.teamRepository.joinTeamWithCode(code, userAccount: userAccount)
-            
-            try repository.syncHistoryRepository.insertLastSyncTimestamp(for: .teamMember, userId: userAccount.userId)
-        }
-    }
-    
-    func searchTeam(string: String) {
-        Task {
-            do {
-                foundTeams = try await repository.teamRepository.searchTeamByName(name: string)
-            } catch {
-                print(error.localizedDescription)
-            }
-        }
-    }
-    
-    func resetFoundTeams() {
-        foundTeams = []
-    }
-}

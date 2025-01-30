@@ -37,10 +37,14 @@ import SwiftUICore
                 try self.repository.chatRepository.upsertLocal(message: new)
                 try self.repository.syncHistoryRepository.insertLastSyncTimestamp(for: .chat, userId: myUser.userId)
                  
-                try await self.repository.chatRepository.sendMessageToBackend(message: new) {
-                    Task {
-                        try await self.repository.syncHistoryRepository.insertUpdateTimestampTable(for: .chat, userId: senderID)
+                try await self.repository.chatRepository.sendMessageToBackend(message: new) { result in
+                    
+                    if result {
+                        Task {
+                            try await self.repository.syncHistoryRepository.insertUpdateTimestampTable(for: .chat, userId: senderID)
+                        }
                     }
+                    
                 }
                 
                 self.getAllLocalMessages()

@@ -9,7 +9,7 @@ import Foundation
 struct UserAccountDTO: DTOProtocol {
     var id: UUID // PK
     var userId: UUID
-    var teamId: String
+    var teamId: UUID?
     var position: String
     var role: String
     var displayName: String
@@ -17,7 +17,7 @@ struct UserAccountDTO: DTOProtocol {
     var updatedAt: Date
     var deletedAt: Date?
     
-    init(id: UUID = UUID(), userId: UUID, teamId: String, position: String, role: String, displayName: String, createdAt: Date = Date(), updatedAt: Date = Date(), deletedAt: Date? = nil) {
+    init(id: UUID = UUID(), userId: UUID, teamId: UUID?, position: String, role: String, displayName: String, createdAt: Date = Date(), updatedAt: Date = Date(), deletedAt: Date? = nil) {
         self.id = id
         self.userId = userId
         self.teamId = teamId

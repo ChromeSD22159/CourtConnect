@@ -13,17 +13,16 @@ struct MainNavigationView: View {
     @Environment(SyncServiceViewModel.self) private var syncServiceViewModel
     @State var navViewModel = NavigationViewModel.shared
     @ObservedObject var userViewModel: SharedUserViewModel
-    @ObservedObject var userAccountViewModel: UserAccountViewModel 
     
     var body: some View {
         MessagePopover {
             NavigationStack {
                 NavigationTabBar(navViewModel: navViewModel) {
                     switch navViewModel.current {
-                    case .home: DashboardView(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel)
-                    case .team: TeamView()
+                    case .home: DashboardView(userViewModel: userViewModel)
+                    case .team: TeamView(userViewModel: userViewModel)
                     case .player: EmptyView()
-                    case .settings: SettingsView(userViewModel: userViewModel).environment(userAccountViewModel)
+                    case .settings: SettingsView(userViewModel: userViewModel)
                     }
                 }
             }.navigationStackTint()
@@ -32,11 +31,10 @@ struct MainNavigationView: View {
             UserProfileEditView(userViewModel: userViewModel, isSheet: true)
         })
         .onAppear {
-            userAccountViewModel.importAccountsAfterLastSyncFromBackend()
+            userViewModel.importAccountsAfterLastSyncFromBackend()
         }
         .task {
-            userViewModel.setUserOnline() 
-            userViewModel.getCurrentAccount() 
+            userViewModel.setUserOnline()
             
             if await !NotificationService.getAuthStatus() {
                 await NotificationService.request()
@@ -58,7 +56,6 @@ struct MainNavigationView: View {
  
 #Preview {
     @Previewable @State var userViewModel = SharedUserViewModel(repository: RepositoryPreview.shared)
-    @Previewable @State var userAccountViewModel = UserAccountViewModel(repository: RepositoryPreview.shared, userId: nil)
-    MainNavigationView(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel)
+    MainNavigationView(userViewModel: userViewModel)
         .previewEnvirments()
 }

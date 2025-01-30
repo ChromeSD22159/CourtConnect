@@ -8,7 +8,6 @@ import Foundation
 import SwiftUI
 
 struct SettingsView: View {
-    @Environment(UserAccountViewModel.self) var userAccountViewModel: UserAccountViewModel
     @Environment(\.networkMonitor) var networkMonitor
     @ObservedObject var userViewModel: SharedUserViewModel
     
@@ -29,7 +28,7 @@ struct SettingsView: View {
             
             Section {
                 NavigationLink("DEBUG Options") {
-                    DebugView(userAccountViewModel: userAccountViewModel, userViewModel: userViewModel)
+                    DebugView(userViewModel: userViewModel)
                 }
             } header: {
                 Text("Development")
@@ -83,12 +82,10 @@ struct SettingsView: View {
 }
  
 fileprivate struct DebugView: View {
-    @ObservedObject var userAccountViewModel: UserAccountViewModel
     @ObservedObject var userViewModel: SharedUserViewModel
     var body: some View {
         Form {
-            Button("DEBUG DELETE All UserAccounts") {
-                userAccountViewModel.debugdelete()
+            Button("DEBUG DELETE All UserAccounts") { 
                 userViewModel.setCurrentAccount(newAccount: nil)
             }
         }
@@ -135,8 +132,7 @@ fileprivate struct OnlineUserList: View {
 }
 
 #Preview {
-    @Previewable @State var userViewModel = SharedUserViewModel(repository: RepositoryPreview.shared)
-    @Previewable @State var userAccountViewModel = UserAccountViewModel(repository: RepositoryPreview.shared, userId: nil)
+    @Previewable @State var userViewModel = SharedUserViewModel(repository: RepositoryPreview.shared) 
     NavigationStack {
         SettingsView(userViewModel: userViewModel)
     }

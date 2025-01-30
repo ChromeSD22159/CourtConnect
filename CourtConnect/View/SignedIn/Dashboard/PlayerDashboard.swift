@@ -7,8 +7,7 @@
 import SwiftUI
 
 struct PlayerDashboard: View {
-    @ObservedObject var userViewModel: SharedUserViewModel
-    @ObservedObject var userAccountViewModel: UserAccountViewModel
+    @ObservedObject var userViewModel: SharedUserViewModel 
     var body: some View {
         VStack {
             Text(userViewModel.userProfile?.firstName ?? "")

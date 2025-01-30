@@ -64,8 +64,7 @@ import Foundation
     
     /// BACKEND
     func insertUpdateTimestampTable(for table: DatabaseTable, userId: UUID) async throws -> UpdateHistoryDTO {
-        let entry = UpdateHistoryDTO(tableString: table.rawValue, userId: userId, timestamp: Date())
-        
+        let entry = UpdateHistoryDTO(tableString: table.rawValue, userId: userId, timestamp: Date()) 
         return try await SupabaseService.upsert<UpdateHistoryDTO>(item: entry, table: .updateHistory, onConflict: "tableString, userId")
     }
 

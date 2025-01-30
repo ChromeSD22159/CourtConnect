@@ -62,8 +62,7 @@ struct PreviewEnvirments: ViewModifier {
     @State var inAppMessagehandlerViewModel = InAppMessagehandlerViewModel.shared
     let repo = RepositoryPreview.shared
     func body(content: Content) -> some View {
-        content
-            .environment(UserAccountViewModel(repository: repo, userId: nil))
+        content 
             .environment(SyncServiceViewModel(repository: repo))
             .environment(\.messagehandler, InAppMessagehandlerViewModel())
             .environment(\.networkMonitor, NetworkMonitorViewModel())

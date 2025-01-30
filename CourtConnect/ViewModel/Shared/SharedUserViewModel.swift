@@ -20,6 +20,8 @@ class SharedUserViewModel: ObservableObject {
     var showDeleteConfirmMenu = false
     var editProfile: UserProfile = UserProfile(userId: UUID(), firstName: "", lastName: "", birthday: "", createdAt: Date(), updatedAt: Date())
     var onlineUser: [UserOnlineDTO] = []
+    var accounts: [UserAccount] = []
+    var isCreateRoleSheet = false 
     var onlineUserCount: Int {
         self.onlineUser.count
     }
@@ -45,42 +47,7 @@ class SharedUserViewModel: ObservableObject {
         self.listenForOnlineUserComesOnline()
         self.listenForOnlineUserGoesOffline() 
     }
-    
-    func setEditUserProfile(userProfile: UserProfile) {
-        self.editProfile = userProfile
-    }
-    
-    func resetEditUserProfile() {
-        guard let user = user else { return }
-        self.editProfile = UserProfile(userId: user.id, firstName: "", lastName: "", birthday: "", createdAt: Date(), updatedAt: Date())
-    }
-    
-    func saveUserProfile() {
-        guard
-            let user = self.user,
-            !editProfile.firstName.isEmpty,
-            !editProfile.lastName.isEmpty
-        else {
-            return
-        }
-        
-        editProfile.userId = user.id
-        editProfile.updatedAt = Date()
-        
-        Task {
-            do { 
-                try await self.repository.userRepository.sendUserProfileToBackend(profile: editProfile)
-                
-                let _ = try await self.repository.syncHistoryRepository.insertUpdateTimestampTable(for: .userProfile, userId: user.id)
-
-                self.setUserOffline()
-                self.setUserOnline()
-            } catch {
-                print("UserVM: " + error.localizedDescription)
-            }
-        }
-    }
-    
+     
     func signOut() {
         Task {
             do {
@@ -160,37 +127,6 @@ class SharedUserViewModel: ObservableObject {
         }
     }
     
-    func deleteUserAccount() {
-        guard let user = user else { return }
-        Task {
-            do {
-                
-                try await repository.userRepository.deleteUserAccount(user: user)
-                try await repository.userRepository.signOut()
-                
-                self.user = nil
-                self.userProfile = nil
-            } catch {
-                print(error.localizedDescription)
-            }
-        }
-    }
-    
-    func setCurrentAccount(newAccount: UserAccount?) {
-        self.currentAccount = newAccount
-        LocalStorageService.shared.userAccountId = newAccount?.id.uuidString
-        isAuthendicated()
-    }
-    
-    func getCurrentAccount() {
-        guard let id = LocalStorageService.shared.userAccountId else { return }
-        do { 
-            currentAccount = try repository.accountRepository.getAccount(id: UUID(uuidString: id)!)
-        } catch {
-            print(error.localizedDescription)
-        }
-    }
-    
     private func listenForOnlineUserComesOnline() {
         Task {
             self.repository.userRepository.listenForOnlineUserComesOnline { result in
@@ -227,5 +163,113 @@ class SharedUserViewModel: ObservableObject {
                 onComplete(nil, error)
             }
         }
+    }
+    
+    // MARK: - UserProfile Methodes
+    func saveUserProfile() {
+        guard
+            let user = self.user,
+            !editProfile.firstName.isEmpty,
+            !editProfile.lastName.isEmpty
+        else {
+            return
+        }
+        
+        editProfile.userId = user.id
+        editProfile.updatedAt = Date()
+        
+        Task {
+            do {
+                try await self.repository.userRepository.sendUserProfileToBackend(profile: editProfile)
+                
+                let _ = try await self.repository.syncHistoryRepository.insertUpdateTimestampTable(for: .userProfile, userId: user.id)
+
+                self.setUserOffline()
+                self.setUserOnline()
+            } catch {
+                print("UserVM: " + error.localizedDescription)
+            }
+        }
+    }
+    
+    func resetEditUserProfile() {
+        guard let user = user else { return }
+        self.editProfile = UserProfile(userId: user.id, firstName: "", lastName: "", birthday: "", createdAt: Date(), updatedAt: Date())
+    }
+    
+    func setEditUserProfile(userProfile: UserProfile) {
+        self.editProfile = userProfile
+    }
+    
+    // MARK: - UserAccount Methodes
+    func deleteUserAccount() {
+        guard let user = user else { return }
+        Task {
+            do {
+                
+                try await repository.userRepository.deleteUserAccount(user: user)
+                try await repository.userRepository.signOut()
+                
+                self.user = nil
+                self.userProfile = nil
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    func getCurrentAccount(userId: UUID) {
+        do {
+            if let id = LocalStorageService.shared.userAccountId {
+                currentAccount = try repository.accountRepository.getAccount(id: UUID(uuidString: id)!)
+            } else {
+                if let userAccount = try repository.accountRepository.getAllAccounts(userId: userId).first {
+                    currentAccount = try repository.accountRepository.getAllAccounts(userId: userId).first
+                    LocalStorageService.shared.userAccountId = userAccount.id.uuidString
+                }
+            }
+        } catch {
+            print(error)
+        }
+    }
+    
+    func setCurrentAccount(newAccount: UserAccount?) {
+        self.currentAccount = newAccount
+        LocalStorageService.shared.userAccountId = newAccount?.id.uuidString
+        isAuthendicated()
+    }
+    
+    func importAccountsAfterLastSyncFromBackend() {
+        guard let userId = user?.id else { return }
+        Task {
+            do {
+                let lastSync = try repository.syncHistoryRepository.getLastSyncDate(for: .userAccount, userId: userId).timestamp
+                let result = try await repository.accountRepository.fetchFromServer(after: lastSync)
+                
+                for account in result {
+                    try repository.accountRepository.usert(item: account.toModel())
+                }
+                
+                try self.repository.syncHistoryRepository.insertLastSyncTimestamp(for: .userAccount, userId: userId)
+                
+                self.getAllUserAccountsFromDatabase()
+            } catch {
+                self.getAllUserAccountsFromDatabase()
+            }
+        }
+    }
+    
+    func getAllUserAccountsFromDatabase() {
+        guard let userId = user?.id else { return }
+        do {
+            self.accounts = try repository.accountRepository.getAllAccounts(userId: userId)
+        } catch {
+            print(error)
+        }
+    }
+    
+    func userHasBothAccounts(role1: String = UserRole.player.rawValue, role2: String = UserRole.trainer.rawValue) -> Bool {
+        let rolesSet = Set(accounts.map { $0.role })
+        return rolesSet.contains(role1) && rolesSet.contains(role2)
     }
 }

@@ -8,28 +8,24 @@ import SwiftUI
 
 struct DashboardView: View {
     @ObservedObject var userViewModel: SharedUserViewModel
-    @ObservedObject var userAccountViewModel: UserAccountViewModel
     @Environment(SyncServiceViewModel.self) private var syncServiceViewModel
     @Environment(\.messagehandler) var messagehandler
     @Environment(\.errorHandler) var errorHanler
     @Environment(\.networkMonitor) var networkMonitor
     
-    @State var teamViewModel: TeamViewModel
+    @State var dashBoardViewModel: DashBoardViewModel
     
-    init(userViewModel: SharedUserViewModel, userAccountViewModel: UserAccountViewModel) {
+    init(userViewModel: SharedUserViewModel) {
         self.userViewModel = userViewModel
-        self.userAccountViewModel = userAccountViewModel
-        self.teamViewModel = TeamViewModel(repository: userViewModel.repository)
+        self.dashBoardViewModel = DashBoardViewModel(repository: userViewModel.repository)
     }
     
     var body: some View {
         ScrollView(.vertical) {
-            InternetUnavailableView()
-            
             if let currentAccount = userViewModel.currentAccount, let role = UserRole(rawValue: currentAccount.role) {
                 switch role {
-                case .player: PlayerDashboard(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel)
-                case .trainer: TrainerDashboard(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel, teamViewModel: teamViewModel)
+                case .player: PlayerDashboard(userViewModel: userViewModel)
+                case .trainer: TrainerDashboard(userViewModel: userViewModel, dashBoardViewModel: dashBoardViewModel)
                 case .admin: EmptyView()
                 }
             }
@@ -38,7 +34,47 @@ struct DashboardView: View {
         .errorPopover()
         .navigationTitle("Dashboard")
         .navigationBarTitleDisplayMode(.inline)
-        .userToolBar(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel)
+        .sheet(isPresented: $userViewModel.isCreateRoleSheet, content: {
+            CreateUserAccountView(userViewModel: userViewModel)
+        })
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                HStack {
+                    IconMenuButton(icon: "person.3.fill", description: "Create New Account or Switch to Existing Account") {
+                        ForEach(userViewModel.accounts) { account in
+                            Button {
+                                userViewModel.setCurrentAccount(newAccount: account)
+                            } label: {
+                                HStack {
+                                    if userViewModel.currentAccount?.id == account.id {
+                                        Image(systemName: "xmark")
+                                            .font(.callout)
+                                    }
+                                    
+                                    Text("\(account.displayName)")
+                                }
+                            }
+                        }
+                        
+                        if !userViewModel.userHasBothAccounts() {
+                            Button {
+                                userViewModel.isCreateRoleSheet.toggle()
+                            } label: {
+                                Label("Create User Account", systemImage: "plus")
+                            }
+                            
+                        }
+                    }
+                }
+                .foregroundStyle(Theme.lightOrange)
+            }
+        }
+        .onAppear {
+            if let userId = userViewModel.user?.id {
+                userViewModel.getAllUserAccountsFromDatabase()
+                userViewModel.getCurrentAccount(userId: userId)
+            }
+        }
         .task {
             if let userId = userViewModel.user?.id {
                 do {
@@ -75,13 +111,11 @@ struct DashboardView: View {
  
 #Preview { 
     @Previewable @State var userViewModel = SharedUserViewModel(repository: RepositoryPreview.shared)
-    @Previewable @State var userAccountViewModel = UserAccountViewModel(repository: RepositoryPreview.shared, userId: nil)
     @Previewable @State var networkMonitorViewModel = NetworkMonitorViewModel.shared
     
     NavigationStack {
         DashboardView(
-            userViewModel: userViewModel,
-            userAccountViewModel: userAccountViewModel
+            userViewModel: userViewModel
         )
         .messagePopover()
     }

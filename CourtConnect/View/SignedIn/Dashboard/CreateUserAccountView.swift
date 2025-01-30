@@ -4,11 +4,17 @@
 //
 //  Created by Frederik Kohler on 23.01.25.
 //
-import SwiftUI
+import SwiftUI 
 
 struct CreateUserAccountView: View {
-    @ObservedObject var userAccountViewModel: UserAccountViewModel
+    @State var userAccountViewModel: CreateUserAccountViewModel
     @ObservedObject var userViewModel: SharedUserViewModel
+    
+    init(userViewModel: SharedUserViewModel) {
+        self.userViewModel = userViewModel
+        self.userAccountViewModel = CreateUserAccountViewModel(repository: userViewModel.repository)
+    }
+    
     var body: some View {
         NavigationStack {
             List {
@@ -63,13 +69,11 @@ struct CreateUserAccountView: View {
 }
  
 #Preview {
-    @Previewable @State var userAccountViewModel = UserAccountViewModel(repository: RepositoryPreview.shared, userId: nil)
     @Previewable @State var userViewModel = SharedUserViewModel(repository: RepositoryPreview.shared)
     ZStack {
     }
     .sheet(isPresented: .constant(true)) {
         CreateUserAccountView(
-            userAccountViewModel: userAccountViewModel,
             userViewModel: userViewModel
         )
         .shadow(radius: 5)
