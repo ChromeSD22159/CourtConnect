@@ -1,163 +1,701 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    " " : {
+
+    },
+    "(Optimal)" : {
+
+    },
+    "* Required" : {
+
+    },
+    "**Wilkommen** \n%@!" : {
+
+    },
+    "%@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@"
+          }
+        }
+      }
+    },
+    "%@ wants to join your team. Would you like to accept the request?" : {
+
+    },
+    "%lld" : {
+
+    },
+    "0" : {
+
+    },
+    "Abbrechen" : {
+
+    },
     "App Status" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App Status"
+          }
+        }
+      }
+    },
+    "Beitreten" : {
+
+    },
+    "Bereit für den Sprung? Lass uns starten! Melde dich an, um loszulegen und teil der Community zu werden." : {
+
+    },
+    "Bild auswählen" : {
 
     },
     "Birthday" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geburtstag"
+          }
+        }
+      }
     },
     "Cancel" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abbrechen"
+          }
+        }
+      }
+    },
+    "Choose Image" : {
+
+    },
+    "continue" : {
+
+    },
+    "Copy" : {
+
+    },
+    "Copy Team ID" : {
 
     },
     "Create" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erstellen"
+          }
+        }
+      }
     },
     "Create New Account or Switch to Existing Account" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erstellen Sie ein neues Konto oder wechseln Sie auf das vorhandene Konto"
+          }
+        }
+      }
+    },
+    "Create Team" : {
 
     },
     "Create User Account" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Benutzerkonto erstellen"
+          }
+        }
+      }
     },
     "createdAt: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "erstellt: %@"
+          }
+        }
+      }
+    },
+    "Currently no Requests!" : {
 
     },
-    "Daskboard" : {
-
+    "Dashboard" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dashboard"
+          }
+        }
+      }
     },
     "DEBUG DELETE All UserAccounts" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Debug löschen Sie alle User Accounts"
+          }
+        }
+      }
     },
     "DEBUG Options" : {
-
-    },
-    "Deine Nachricht" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DEBUG Optionen"
+          }
+        }
+      }
     },
     "Delete" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Löschen"
+          }
+        }
+      }
     },
     "Delete Local Chat" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lösche Lokale Chats"
+          }
+        }
+      }
     },
     "Delete User Account" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lösche Benutzerkonto"
+          }
+        }
+      }
     },
     "Delete your Account" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lösche deinen Account"
+          }
+        }
+      }
+    },
+    "Dem Team beitreten?" : {
 
     },
     "Development" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Development"
+          }
+        }
+      }
     },
     "E-Mail" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-Mail"
+          }
+        }
+      }
     },
     "Edit User" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "User bearbeiten"
+          }
+        }
+      }
+    },
+    "Enter Code" : {
+
+    },
+    "Enter Team's Code" : {
 
     },
     "Enter your E-Mail" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geben Sie Ihre E-Mail ein"
+          }
+        }
+      }
     },
     "Enter your Firstname" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geben Vornamen ein"
+          }
+        }
+      }
     },
     "Enter your Lastname" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geben deinen nachnamen ein"
+          }
+        }
+      }
     },
     "Enter your Password" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gebe dein Passwort"
+          }
+        }
+      }
+    },
+    "Error" : {
 
     },
     "Firstname" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vornamen"
+          }
+        }
+      }
+    },
+    "Found New Team" : {
+
+    },
+    "Generate Code" : {
+
+    },
+    "Generate Code Neu" : {
+
+    },
+    "Grant" : {
+
+    },
+    "Handle Message" : {
+
+    },
+    "Headcoach" : {
 
     },
     "Home" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Home"
+          }
+        }
+      }
+    },
+    "Join" : {
+
+    },
+    "Join Requests" : {
 
     },
     "Keep me signed in" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Angemeldet bleiben "
+          }
+        }
+      }
+    },
+    "Kein Team gefunden!" : {
 
     },
     "Kind" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Art"
+          }
+        }
+      }
+    },
+    "Last online, %@ Uhr" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zuletzt online, %@ Uhr"
+          }
+        }
+      }
+    },
+    "Last online:" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zuletzt online:"
+          }
+        }
+      }
+    },
+    "Last online: -" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zuletzt online: -"
+          }
+        }
+      }
     },
     "Lastname" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nachname"
+          }
+        }
+      }
     },
     "LastName" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nachname"
+          }
+        }
+      }
     },
     "lastOnline: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zuletzt Online: %@"
+          }
+        }
+      }
+    },
+    "Leave Team" : {
+
+    },
+    "Loading..." : {
 
     },
     "Logout" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausloggen"
+          }
+        }
+      }
     },
-    "Niemand ist Online!" : {
+    "Möchtest du dem Team %@ beitreten?" : {
 
     },
     "No Connection" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Verbindung!"
+          }
+        }
+      }
+    },
+    "Nobody is online!" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Niemand ist online!"
+          }
+        }
+      }
+    },
+    "OK" : {
 
     },
     "Password" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Passowrt"
+          }
+        }
+      }
+    },
+    "past code" : {
 
+    },
+    "Player" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spieler"
+          }
+        }
+      }
     },
     "Position" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Position"
+          }
+        }
+      }
     },
     "Profile" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profil"
+          }
+        }
+      }
+    },
+    "Reject" : {
 
     },
     "Reload Chat" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chat neu laden"
+          }
+        }
+      }
     },
     "Repeat password" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Passwort wiederholen"
+          }
+        }
+      }
     },
     "Repeat your password" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wiederholen Sie Ihr Passwort"
+          }
+        }
+      }
+    },
+    "Requests" : {
 
     },
     "Save Profile" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profil speichern"
+          }
+        }
+      }
     },
     "Settings" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einstellungen"
+          }
+        }
+      }
     },
     "Sign in" : {
-
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anmelden"
+          }
+        }
+      }
     },
     "Sign up" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Melden Sie sich an"
+          }
+        }
+      }
+    },
+    "SignIn" : {
+
+    },
+    "SignUp" : {
+
+    },
+    "Team" : {
+
+    },
+    "Team Name" : {
+
+    },
+    "Team request from %@" : {
+
+    },
+    "Teams: %lld" : {
 
     },
     "Total Online Users: %lld" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Total Online Users: %lld"
+          }
+        }
+      }
     },
     "Total Online: %lld" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Total Online: %lld"
+          }
+        }
+      }
+    },
+    "Trainer" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trainer"
+          }
+        }
+      }
     },
     "Try checking the Network Connection." : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Überprüfen Sie die Netzwerkverbindung."
+          }
+        }
+      }
     },
     "updatedAt: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktualisiert am: %@"
+          }
+        }
+      }
+    },
+    "Verbands E-Mail" : {
 
     },
     "Version: -" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version: -"
+          }
+        }
+      }
     },
     "Version: %@" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version: %@"
+          }
+        }
+      }
     },
     "Your Birthday" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dein Geburtstag"
+          }
+        }
+      }
+    },
+    "Your Message" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deine Nachricht"
+          }
+        }
+      }
     },
     "Your Profile" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dein Profil"
+          }
+        }
+      }
     },
-    "Zuletzt Online, %@ Uhr" : {
-
-    },
-    "Zuletzt Online:" : {
-
-    },
-    "Zuletzt Online: -" : {
+    "Your Team. \nYour connection. \nYour success." : {
 
     }
   },

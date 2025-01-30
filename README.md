@@ -10,9 +10,8 @@ Die App bietet Funktionen wie Terminverwaltung, Anwesenheitsmanagement und Benac
 Coming soon ...
 
 <p>
-  <img src="./img/screen1.png" width="200">
-  <img src="./img/screen2.png" width="200">
-  <img src="./img/screen3.png" width="200">
+  <img src="./images/ActivityDiagrammEdgeFunction.jpg" width="200">
+  <img src="./images/ActivityDiagrammSyncronization.jpg" width="200"> 
 </p>
 
 
@@ -131,6 +130,11 @@ Stelle sicher, dass Docker installiert und betriebsbereit ist.
 #### Server Functions:
 Lade die JSON-Datei für Firebase Admin herunter und benenne sie in service-account.json, und füge diese in "supabase/functions/<EdgeFuncName>/service-account.json" ein.
 Diese Datei muss sich im Ordner Functions auf dem Server befinden, um serverseitige Edge-Funktionen korrekt auszuführen.
+
+Usert für mehrere Unique identifier:
+```sql
+ALTER TABLE public."<UserOnline>" ADD CONSTRAINT "<UserOnline>_<UserOnline>_<deviceToken>_unique" UNIQUE ("<userId>", "<deviceToken>");
+```
 
 ## Kontakt Informationen  
 **Frederik Kohler**  

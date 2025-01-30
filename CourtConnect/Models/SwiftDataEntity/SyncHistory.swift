@@ -6,17 +6,27 @@
 //
 import SwiftData
 import Foundation
+import Supabase
 
-@Model class SyncHistory: Identifiable {
+@Model class SyncHistory: Identifiable, DatabaseHistoryProtocol {
     @Attribute(.unique) var id: UUID
-    var table: String
+    var tableString: String
     var userId: UUID
     var timestamp: Date
     
-    init(id: UUID = UUID(), table: String, userId: UUID, timestamp: Date = Date()) {
+    init(id: UUID = UUID(), table: DatabaseTable, userId: UUID, timestamp: Date = Date()) {
         self.id = id
-        self.table = table
+        self.tableString = table.rawValue
         self.userId = userId
         self.timestamp = timestamp
     }
-}
+    
+    var table: DatabaseTable {
+       get {
+           DatabaseTable(rawValue: tableString)!
+       }
+       set {
+           tableString = newValue.rawValue
+       }
+   }
+} 

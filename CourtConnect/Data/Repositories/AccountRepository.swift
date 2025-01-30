@@ -6,15 +6,14 @@
 //
 
 import SwiftData
-import SwiftUI
-import FirebaseAuth
+import SwiftUI 
  
 class AccountRepository: SyncronizationProtocol {
     
     var backendClient = BackendClient.shared
     var container: ModelContainer
     
-    init(container: ModelContainer, type: RepositoryType) {
+    init(container: ModelContainer) {
         self.container = container
     }
     
@@ -95,7 +94,7 @@ class AccountRepository: SyncronizationProtocol {
     func sendToBackend(item: UserAccount) async throws {
         try await backendClient.supabase
             .from(DatabaseTable.userAccount.rawValue)
-            .upsert(item.toUserAccountDTO(), onConflict: "id")
+            .upsert(item.toDTO(), onConflict: "id")
             .execute()
             .value
     }
@@ -108,4 +107,4 @@ class AccountRepository: SyncronizationProtocol {
             .execute()
             .value
     }
-} 
+}

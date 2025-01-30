@@ -10,30 +10,66 @@ import Lottie
 @main
 struct CourtConnectApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-      
-    #if targetEnvironment(simulator)
+    
+    @State var syncServiceViewModel: SyncServiceViewModel 
+    @State var userViewModel: SharedUserViewModel = SharedUserViewModel(repository: Repository.shared)
+    
     init() {
+        let repo = Repository.shared
+        userViewModel = SharedUserViewModel(repository: repo)
+        syncServiceViewModel = SyncServiceViewModel(repository: repo)
+         
+        #if targetEnvironment(simulator)
         guard (Bundle(path: "/Applications/RocketSim.app/Contents/Frameworks/RocketSimConnectLinker.nocache.framework")?.load() == true) else {
             print("RocketSim: Failed to load linker framework")
             return
         }
         #warning("RocketSim Connect successfully linked")
+        #endif
     }
-    #endif
-    
+     
     @State var isSlashScreen = true
+    
     var body: some Scene {
         WindowGroup {
             AppBackground {
                 ZStack {
-                    LoginNavigation(repository: Repository(type: .app))
+                    LoginNavigation(userViewModel: userViewModel)
                         .opacity(isSlashScreen ? 0 : 1)
                     
-                    SplashScreen(duration: 1.5, isVisible: $isSlashScreen) {
+                    SplashScreen(isVisible: $isSlashScreen, duration: 1.5, userId: userViewModel.user?.id, onComplete: {
                         isSlashScreen.toggle()
-                    }
+                        
+                        if userViewModel.userProfile?.onBoardingAt == nil {
+                            userViewModel.showOnBoarding = true
+                        }
+                    })
                 }
             }
+            .environment(syncServiceViewModel)
         }
     }
-}  
+}
+
+extension View {
+    func previewEnvirments() -> some View {
+        modifier(PreviewEnvirments())
+    }
+}
+
+struct PreviewEnvirments: ViewModifier {
+    @State var errorHandlerViewModel = ErrorHandlerViewModel.shared
+    @State var inAppMessagehandlerViewModel = InAppMessagehandlerViewModel.shared
+    let repo = RepositoryPreview.shared
+    func body(content: Content) -> some View {
+        content 
+            .environment(SyncServiceViewModel(repository: repo))
+            .environment(\.messagehandler, InAppMessagehandlerViewModel())
+            .environment(\.networkMonitor, NetworkMonitorViewModel())
+            .environment(\.errorHandler, errorHandlerViewModel)
+            .errorPopover()
+            .messagePopover()
+        
+    }
+}
+   

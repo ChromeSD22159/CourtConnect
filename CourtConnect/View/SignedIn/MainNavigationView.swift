@@ -8,53 +8,54 @@
 import SwiftUI
 
 struct MainNavigationView: View {
-    @ObservedObject var userViewModel: SharedUserViewModel
     @Environment(\.scenePhase) var scenePhase
-    
-    @State var networkMonitorViewModel: NetworkMonitorViewModel = NetworkMonitorViewModel()
-    @State var userAccountViewModel: UserAccountViewModel
-    
-    init(userViewModel: SharedUserViewModel) {
-        self.userViewModel = userViewModel
-        self.userAccountViewModel = UserAccountViewModel(repository: userViewModel.repository, userId: userViewModel.user?.id)
-    }
+    @Environment(\.networkMonitor) var networkMonitor
+    @Environment(SyncServiceViewModel.self) private var syncServiceViewModel
+    @State var navViewModel = NavigationViewModel.shared
+    @ObservedObject var userViewModel: SharedUserViewModel
     
     var body: some View {
         MessagePopover {
-            TabView {
-                Tab("Home", systemImage: "house.fill") {
-                    DashboardView(userViewModel: userViewModel, userAccountViewModel: userAccountViewModel, networkMonitorViewModel: networkMonitorViewModel)
+            NavigationStack {
+                NavigationTabBar(navViewModel: navViewModel) {
+                    switch navViewModel.current {
+                    case .home: DashboardView(userViewModel: userViewModel)
+                    case .team: TeamView(userViewModel: userViewModel)
+                    case .player: EmptyView()
+                    case .settings: SettingsView(userViewModel: userViewModel)
+                    }
                 }
-                Tab("Settings", systemImage: "gear") {
-                    SettingsView(userViewModel: userViewModel, networkMonitorViewModel: networkMonitorViewModel)
-                        .environment(userAccountViewModel)
-                }
-            }
-            .accentColor(Theme.lightOrange)
+            }.navigationStackTint()
         }
-        .sheet(isPresented: $userViewModel.showOnBoarding, content: {
+        .sheet(isPresented: $userViewModel.showUserEditSheet, content: {
             UserProfileEditView(userViewModel: userViewModel, isSheet: true)
         })
         .onAppear {
-            userAccountViewModel.importAccountsAfterLastSyncFromBackend()
-        } 
+            userViewModel.importAccountsAfterLastSyncFromBackend()
+        }
         .task {
-            userViewModel.setUserOnline() 
-            
-            userViewModel.setCurrentAccount(newAccount: userAccountViewModel.getCurrentAccount())
+            userViewModel.setUserOnline()
             
             if await !NotificationService.getAuthStatus() {
                 await NotificationService.request()
-            } 
+            }
         }
         .onChange(of: scenePhase) { _, newPhase in
             userViewModel.changeOnlineStatus(phase: newPhase)
+            
+            if newPhase == .background {
+                Task {
+                    print("disappear")
+                    guard let userId = userViewModel.user?.id else { return }
+                    try await syncServiceViewModel.sendAllData(userId: userId)
+                }
+            }
         }
     }
 }
  
 #Preview {
-    @Previewable @State var userViewModel = SharedUserViewModel(repository: Repository(type: .preview))
-    @Previewable @State var userAccountViewModel = UserAccountViewModel(repository: Repository(type: .preview), userId: nil)
+    @Previewable @State var userViewModel = SharedUserViewModel(repository: RepositoryPreview.shared)
     MainNavigationView(userViewModel: userViewModel)
+        .previewEnvirments()
 }

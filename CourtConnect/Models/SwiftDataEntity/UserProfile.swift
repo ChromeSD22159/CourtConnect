@@ -5,10 +5,10 @@
 //  Created by Frederik Kohler on 12.01.25.
 //
 import Foundation
-import SwiftData
+import SwiftData 
 
 @Model
-class UserProfile: Codable {
+class UserProfile: ModelProtocol {
     @Attribute(.unique) var id: UUID
     var userId: UUID
     var firstName: String
@@ -17,55 +17,32 @@ class UserProfile: Codable {
     var fcmToken: String?
     var createdAt: Date
     var updatedAt: Date
+    var deletedAt: Date?
     var lastOnline: Date
+    var onBoardingAt: Date?
     
-    enum CodingKeys: String, CodingKey {
-        case id, firstName, lastName, birthday, userId, fcmToken, updatedAt, lastOnline
-        case createdAt = "created_at"
-    }
-    
-    init(id: UUID = UUID(), userId: UUID, fcmToken: String? = nil, firstName: String, lastName: String, birthday: String, createdAt: Date = Date(), updatedAt: Date = Date(), lastOnline: Date = Date()) {
+    init(id: UUID = UUID(), userId: UUID, fcmToken: String? = nil, firstName: String, lastName: String, birthday: String, lastOnline: Date = Date(), createdAt: Date = Date(), updatedAt: Date = Date(), deletedAt: Date? = nil, onBoardingAt: Date? = nil) {
         self.id = id
         self.userId = userId
         self.fcmToken = fcmToken
         self.firstName = firstName
         self.lastName = lastName
         self.birthday = birthday
+        self.lastOnline = lastOnline
         self.createdAt = createdAt
         self.updatedAt = updatedAt
-        self.lastOnline = lastOnline
+        self.deletedAt = deletedAt
+        self.onBoardingAt = onBoardingAt
     }
     
-    required init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.id = try container.decode(UUID.self, forKey: .id)
-        self.userId = try container.decode(UUID.self, forKey: .userId)
-        self.fcmToken = try container.decode(String?.self, forKey: .fcmToken)
-        self.firstName = try container.decode(String.self, forKey: .firstName)
-        self.lastName = try container.decode(String.self, forKey: .lastName)
-        self.birthday = try container.decode(String.self, forKey: .birthday)
-        self.createdAt = try container.decode(Date.self, forKey: .createdAt)
-        self.updatedAt = try container.decode(Date.self, forKey: .updatedAt)
-        self.lastOnline = try container.decode(Date.self, forKey: .lastOnline)
+    func toDTO() -> UserProfileDTO {
+        UserProfileDTO(id: id, userId: userId, firstName: firstName, lastName: lastName, birthday: birthday, lastOnline: lastOnline, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt, onBoardingAt: onBoardingAt)
     }
-
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(userId, forKey: .userId)
-        try container.encode(fcmToken, forKey: .fcmToken)
-        try container.encode(firstName, forKey: .firstName)
-        try container.encode(lastName, forKey: .lastName)
-        try container.encode(birthday, forKey: .birthday)
-        try container.encode(createdAt, forKey: .createdAt)
-        try container.encode(updatedAt, forKey: .updatedAt)
-        try container.encode(updatedAt, forKey: .lastOnline)
-    }
-} 
-
-extension UserProfile { 
-    
-    func toUserOnline() -> UserOnline {
-        return UserOnline(userId: userId, firstName: firstName, lastName: lastName, deviceToken: "asds")
+}
+  
+extension UserProfile {
+    func toUserOnline() -> UserOnlineDTO {
+        return UserOnlineDTO(userId: userId, firstName: firstName, lastName: lastName, deviceToken: "asds")
     }
     
     var fullName: String {

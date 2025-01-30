@@ -6,30 +6,28 @@
 //
 import Foundation 
  
-class ChatDTO: Codable {
+class ChatDTO: DTOProtocol {
     var id: UUID
-    var senderId: String
-    var recipientId: String
+    var senderId: UUID
+    var recipientId: UUID
     var message: String
-    var createdAt: Date
     var readedAt: Date?
+    var createdAt: Date
+    var updatedAt: Date
+    var deletedAt: Date?
     
-    init(id: UUID, senderId: String, recipientId: String, message: String, createdAt: Date, readedAt: Date? = nil) {
+    init(id: UUID, senderId: UUID, recipientId: UUID, message: String, readedAt: Date? = nil, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil) {
         self.id = id
         self.senderId = senderId
         self.recipientId = recipientId
         self.message = message
-        self.createdAt = createdAt
         self.readedAt = readedAt
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
+        self.deletedAt = deletedAt
     }
     
-    func toChat() -> Chat {
-        do { 
-            let decryptedMessage = try EncryptionHelper.toDecryptedString(text: message, senderId: id.uuidString)
-             
-            return Chat(id: id, senderId: senderId, recipientId: recipientId, message: decryptedMessage, createdAt: createdAt)
-        } catch {
-            return Chat(id: id, senderId: senderId, recipientId: recipientId, message: message, createdAt: createdAt)
-        }
+    func toModel() -> Chat {
+        Chat(id: id, senderId: senderId, recipientId: recipientId, message: message, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
-} 
+}

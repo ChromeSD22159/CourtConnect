@@ -14,13 +14,13 @@ class UserRepository {
     let container: ModelContainer
     let deviceToken: String
     let backendClient: BackendClient
-     
+    
     init(container: ModelContainer) {
         self.container = container
         self.deviceToken = UIDevice.current.identifierForVendor!.uuidString
         self.backendClient = BackendClient.shared
     }
-       
+    
     /// LOGIN INTO SUPABASE
     func signIn(email:String, password: String) async throws -> User {
         let result = try await backendClient.supabase.auth.signIn(email: email, password: password)
@@ -52,16 +52,27 @@ class UserRepository {
         let predicate = #Predicate<UserProfile> {
             $0.userId == userId
         }
-        
-        let sortBy = [SortDescriptor(\UserProfile.createdAt, order: .reverse)]
-        
-        let fetchDescriptor = FetchDescriptor<UserProfile>(predicate: predicate, sortBy: sortBy)
-         
+        let fetchDescriptor = FetchDescriptor<UserProfile>(predicate: predicate)
         return try container.mainContext.fetch(fetchDescriptor).first
     }
      
+    func getRequestedUser(accountId: UUID) async throws -> (UserAccount?, UserProfile?) {
+        let accountPredicate = #Predicate<UserAccount> { $0.id == accountId }
+        let userAccount = try container.mainContext.fetch(FetchDescriptor<UserAccount>(predicate: accountPredicate)).first
+
+        guard let userAccount = userAccount else { return (nil, nil) }
+
+        let userId = userAccount.userId
+        let profilePredicate = #Predicate<UserProfile> { $0.userId == userId }
+        let userProfile = try container.mainContext.fetch(FetchDescriptor<UserProfile>(predicate: profilePredicate)).first
+
+        guard let userProfile = userProfile else { return (nil, nil)  }
+
+        return (userAccount, userProfile)
+    }
+    
     func syncUserProfile(userId: UUID) async throws {
-        let date: [UserProfile] = try await backendClient.supabase
+        let date: [UserProfileDTO] = try await backendClient.supabase
             .from(DatabaseTable.userProfile.rawValue)
             .select("*")
             .eq("userId", value: userId)
@@ -69,7 +80,7 @@ class UserRepository {
             .value 
             
         if let newProfile = date.first {
-            try insertOrUpdate(profile: newProfile)
+            try insertOrUpdate(profile: newProfile.toModel())
         }
     }
     
@@ -84,7 +95,7 @@ class UserRepository {
         
         try await backendClient.supabase
             .from(DatabaseTable.userProfile.rawValue)
-            .upsert(profile, onConflict: "userId")
+            .upsert(profile.toDTO(), onConflict: "id")
             .execute()
     }
     
@@ -106,28 +117,16 @@ class UserRepository {
     }
     
     func setUserOnline(userId: UUID, userProfile: UserProfile) async throws -> Bool {
-        let userOnline = UserOnline(userId: userId, firstName: userProfile.firstName, lastName: userProfile.lastName, deviceToken: self.deviceToken)
-        
-        try await backendClient.supabase
-            .from(DatabaseTable.userOnline.rawValue)
-            .insert(userOnline)
-            .execute()
-        
-        return await isRequestSuccessful(statusCode: 201)
+        let userOnline = UserOnlineDTO(userId: userId, firstName: userProfile.firstName, lastName: userProfile.lastName, deviceToken: self.deviceToken, timestamp: Date())
+     
+        return try await SupabaseService.upsert(item: userOnline, table: .userOnline, onConflict: "userId, deviceToken")
     }
     
     func setUserOffline(userId: UUID) async throws -> Bool {
-         let query = try await backendClient.supabase
-            .from(DatabaseTable.userOnline.rawValue)
-           .delete()
-           .match(["userId": userId.uuidString, "deviceToken": self.deviceToken])
-           .execute()
-
-         // Check the response status code
-         return await isRequestSuccessful(statusCode: query.response.statusCode)
+        return try await SupabaseService.delete(table: .userOnline, match: ["userId": userId.uuidString, "deviceToken": self.deviceToken])
     }
     
-    func listenForOnlineUserComesOnline(completion: @escaping (Result<[UserOnline], Error>) -> Void) {
+    func listenForOnlineUserComesOnline(completion: @escaping (Result<[UserOnlineDTO], Error>) -> Void) {
         let channelInsertUserOnline = backendClient.supabase.realtimeV2.channel("public:UserOnline:insert")
           
         let insertions = channelInsertUserOnline.postgresChange(InsertAction.self, table: DatabaseTable.userOnline.rawValue)
@@ -140,7 +139,7 @@ class UserRepository {
         }
     }
     
-    func listenForOnlineUserGoesOffline(completion: @escaping (Result<[UserOnline], Error>) -> Void) {
+    func listenForOnlineUserGoesOffline(completion: @escaping (Result<[UserOnlineDTO], Error>) -> Void) {
         let channelDeleteUserOnline = backendClient.supabase.realtimeV2.channel("public:UserOnline:delete")
          
         let deletions = channelDeleteUserOnline.postgresChange(DeleteAction.self, table: DatabaseTable.userOnline.rawValue)
@@ -153,14 +152,21 @@ class UserRepository {
         }
     }
     
-    func getOnlineUserList() async throws -> [UserOnline] {
-        let list: [UserOnline] = try await backendClient.supabase
-            .from(DatabaseTable.userOnline.rawValue)
-            .select()
+    func getOnlineUserList() async throws -> [UserOnlineDTO] {
+        let list: [UserOnlineDTO] = try await SupabaseService.getAllFromTable(table: .userOnline)
+         
+        return uniqueOnlineUserList(list: list)
+    }
+    
+    func deleteUserAccount(user: User) async throws {
+        try await backendClient.supabase
+            .from(DatabaseTable.deletionRequest.rawValue)
+            .upsert(DeletionRequestDTO(userId: user.id, createdAt: Date(), updatedAt: Date()), onConflict: "userId")
             .execute()
-            .value
-        
-        var uniqueUsers: [UserOnline] = []
+    }
+    
+    private func uniqueOnlineUserList(list: [UserOnlineDTO]) -> [UserOnlineDTO] {
+        var uniqueUsers: [UserOnlineDTO] = []
         
         list.forEach { user in
             let result = uniqueUsers.filter {
@@ -169,21 +175,10 @@ class UserRepository {
             }
             
             if result.isEmpty {
-                uniqueUsers.append(UserOnline(userId: user.userId, firstName: user.firstName, lastName: user.lastName, deviceToken: user.deviceToken, timestamp: user.timestamp))
+                uniqueUsers.append(UserOnlineDTO(userId: user.userId, firstName: user.firstName, lastName: user.lastName, deviceToken: user.deviceToken, timestamp: user.timestamp))
             }
         }
         
         return uniqueUsers
-    }
-    
-    func isRequestSuccessful(statusCode: Int) async -> Bool {
-        return (200...299).contains(statusCode)
-    }
-    
-    func deleteUserAccount(user: User) async throws {
-        try await backendClient.supabase
-            .from(DatabaseTable.deletionRequest.rawValue)
-            .upsert(DeletionRequestDTO(userId: user.id), onConflict: "userId")
-            .execute()
     }
 }

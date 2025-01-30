@@ -7,15 +7,19 @@
 import SwiftUI
 
 struct InternetUnavailableView: View {
+    @State var networkMonitorViewModel: NetworkMonitorViewModel = NetworkMonitorViewModel.shared
     var body: some View {
-        ContentUnavailableView {
-            Label("No Connection", systemImage: "wifi.slash")
-        } description: {
-            Text("Try checking the Network Connection.")
+        if !networkMonitorViewModel.isConnected {
+            ContentUnavailableView {
+                Label("No Connection", systemImage: "wifi.slash")
+            } description: {
+                Text("Try checking the Network Connection.")
+            }
         }
     }
 }
 
 #Preview {
     InternetUnavailableView()
+        .previewEnvirments()
 }

@@ -8,10 +8,10 @@ import SwiftData
 import Foundation
 
 @Model
-class UserAccount: Identifiable, SupabaseEntitiy {
+class UserAccount: ModelProtocol { 
     @Attribute(.unique) var id: UUID
     var userId: UUID
-    var teamId: String
+    var teamId: UUID?
     var position: String
     var role: String
     var displayName: String
@@ -19,7 +19,7 @@ class UserAccount: Identifiable, SupabaseEntitiy {
     var updatedAt: Date
     var deletedAt: Date?
     
-    init(id: UUID = UUID(), userId: UUID, teamId: String, position: String, role: String, displayName: String, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil) {
+    init(id: UUID = UUID(), userId: UUID, teamId: UUID?, position: String, role: String, displayName: String, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil) {
         self.id = id
         self.userId = userId
         self.teamId = teamId
@@ -31,7 +31,11 @@ class UserAccount: Identifiable, SupabaseEntitiy {
         self.deletedAt = deletedAt
     }
     
-    func toUserAccountDTO() -> UserAccountDTO {
+    func toDTO() -> UserAccountDTO {
         return UserAccountDTO(id: id, userId: userId, teamId: teamId, position: position, role: role, displayName: displayName, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
+    }
+    
+    var roleEnum: UserRole {
+        UserRole(rawValue: self.role)!
     }
 }

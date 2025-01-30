@@ -7,15 +7,15 @@
 import SwiftUI
 
 struct MessagePopover<Content: View>: View {
-    @State var viewModel = InAppMessagehandler.shared
-    @State var errorHanler = ErrorHandlerViewModel.shared
+    @Environment(\.messagehandler) var messagehandler
+    @Environment(\.errorHandler) var errorHanler
     @ViewBuilder var content: () -> Content
     
     var body: some View {
         ZStack {
             content()
             
-            if let message = viewModel.message {
+            if let message = messagehandler.message {
                VStack {
                    HStack {
                        Text(message.title)
@@ -47,15 +47,15 @@ struct MessagePopover<Content: View>: View {
                .transition(.move(edge: .top))
            }
        }
-        .animation(.easeInOut, value: viewModel.message != nil)
+        .animation(.easeInOut, value: messagehandler.message != nil)
     }
 }
  
 #Preview {
-    @Previewable @State var viewModel = InAppMessagehandler.shared
+    @Previewable @State var viewModel = InAppMessagehandlerViewModel.shared
     ZStack {
-        Button("asdsad") {
+        Button("Handle Message") {
             viewModel.handleMessage(message: InAppMessage(title: "Neue Nachricht von Frederik", body: "Neue Nachricht von Frederik"))
         }
-    }.messagePopover()
+    }.previewEnvirments()
 }

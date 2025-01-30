@@ -10,16 +10,19 @@ import SwiftData
  
 @MainActor
 class ChatRepository {
-    let type: RepositoryType
     let container: ModelContainer
     let backendClient = BackendClient.shared
      
-    init(container: ModelContainer, type: RepositoryType) {
-        self.type = type
+    init(container: ModelContainer) {
         self.container = container
     }
     
-    func getAllFromDatabase(myUserId: String, recipientId: String) throws -> [Chat] {
+    func upsertLocal(message: Chat) throws {
+        container.mainContext.insert(message)
+        try container.mainContext.save()
+    }
+    
+    func getAllMessagesLocal(myUserId: UUID, recipientId: UUID) throws -> [Chat] {
         let predicate = #Predicate<Chat> { chat in
             chat.senderId == myUserId && chat.recipientId == recipientId || chat.senderId == recipientId && chat.recipientId == myUserId
         }
@@ -30,77 +33,78 @@ class ChatRepository {
         
         return try container.mainContext.fetch(fetchDescriptor)
     }
-    
-    func syncChatFromBackend(myUserId: String, recipientId: String, lastSync: Date, complete: @escaping (Result<[Chat], Error>) -> Void) async {
+  
+    func sendMessageToBackend(message: Chat, complete: @escaping (Bool) -> Void) async throws {
         do {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ" // Passe das Format an
-            let formattedLastSync = dateFormatter.string(from: lastSync)
-            
-            let response: [ChatDTO] = try await backendClient.supabase.from(DatabaseTable.messages.rawValue)
-               .select()
-               .or("senderId.eq.\(myUserId), recipientId.eq.\(recipientId), createdAt.gt.\(formattedLastSync)")
-               .gte("createdAt", value: formattedLastSync)
-               .order("createdAt", ascending: true)
-               .execute()
-               .value 
-
-            for chat in response {
-                let chat = chat.toChat()
-                container.mainContext.insert(chat)
-                try container.mainContext.save()
-            }
-            
-            let all = try getAllFromDatabase(myUserId: myUserId, recipientId: recipientId)
-            
-            complete(.success(all))
+            let result: Bool = try await SupabaseService.insert(item: message.toDTO(), table: .chat)
+             
+            complete(result)
         } catch {
-            print("Fehler beim Abrufen von Nachrichten:", error)
-            complete(.failure(error))
+            print(error.localizedDescription)
         }
     }
     
-    func sendMessageToBackend(message: Chat, lastDate: Date, complete: @escaping (Result<[Chat], Error>) -> Void) async throws {
-        guard type == .app else { return }
-        
-        do {
-            try await backendClient.supabase.from(DatabaseTable.messages.rawValue).insert(message.toChat()).execute()
-            
-            await syncChatFromBackend(myUserId: message.senderId, recipientId: message.recipientId, lastSync: lastDate) { result in
-                switch result {
-                case .success(let chats): complete(.success(chats))
-                case .failure(let error): complete(.failure(error))
-                }
-            }
-        } catch {
-            throw error
-        }
-    }
-    
-    func receiveMessages(myUserId: String, recipientId: String, complete: @escaping (Result<[Chat], Error>) -> Void) {
+    func receiveMessageAndInsertLocal(myUserId: UUID, recipientId: UUID, complete: @escaping () -> Void) {
         let channel = backendClient.supabase.realtimeV2.channel("public:Messages")
          
-        let inserts = channel.postgresChange(InsertAction.self, table: DatabaseTable.messages.rawValue)
+        let inserts = channel.postgresChange(InsertAction.self, table: DatabaseTable.chat.rawValue)
         
         Task {
             await channel.subscribe()
             
             for await insertion in inserts {
-                if let message: ChatDTO = await insertion.decodeTo() {
+                do {
                     
-                    container.mainContext.insert(message.toChat())
-                    try container.mainContext.save()
-                    
-                    let all = try self.getAllFromDatabase(myUserId: myUserId, recipientId: recipientId)
-                    
-                    complete(.success(all))
+                    if let message: ChatDTO = decodeDTO(from: insertion) {
+                        container.mainContext.insert(message.toModel())
+                        try container.mainContext.save()
+                        complete()
+                    } else {
+                        complete()
+                    } 
+                } catch {
+                    complete()
                 }
             }
         }
     }
-     
+    
     func delete(message: Chat) {
          container.mainContext.delete(message)
+    }
+    
+    func decodeDTO<T: Codable>(from insertion: InsertAction) -> T? {
+        let decoder = JSONDecoder()
+        
+        let iso8601Formats = [
+            "yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXXXX", // Mit Mikrosekunden
+            "yyyy-MM-dd'T'HH:mm:ssXXXXX"         // Ohne Mikrosekunden
+        ]
+        
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        
+        decoder.dateDecodingStrategy = .custom { decoder -> Date in
+            let container = try decoder.singleValueContainer()
+            let dateString = try container.decode(String.self)
+            
+            for format in iso8601Formats {
+                formatter.dateFormat = format
+                if let date = formatter.date(from: dateString) {
+                    return date
+                }
+            }
+            
+            throw DecodingError.dataCorruptedError(in: container, debugDescription: "Invalid date format: \(dateString)")
+        }
+        
+        do {
+            return try insertion.decodeRecord(as: T.self, decoder: decoder)
+        } catch {
+            print("Decoding error: \(error)")
+            return nil
+        }
     }
 }
 
@@ -110,19 +114,6 @@ enum ChatError: Error, LocalizedError {
     var errorDescription: String? {
         switch self {
         case .whileSendindToServer: return "whileSendindToServer"
-        }
-    }
-}
-
-extension InsertAction {
-    func decodeTo<T:Codable>() async -> T? {
-        do {
-            let decoder = JSONDecoder()
-            decoder.dateDecodingStrategy = .iso8601
-             
-            return try self.decodeRecord(decoder: decoder) as T?
-        } catch {
-            return nil
         }
     }
 }

@@ -7,12 +7,10 @@
 import SwiftUI 
 
 struct LoginNavigation: View {
-    @State var navigationView: LoginNavigationView
-    @State var userViewModel: SharedUserViewModel
-     
-    @MainActor init(repository: Repository) {
-        self.navigationView = .login
-        self.userViewModel = SharedUserViewModel(repository: repository)
+    @ObservedObject var userViewModel: SharedUserViewModel
+    
+    init(userViewModel: SharedUserViewModel) {
+        self.userViewModel = userViewModel
     }
     
     var body: some View {
@@ -20,30 +18,16 @@ struct LoginNavigation: View {
             if userViewModel.user != nil {
                 MainNavigationView(userViewModel: userViewModel)
             } else {
-                switch navigationView {
-                case .login: LoginView(userViewModel: userViewModel, navigate: handleNavigate)
-                case .register: RegisterView(userViewModel: userViewModel, navigate: handleNavigate)
-                case .forget: EmptyView()
-                }
+                LoginEntryView(userViewModel: userViewModel)
             }
         } 
         .task {
             userViewModel.isAuthendicated()
         }
-        
     }
-    
-    private func handleNavigate(toView: LoginNavigationView) {
-        withAnimation {
-            self.navigationView = toView
-        }
-    }
-}
-
-enum LoginNavigationView {
-    case login, register, forget
 }
 
 #Preview {
-    LoginNavigation(repository: Repository(type: .preview))
+    LoginNavigation(userViewModel: SharedUserViewModel(repository: RepositoryPreview.shared))
+        .previewEnvirments()
 }
