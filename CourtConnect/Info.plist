@@ -4,6 +4,8 @@
 <dict>
 	<key>DefaultEnvironment</key>
 	<string>Local</string>
+	<key>isStoredInMemoryOnly</key>
+	<false/>
 	<key>SupabaseEnvironments</key>
 	<array>
 		<dict>

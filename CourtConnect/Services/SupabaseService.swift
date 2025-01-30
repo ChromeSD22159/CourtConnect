@@ -37,13 +37,15 @@ struct SupabaseService {
         return isRequestSuccessful(statusCode: response.response.statusCode)
     }
     
-    static func getEquals<T: DTOProtocol>(value: String, table: DatabaseTable, column: String) async throws -> T? {
-        return try await BackendClient.shared.supabase
-            .from(table.rawValue)
-            .select()
-            .eq(column, value: value)
-            .execute()
-            .value
+    static func getEquals<T: DTOProtocol>(value: String, table: DatabaseTable, column: String) async throws -> T? { 
+        let result: [T] = try await BackendClient.shared.supabase
+                .from(table.rawValue)
+                .select()
+                .eq(column, value: value)
+                .execute()
+                .value
+            
+        return result.first
     }
     
     static func getGreaterThan<T: DTOProtocol>(table: DatabaseTable, column: String = "updatedAt", lastSync: Date) async throws -> [T] {
@@ -57,6 +59,14 @@ struct SupabaseService {
     
     static func upsert<T: DTOProtocol>(item: T, table: DatabaseTable, onConflict: String) async throws -> T {
         return try await BackendClient.shared.supabase
+            .from(table.rawValue)
+            .upsert(item, onConflict: onConflict)
+            .execute()
+            .value
+    }
+    
+    static func upsertWithOutResult<T: DTOProtocol>(item: T, table: DatabaseTable, onConflict: String) async throws {
+         try await BackendClient.shared.supabase
             .from(table.rawValue)
             .upsert(item, onConflict: onConflict)
             .execute()

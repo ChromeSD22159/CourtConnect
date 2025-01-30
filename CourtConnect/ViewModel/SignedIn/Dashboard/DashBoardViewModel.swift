@@ -38,9 +38,10 @@ import Foundation
             try repository.teamRepository.softDelete(teamMember: myMemberAccount)
         }
         
-        repository.teamRepository.removeTeamFromUserAccount(for: currentAccount)
+        currentAccount.teamId = nil
+        currentAccount.updatedAt = Date()
         
-        getTeam(for: currentAccount)
+        currentTeam = nil
     }
     
     /// SOFT DELETE LOCAL ONLY

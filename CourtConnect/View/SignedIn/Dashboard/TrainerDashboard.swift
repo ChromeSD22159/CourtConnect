@@ -42,13 +42,17 @@ struct TrainerDashboard: View {
                 GenerateCodeView()
             }
         })
-        .sheet(isPresented: $isEnterCode, content: {
-            ZStack {
-                Theme.background.ignoresSafeArea()
-                
-                EnterCodeView()
+        .sheet(isPresented: $isEnterCode, onDismiss: {
+            dashBoardViewModel.getTeam(for: userViewModel.currentAccount)
+        }) {
+            if let currentAccount = userViewModel.currentAccount {
+                ZStack {
+                    Theme.background.ignoresSafeArea()
+                    
+                    EnterCodeView(userAccount: currentAccount)
+                }
             }
-        })
+        }
     }
     
     @ViewBuilder func hasNoTeam() -> some View {
@@ -90,7 +94,7 @@ struct TrainerDashboard: View {
         
         Button("Leave Team") {
             do {
-                try dashBoardViewModel.leaveTeam(for: userViewModel.currentAccount)
+                try dashBoardViewModel.leaveTeam(for: userViewModel.currentAccount) 
             } catch {
                 print(error)
             }

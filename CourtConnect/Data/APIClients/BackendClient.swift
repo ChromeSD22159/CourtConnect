@@ -42,10 +42,10 @@ struct BackendClient {
                 return SupabaseConfig(name: name, key: key, url: url)
             }
     }
-}
-
-private struct SupabaseConfig {
-    let name: String
-    let key: String
-    let url: String
+    
+    struct SupabaseConfig {
+        let name: String
+        let key: String
+        let url: String
+    }
 }

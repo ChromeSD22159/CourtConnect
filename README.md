@@ -91,6 +91,8 @@ In deine Info.plist:
 ```
     <key>DefaultEnvironment</key>
     <string>Local</string>
+    <key>isStoredInMemoryOnly</key>
+    <false/>
     <key>SupabaseEnvironments</key>
     <array>
         <dict>
@@ -102,7 +104,7 @@ In deine Info.plist:
             <string>http://192.168.0.178:54321</string>
         </dict>
         <dict>
-            <key>Name</key>
+            <key>Name</key> 
             <string>Remote</string>
             <key>SupabaseKey</key>
             <string>ey...</string>

@@ -118,6 +118,10 @@ import Foundation
         teamMember.deletedAt = Date()
         
         try upsertLocal(item: teamMember)
+        
+        Task {
+            try await SupabaseService.upsertWithOutResult(item: teamMember.toDTO(), table: .teamMember, onConflict: "id")
+        }
     }
     
     func softDelete(teamAdmin: TeamAdmin) throws {
@@ -125,6 +129,10 @@ import Foundation
         teamAdmin.deletedAt = Date()
         
         try upsertLocal(item: teamAdmin)
+        
+        Task {
+            try await SupabaseService.upsertWithOutResult(item: teamAdmin.toDTO(), table: .teamAdmin, onConflict: "id")
+        }
     }
     
     func softDelete(team: Team) throws {
@@ -132,6 +140,10 @@ import Foundation
         team.deletedAt = Date()
         
         try upsertLocal(item: team)
+        
+        Task {
+           try await SupabaseService.upsertWithOutResult(item: team.toDTO(), table: .team, onConflict: "id")
+        }
     }
     
     func removeTeamFromUserAccount(for userAccount: UserAccount) {
@@ -149,13 +161,16 @@ import Foundation
             // CREATE MEMBER
             let newMember = TeamMember(userAccountId: userAccount.userId, teamId: foundTeamDTO.id, role: userAccount.role, createdAt: Date(), updatedAt: Date())
             // INSER MEMBER REMOTE
-            let supabaseMember: TeamMemberDTO = try await SupabaseService.insert(item: newMember.toDTO(), table: .teamMember) 
+            let supabaseMember: TeamMemberDTO = try await SupabaseService.insert(item: newMember.toDTO(), table: .teamMember)
             // UPDATE LOCAL CURRENTUSERACCOUNT
             userAccount.teamId = newMember.teamId
             userAccount.updatedAt = Date()
             
             // INSERT LOCAL MEMBER
+            try self.upsertLocal(item: foundTeamDTO.toModel())
             try self.upsertLocal(item: supabaseMember.toModel())
+        } else {
+            throw TeamError.noTeamFoundwithThisJoinCode
         }
     }
     
