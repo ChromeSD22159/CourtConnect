@@ -41,3 +41,24 @@ extension UserOnlineDTO {
         return UserProfile(userId: self.userId, firstName: self.firstName, lastName: self.lastName, birthday: "")
     }
 }
+
+/*
+ -- 1. Trigger-Funktion erstellen
+ CREATE OR REPLACE FUNCTION "LogUserOnlineCrud"()
+ RETURNS TRIGGER AS $$
+ BEGIN
+     INSERT INTO public."UpdateHistory" ("tableString", "timestamp", "userId")
+     VALUES ('UserOnline', NOW(), COALESCE(NEW."userId", OLD."userId"))
+     ON CONFLICT ("tableString", "userId")
+     DO UPDATE SET "timestamp" = NOW();
+
+     RETURN NULL;
+ END;
+ $$ LANGUAGE plpgsql;
+
+ -- 2. Trigger erstellen
+ CREATE TRIGGER "LogUserOnlineCrudTrigger"
+ AFTER INSERT OR DELETE OR UPDATE ON "UserOnline"
+ FOR EACH ROW
+ EXECUTE FUNCTION "LogUserOnlineCrud"();
+ */ 

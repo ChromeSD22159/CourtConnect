@@ -27,29 +27,22 @@ struct DeletionRequestDTO: DTOProtocol {
 }
 
 /*
- create trigger "DeletionRequestCrudTrigger"
- after insert or delete or update on "DeletionRequest" for each row
- execute function "LogDeletionRequestCrud" (); 
- -- OR --
- create trigger "DeletionRequestInsertTrigger"
- after insert on "DeletionRequest" for each row
- execute function "LogChatInsert"();
- 
- create trigger "DeletionRequestUpdateTrigger"
- after update on "DeletionRequest" for each row
- execute function "LogChatInsert"();
- 
- create trigger "DeletionRequestDeleteTrigger"
- after delete on "DeletionRequest" for each row
- execute function "LogChatInsert"();
- 
- -- Function
- CREATE OR REPLACE FUNCTION "LogDeletionRequestInsert"()
+ -- 1. Trigger-Funktion erstellen
+ CREATE OR REPLACE FUNCTION "LogDeletionRequestCrud"()
  RETURNS TRIGGER AS $$
  BEGIN
      INSERT INTO public."UpdateHistory" ("tableString", "timestamp", "userId")
-     VALUES ('DeletionRequest', NOW(), NEW."userId");
-     RETURN NEW;
+     VALUES ('DeletionRequest', NOW(), COALESCE(NEW."userId", OLD."userId"))
+     ON CONFLICT ("tableString", "userId")
+     DO UPDATE SET "timestamp" = NOW();
+
+     RETURN NULL;
  END;
  $$ LANGUAGE plpgsql;
+
+ -- 2. Trigger erstellen
+ CREATE TRIGGER "DeletionRequestCrudTrigger"
+ AFTER INSERT OR DELETE OR UPDATE ON "DeletionRequest"
+ FOR EACH ROW
+ EXECUTE FUNCTION "LogDeletionRequestCrud"();
  */

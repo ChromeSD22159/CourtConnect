@@ -29,4 +29,4 @@ struct UpdateHistoryDTO: DTOProtocol {
     func toModel() -> UpdateHistory {
         UpdateHistory(id: id, tableString: tableString, userId: userId, timestamp: timestamp, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
-} 
+}

@@ -25,3 +25,24 @@ struct TermineDTO: DTOProtocol {
         return Termine(id: id, locationId: locationId, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
 }
+
+/*
+ -- 1. Trigger-Funktion erstellen
+ CREATE OR REPLACE FUNCTION "LogTermineCrud"()
+ RETURNS TRIGGER AS $$
+ BEGIN
+     INSERT INTO public."UpdateHistory" ("tableString", "timestamp", "userId")
+     VALUES ('Termine', NOW(), COALESCE(NEW."userId", OLD."userId"))
+     ON CONFLICT ("tableString", "userId")
+     DO UPDATE SET "timestamp" = NOW();
+
+     RETURN NULL;
+ END;
+ $$ LANGUAGE plpgsql;
+
+ -- 2. Trigger erstellen
+ CREATE TRIGGER "LogTermineCrudTrigger"
+ AFTER INSERT OR DELETE OR UPDATE ON "Termine"
+ FOR EACH ROW
+ EXECUTE FUNCTION "LogTermineCrud"();
+ */

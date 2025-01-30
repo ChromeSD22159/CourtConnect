@@ -33,3 +33,24 @@ struct UserAccountDTO: DTOProtocol {
         return UserAccount(id: id, userId: userId, teamId: teamId, position: position, role: role, displayName: displayName, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
 } 
+
+/*
+ -- 1. Trigger-Funktion erstellen
+ CREATE OR REPLACE FUNCTION "LogUserAccountCrud"()
+ RETURNS TRIGGER AS $$
+ BEGIN
+     INSERT INTO public."UpdateHistory" ("tableString", "timestamp", "userId")
+     VALUES ('UserAccount', NOW(), COALESCE(NEW."userId", OLD."userId"))
+     ON CONFLICT ("tableString", "userId")
+     DO UPDATE SET "timestamp" = NOW();
+
+     RETURN NULL;
+ END;
+ $$ LANGUAGE plpgsql;
+
+ -- 2. Trigger erstellen
+ CREATE TRIGGER "LogUserAccountCrudTrigger"
+ AFTER INSERT OR DELETE OR UPDATE ON "UserAccount"
+ FOR EACH ROW
+ EXECUTE FUNCTION "LogUserAccountCrud"();
+ */

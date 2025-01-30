@@ -33,3 +33,24 @@ struct TeamDTO: DTOProtocol {
         return Team(id: id, teamName: teamName, createdBy: createdBy, headcoach: headcoach, joinCode: joinCode, email: email, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
 }
+
+/*
+ -- 1. Trigger-Funktion erstellen
+ CREATE OR REPLACE FUNCTION "LogTeamCrud"()
+ RETURNS TRIGGER AS $$
+ BEGIN
+     INSERT INTO public."UpdateHistory" ("tableString", "timestamp", "userId")
+     VALUES ('Team', NOW(), COALESCE(NEW."userId", OLD."userId"))
+     ON CONFLICT ("tableString", "userId")
+     DO UPDATE SET "timestamp" = NOW();
+
+     RETURN NULL;
+ END;
+ $$ LANGUAGE plpgsql;
+
+ -- 2. Trigger erstellen
+ CREATE TRIGGER "LogTeamCrudTrigger"
+ AFTER INSERT OR DELETE OR UPDATE ON "Team"
+ FOR EACH ROW
+ EXECUTE FUNCTION "LogTeamCrud"();
+ */ 

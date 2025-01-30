@@ -33,3 +33,24 @@ struct StatisticDTO: DTOProtocol {
         return Statistic(id: id, userId: userId, fouls: fouls, twoPointAttempts: twoPointAttempts, threePointAttempts: threePointAttempts, points: points, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
 }
+
+/*
+ -- 1. Trigger-Funktion erstellen
+ CREATE OR REPLACE FUNCTION "LogStatisticCrud"()
+ RETURNS TRIGGER AS $$
+ BEGIN
+     INSERT INTO public."UpdateHistory" ("tableString", "timestamp", "userId")
+     VALUES ('Statistic', NOW(), COALESCE(NEW."userId", OLD."userId"))
+     ON CONFLICT ("tableString", "userId")
+     DO UPDATE SET "timestamp" = NOW();
+
+     RETURN NULL;
+ END;
+ $$ LANGUAGE plpgsql;
+
+ -- 2. Trigger erstellen
+ CREATE TRIGGER "LogStatisticCrudTrigger"
+ AFTER INSERT OR DELETE OR UPDATE ON "Statistic"
+ FOR EACH ROW
+ EXECUTE FUNCTION "LogStatisticCrud"();
+ */

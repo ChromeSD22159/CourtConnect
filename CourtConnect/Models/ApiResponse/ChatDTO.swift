@@ -33,19 +33,22 @@ class ChatDTO: DTOProtocol {
 }
 
 /*
- -- Function
- CREATE OR REPLACE FUNCTION "LogChatInsert"()
+ -- 1. Trigger-Funktion erstellen
+ CREATE OR REPLACE FUNCTION "LogChatCrud"()
  RETURNS TRIGGER AS $$
  BEGIN
      INSERT INTO public."UpdateHistory" ("tableString", "timestamp", "userId")
-     VALUES ('Chat', NOW(), NEW."senderId");
-     RETURN NEW;
+     VALUES ('Chat', NOW(), COALESCE(NEW."userId", OLD."userId"))
+     ON CONFLICT ("tableString", "userId")
+     DO UPDATE SET "timestamp" = NOW();
+
+     RETURN NULL;
  END;
  $$ LANGUAGE plpgsql;
 
- -- Trigger
- CREATE TRIGGER "ChatInsertTrigger"  -- More descriptive name
- AFTER INSERT ON "Chat"
+ -- 2. Trigger erstellen
+ CREATE TRIGGER "LogChatCrudTrigger"
+ AFTER INSERT OR DELETE OR UPDATE ON "Chat"
  FOR EACH ROW
- EXECUTE FUNCTION "LogChatInsert"();
-*/
+ EXECUTE FUNCTION "LogChatCrud"();
+ */
