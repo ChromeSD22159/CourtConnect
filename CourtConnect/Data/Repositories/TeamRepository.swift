@@ -149,9 +149,7 @@ import Foundation
             // CREATE MEMBER
             let newMember = TeamMember(userAccountId: userAccount.userId, teamId: foundTeamDTO.id, role: userAccount.role, createdAt: Date(), updatedAt: Date())
             // INSER MEMBER REMOTE
-            let supabaseMember: TeamMemberDTO = try await SupabaseService.insert(item: newMember.toDTO(), table: .teamMember)
-            // SET UPDATE REMOTE TIMESTAMP
-            try await SupabaseService.insertUpdateTimestampTable(for: .teamMember, userId: userAccount.userId)
+            let supabaseMember: TeamMemberDTO = try await SupabaseService.insert(item: newMember.toDTO(), table: .teamMember) 
             // UPDATE LOCAL CURRENTUSERACCOUNT
             userAccount.teamId = newMember.teamId
             userAccount.updatedAt = Date()
@@ -163,25 +161,19 @@ import Foundation
     
     func insertTeam(newTeam: Team, userId: UUID) async throws {
         let entry: TeamDTO = try await SupabaseService.insert(item: newTeam.toDTO(), table: .team)
-        
-        try await SupabaseService.insertUpdateTimestampTable(for: .team, userId: userId)
-        
+         
         try self.upsertLocal(item: entry.toModel())
     }
     
     func insertTeamMember(newMember: TeamMember, userId: UUID) async throws {
         let entry: TeamMemberDTO = try await SupabaseService.insert(item: newMember.toDTO(), table: .teamMember)
-        
-        try await SupabaseService.insertUpdateTimestampTable(for: .teamMember, userId: userId)
-        
+         
         try self.upsertLocal(item: entry.toModel())
     }
     
     func insertTeamAdmin(newAdmin: TeamAdmin, userId: UUID) async throws {
         let entry: TeamAdminDTO = try await SupabaseService.insert(item: newAdmin.toDTO(), table: .teamAdmin)
-        
-         try await SupabaseService.insertUpdateTimestampTable(for: .teamMember, userId: userId)
-        
+         
         try self.upsertLocal(item: entry.toModel())
     }
     

@@ -29,7 +29,7 @@ struct TeamAdminDTO: DTOProtocol {
         return TeamAdmin(id: id, teamId: teamId, userAccountId: userAccountId, role: role, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
 } 
-
+// --> Get Account from userAccountId to get the UserId
 /*
  -- 1. Trigger-Funktion erstellen
  CREATE OR REPLACE FUNCTION "LogTeamAdminCrud"()

@@ -45,8 +45,7 @@ import Foundation
                 let _ = try await repository.syncHistoryRepository.sendUpdatesToServer(for: table, data: item.toDTO())
             }
             
-            if !allLocalChange.isEmpty {
-                let _ = try await repository.syncHistoryRepository.insertUpdateTimestampTable(for: table, userId: userId)
+            if !allLocalChange.isEmpty { 
                 print("\(table.rawValue) - send \(allLocalChange.count)")
             }
         }

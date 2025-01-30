@@ -98,15 +98,7 @@ struct SupabaseService {
         }
 
         return try await query.execute().value
-    }
-    
-    static func insertUpdateTimestampTable(for table: DatabaseTable, userId: UUID) async throws {
-        let entry = UpdateHistoryDTO(tableString: table.rawValue, userId: userId, timestamp: Date())
-        try await BackendClient.shared.supabase
-            .from(DatabaseTable.updateHistory.rawValue)
-            .upsert(entry, onConflict: "tableString, userId")
-            .execute()
-    }
+    } 
     
     static func isRequestSuccessful(statusCode: Int) -> Bool {
         return (200...299).contains(statusCode)

@@ -28,7 +28,7 @@ struct RequestsDTO: DTOProtocol {
         return Requests(id: id, accountId: accountId, teamId: teamId, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
 } 
-
+// Sync All
 /*
  -- 1. Trigger-Funktion erstellen
  CREATE OR REPLACE FUNCTION "LogRequestCrud"()

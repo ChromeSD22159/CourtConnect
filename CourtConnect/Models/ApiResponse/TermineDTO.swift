@@ -8,21 +8,27 @@ import Foundation
 
 struct TermineDTO: DTOProtocol {
     var id: UUID
+    var teamId: UUID
+    var typeString: String
     var locationId: UUID
+    var date: Date
     var createdAt: Date
     var updatedAt: Date
     var deletedAt: Date?
-    
-    init(id: UUID = UUID(), locationId: UUID, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil) {
+   
+    init(id: UUID = UUID(), teamId: UUID, typeString: String, locationId: UUID, date: Date, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil) {
         self.id = id
+        self.teamId = teamId
+        self.typeString = typeString
         self.locationId = locationId
+        self.date = date
         self.createdAt = createdAt
         self.updatedAt = updatedAt
         self.deletedAt = deletedAt
     }
     
     func toModel() -> some ModelProtocol {
-        return Termine(id: id, locationId: locationId, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
+        return Termine(id: id, teamId: teamId, typeString: typeString, locationId: locationId, date: date, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
 }
 

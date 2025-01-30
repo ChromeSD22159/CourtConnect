@@ -1,0 +1,22 @@
+UPSERT
+
+INSERT INTO public."Location" (
+    "id", "name", "street", "number", "zip", "city", "createdAt", "updatedAt"
+) VALUES (
+    '29704d29-e03e-411d-89a7-de3b4bb16a35', -- ID, die bereits existiert
+    'Aktualisierter Standort',              -- Neuer Name
+    'Neue Straße',                          -- Neue Straße
+    '999',                                  -- Neue Hausnummer
+    '54321',                                -- Neue Postleitzahl
+    'Neustadt',                             -- Neue Stadt
+    NOW(),                                  -- createdAt
+    NOW()                                   -- updatedAt
+)
+ON CONFLICT ("id")
+DO UPDATE SET
+    "name" = EXCLUDED."name",
+    "street" = EXCLUDED."street",
+    "number" = EXCLUDED."number",
+    "zip" = EXCLUDED."zip",
+    "city" = EXCLUDED."city",
+    "updatedAt" = NOW();

@@ -28,8 +28,9 @@ struct InterestDTO: DTOProtocol {
     func toModel() -> Interest {
         return Interest(id: id, memberId: memberId, terminId: terminId, willParticipate: willParticipate, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
-} 
+}
 
+// --> Get Account from memberId to get the UserId
 /*
  -- 1. Trigger-Funktion erstellen
  CREATE OR REPLACE FUNCTION "LogInterestCrud"()

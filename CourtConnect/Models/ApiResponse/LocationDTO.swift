@@ -21,7 +21,7 @@ struct LocationDTO: DTOProtocol {
         return Location(id: id, name: name, street: street, number: number, zip: zip, city: city, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
 } 
-
+// SYNC ALL
 /*
  -- 1. Trigger-Funktion erstellen
  CREATE OR REPLACE FUNCTION "LogLocationCrud"()
