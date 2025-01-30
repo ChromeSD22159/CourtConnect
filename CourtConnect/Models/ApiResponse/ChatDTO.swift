@@ -31,3 +31,21 @@ class ChatDTO: DTOProtocol {
         Chat(id: id, senderId: senderId, recipientId: recipientId, message: message, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
 }
+
+/*
+ -- Function
+ CREATE OR REPLACE FUNCTION "LogChatInsert"()
+ RETURNS TRIGGER AS $$
+ BEGIN
+     INSERT INTO public."UpdateHistory" ("tableString", "timestamp", "userId")
+     VALUES ('Chat', NOW(), NEW."senderId");
+     RETURN NEW;
+ END;
+ $$ LANGUAGE plpgsql;
+
+ -- Trigger
+ CREATE TRIGGER "ChatInsertTrigger"  -- More descriptive name
+ AFTER INSERT ON "Chat"
+ FOR EACH ROW
+ EXECUTE FUNCTION "LogChatInsert"();
+*/

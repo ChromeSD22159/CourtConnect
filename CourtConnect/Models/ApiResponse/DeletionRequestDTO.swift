@@ -25,3 +25,31 @@ struct DeletionRequestDTO: DTOProtocol {
         return DeletionRequest(id: id, userId: userId, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
 }
+
+/*
+ create trigger "DeletionRequestCrudTrigger"
+ after insert or delete or update on "DeletionRequest" for each row
+ execute function "LogDeletionRequestCrud" (); 
+ -- OR --
+ create trigger "DeletionRequestInsertTrigger"
+ after insert on "DeletionRequest" for each row
+ execute function "LogChatInsert"();
+ 
+ create trigger "DeletionRequestUpdateTrigger"
+ after update on "DeletionRequest" for each row
+ execute function "LogChatInsert"();
+ 
+ create trigger "DeletionRequestDeleteTrigger"
+ after delete on "DeletionRequest" for each row
+ execute function "LogChatInsert"();
+ 
+ -- Function
+ CREATE OR REPLACE FUNCTION "LogDeletionRequestInsert"()
+ RETURNS TRIGGER AS $$
+ BEGIN
+     INSERT INTO public."UpdateHistory" ("tableString", "timestamp", "userId")
+     VALUES ('DeletionRequest', NOW(), NEW."userId");
+     RETURN NEW;
+ END;
+ $$ LANGUAGE plpgsql;
+ */
