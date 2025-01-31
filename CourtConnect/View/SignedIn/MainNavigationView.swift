@@ -34,11 +34,7 @@ struct MainNavigationView: View {
             userViewModel.importAccountsAfterLastSyncFromBackend()
         }
         .task {
-            userViewModel.setUserOnline()
-            
-            if await !NotificationService.getAuthStatus() {
-                await NotificationService.request()
-            }
+            userViewModel.setUserOnline() 
         }
         .onChange(of: scenePhase) { _, newPhase in
             userViewModel.changeOnlineStatus(phase: newPhase)

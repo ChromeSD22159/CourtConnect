@@ -10,12 +10,13 @@ import SwiftUI
     let repository: BaseRepository
     var currentTeam: Team?
     var account: UserAccount?
+    var qrCode: UIImage?
+    var showQrCode = false
     
     init(repository: BaseRepository, account: UserAccount?) {
         self.repository = repository
-        self.currentTeam = currentTeam
         self.account = account
-        
+         
         self.getTeam()
     }
     
@@ -43,7 +44,13 @@ struct TeamView: View {
     
     var body: some View {
         VStack {
-           
+            if let qrCode = teamViewViewModel.qrCode, teamViewViewModel.showQrCode {
+                Image(uiImage: qrCode)
+                    .interpolation(.none)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 100, height: 100)
+            }
         }
         .navigationTitle(teamViewViewModel.currentTeam?.teamName ?? "TeamName")
         .navigationBarTitleDisplayMode(.inline)
@@ -57,6 +64,11 @@ struct TeamView: View {
                             messagehandler.handleMessage(message: InAppMessage(title: "TeamId Kopiert"))
                         } label: {
                             Label("Copy Team ID", systemImage: "arrow.right.doc.on.clipboard")
+                        }
+                        Button {
+                            
+                        } label: {
+                            Label("Show QR Code", systemImage: "qrcode")
                         }
                         ShareLink(item: "TeamID: \(team.joinCode)")
                     }

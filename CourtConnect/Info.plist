@@ -5,6 +5,8 @@
 	<key>DefaultEnvironment</key>
 	<string>Local</string>
 	<key>isStoredInMemoryOnly</key>
+	<true/>
+	<key>FirebaseAppDelegateProxyEnabled</key>
 	<false/>
 	<key>SupabaseEnvironments</key>
 	<array>
@@ -25,8 +27,6 @@
 			<string>https://anwqiuyfuhaebycbblrc.supabase.co</string>
 		</dict>
 	</array>
-	<key>FirebaseAppDelegateProxyEnabled</key>
-	<false/>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>

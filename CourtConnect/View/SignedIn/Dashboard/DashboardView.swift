@@ -103,6 +103,10 @@ struct DashboardView: View {
             if let userId = userId {
                 Task {
                     try await syncServiceViewModel.sendAllData(userId: userId)
+                    
+                    if await !NotificationService.getAuthStatus() {
+                        await NotificationService.request()
+                    }
                 }
             }
         })

@@ -86,7 +86,7 @@ struct TrainerDashboard: View {
                 }
             }
             .frame(height: 150)
-        }
+        } 
          
         Button("Generate Code Neu") {
             isGenerateCode.toggle()
@@ -103,9 +103,10 @@ struct TrainerDashboard: View {
 }  
 
 #Preview {
+    @Previewable @State var dashBoardViewModel = DashBoardViewModel(repository: RepositoryPreview.shared)
     NavigationStack {
-        VStack(spacing: 15) {
-             
+        VStack(spacing: 15) {  
+               
             SnapScrollView(horizontalSpacing: 16) {
                 LazyHStack(spacing: 16) {
                     NavigationLink {

@@ -306,9 +306,6 @@
     "Grant" : {
 
     },
-    "Handle Message" : {
-
-    },
     "Headcoach" : {
 
     },
@@ -551,6 +548,9 @@
           }
         }
       }
+    },
+    "Show QR Code" : {
+
     },
     "Sign in" : {
       "extractionState" : "stale",

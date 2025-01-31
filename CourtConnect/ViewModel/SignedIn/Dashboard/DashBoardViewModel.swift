@@ -4,7 +4,8 @@
 //
 //  Created by Frederik Kohler on 30.01.25.
 //
-import Foundation
+import Foundation 
+import UIKit
 
 @MainActor
 @Observable class DashBoardViewModel: ObservableObject {
@@ -14,7 +15,7 @@ import Foundation
     
     init(repository: BaseRepository) {
         self.repository = repository
-    } 
+    }
     
     func getTeam(for currentAccount: UserAccount?) {
         guard let currentUser = currentAccount, let teamId = currentUser.teamId else { return }
@@ -41,7 +42,7 @@ import Foundation
         currentAccount.teamId = nil
         currentAccount.updatedAt = Date()
         
-        currentTeam = nil
+        currentTeam = nil 
     }
     
     /// SOFT DELETE LOCAL ONLY
@@ -53,4 +54,4 @@ import Foundation
     func deleteTeam(currentAccount: UserAccount?) {
         // getAll
     }
-}
+} 
