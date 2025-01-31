@@ -30,6 +30,17 @@ struct TrainerDashboard: View {
             } else {
                 hasNoTeam()
             }
+            
+            Button("Delete Trainer Account") {
+                Task {
+                    do {
+                        try await dashBoardViewModel.deleteUserAccount(for: userViewModel.currentAccount) 
+                        try userViewModel.setRandomAccount()
+                    } catch {
+                        print(error)
+                    }
+                }
+            }
         }
         .onAppear {
             dashBoardViewModel.getTeam(for: userViewModel.currentAccount)
@@ -135,34 +146,6 @@ struct TrainerDashboard: View {
     }
     .previewEnvirments()
     .navigationStackTint()
-}
- 
-struct SnapScrollView<Content: View>: View {
-    @ViewBuilder var content: () -> Content
-    let horizontalSpacing: CGFloat
-    
-    init(horizontalSpacing: CGFloat = 16, content: @escaping () -> Content) {
-        self.content = content
-        self.horizontalSpacing = horizontalSpacing
-    }
-    
-    var body: some View {
-        VStack {
-            ScrollView(.horizontal) {
-                content()
-                    .scrollTargetLayout()
-            }
-            .scrollTargetBehavior(.viewAligned)
-            .safeAreaPadding(.horizontal, horizontalSpacing)
-            .scrollIndicators(.hidden)
-        }
-    }
-    
-    func calculateCurrentIndex(from xValue: CGFloat, contentWidth: CGFloat) -> Int {
-        let pageWidth = contentWidth // Width of each page/item, including spacing
-        let currentPage = Int(round(-xValue / pageWidth))
-        return currentPage
-    }
 }
 
 #Preview {

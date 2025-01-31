@@ -42,7 +42,9 @@ class UserRepository {
     /// CHECK IF LOGGEDIN AND SET USER / USERPROFILE
     func isAuthendicated() async -> User? {
         do {
-            return try await backendClient.supabase.auth.user()
+            let auth = try await backendClient.supabase.auth.user()
+            LocalStorageService.shared.user = auth
+            return auth
         } catch {
             return LocalStorageService.shared.user
         }
@@ -90,6 +92,21 @@ class UserRepository {
     }
     
     /// SAVE CHANGES LOCAL AND SEND TO SUPABASE
+    func fetchUserProfile(userId: UUID) async throws -> UserProfile? {
+        if !NetworkMonitorViewModel.shared.isConnected {
+            return try self.getUserProfileFromDatabase(userId: userId)
+        } else {
+            let userProfile: UserProfileDTO? = try await SupabaseService.getEquals(value: userId.uuidString, table: .userProfile, column: "userId")
+            
+            if let userProfile = userProfile?.toModel() {
+                container.mainContext.insert(userProfile)
+                return userProfile
+            } else {
+                return nil
+            }
+        }
+    }
+    
     func sendUserProfileToBackend(profile: UserProfile) async throws {
         try insertOrUpdate(profile: profile)
         

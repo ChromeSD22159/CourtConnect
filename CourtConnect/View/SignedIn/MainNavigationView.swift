@@ -10,10 +10,9 @@ import SwiftUI
 struct MainNavigationView: View {
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.networkMonitor) var networkMonitor
-    @Environment(SyncServiceViewModel.self) private var syncServiceViewModel
     @State var navViewModel = NavigationViewModel.shared
     @ObservedObject var userViewModel: SharedUserViewModel
-    
+    @Environment(SyncServiceViewModel.self) var syncServiceViewModel
     var body: some View {
         MessagePopover {
             NavigationStack {
@@ -27,7 +26,7 @@ struct MainNavigationView: View {
                 }
             }.navigationStackTint()
         }
-        .sheet(isPresented: $userViewModel.showUserEditSheet, content: {
+        .sheet(isPresented: $userViewModel.isEditSheet, content: {
             UserProfileEditView(userViewModel: userViewModel, isSheet: true)
         })
         .onAppear {
@@ -37,16 +36,19 @@ struct MainNavigationView: View {
             userViewModel.setUserOnline() 
         }
         .onChange(of: scenePhase) { _, newPhase in
-            userViewModel.changeOnlineStatus(phase: newPhase)
-            
-            if newPhase == .background {
-                Task {
-                    print("disappear")
-                    guard let userId = userViewModel.user?.id else { return }
-                    try await syncServiceViewModel.sendAllData(userId: userId)
+            userViewModel.changeOnlineStatus(phase: newPhase) 
+        }
+        .fullScreenCover(
+            isPresented: $userViewModel.isOnboardingSheet,
+            onDismiss: {
+                userViewModel.onDismissOnBoarding(syncServiceViewModel: syncServiceViewModel) 
+            },
+            content: {
+                if let userProfile = userViewModel.userProfile {
+                    OnBoardingView(userProfile: userProfile)
                 }
             }
-        }
+        )
     }
 }
  

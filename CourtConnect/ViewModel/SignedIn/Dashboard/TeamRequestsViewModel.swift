@@ -25,28 +25,24 @@ import Foundation
             let requests = try repository.teamRepository.getTeamRequests(teamId: teamId)
             
             requests.forEach {
-                getRequestedUser(accountId: $0.accountId)
+                getRequestedUser(accountId: $0.accountId, request: $0)
             }
         } catch {
             //
         }
     }
   
-    func syncRemoteRequests() async {
-        do {
-            let requestsDTO: [RequestsDTO] = try await SupabaseService.getAllFromTable(table: .request, match: ["teamId": teamId.uuidString])
+    func syncRemoteRequests() async throws {
+        let requestsDTO: [RequestsDTO] = try await SupabaseService.getAllFromTable(table: .request, match: ["teamId": teamId.uuidString])
+        
+        let requests = requestsDTO.map { $0.toModel() }
+        
+        try requests.forEach { request in
+            try repository.teamRepository.upsertLocal(item: request)
             
-            let requests = requestsDTO.map { $0.toModel() }
-            
-            try requests.forEach { request in
-                try repository.teamRepository.upsertLocal(item: request)
-                
-                Task {
-                    await syncRemoteUseraccounts(accountId: request.accountId)
-                }
+            Task {
+                await syncRemoteUseraccounts(accountId: request.accountId)
             }
-        } catch {
-            print(error)
         }
     }
     
@@ -73,25 +69,39 @@ import Foundation
         }
     }
     
-    private func getRequestedUser(accountId: UUID) {
+    private func getRequestedUser(accountId: UUID, request: Requests) {
         Task {
             do {
                 let (userAccountOrNil, userProfileOrNil) = try await repository.userRepository.getRequestedUser(accountId: accountId)
                 
                 guard let userAccount = userAccountOrNil, let userProfile = userProfileOrNil else { return }
                  
-                requests.append(RequestUser(userAccount: userAccount, userProfile: userProfile))
+                requests.append(RequestUser(teamID: request.teamId, userAccount: userAccount, userProfile: userProfile, request: request))
             } catch {
             }
         }
     }
     
-    func grandRequest() {
-        // softDelete request -> send to Server
-        // add to TeamMemner
+    func grandRequest(request: Requests, userAccount: UserAccount) {
+        Task {
+            let newMember = TeamMember(userAccountId: request.accountId, teamId: request.teamId, role: userAccount.role, createdAt: Date(), updatedAt: Date())
+            
+            try repository.teamRepository.softDelete(request: request)
+            await getLocalRequests()
+        
+            try repository.teamRepository.upsertLocal(item: newMember)
+        
+            try await SupabaseService.upsertWithOutResult(item: newMember.toDTO(), table: .teamMember, onConflict: "id")
+            try await SupabaseService.upsertWithOutResult(item: request.toDTO(), table: .request, onConflict: "id")
+        }
     }
     
-    func rejectRequest() {
-        // softdelete the request -> send to Server
+    func rejectRequest(request: Requests) {
+        Task {
+            try repository.teamRepository.softDelete(request: request)
+            await getLocalRequests()
+            
+            try await SupabaseService.upsertWithOutResult(item: request.toDTO(), table: .request, onConflict: "id")
+        }
     }
 }

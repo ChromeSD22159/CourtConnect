@@ -11,6 +11,7 @@ struct EnterCodeView: View {
     @Environment(\.errorHandler) var errorHandler
     @State private var viewModel = CodeEntryViewModel(repository: Repository.shared)
     let userAccount: UserAccount
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -110,7 +111,6 @@ struct EnterCodeView: View {
                 
                 ToolbarItem(placement: .navigationBarTrailing, content: {
                     Button("Join") {
-                        // TODO: ("joinTeamWithCode")
                         Task {
                             do {
                                 try await viewModel.joinTeamWithCode(userAccount: userAccount)

@@ -27,6 +27,12 @@ enum DatabaseTable: String, CaseIterable {
     case userOnline = "UserOnline"
     case userProfile = "UserProfile"
     
+    static var tablesToSync: [DatabaseTable] {
+        var tables = DatabaseTable.allCases
+        tables.removeAll { $0 == .updateHistory || $0 == .userOnline }
+        return tables
+    }
+    
     var remoteModel: any DTOProtocol.Type {
         switch self {
         case .document: return DocumentDTO.self

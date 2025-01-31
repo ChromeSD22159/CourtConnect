@@ -18,8 +18,7 @@ import UIKit
     }
     
     func getTeam(for currentAccount: UserAccount?) {
-        guard let currentUser = currentAccount, let teamId = currentUser.teamId else { return }
-            
+        guard let currentUser = currentAccount, let teamId = currentUser.teamId else { return } 
         do {
             currentTeam = try repository.teamRepository.getTeam(for: teamId)
         } catch {
@@ -46,12 +45,21 @@ import UIKit
     }
     
     /// SOFT DELETE LOCAL ONLY
-    func deleteUserAccount(for currentAccount: UserAccount?) throws {
+    func deleteUserAccount(for currentAccount: UserAccount?) async throws {
         guard let currentAccount = currentAccount else { return }
+        // TODO: delete all UserAccount Data
         try repository.accountRepository.softDelete(item: currentAccount)
+        try await repository.accountRepository.sendToBackend(item: currentAccount)
     }
     
     func deleteTeam(currentAccount: UserAccount?) {
         // getAll
     }
-} 
+    
+    func startReceivingRequests() {
+        print("Start RECEIVING")
+        repository.teamRepository.receiveTeamJoinRequests { request in
+            
+        }
+    }
+}

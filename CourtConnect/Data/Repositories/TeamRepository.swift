@@ -4,9 +4,9 @@
 //
 //  Created by Frederik Kohler on 24.01.25.
 //
-
 import SwiftData
 import Foundation
+import Supabase
 
 @MainActor class TeamRepository {
     var container: ModelContainer
@@ -103,9 +103,9 @@ import Foundation
         return try container.mainContext.fetch(fetchDescriptor).first
     }
      
-    func getTeamRequests(teamId: UUID) throws -> [Requests] {
+    func getTeamRequests(teamId: UUID) throws -> [Requests] { 
         let predicate = #Predicate<Requests> { $0.teamId == teamId && $0.deletedAt == nil }
-        let fetchDescriptor = FetchDescriptor(predicate: predicate)
+        let fetchDescriptor = FetchDescriptor<Requests>(predicate: predicate)
         return try container.mainContext.fetch(fetchDescriptor)
     } 
     
@@ -146,6 +146,11 @@ import Foundation
         }
     }
     
+    func softDelete(request: Requests) throws {
+        request.updatedAt = Date()
+        request.deletedAt = Date()
+    }
+    
     func removeTeamFromUserAccount(for userAccount: UserAccount) {
         userAccount.teamId = nil
         userAccount.updatedAt = Date()
@@ -169,6 +174,8 @@ import Foundation
             // INSERT LOCAL MEMBER
             try self.upsertLocal(item: foundTeamDTO.toModel())
             try self.upsertLocal(item: supabaseMember.toModel())
+       
+            try await SupabaseService.upsertWithOutResult(item: userAccount.toDTO(), table: .userAccount, onConflict: "id")
         } else {
             throw TeamError.noTeamFoundwithThisJoinCode
         }
@@ -195,4 +202,63 @@ import Foundation
     func searchTeamByName(name: String) async throws -> [TeamDTO] {
         return try await SupabaseService.search(name: name, table: DatabaseTable.team, column: "teamName")
     }
-} 
+    
+    // MARK: SOCKET
+    func receiveTeamJoinRequests(complete: @escaping (Requests?) -> Void) {
+        let channel = BackendClient.shared.supabase.channel("JoinRequests")
+        
+        let inserts = channel.postgresChange(InsertAction.self, schema: DatabaseTable.request.rawValue)
+        
+        Task {
+            await channel.subscribe()
+            
+            for await insertion in inserts {
+                do {
+                    if let message: RequestsDTO = decodeDTO(from: insertion) { 
+                        container.mainContext.insert(message.toModel())
+                        try container.mainContext.save()
+                        complete(message.toModel())
+                    } else {
+                        complete(nil)
+                    }
+                } catch {
+                    complete(nil)
+                }
+            }
+        }
+    }
+    
+    func decodeDTO<T: Codable>(from insertion: InsertAction) -> T? {
+        let decoder = JSONDecoder()
+        
+        let iso8601Formats = [
+            "yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXXXX", // Mit Mikrosekunden
+            "yyyy-MM-dd'T'HH:mm:ssXXXXX"         // Ohne Mikrosekunden
+        ]
+        
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        
+        decoder.dateDecodingStrategy = .custom { decoder -> Date in
+            let container = try decoder.singleValueContainer()
+            let dateString = try container.decode(String.self)
+            
+            for format in iso8601Formats {
+                formatter.dateFormat = format
+                if let date = formatter.date(from: dateString) {
+                    return date
+                }
+            }
+            
+            throw DecodingError.dataCorruptedError(in: container, debugDescription: "Invalid date format: \(dateString)")
+        }
+        
+        do {
+            return try insertion.decodeRecord(as: T.self, decoder: decoder)
+        } catch {
+            print("Decoding error: \(error)")
+            return nil
+        }
+    }
+}

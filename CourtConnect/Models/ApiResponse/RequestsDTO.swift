@@ -27,7 +27,9 @@ struct RequestsDTO: DTOProtocol {
     func toModel() -> Requests {
         return Requests(id: id, accountId: accountId, teamId: teamId, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
-} 
+}
+ 
+
 // Sync All
 /*
  -- 1. Trigger-Funktion erstellen

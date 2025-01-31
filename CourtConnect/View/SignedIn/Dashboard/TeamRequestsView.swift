@@ -10,13 +10,7 @@ import SwiftUI
     @State var viewModel: TeamRequestsViewModel
     
     init(teamId: UUID) {
-        #if targetEnvironment(simulator)
-        self.viewModel = TeamRequestsViewModel(repository: RepositoryPreview.shared, teamId: teamId)
-        print("RepositoryPreview")
-        #else
-        self.viewModel = TeamRequestsViewModel(repository: Repository.shared)
-        print("Repository")
-        #endif
+        self.viewModel = TeamRequestsViewModel(repository: Repository.shared, teamId: teamId)
     }
     
     var body: some View {
@@ -35,9 +29,9 @@ import SwiftUI
                         ForEach(viewModel.requests) { requestUser in
                             HStack {
                                 RequestAcceptionField(requestUser: requestUser) {
-                                    viewModel.grandRequest()
+                                    viewModel.grandRequest(request: requestUser.request, userAccount: requestUser.userAccount)
                                 } rejectRequest: {
-                                    viewModel.rejectRequest()
+                                    viewModel.rejectRequest(request: requestUser.request)
                                 }
  
                                 Spacer()
@@ -46,15 +40,24 @@ import SwiftUI
                     }
                 }
             }
+            
+            LoadingCard(isLoading: $viewModel.isLoading)
         }
         .navigationTitle("Requests")
         .navigationBarTitleDisplayMode(.inline)
         .refreshable {
+            viewModel.isLoading = true
             Task {
-                viewModel.isLoading = true
-                await viewModel.syncRemoteRequests()
-                await viewModel.getLocalRequests()
-                viewModel.isLoading = false
+                do {
+                    
+                    try await viewModel.syncRemoteRequests()
+                    try await Task.sleep(for: .seconds(0.8))
+                    await viewModel.getLocalRequests()
+                    viewModel.isLoading = false
+                } catch {
+                    await viewModel.getLocalRequests()
+                    viewModel.isLoading = false
+                }
             }
         }
         .task {
@@ -70,17 +73,21 @@ fileprivate struct RequestAcceptionField: View {
     let grandRequest: () -> Void
     let rejectRequest: () -> Void
     var body: some View {
-        Text(requestUser.userProfile.fullName)
-            .onTapGesture {
-                isPresenting.toggle()
-            }
-            .alert("Team request from \(requestUser.userProfile.fullName)", isPresented: $isPresenting) {
-                Button("Grant") { grandRequest() }
-                
-                Button("Reject") { rejectRequest() }
-            } message: {
-                Text("\(requestUser.userProfile.fullName) wants to join your team. Would you like to accept the request?")
-            }
+        HStack {
+            Text(requestUser.userProfile.fullName)
+            
+            Text(requestUser.teamID.uuidString)
+        }
+        .onTapGesture {
+            isPresenting.toggle()
+        }
+        .alert("Team request from \(requestUser.userProfile.fullName)", isPresented: $isPresenting) {
+            Button("Grant") { grandRequest() }
+            
+            Button("Reject") { rejectRequest() }
+        } message: {
+            Text("\(requestUser.userProfile.fullName) wants to join your team. Would you like to accept the request?")
+        }
 
     }
 }
@@ -90,8 +97,11 @@ fileprivate struct RequestAcceptionField: View {
     let teamId = MockUser.teamId
     let userProfile = MockUser.userList.randomElement()!
     let userAccount = UserAccount(userId: userId, teamId: teamId, position: "Position", role: "Spieler", displayName: "Spieler", createdAt: Date(), updatedAt: Date())
-    let request = RequestUser(userAccount: userAccount, userProfile: userProfile)
-    RequestAcceptionField(requestUser: RequestUser(userAccount: userAccount, userProfile: userProfile)) {
+    
+    let request = Requests(accountId: userAccount.id, teamId: teamId, createdAt: Date(), updatedAt: Date())
+    
+    let requestUser = RequestUser(teamID: UUID(), userAccount: userAccount, userProfile: userProfile, request: request)
+    RequestAcceptionField(requestUser: requestUser) {
         
     } rejectRequest: {
         

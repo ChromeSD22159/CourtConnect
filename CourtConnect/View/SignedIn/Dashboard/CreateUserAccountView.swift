@@ -4,21 +4,59 @@
 //
 //  Created by Frederik Kohler on 23.01.25.
 //
-import SwiftUI 
+import SwiftUI
 
-struct CreateUserAccountView: View {
-    @State var userAccountViewModel: CreateUserAccountViewModel
-    @ObservedObject var userViewModel: SharedUserViewModel
+@Observable @MainActor class CreateUserAccountViewModel {
+    var repository: BaseRepository
+    var userId: UUID
     
-    init(userViewModel: SharedUserViewModel) {
-        self.userViewModel = userViewModel
-        self.userAccountViewModel = CreateUserAccountViewModel(repository: userViewModel.repository)
+    var role: UserRole = .player
+    var position: BasketballPosition = .center
+    var accounts: [UserAccount] = []
+    
+    init(repository: BaseRepository, userId: UUID) {
+        self.repository = repository
+        self.userId = userId
+    }
+    
+    func insertAccount() async throws {
+        let account = UserAccount(userId: userId, teamId: nil, position: position.rawValue, role: role.rawValue, displayName: role.rawValue, createdAt: Date(), updatedAt: Date())
+        
+        try repository.accountRepository.usert(item: account)
+        
+        self.getAllFromDatabase()
+        
+        try await sendToServer(account: account)
+        
+        LocalStorageService.shared.userAccountId = account.id.uuidString
+    }
+    
+    func getAllFromDatabase() {
+        do {
+            self.accounts = try repository.accountRepository.getAllAccounts(userId: userId)
+        } catch {
+            print(error)
+        }
+    }
+    
+    func sendToServer(account: UserAccount) async throws {
+        try await repository.accountRepository.sendToBackend(item: account)
+    }
+}
+ 
+struct CreateUserAccountView: View {
+    @State private var createUserAccountViewModel: CreateUserAccountViewModel
+    
+    @Environment(\.dismiss) var dismiss
+    
+    init(userId: UUID) {
+        self.createUserAccountViewModel = CreateUserAccountViewModel(repository: Repository.shared, userId: userId)
     }
     
     var body: some View {
         NavigationStack {
             List {
-                Picker("Kind", selection: $userAccountViewModel.role) {
+                Picker("Kind", selection: $createUserAccountViewModel.role) {
                     ForEach(UserRole.registerRoles) { position in
                         Text(position.rawValue).tag(position)
                     }
@@ -27,8 +65,8 @@ struct CreateUserAccountView: View {
                 .tint(.primary)
                 .listRowSeparatorTint(.orange)
 
-                if userAccountViewModel.role == .player {
-                    Picker("Position", selection: $userAccountViewModel.position) {
+                if createUserAccountViewModel.role == .player {
+                    Picker("Position", selection: $createUserAccountViewModel.position) {
                         ForEach(BasketballPosition.allCases) { position in
                             Text(position.rawValue).tag(position)
                         }
@@ -45,11 +83,9 @@ struct CreateUserAccountView: View {
                     Button("Create") {
                         Task {
                             do {
-                                let newAccount = try userAccountViewModel.insertAccount() 
-                                if let newAccount = newAccount {
-                                    try await userAccountViewModel.sendToServer(account: newAccount)
-                                }
-                                userViewModel.setCurrentAccount(newAccount: newAccount)
+                                try await createUserAccountViewModel.insertAccount()
+                                
+                                dismiss()
                             } catch {
                                 print(error.localizedDescription)
                             }
@@ -58,7 +94,7 @@ struct CreateUserAccountView: View {
                 }
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel", action: {
-                        
+                        dismiss()
                     })
                 }
             }
@@ -73,9 +109,7 @@ struct CreateUserAccountView: View {
     ZStack {
     }
     .sheet(isPresented: .constant(true)) {
-        CreateUserAccountView(
-            userViewModel: userViewModel
-        )
+        CreateUserAccountView(userId: MockUser.myUserAccount.userId)
         .shadow(radius: 5)
         .previewEnvirments()
     }
