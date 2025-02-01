@@ -29,7 +29,6 @@ struct RequestsDTO: DTOProtocol {
     }
 }
  
-
 // Sync All
 /*
  -- 1. Trigger-Funktion erstellen

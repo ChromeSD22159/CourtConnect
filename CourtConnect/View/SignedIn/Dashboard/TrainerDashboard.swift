@@ -9,10 +9,7 @@ import SwiftUI
 struct TrainerDashboard: View {
     @ObservedObject var userViewModel: SharedUserViewModel
     @ObservedObject var dashBoardViewModel: DashBoardViewModel
-    
-    @State var isGenerateCode = false
-    @State var isEnterCode = false
-    
+     
     @State var foundNewTeamViewModel: FoundNewTeamViewModel
     @State var teamListViewModel: TeamListViewModel
     
@@ -25,11 +22,16 @@ struct TrainerDashboard: View {
     
     var body: some View {
         VStack(spacing: 15) {
-            if dashBoardViewModel.currentTeam != nil {
-                hasTeam(teamId: dashBoardViewModel.currentTeam!.id)
+            if let currentTeam = dashBoardViewModel.currentTeam {
+                HasTeam(userViewModel: userViewModel, dashBoardViewModel: dashBoardViewModel, teamId: currentTeam.id)
             } else {
-                hasNoTeam()
-            }
+                HasNoTeam(
+                    userViewModel: userViewModel,
+                    dashBoardViewModel: dashBoardViewModel,
+                    foundNewTeamViewModel: foundNewTeamViewModel,
+                    teamListViewModel: teamListViewModel
+                )
+            } 
             
             Button("Delete Trainer Account") {
                 Task {
@@ -46,13 +48,38 @@ struct TrainerDashboard: View {
             dashBoardViewModel.getTeam(for: userViewModel.currentAccount)
         }
         .navigationTitle("Trainer")
-        .sheet(isPresented: $isGenerateCode, content: {
-            ZStack {
-                Theme.background.ignoresSafeArea()
-                
-                GenerateCodeView()
+    }
+}
+
+fileprivate struct HasNoTeam: View {
+    @ObservedObject var userViewModel: SharedUserViewModel
+    @ObservedObject var dashBoardViewModel: DashBoardViewModel
+    @ObservedObject var foundNewTeamViewModel: FoundNewTeamViewModel
+    @ObservedObject var teamListViewModel: TeamListViewModel
+    
+    @State var isEnterCode = false
+    
+    var body: some View {
+        VStack {
+            NavigationLink {
+                if let userAccount = userViewModel.currentAccount, let userProfile = userViewModel.userProfile {
+                    FoundNewTeamView(viewModel: foundNewTeamViewModel, userAccount: userAccount, userProfile: userProfile)
+                }
+            } label: {
+                RoundedIconTextCard(icon: "person.crop.circle.badge.plus", title: "Found team now!", description: "Start your own team and manage players and training sessions.")
             }
-        })
+            
+            NavigationLink {
+                SearchTeam(teamListViewModel: teamListViewModel)
+            } label: {
+                RoundedIconTextCard(icon: "person.badge.plus", title: "Join a Team!", description: "Send a request to join a team as a trainer and start managing players and training sessions.")
+            }
+            
+            RoundedIconTextCard(icon: "qrcode.viewfinder", title: "Join with Team ID!", description: "Enter a Team ID to instantly join an existing team and start managing players and training sessions.")
+                .onTapGesture {
+                    isEnterCode.toggle()
+                }
+        }
         .sheet(isPresented: $isEnterCode, onDismiss: {
             dashBoardViewModel.getTeam(for: userViewModel.currentAccount)
         }) {
@@ -65,51 +92,49 @@ struct TrainerDashboard: View {
             }
         }
     }
+}
+
+fileprivate struct HasTeam: View {
+    @ObservedObject var userViewModel: SharedUserViewModel
+    @ObservedObject var dashBoardViewModel: DashBoardViewModel
+    let teamId: UUID
     
-    @ViewBuilder func hasNoTeam() -> some View {
-        NavigationLink {
-            if let userAccount = userViewModel.currentAccount, let userProfile = userViewModel.userProfile {
-                FoundNewTeamView(viewModel: foundNewTeamViewModel, userAccount: userAccount, userProfile: userProfile)
-            }
-        } label: {
-            RoundedIconTextCard(icon: "person.crop.circle.badge.plus", title: "Found team now!", description: "Start your own team and manage players and training sessions.")
-        }
-        
-        NavigationLink {
-            SearchTeam(teamListViewModel: teamListViewModel)
-        } label: {
-            RoundedIconTextCard(icon: "person.badge.plus", title: "Join a Team!", description: "Send a request to join a team as a trainer and start managing players and training sessions.")
-        }
-        
-        RoundedIconTextCard(icon: "qrcode.viewfinder", title: "Join with Team ID!", description: "Enter a Team ID to instantly join an existing team and start managing players and training sessions.")
-            .onTapGesture {
-                isEnterCode.toggle()
-            }
-    }
+    @State var isGenerateCode = false
     
-    @ViewBuilder func hasTeam(teamId: UUID) -> some View {
-        SnapScrollView(horizontalSpacing: 16) {
-            LazyHStack(spacing: 16) {
-                NavigationLink {
-                    TeamRequestsView(teamId: teamId)
-                } label: {
-                    IconCard(systemName: "person.fill.questionmark", title: "Join Requests", background: Material.ultraThinMaterial)
+    var body: some View {
+        VStack {
+            SnapScrollView(horizontalSpacing: 16) {
+                LazyHStack(spacing: 16) {
+                    NavigationLink {
+                        TeamRequestsView(teamId: teamId)
+                    } label: {
+                        IconCard(systemName: "person.fill.questionmark", title: "Join Requests", background: Material.ultraThinMaterial)
+                    }
+                }
+                .frame(height: 150)
+            }
+            
+            PlanTerminSheetButton()
+             
+            Button("Generate Code Neu") {
+                isGenerateCode.toggle()
+            }
+            
+            Button("Leave Team") {
+                do {
+                    try dashBoardViewModel.leaveTeam(for: userViewModel.currentAccount)
+                } catch {
+                    print(error)
                 }
             }
-            .frame(height: 150)
-        } 
-         
-        Button("Generate Code Neu") {
-            isGenerateCode.toggle()
         }
-        
-        Button("Leave Team") {
-            do {
-                try dashBoardViewModel.leaveTeam(for: userViewModel.currentAccount) 
-            } catch {
-                print(error)
+        .sheet(isPresented: $isGenerateCode, content: {
+            ZStack {
+                Theme.background.ignoresSafeArea()
+                
+                GenerateCodeView()
             }
-        }
+        })
     }
 }  
 

@@ -54,20 +54,14 @@ struct LoginEntryView: View {
             Button("SignIn") {
                 isSignInSheet.toggle()
             }
-            .padding()
-            .font(.body.bold())
-            .foregroundStyle(.white)
-            .background(Theme.darkOrange)
-            .clipShape(RoundedRectangle(cornerRadius: 15))
+            .buttonStyle(DarkButtonStlye())
             
             Spacer()
             
             Button("SignUp") {
                 isSignUpSheet.toggle()
             }
-            .font(.body.bold())
-            .padding()
-            .foregroundStyle(Theme.myGray)
+            .buttonStyle(TransparentButtonStyle())
         }
     }
     
@@ -83,7 +77,7 @@ struct LoginEntryView: View {
         }
         .lineSpacing(5)
     }
-}
+} 
  
 private struct SignInSheet: View {
     @Binding var isSignInSheet: Bool

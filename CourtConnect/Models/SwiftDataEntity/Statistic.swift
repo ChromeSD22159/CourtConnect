@@ -14,24 +14,26 @@ class Statistic: ModelProtocol {
     var fouls: Int
     var twoPointAttempts: Int
     var threePointAttempts: Int
-    var points: Int
     var createdAt: Date
     var updatedAt: Date
     var deletedAt: Date?
     
-    init(id: UUID, userId: UUID, fouls: Int, twoPointAttempts: Int, threePointAttempts: Int, points: Int, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil) {
+    init(id: UUID, userId: UUID, fouls: Int, twoPointAttempts: Int, threePointAttempts: Int, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil) {
         self.id = id
         self.userId = userId
         self.fouls = fouls
         self.twoPointAttempts = twoPointAttempts
         self.threePointAttempts = threePointAttempts
-        self.points = points
         self.createdAt = createdAt
         self.updatedAt = updatedAt
         self.deletedAt = deletedAt
     }
     
+    var points: Int {
+        (twoPointAttempts * 2) + (threePointAttempts * 3)
+    }
+    
     func toDTO() -> StatisticDTO {
-        return StatisticDTO(id: id, userId: userId, fouls: fouls, twoPointAttempts: twoPointAttempts, threePointAttempts: threePointAttempts, points: points, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
+        return StatisticDTO(id: id, userId: userId, fouls: fouls, twoPointAttempts: twoPointAttempts, threePointAttempts: threePointAttempts, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
 }

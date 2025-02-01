@@ -21,6 +21,8 @@ struct DashboardView: View {
     
     var body: some View {
         ScrollView(.vertical) {
+            PlanTerminSheetButton()
+            
             if let currentAccount = userViewModel.currentAccount, let role = UserRole(rawValue: currentAccount.role) {
                 switch role {
                 case .player: PlayerDashboard(userViewModel: userViewModel, dashBoardViewModel: dashBoardViewModel)

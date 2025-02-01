@@ -6,29 +6,37 @@
 //
 import Foundation 
 
-struct TermineDTO: DTOProtocol {
+struct TerminDTO: DTOProtocol {
     var id: UUID
     var teamId: UUID
+    var title: String
+    var place: String
+    var infomation: String
     var typeString: String
-    var locationId: UUID
+    var durationMinutes: Int
     var date: Date
+    var createdByUserAccountId: UUID
     var createdAt: Date
     var updatedAt: Date
     var deletedAt: Date?
-   
-    init(id: UUID = UUID(), teamId: UUID, typeString: String, locationId: UUID, date: Date, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil) {
+
+    init(id: UUID = UUID(), teamId: UUID, title: String, place: String, infomation: String, typeString: String, durationMinutes: Int, date: Date, createdByUserAccountId: UUID, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil) {
         self.id = id
         self.teamId = teamId
+        self.title = title
+        self.place = place
+        self.infomation = infomation
         self.typeString = typeString
-        self.locationId = locationId
+        self.durationMinutes = durationMinutes
         self.date = date
+        self.createdByUserAccountId = createdByUserAccountId
         self.createdAt = createdAt
         self.updatedAt = updatedAt
         self.deletedAt = deletedAt
     }
     
     func toModel() -> some ModelProtocol {
-        return Termine(id: id, teamId: teamId, typeString: typeString, locationId: locationId, date: date, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
+        return Termin(id: id, teamId: teamId, title: title, place: place, infomation: infomation, typeString: typeString, durationMinutes: durationMinutes, date: date,  createdByUserAccountId: createdByUserAccountId, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
 }
 

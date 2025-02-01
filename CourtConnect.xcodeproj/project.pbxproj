@@ -7,20 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B64487B22D4CCBB00012FB43 /* rest-version in Resources */ = {isa = PBXBuildFile; fileRef = B64487A42D4CCBB00012FB43 /* rest-version */; };
-		B64487B32D4CCBB00012FB43 /* pooler-url in Resources */ = {isa = PBXBuildFile; fileRef = B64487A12D4CCBB00012FB43 /* pooler-url */; };
-		B64487B42D4CCBB00012FB43 /* postgres-version in Resources */ = {isa = PBXBuildFile; fileRef = B64487A22D4CCBB00012FB43 /* postgres-version */; };
-		B64487B52D4CCBB00012FB43 /* gotrue-version in Resources */ = {isa = PBXBuildFile; fileRef = B64487A02D4CCBB00012FB43 /* gotrue-version */; };
-		B64487B62D4CCBB00012FB43 /* config.toml in Resources */ = {isa = PBXBuildFile; fileRef = B64487B02D4CCBB00012FB43 /* config.toml */; };
-		B64487B72D4CCBB00012FB43 /* deno.json in Resources */ = {isa = PBXBuildFile; fileRef = B64487A82D4CCBB00012FB43 /* deno.json */; };
-		B64487B82D4CCBB00012FB43 /* storage-version in Resources */ = {isa = PBXBuildFile; fileRef = B64487A52D4CCBB00012FB43 /* storage-version */; };
-		B64487B92D4CCBB00012FB43 /* 20250121183532_remote_schema.sql in Resources */ = {isa = PBXBuildFile; fileRef = B64487AD2D4CCBB00012FB43 /* 20250121183532_remote_schema.sql */; };
-		B64487BA2D4CCBB00012FB43 /* service-account.json in Resources */ = {isa = PBXBuildFile; fileRef = B64487AA2D4CCBB00012FB43 /* service-account.json */; };
-		B64487BB2D4CCBB00012FB43 /* _current_branch in Resources */ = {isa = PBXBuildFile; fileRef = B644879D2D4CCBB00012FB43 /* _current_branch */; };
-		B64487BC2D4CCBB00012FB43 /* project-ref in Resources */ = {isa = PBXBuildFile; fileRef = B64487A32D4CCBB00012FB43 /* project-ref */; };
-		B64487BD2D4CCBB00012FB43 /* cli-latest in Resources */ = {isa = PBXBuildFile; fileRef = B644879F2D4CCBB00012FB43 /* cli-latest */; };
-		B64487BE2D4CCBB00012FB43 /* 20250124124436_UserAccount.sql in Resources */ = {isa = PBXBuildFile; fileRef = B64487AE2D4CCBB00012FB43 /* 20250124124436_UserAccount.sql */; };
-		B64487BF2D4CCBB00012FB43 /* .npmrc in Resources */ = {isa = PBXBuildFile; fileRef = B64487A72D4CCBB00012FB43 /* .npmrc */; };
 		B64487C12D4CCC5B0012FB43 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = B64487C02D4CCC5B0012FB43 /* .swiftlint.yml */; };
 		B66529D82D3A81EC00B87D71 /* RNCryptor in Frameworks */ = {isa = PBXBuildFile; productRef = B66529D72D3A81EC00B87D71 /* RNCryptor */; };
 		B6652A512D3DAA2E00B87D71 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = B6652A502D3DAA2E00B87D71 /* FirebaseAuth */; };
@@ -62,21 +48,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		B644879D2D4CCBB00012FB43 /* _current_branch */ = {isa = PBXFileReference; lastKnownFileType = text; path = _current_branch; sourceTree = "<group>"; };
-		B644879F2D4CCBB00012FB43 /* cli-latest */ = {isa = PBXFileReference; lastKnownFileType = text; path = "cli-latest"; sourceTree = "<group>"; };
-		B64487A02D4CCBB00012FB43 /* gotrue-version */ = {isa = PBXFileReference; lastKnownFileType = text; path = "gotrue-version"; sourceTree = "<group>"; };
-		B64487A12D4CCBB00012FB43 /* pooler-url */ = {isa = PBXFileReference; lastKnownFileType = text; path = "pooler-url"; sourceTree = "<group>"; };
-		B64487A22D4CCBB00012FB43 /* postgres-version */ = {isa = PBXFileReference; lastKnownFileType = text; path = "postgres-version"; sourceTree = "<group>"; };
-		B64487A32D4CCBB00012FB43 /* project-ref */ = {isa = PBXFileReference; lastKnownFileType = text; path = "project-ref"; sourceTree = "<group>"; };
-		B64487A42D4CCBB00012FB43 /* rest-version */ = {isa = PBXFileReference; lastKnownFileType = text; path = "rest-version"; sourceTree = "<group>"; };
-		B64487A52D4CCBB00012FB43 /* storage-version */ = {isa = PBXFileReference; lastKnownFileType = text; path = "storage-version"; sourceTree = "<group>"; };
-		B64487A72D4CCBB00012FB43 /* .npmrc */ = {isa = PBXFileReference; lastKnownFileType = text; path = .npmrc; sourceTree = "<group>"; };
-		B64487A82D4CCBB00012FB43 /* deno.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = deno.json; sourceTree = "<group>"; };
-		B64487A92D4CCBB00012FB43 /* index.ts */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.typescript; path = index.ts; sourceTree = "<group>"; };
-		B64487AA2D4CCBB00012FB43 /* service-account.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "service-account.json"; sourceTree = "<group>"; };
-		B64487AD2D4CCBB00012FB43 /* 20250121183532_remote_schema.sql */ = {isa = PBXFileReference; lastKnownFileType = text; path = 20250121183532_remote_schema.sql; sourceTree = "<group>"; };
-		B64487AE2D4CCBB00012FB43 /* 20250124124436_UserAccount.sql */ = {isa = PBXFileReference; lastKnownFileType = text; path = 20250124124436_UserAccount.sql; sourceTree = "<group>"; };
-		B64487B02D4CCBB00012FB43 /* config.toml */ = {isa = PBXFileReference; lastKnownFileType = text; path = config.toml; sourceTree = "<group>"; };
 		B64487C02D4CCC5B0012FB43 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		B66532582D3EC28500B87D71 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		B665325A2D3EC28F00B87D71 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -159,73 +130,10 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		B644879E2D4CCBB00012FB43 /* .branches */ = {
-			isa = PBXGroup;
-			children = (
-				B644879D2D4CCBB00012FB43 /* _current_branch */,
-			);
-			path = .branches;
-			sourceTree = "<group>";
-		};
-		B64487A62D4CCBB00012FB43 /* .temp */ = {
-			isa = PBXGroup;
-			children = (
-				B644879F2D4CCBB00012FB43 /* cli-latest */,
-				B64487A02D4CCBB00012FB43 /* gotrue-version */,
-				B64487A12D4CCBB00012FB43 /* pooler-url */,
-				B64487A22D4CCBB00012FB43 /* postgres-version */,
-				B64487A32D4CCBB00012FB43 /* project-ref */,
-				B64487A42D4CCBB00012FB43 /* rest-version */,
-				B64487A52D4CCBB00012FB43 /* storage-version */,
-			);
-			path = .temp;
-			sourceTree = "<group>";
-		};
-		B64487AB2D4CCBB00012FB43 /* SendChatNotification */ = {
-			isa = PBXGroup;
-			children = (
-				B64487A72D4CCBB00012FB43 /* .npmrc */,
-				B64487A82D4CCBB00012FB43 /* deno.json */,
-				B64487A92D4CCBB00012FB43 /* index.ts */,
-				B64487AA2D4CCBB00012FB43 /* service-account.json */,
-			);
-			path = SendChatNotification;
-			sourceTree = "<group>";
-		};
-		B64487AC2D4CCBB00012FB43 /* functions */ = {
-			isa = PBXGroup;
-			children = (
-				B64487AB2D4CCBB00012FB43 /* SendChatNotification */,
-			);
-			path = functions;
-			sourceTree = "<group>";
-		};
-		B64487AF2D4CCBB00012FB43 /* migrations */ = {
-			isa = PBXGroup;
-			children = (
-				B64487AD2D4CCBB00012FB43 /* 20250121183532_remote_schema.sql */,
-				B64487AE2D4CCBB00012FB43 /* 20250124124436_UserAccount.sql */,
-			);
-			path = migrations;
-			sourceTree = "<group>";
-		};
-		B64487B12D4CCBB00012FB43 /* supabase */ = {
-			isa = PBXGroup;
-			children = (
-				B644879E2D4CCBB00012FB43 /* .branches */,
-				B64487A62D4CCBB00012FB43 /* .temp */,
-				B64487AC2D4CCBB00012FB43 /* functions */,
-				B64487AF2D4CCBB00012FB43 /* migrations */,
-				B64487B02D4CCBB00012FB43 /* config.toml */,
-			);
-			path = supabase;
-			sourceTree = "<group>";
-		};
 		B698ABF22D330FC10086AF8C = {
 			isa = PBXGroup;
 			children = (
 				B66532582D3EC28500B87D71 /* .gitignore */,
-				B64487B12D4CCBB00012FB43 /* supabase */,
 				B6653C582D42C00D00B87D71 /* Localizable.xcstrings */,
 				B64487C02D4CCC5B0012FB43 /* .swiftlint.yml */,
 				B665325A2D3EC28F00B87D71 /* GoogleService-Info.plist */,
@@ -403,20 +311,6 @@
 			files = (
 				B665325D2D3EC35300B87D71 /* README.md in Resources */,
 				B6653C592D42C00D00B87D71 /* Localizable.xcstrings in Resources */,
-				B64487B22D4CCBB00012FB43 /* rest-version in Resources */,
-				B64487B32D4CCBB00012FB43 /* pooler-url in Resources */,
-				B64487B42D4CCBB00012FB43 /* postgres-version in Resources */,
-				B64487B52D4CCBB00012FB43 /* gotrue-version in Resources */,
-				B64487B62D4CCBB00012FB43 /* config.toml in Resources */,
-				B64487B72D4CCBB00012FB43 /* deno.json in Resources */,
-				B64487B82D4CCBB00012FB43 /* storage-version in Resources */,
-				B64487B92D4CCBB00012FB43 /* 20250121183532_remote_schema.sql in Resources */,
-				B64487BA2D4CCBB00012FB43 /* service-account.json in Resources */,
-				B64487BB2D4CCBB00012FB43 /* _current_branch in Resources */,
-				B64487BC2D4CCBB00012FB43 /* project-ref in Resources */,
-				B64487BD2D4CCBB00012FB43 /* cli-latest in Resources */,
-				B64487BE2D4CCBB00012FB43 /* 20250124124436_UserAccount.sql in Resources */,
-				B64487BF2D4CCBB00012FB43 /* .npmrc in Resources */,
 				B64487C12D4CCC5B0012FB43 /* .swiftlint.yml in Resources */,
 				B66532592D3EC28500B87D71 /* .gitignore in Resources */,
 				B6D69A642D447AE200702FA2 /* GoogleService-Info.plist in Resources */,

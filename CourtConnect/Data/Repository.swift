@@ -41,14 +41,13 @@ import SwiftUICore
             Chat.self,
             Document.self,
             Interest.self,
-            Location.self,
             Requests.self,
             Statistic.self,
             SyncHistory.self,
             Team.self,
             TeamAdmin.self,
             TeamMember.self,
-            Termine.self,
+            Termin.self,
             UserAccount.self,
             UserProfile.self
         ])

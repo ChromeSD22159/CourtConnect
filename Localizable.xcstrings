@@ -10,6 +10,9 @@
     "* Required" : {
 
     },
+    "**%@**" : {
+
+    },
     "**Wilkommen** \n%@!" : {
 
     },
@@ -44,6 +47,12 @@
           }
         }
       }
+    },
+    "Art?" : {
+
+    },
+    "asdsddasd" : {
+
     },
     "Beitreten" : {
 
@@ -107,6 +116,9 @@
       }
     },
     "Create Team" : {
+
+    },
+    "Create Termin" : {
 
     },
     "Create User Account" : {
@@ -303,6 +315,9 @@
     "Found New Team" : {
 
     },
+    "Game" : {
+
+    },
     "Generate Code" : {
 
     },
@@ -436,6 +451,9 @@
     "Möchtest du dem Team %@ beitreten?" : {
 
     },
+    "New Termin" : {
+
+    },
     "No Connection" : {
       "localizations" : {
         "de" : {
@@ -470,6 +488,9 @@
       }
     },
     "past code" : {
+
+    },
+    "Plan Termin" : {
 
     },
     "Player" : {
@@ -589,6 +610,9 @@
     "SignUp" : {
 
     },
+    "Spielort" : {
+
+    },
     "Team" : {
 
     },
@@ -630,6 +654,9 @@
           }
         }
       }
+    },
+    "Training" : {
+
     },
     "Try checking the Network Connection." : {
       "localizations" : {
@@ -674,6 +701,18 @@
         }
       }
     },
+    "Was?" : {
+
+    },
+    "Wichtiges?" : {
+
+    },
+    "Wie lange?" : {
+
+    },
+    "Wo?" : {
+
+    },
     "Your Birthday" : {
       "localizations" : {
         "de" : {
@@ -705,6 +744,12 @@
       }
     },
     "Your Team. \nYour connection. \nYour success." : {
+
+    },
+    "z.B. Mannschaftstraining" : {
+
+    },
+    "z.B. Treffpunkt vor Ort um 10 Uhr" : {
 
     }
   },

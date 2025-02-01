@@ -20,3 +20,12 @@ DO UPDATE SET
     "zip" = EXCLUDED."zip",
     "city" = EXCLUDED."city",
     "updatedAt" = NOW();
+
+// TODO:
+Function für automatische updateHistory in den tables:
+- Attendance
+- documents 
+- TeamMember
+- Team
+- Request
+- Interest
