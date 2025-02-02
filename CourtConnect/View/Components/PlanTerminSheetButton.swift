@@ -5,7 +5,7 @@
 //  Created by Frederik Kohler on 01.02.25.
 //
 import SwiftUI 
-
+ 
 struct PlanTerminSheetButton: View {
     @State var viewModel = PlanTerminViewModel()
     
@@ -14,21 +14,13 @@ struct PlanTerminSheetButton: View {
     let onComplete: (Termin) -> Void
     
     var body: some View {
-        HStack {
-            Label("Plan Termin", systemImage: "calendar")
-            Spacer()
-        }
-        .onTapGesture {
+        RowLabelButton(text: "Plan Termin", systemImage: "calendar") {
             viewModel.isSheet.toggle()
         }
-        .padding()
-        .background(Material.ultraThinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 15))
-        .padding(.horizontal)
         .sheet(isPresented: $viewModel.isSheet, onDismiss: {
             viewModel.resetAnimationState()
         }) {
-            SheetStlye(title: "New Termin", isLoading: $viewModel.isLoading) {
+            SheetStlye(title: "New Termin", detents: [.large], isLoading: $viewModel.isLoading) {
                 LazyVStack {
                     rowSectionInputText(systemName: "at", headline: "What?", placeholder: "e.g. team training", text: $viewModel.title)
                         .zoomFadeIn(delay: 0.15, trigger: $viewModel.animateOnAppear)

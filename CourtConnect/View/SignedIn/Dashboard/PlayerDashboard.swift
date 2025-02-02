@@ -28,8 +28,9 @@ struct PlayerDashboard: View {
                 }
             }
             
-            ConfirmButton(confirmButtonDialog: ConfirmButtonDialog(
-                buttonText: "Delete UserAccount Account",
+            ConfirmButtonLabel(confirmButtonDialog: ConfirmButtonDialog(
+                systemImage: "trash",
+                buttonText: "Delete Player Account",
                 question: "Delete your Account",
                 message: "Are you sure you want to delete your account? This action cannot be undone.",
                 action: "Delete",

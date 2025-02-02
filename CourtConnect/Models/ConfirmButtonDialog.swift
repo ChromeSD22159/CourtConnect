@@ -7,6 +7,7 @@
 import SwiftUI
 
 struct ConfirmButtonDialog {
+    var systemImage: String? = nil
     var buttonText: LocalizedStringKey
     var question: LocalizedStringKey
     var message: LocalizedStringKey

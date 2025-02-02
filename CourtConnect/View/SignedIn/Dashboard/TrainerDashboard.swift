@@ -33,8 +33,9 @@ struct TrainerDashboard: View {
                 )
             } 
             
-            ConfirmButton(confirmButtonDialog: ConfirmButtonDialog(
-                buttonText: "Delete UserAccount Account",
+            ConfirmButtonLabel(confirmButtonDialog: ConfirmButtonDialog(
+                systemImage: "trash",
+                buttonText: "Delete Trainer Account",
                 question: "Delete your Account",
                 message: "Are you sure you want to delete your account? This action cannot be undone.",
                 action: "Delete",
@@ -106,8 +107,6 @@ fileprivate struct HasTeam: View {
     @ObservedObject var dashBoardViewModel: DashBoardViewModel
     let teamId: UUID
     
-    @State var isGenerateCode = false
-    
     var body: some View {
         VStack {
             SnapScrollView(horizontalSpacing: 16) {
@@ -128,12 +127,13 @@ fileprivate struct HasTeam: View {
                     dashBoardViewModel.saveTermin(termin: termin)
                 }
             }
-             
-            Button("Generate Code Neu") {
-                isGenerateCode.toggle()
+              
+            if let QRCode = dashBoardViewModel.qrCode {
+                ShowTeamJoinQrCode(QRCode: QRCode)
             }
             
-            ConfirmButton(confirmButtonDialog: ConfirmButtonDialog(
+            ConfirmButtonLabel(confirmButtonDialog: ConfirmButtonDialog(
+                systemImage: "iphone.and.arrow.right.inward",
                 buttonText: "Leave Team",
                 question: "Want Leave the Team",
                 message: "Are you sure you want to leave the Team? This action cannot be undone.",
@@ -147,16 +147,45 @@ fileprivate struct HasTeam: View {
                 }
             })
         }
+        
+    }
+}
+
+fileprivate struct GenerateNewJoinCodeView: View {
+    @State var isGenerateCode = false
+    var body: some View {
+        RowLabelButton(text: "Generate new joinCode", systemImage: "qrcode.viewfinder") {
+            isGenerateCode.toggle()
+        }
         .sheet(isPresented: $isGenerateCode, content: {
             ZStack {
                 Theme.background.ignoresSafeArea()
                 
-                GenerateCodeView()
+                GenerateCodeViewSheet()
             }
         })
     }
-}  
+}
 
+fileprivate struct ShowTeamJoinQrCode: View {
+    var QRCode: UIImage
+    @State var showQrSheet = false
+    var body: some View {
+        RowLabelButton(text: "Show Join QR Code", systemImage: "qrcode.viewfinder") {
+            showQrSheet.toggle()
+        }
+        .sheet(isPresented: $showQrSheet, onDismiss: {}) {
+            SheetStlye(title: "Join QR Code", detents: [.medium], isLoading: .constant(false)) {
+                Image(uiImage: QRCode)
+                    .resizable()
+                    .interpolation(.none)
+                    .scaledToFit()
+                    .frame(width: 300, height: 300)
+            }
+        }
+    }
+}
+ 
 #Preview {
     @Previewable @State var dashBoardViewModel = DashBoardViewModel(repository: RepositoryPreview.shared)
     NavigationStack {

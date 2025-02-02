@@ -4,12 +4,31 @@
 //
 //  Created by Frederik Kohler on 30.01.25.
 //
-import Foundation 
+import CoreImage.CIFilterBuiltins
+import Foundation
 import UIKit
+
+struct QRCodeHelper {
+    let context = CIContext()
+    let filter = CIFilter.qrCodeGenerator()
+    
+    func generateQRCode(from string: String) -> UIImage {
+        filter.message = Data(string.utf8)
+
+        if let outputImage = filter.outputImage {
+            if let cgImage = context.createCGImage(outputImage, from: outputImage.extent) {
+                return UIImage(cgImage: cgImage)
+            }
+        }
+
+        return UIImage(systemName: "xmark.circle") ?? UIImage()
+    }
+}
 
 @MainActor
 @Observable class DashBoardViewModel: ObservableObject {
     var currentTeam: Team?
+    var qrCode: UIImage?
     
     let repository: BaseRepository
     
@@ -21,8 +40,17 @@ import UIKit
         guard let currentUser = currentAccount, let teamId = currentUser.teamId else { return } 
         do {
             currentTeam = try repository.teamRepository.getTeam(for: teamId)
+            
+            readQRCode()
         } catch {
             currentTeam = nil
+            qrCode = nil
+        }
+    }
+    
+    func readQRCode() {
+        if let currentTeam = currentTeam {
+            qrCode = QRCodeHelper().generateQRCode(from: currentTeam.joinCode)
         }
     }
     
@@ -41,7 +69,8 @@ import UIKit
         currentAccount.teamId = nil
         currentAccount.updatedAt = Date()
         
-        currentTeam = nil 
+        currentTeam = nil
+        qrCode = nil
     }
     
     /// SOFT DELETE LOCAL ONLY

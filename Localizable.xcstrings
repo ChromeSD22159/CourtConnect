@@ -100,6 +100,12 @@
     "Delete Local Chat" : {
 
     },
+    "Delete Player Account" : {
+
+    },
+    "Delete Trainer Account" : {
+
+    },
     "Delete User Account" : {
 
     },
@@ -160,7 +166,10 @@
     "Generate Code" : {
 
     },
-    "Generate Code Neu" : {
+    "Generate new joinCode" : {
+
+    },
+    "Generate new team's Code" : {
 
     },
     "Grant" : {
@@ -278,6 +287,9 @@
 
     },
     "Settings" : {
+
+    },
+    "Show Join QR Code" : {
 
     },
     "Show QR Code" : {
