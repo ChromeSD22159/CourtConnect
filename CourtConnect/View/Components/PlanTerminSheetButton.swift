@@ -25,63 +25,45 @@ struct PlanTerminSheetButton: View {
         .background(Material.ultraThinMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 15))
         .padding(.horizontal)
-        .sheet(isPresented: $viewModel.isSheet, onDismiss: {}) {
-            NavigationStack {
-                ScrollView {
-                    LazyVStack {
-                        rowSectionInputText(systemName: "at", headline: "What?", placeholder: "e.g. team training", text: $viewModel.title)
-                            .zoomFadeIn(delay: 0.15, trigger: $viewModel.isSheetAnimate)
-                        
-                        rowSectionInputText(systemName: "location.fill", headline: "Where?", placeholder: "Venue", text: $viewModel.place)
-                            .zoomFadeIn(delay: 0.25, trigger: $viewModel.isSheetAnimate)
-                        
-                        rowSectionInputText(systemName: "info.circle.fill", headline: "Important?", placeholder: "e.g. meeting point on site at 10 am.", text: $viewModel.infomation)
-                            .zoomFadeIn(delay: 0.35, trigger: $viewModel.isSheetAnimate)
-                        
-                        rowSectionKindSelection(systemName: "figure.basketball", headline: "Kind?", terminType: $viewModel.kind)
-                            .zoomFadeIn(delay: 0.45, trigger: $viewModel.isSheetAnimate)
-                        
-                        rowSectionDateSelection(systemName: "calendar.badge.clock", headline: "Date?", date: $viewModel.date)
-                            .zoomFadeIn(delay: 0.45, trigger: $viewModel.isSheetAnimate)
-                        
-                        rowSectionDurationSelection(systemName: "clock", headline: "How long?", terminType: $viewModel.duration)
-                            .zoomFadeIn(delay: 0.55, trigger: $viewModel.isSheetAnimate)
-                        
-                        Button("Create Termin") {
+        .sheet(isPresented: $viewModel.isSheet, onDismiss: {
+            viewModel.resetAnimationState()
+        }) {
+            SheetStlye(title: "New Termin", isLoading: $viewModel.isLoading) {
+                LazyVStack {
+                    rowSectionInputText(systemName: "at", headline: "What?", placeholder: "e.g. team training", text: $viewModel.title)
+                        .zoomFadeIn(delay: 0.15, trigger: $viewModel.animateOnAppear)
+                    
+                    rowSectionInputText(systemName: "location.fill", headline: "Where?", placeholder: "Venue", text: $viewModel.place)
+                        .zoomFadeIn(delay: 0.25, trigger: $viewModel.animateOnAppear)
+                    
+                    rowSectionInputText(systemName: "info.circle.fill", headline: "Important?", placeholder: "e.g. meeting point on site at 10 am.", text: $viewModel.infomation)
+                        .zoomFadeIn(delay: 0.35, trigger: $viewModel.animateOnAppear)
+                    
+                    rowSectionKindSelection(systemName: "figure.basketball", headline: "Kind?", terminType: $viewModel.kind)
+                        .zoomFadeIn(delay: 0.45, trigger: $viewModel.animateOnAppear)
+                    
+                    rowSectionDateSelection(systemName: "calendar.badge.clock", headline: "Date?", date: $viewModel.date)
+                        .zoomFadeIn(delay: 0.45, trigger: $viewModel.animateOnAppear)
+                    
+                    rowSectionDurationSelection(systemName: "clock", headline: "How long?", terminType: $viewModel.duration)
+                        .zoomFadeIn(delay: 0.55, trigger: $viewModel.animateOnAppear)
+                    
+                    Button("Create Termin") {
+                        Task {
                             do {
-                                let newTermin = try viewModel.generateTermin(userAccount: userAccount)
-                                onComplete(newTermin)
+                                if let newTermin = try await viewModel.generateTermin(userAccount: userAccount) { 
+                                    onComplete(newTermin)
+                                }
                             } catch {
                                 print(error)
                             }
                         }
-                        .buttonStyle(DarkButtonStlye())
                     }
+                    .buttonStyle(DarkButtonStlye())
                 }
-                .onAppear(perform: viewModel.toggleAnimate)
-                .onDisappear(perform: viewModel.toggleAnimate)
-                .listStyle(.insetGrouped)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Text("New Termin")
-                            .font(.headline)
-                            .fontWeight(.bold)
-                            .foregroundStyle(
-                                LinearGradient(
-                                    colors: [
-                                        Theme.darkOrange,
-                                        Theme.lightOrange
-                                    ],
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                )
-                            )
-                    }
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Image(systemName: "xmark")
-                            .onTapGesture(perform: viewModel.toggleSheet)
-                    }
-                }
+            }
+            .onAppear {
+                viewModel.startAnimation() 
             }
         }
     }
@@ -199,4 +181,4 @@ struct PlanTerminSheetButton: View {
         }
     }
     .navigationStackTint()
-}
+} 

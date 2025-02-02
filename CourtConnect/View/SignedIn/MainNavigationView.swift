@@ -41,7 +41,7 @@ struct MainNavigationView: View {
         .fullScreenCover(
             isPresented: $userViewModel.isOnboardingSheet,
             onDismiss: {
-                userViewModel.onDismissOnBoarding(syncServiceViewModel: syncServiceViewModel) 
+                userViewModel.onDismissOnBoarding(syncServiceViewModel: syncServiceViewModel)
             },
             content: {
                 if let userProfile = userViewModel.userProfile {

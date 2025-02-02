@@ -28,6 +28,9 @@
     "0" : {
 
     },
+    "Add Document" : {
+
+    },
     "App Status" : {
 
     },
@@ -41,6 +44,12 @@
 
     },
     "Cancel" : {
+
+    },
+    "Change Document" : {
+
+    },
+    "Choose Document" : {
 
     },
     "continue" : {
@@ -217,9 +226,6 @@
     "Logout" : {
 
     },
-    "New Termin" : {
-
-    },
     "No Connection" : {
 
     },
@@ -314,6 +320,9 @@
 
     },
     "updatedAt: %@" : {
+
+    },
+    "Upload Document" : {
 
     },
     "Venue" : {

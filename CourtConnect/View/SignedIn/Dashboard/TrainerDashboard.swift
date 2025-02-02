@@ -122,6 +122,8 @@ fileprivate struct HasTeam: View {
             }
             
             if let userAccount = userViewModel.currentAccount {
+                DocumentSheetButton(userAccount: userAccount)
+                
                 PlanTerminSheetButton(userAccount: userAccount) { termin in
                     dashBoardViewModel.saveTermin(termin: termin)
                 }
