@@ -234,12 +234,12 @@ class SharedUserViewModel: ObservableObject {
     }
     
     // MARK: - UserAccount Methodes
-    func deleteUserAccount() {
+    func deleteUser() {
         guard let user = user else { return }
         Task {
             do {
                 
-                try await repository.userRepository.deleteUserAccount(user: user)
+                try await repository.userRepository.deleteUser(user: user)
                 try await repository.userRepository.signOut()
                 
                 self.user = nil

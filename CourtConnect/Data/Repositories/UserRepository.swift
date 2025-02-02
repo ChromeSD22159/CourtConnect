@@ -175,7 +175,7 @@ class UserRepository {
         return uniqueOnlineUserList(list: list)
     }
     
-    func deleteUserAccount(user: User) async throws {
+    func deleteUser(user: User) async throws {
         try await backendClient.supabase
             .from(DatabaseTable.deletionRequest.rawValue)
             .upsert(DeletionRequestDTO(userId: user.id, createdAt: Date(), updatedAt: Date()), onConflict: "userId")

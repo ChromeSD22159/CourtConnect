@@ -23,6 +23,10 @@ class AccountRepository: SyncronizationProtocol {
         try container.mainContext.save()
     }
     
+    func insert(termin:Termin) {
+        container.mainContext.insert(termin)
+    }
+    
     func getAllAccounts(userId: UUID) throws -> [UserAccount] {
         let predicate = #Predicate<UserAccount> { $0.userId == userId && $0.deletedAt == nil }
         let fetchDescruptor = FetchDescriptor<UserAccount>(predicate: predicate)

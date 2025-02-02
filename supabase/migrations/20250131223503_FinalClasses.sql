@@ -86,7 +86,10 @@ create table
  BEGIN
      INSERT INTO public."UpdateHistory" ("tableString", "timestamp", "userId")
      VALUES ('Chat', NOW(), NEW."senderId") 
-      ON CONFLICT ("tableString", "userId") DO UPDATE SET "timestamp" = NOW();
+      ON CONFLICT ("tableString", "userId") 
+      DO UPDATE SET 
+        "timestamp" = NOW(), 
+        "updatedAt" = NOW(); 
 
      RETURN NULL;
  END;
@@ -294,7 +297,7 @@ create table
     headcoach text not null,
     "joinCode" text not null,
     email text not null,
-     "createdByUserAccountId" text not null,
+    "createdByUserAccountId" uuid not null,
     "createdAt" timestamp with time zone not null default now(),
     "updatedAt" timestamp with time zone not null default now(),
     "deletedAt" timestamp with time zone null,
@@ -409,18 +412,20 @@ DECLARE
 BEGIN 
     SELECT "userId" INTO user_id
     FROM public."UserAccount"
-    WHERE id = NEW."userAccountId";
+    WHERE id = NEW."userAccountId"; 
 
-    IF user_id IS NULL THEN
+     IF user_id IS NULL THEN
         RAISE NOTICE 'userAccountId % not found in UserAccount', NEW."userAccountId"; 
+        RAISE EXCEPTION 'userAccountId % not found in UserAccount', NEW."userAccountId"; 
     END IF;
 
-  INSERT INTO public."UpdateHistory" ("tableString", "timestamp", "updatedAt", "userId")
-    VALUES ('TeamMember', NOW(), NOW(), user_id)
-    ON CONFLICT ("tableString", "userId")
-    DO UPDATE SET 
-        "timestamp" = NOW(), 
-        "updatedAt" = NOW(); 
+    IF user_id IS NOT NULL THEN -- Add this check
+        INSERT INTO public."UpdateHistory" ("tableString", "timestamp", "updatedAt", "userId")
+        VALUES ('TeamMember', NOW(), NOW(), user_id)
+        ON CONFLICT ("tableString", "userId") DO UPDATE SET 
+            "timestamp" = NOW(),
+            "updatedAt" = NOW();
+    END IF;
 
     RETURN NULL; 
  END;
@@ -450,7 +455,7 @@ create table
     place text not null,
     infomation text not null,
     "durationMinutes" smallint not null default '0'::smallint,
-    "createdByAccountId" uuid not null,
+    "createdByUserAccountId" uuid not null,
     constraint termine_pkey primary key (id)
   ) tablespace pg_default;
 
@@ -467,18 +472,20 @@ BEGIN
    -- Get the userId from the UserAccount table based on the trainerId
     SELECT "userId" INTO user_id
     FROM public."UserAccount"
-    WHERE id = NEW."createdByAccountId";
+    WHERE id = NEW."createdByUserAccountId";
 
-    IF user_id IS NULL THEN
-        RAISE NOTICE 'createdByAccountId % not found in UserAccount', NEW."createdByAccountId"; 
-    END IF;
+     IF user_id IS NULL THEN
+        RAISE NOTICE 'userId % not found in UserAccount', NEW."createdByUserAccountId"; 
+        RAISE EXCEPTION 'userId % not found in UserAccount', NEW."createdByUserAccountId"; 
+      END IF;
 
-  INSERT INTO public."UpdateHistory" ("tableString", "timestamp", "updatedAt", "userId")
-    VALUES ('Termin', NOW(), NOW(), user_id)
-    ON CONFLICT ("tableString", "userId")
-    DO UPDATE SET 
-        "timestamp" = NOW(), 
-        "updatedAt" = NOW(); 
+    IF user_id IS NOT NULL THEN -- Add this check
+        INSERT INTO public."UpdateHistory" ("tableString", "timestamp", "updatedAt", "userId")
+        VALUES ('TeamMember', NOW(), NOW(), user_id)
+        ON CONFLICT ("tableString", "userId") DO UPDATE SET 
+            "timestamp" = NOW(),
+            "updatedAt" = NOW();
+    END IF; 
 
     RETURN NULL; 
 END;
@@ -515,7 +522,7 @@ create table
 create table
   public."UserAccount" (
     "id" uuid not null default gen_random_uuid (),
-    "userId" uuid not null,
+    "userId" uuid null,
     "teamId" uuid not null,
     "position" text not null,
     "role" text not null,

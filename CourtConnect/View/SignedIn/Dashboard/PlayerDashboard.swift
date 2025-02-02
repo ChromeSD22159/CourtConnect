@@ -27,7 +27,24 @@ struct PlayerDashboard: View {
                     }
                 }
             }
+            
+            ConfirmButton(confirmButtonDialog: ConfirmButtonDialog(
+                buttonText: "Delete UserAccount Account",
+                question: "Delete your Account",
+                message: "Are you sure you want to delete your account? This action cannot be undone.",
+                action: "Delete",
+                cancel: "Cancel"
+            ), action: {
+                Task {
+                    do {
+                        try await dashBoardViewModel.deleteUserAccount(for: userViewModel.currentAccount)
+                        try userViewModel.setRandomAccount()
+                    } catch {
+                        print(error)
+                    }
+                }
+            })
         }
         .navigationTitle("Trainer")
     }
-}
+} 

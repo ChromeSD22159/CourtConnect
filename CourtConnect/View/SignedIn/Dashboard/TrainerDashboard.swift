@@ -33,16 +33,22 @@ struct TrainerDashboard: View {
                 )
             } 
             
-            Button("Delete Trainer Account") {
+            ConfirmButton(confirmButtonDialog: ConfirmButtonDialog(
+                buttonText: "Delete UserAccount Account",
+                question: "Delete your Account",
+                message: "Are you sure you want to delete your account? This action cannot be undone.",
+                action: "Delete",
+                cancel: "Cancel"
+            ), action: {
                 Task {
                     do {
-                        try await dashBoardViewModel.deleteUserAccount(for: userViewModel.currentAccount) 
+                        try await dashBoardViewModel.deleteUserAccount(for: userViewModel.currentAccount)
                         try userViewModel.setRandomAccount()
                     } catch {
                         print(error)
                     }
                 }
-            }
+            })
         }
         .onAppear {
             dashBoardViewModel.getTeam(for: userViewModel.currentAccount)
@@ -79,18 +85,19 @@ fileprivate struct HasNoTeam: View {
                 .onTapGesture {
                     isEnterCode.toggle()
                 }
-        }
-        .sheet(isPresented: $isEnterCode, onDismiss: {
-            dashBoardViewModel.getTeam(for: userViewModel.currentAccount)
-        }) {
-            if let currentAccount = userViewModel.currentAccount {
-                ZStack {
-                    Theme.background.ignoresSafeArea()
-                    
-                    EnterCodeView(userAccount: currentAccount)
+                .sheet(isPresented: $isEnterCode, onDismiss: {
+                    dashBoardViewModel.getTeam(for: userViewModel.currentAccount)
+                }) {
+                    if let currentAccount = userViewModel.currentAccount {
+                        ZStack {
+                            Theme.background.ignoresSafeArea()
+                            
+                            EnterCodeView(userAccount: currentAccount)
+                        }
+                    }
                 }
-            }
         }
+       
     }
 }
 
@@ -114,19 +121,29 @@ fileprivate struct HasTeam: View {
                 .frame(height: 150)
             }
             
-            PlanTerminSheetButton()
+            if let userAccount = userViewModel.currentAccount {
+                PlanTerminSheetButton(userAccount: userAccount) { termin in
+                    dashBoardViewModel.saveTermin(termin: termin)
+                }
+            }
              
             Button("Generate Code Neu") {
                 isGenerateCode.toggle()
             }
             
-            Button("Leave Team") {
+            ConfirmButton(confirmButtonDialog: ConfirmButtonDialog(
+                buttonText: "Leave Team",
+                question: "Want Leave the Team",
+                message: "Are you sure you want to leave the Team? This action cannot be undone.",
+                action: "Delete",
+                cancel: "Cancel"
+            ), action: {
                 do {
                     try dashBoardViewModel.leaveTeam(for: userViewModel.currentAccount)
                 } catch {
                     print(error)
                 }
-            }
+            })
         }
         .sheet(isPresented: $isGenerateCode, content: {
             ZStack {

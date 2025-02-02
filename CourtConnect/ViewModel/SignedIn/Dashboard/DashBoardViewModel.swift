@@ -62,4 +62,16 @@ import UIKit
             
         }
     }
+    
+    func saveTermin(termin: Termin) {
+        repository.accountRepository.insert(termin: termin)
+        
+        Task {
+            do {
+                try await SupabaseService.upsertWithOutResult(item: termin.toDTO(), table: .termin, onConflict: "id")
+            } catch {
+                print(error)
+            }
+        }
+    }
 }

@@ -19,7 +19,7 @@ struct OnBoardingView: View {
             
             ConfettiOverlay {
                 VStack(spacing: 100) {
-                    Text("**Wilkommen** \n\(userProfile.firstName)!")
+                    Text("**Welcome** \n\(userProfile.firstName)!")
                         .lineSpacing(20)
                         .multilineTextAlignment(.center)
                         .font(.largeTitle)

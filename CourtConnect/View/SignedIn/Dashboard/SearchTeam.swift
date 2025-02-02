@@ -47,12 +47,12 @@ struct SearchTeam: View {
                 teamListViewModel.isSearchBar.toggle()
             })
         }
-        .alert("Dem Team beitreten?", isPresented: $teamListViewModel.showJoinTeamAlert) {
-                    Button("Beitreten", role: .destructive) { }
-                    Button("Abbrechen", role: .cancel) { }
-                } message: {
-                    Text("Möchtest du dem Team \(teamListViewModel.selectedTeam?.teamName ?? "") beitreten?")
-                }
+        .alert("Join Team?", isPresented: $teamListViewModel.showJoinTeamAlert) {
+            Button("Join", role: .destructive) { }
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("Do you want to join the team\(teamListViewModel.selectedTeam?.teamName ?? "")?")
+        }
     }
 } 
 

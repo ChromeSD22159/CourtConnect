@@ -71,7 +71,7 @@ struct LoginEntryView: View {
                 .font(.title.bold())
                 .foregroundStyle(Theme.darkOrange)
                  
-            Text("Bereit für den Sprung? Lass uns starten! Melde dich an, um loszulegen und teil der Community zu werden.")
+            Text("Ready for the jump? Let's start! Register to get started and become part of the community.")
                 .foregroundStyle(Theme.myGray)
                 .lineSpacing(5)
         }

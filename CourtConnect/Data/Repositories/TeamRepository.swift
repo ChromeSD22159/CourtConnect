@@ -164,9 +164,11 @@ import Supabase
     func joinTeamWithCode(_ code: String, userAccount: UserAccount) async throws {
         if let foundTeamDTO = try await getTeamRemote(code: code) {
             // CREATE MEMBER
-            let newMember = TeamMember(userAccountId: userAccount.userId, teamId: foundTeamDTO.id, role: userAccount.role, createdAt: Date(), updatedAt: Date())
+            let newMember = TeamMember(userAccountId: userAccount.id, teamId: foundTeamDTO.id, role: userAccount.role, createdAt: Date(), updatedAt: Date())
             // INSER MEMBER REMOTE
+            print("before insert") 
             let supabaseMember: TeamMemberDTO = try await SupabaseService.insert(item: newMember.toDTO(), table: .teamMember)
+            print("after insert")
             // UPDATE LOCAL CURRENTUSERACCOUNT
             userAccount.teamId = newMember.teamId
             userAccount.updatedAt = Date()
@@ -175,7 +177,9 @@ import Supabase
             try self.upsertLocal(item: foundTeamDTO.toModel())
             try self.upsertLocal(item: supabaseMember.toModel())
        
+            print("before upsert")
             try await SupabaseService.upsertWithOutResult(item: userAccount.toDTO(), table: .userAccount, onConflict: "id")
+            print("after upsert")
         } else {
             throw TeamError.noTeamFoundwithThisJoinCode
         }
