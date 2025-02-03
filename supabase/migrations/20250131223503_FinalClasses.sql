@@ -204,8 +204,7 @@ create table
   public."Request" (
     id uuid not null default gen_random_uuid (),
     "accountId" uuid not null,
-    "teamId" uuid not null,
-    "userId" uuid not null,
+    "teamId" uuid not null, 
     "createdAt" timestamp with time zone not null default now(),
     "updatedAt" timestamp with time zone not null default now(),
     "deletedAt" timestamp with time zone null,
@@ -316,7 +315,7 @@ BEGIN
     WHERE id = NEW."createdByUserAccountId";
 
     IF user_id IS NULL THEN
-        RAISE NOTICE 'createdByUserAccountId % not found in UserAccount', NEW."userAccountId"; 
+        RAISE NOTICE 'createdByUserAccountId % not found in UserAccount', NEW."createdByUserAccountId"; 
     END IF;
 
   INSERT INTO public."UpdateHistory" ("tableString", "timestamp", "updatedAt", "userId")
@@ -402,7 +401,7 @@ create table
     role text not null,
     "createdAt" timestamp with time zone not null default now(),
     "updatedAt" timestamp with time zone not null default now(),
-    "deletedAt" timestamp with time zone null default now(),
+    "deletedAt" timestamp with time zone null,
     constraint teammember_pkey primary key (id)
   ) tablespace pg_default;
 

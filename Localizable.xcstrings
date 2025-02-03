@@ -118,16 +118,13 @@
     "Delete User Account" : {
 
     },
-    "Delete UserAccount Account" : {
-
-    },
     "Delete your Account" : {
 
     },
     "Development" : {
 
     },
-    "Do you want to join the team%@?" : {
+    "Do you want to join the team %@?" : {
 
     },
     "documents: %lld" : {
@@ -326,6 +323,9 @@
 
     },
     "Soon you will see your data here!" : {
+
+    },
+    "Spieler" : {
 
     },
     "Team" : {

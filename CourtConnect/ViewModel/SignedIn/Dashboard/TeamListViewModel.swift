@@ -34,6 +34,9 @@ import Foundation
         foundTeams = []
     }
     
-    func joinTeam(team: TeamDTO) {
+    func requestTeam(userAccount: UserAccount) async throws {
+        guard let selectedTeam = selectedTeam else { throw TeamError.noTeamFoundwithThisJoinCode }
+        let newRequest = Requests(accountId: userAccount.id, teamId: selectedTeam.id, createdAt: Date(), updatedAt: Date())
+        try await repository.teamRepository.requestTeam(request: newRequest)
     }
-} 
+}

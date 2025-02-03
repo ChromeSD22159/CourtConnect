@@ -4,26 +4,8 @@
 //
 //  Created by Frederik Kohler on 30.01.25.
 //
-import CoreImage.CIFilterBuiltins
 import Foundation
 import UIKit
-
-struct QRCodeHelper {
-    let context = CIContext()
-    let filter = CIFilter.qrCodeGenerator()
-    
-    func generateQRCode(from string: String) -> UIImage {
-        filter.message = Data(string.utf8)
-
-        if let outputImage = filter.outputImage {
-            if let cgImage = context.createCGImage(outputImage, from: outputImage.extent) {
-                return UIImage(cgImage: cgImage)
-            }
-        }
-
-        return UIImage(systemName: "xmark.circle") ?? UIImage()
-    }
-}
 
 @MainActor
 @Observable class DashBoardViewModel: ObservableObject {
@@ -56,13 +38,15 @@ struct QRCodeHelper {
     
     /// SOFT DELETE LOCAL ONLY
     func leaveTeam(for currentAccount: UserAccount?) throws {
-        guard let currentAccount = currentAccount else { return }
+        guard let currentAccount = currentAccount else { throw UserError.userAccountNotFound }
          
-        if let myAdmin = try repository.teamRepository.getAdmin(for: currentAccount.userId) {
+        if let myAdmin = try? repository.teamRepository.getAdmin(for: currentAccount.id) {
             try repository.teamRepository.softDelete(teamAdmin: myAdmin)
         }
         
-        if let myMemberAccount = try repository.teamRepository.getMember(for: currentAccount.userId) {
+        print(currentAccount)
+        if let myMemberAccount = try repository.teamRepository.getMember(for: currentAccount.id) {
+            print(myMemberAccount)
             try repository.teamRepository.softDelete(teamMember: myMemberAccount)
         }
         

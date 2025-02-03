@@ -49,7 +49,6 @@ import SwiftUI
             viewModel.isLoading = true
             Task {
                 do {
-                    
                     try await viewModel.syncRemoteRequests()
                     try await Task.sleep(for: .seconds(0.8))
                     await viewModel.getLocalRequests()
@@ -61,7 +60,12 @@ import SwiftUI
             }
         }
         .task {
-            await viewModel.getLocalRequests()
+            do {
+                try await viewModel.syncRemoteRequests()
+                await viewModel.getLocalRequests()
+            } catch {
+                await viewModel.getLocalRequests()
+            }
         }
         .listBackground()
     }

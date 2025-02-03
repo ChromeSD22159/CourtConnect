@@ -8,7 +8,9 @@ import SwiftUI
 
 struct SearchTeam: View {
     @ObservedObject var teamListViewModel: TeamListViewModel
-    
+    @ObservedObject var userViewModel: SharedUserViewModel
+    @Environment(\.messagehandler) var messagehandler
+    @Environment(\.errorHandler) var errorHandler
     var body: some View {
         List {
             Section {
@@ -48,15 +50,26 @@ struct SearchTeam: View {
             })
         }
         .alert("Join Team?", isPresented: $teamListViewModel.showJoinTeamAlert) {
-            Button("Join", role: .destructive) { }
+            Button("Join", role: .destructive) {
+                Task { 
+                    guard let userAccount = userViewModel.currentAccount else { return }
+                    do {
+                        try await teamListViewModel.requestTeam(userAccount: userAccount)
+                        let msg = InAppMessage(title: "Request send!")
+                        messagehandler.handleMessage(message: msg)
+                    } catch {
+                        errorHandler.handleError(error: error)
+                    }
+                }
+            }
             Button("Cancel", role: .cancel) { }
         } message: {
-            Text("Do you want to join the team\(teamListViewModel.selectedTeam?.teamName ?? "")?")
+            Text("Do you want to join the team \(teamListViewModel.selectedTeam?.teamName ?? "")?")
         }
     }
 } 
 
 #Preview {
-    SearchTeam(teamListViewModel: TeamListViewModel(repository: RepositoryPreview.shared))
+    SearchTeam(teamListViewModel: TeamListViewModel(repository: RepositoryPreview.shared), userViewModel: SharedUserViewModel(repository: RepositoryPreview.shared))
         .previewEnvirments()
 }

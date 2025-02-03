@@ -42,8 +42,7 @@ INSERT INTO
 -- Create UserProfiles for ALL the newly created users (the key change!)
 INSERT INTO public."UserProfile" ("userId", "firstName", "lastName", "birthday", "lastOnline")
 SELECT id, 'Frederik', 'Kohler', '22.11.1986', NOW() 
-FROM auth.users
-WHERE email = 'test@user.de';
+FROM auth.users WHERE email = 'test@user.de';
 
 -- Create email identities for the new users
 INSERT INTO
@@ -142,3 +141,9 @@ SELECT
     NOW() 
 FROM auth.users
 WHERE raw_user_meta_data = '{}' AND NOT email = 'test@user.de'; 
+
+ 
+
+INSERT INTO "UserAccount" ("userId", "teamId", position, role, "displayName")
+SELECT gen_random_uuid(), NULL, 'Forward', 'Trainer', 'John Doe'
+WHERE EXISTS (SELECT 1 FROM auth.users WHERE email = 'test@user.de');

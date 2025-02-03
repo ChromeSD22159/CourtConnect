@@ -84,15 +84,22 @@ import Foundation
     
     func grandRequest(request: Requests, userAccount: UserAccount) {
         Task {
-            let newMember = TeamMember(userAccountId: request.accountId, teamId: request.teamId, role: userAccount.role, createdAt: Date(), updatedAt: Date())
+            do {
+                let newMember = TeamMember(userAccountId: request.accountId, teamId: request.teamId, role: userAccount.role, createdAt: Date(), updatedAt: Date())
+                
+                try repository.teamRepository.softDelete(request: request)
+                await getLocalRequests()
             
-            try repository.teamRepository.softDelete(request: request)
-            await getLocalRequests()
-        
-            try repository.teamRepository.upsertLocal(item: newMember)
-        
-            try await SupabaseService.upsertWithOutResult(item: newMember.toDTO(), table: .teamMember, onConflict: "id")
-            try await SupabaseService.upsertWithOutResult(item: request.toDTO(), table: .request, onConflict: "id")
+                try await repository.teamRepository.insertTeamMember(newMember: newMember, userId: request.accountId)
+                
+                let account = try repository.accountRepository.getAccount(id: request.accountId)
+                account?.teamId = teamId
+                
+                try await SupabaseService.upsertWithOutResult(item: newMember.toDTO(), table: .teamMember, onConflict: "id")
+                try await SupabaseService.upsertWithOutResult(item: request.toDTO(), table: .request, onConflict: "id")
+            } catch {
+                print(error)
+            }
         }
     }
     

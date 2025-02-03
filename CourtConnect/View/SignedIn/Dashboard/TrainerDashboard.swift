@@ -52,6 +52,7 @@ struct TrainerDashboard: View {
             })
         }
         .onAppear {
+            dashBoardViewModel.currentTeam = nil
             dashBoardViewModel.getTeam(for: userViewModel.currentAccount)
         }
         .navigationTitle("Trainer")
@@ -77,7 +78,7 @@ fileprivate struct HasNoTeam: View {
             }
             
             NavigationLink {
-                SearchTeam(teamListViewModel: teamListViewModel)
+                SearchTeam(teamListViewModel: teamListViewModel, userViewModel: userViewModel)
             } label: {
                 RoundedIconTextCard(icon: "person.badge.plus", title: "Join a Team!", description: "Send a request to join a team as a trainer and start managing players and training sessions.")
             }
@@ -167,7 +168,7 @@ fileprivate struct GenerateNewJoinCodeView: View {
     }
 }
 
-fileprivate struct ShowTeamJoinQrCode: View {
+struct ShowTeamJoinQrCode: View {
     var QRCode: UIImage
     @State var showQrSheet = false
     var body: some View {
@@ -188,6 +189,8 @@ fileprivate struct ShowTeamJoinQrCode: View {
  
 #Preview {
     @Previewable @State var dashBoardViewModel = DashBoardViewModel(repository: RepositoryPreview.shared)
+    @Previewable @State var userViewModel = SharedUserViewModel(repository: RepositoryPreview.shared)
+    @Previewable @State var teamViewModel = TeamListViewModel(repository: RepositoryPreview.shared)
     NavigationStack {
         VStack(spacing: 15) {  
                
@@ -209,7 +212,7 @@ fileprivate struct ShowTeamJoinQrCode: View {
             RoundedIconTextCard(icon: "person.crop.circle.badge.plus", title: "Found team now!", description: "Start your own team and manage players and training sessions.")
             
             NavigationLink {
-                SearchTeam(teamListViewModel: TeamListViewModel(repository: RepositoryPreview.shared))
+                SearchTeam(teamListViewModel: teamViewModel, userViewModel: userViewModel)
             } label: {
                 RoundedIconTextCard(icon: "person.badge.plus", title: "Join a Team!", description: "Send a request to join a team as a trainer and start managing players and training sessions.")
             }
