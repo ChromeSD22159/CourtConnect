@@ -32,7 +32,7 @@ import SwiftUICore
     var chatRepository: ChatRepository
     var accountRepository: AccountRepository
     var teamRepository: TeamRepository
-    var documentRepository: DocumentRepository
+    var documentRepository: DocumentRepository 
     var syncHistoryRepository: SyncServiceRepository
     var container: ModelContainer
     

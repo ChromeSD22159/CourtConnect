@@ -156,6 +156,16 @@ import Supabase
         userAccount.updatedAt = Date()
     }
     
+    func getPlayerStatistics(userAccountId: UUID, fetchLimit: Int = 7) throws -> [Statistic] {
+        let predicate = #Predicate<Statistic>{ item in
+            item.userAccountId == userAccountId && item.deletedAt == nil
+        }
+        
+        var fetchDescriptor = FetchDescriptor(predicate: predicate, sortBy: [SortDescriptor(\.createdAt, order: .reverse)])
+        fetchDescriptor.fetchLimit = fetchLimit
+        return try container.mainContext.fetch(fetchDescriptor)
+    }
+    
     // MARK: - REMOTE
     func getTeamRemote(code: String) async throws -> TeamDTO? {
         return try await SupabaseService.getEquals(value: code, table: .team, column: "joinCode")

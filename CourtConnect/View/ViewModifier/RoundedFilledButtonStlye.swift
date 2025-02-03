@@ -7,11 +7,15 @@
 import SwiftUI
 
 struct RoundedFilledButtonStlye: ButtonStyle {
+    let color: Color
+    init (color: Color = Theme.lightOrange) {
+        self.color = color
+    }
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .padding(7)
             .foregroundStyle(.white)
-            .background(Theme.lightOrange)
+            .background(color)
             .clipShape(RoundedRectangle(cornerRadius: 10))
     }
 }

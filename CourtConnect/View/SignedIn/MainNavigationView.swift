@@ -20,7 +20,7 @@ struct MainNavigationView: View {
                     switch navViewModel.current {
                     case .home: DashboardView(userViewModel: userViewModel)
                     case .team: TeamView(userViewModel: userViewModel)
-                    case .player: EmptyView()
+                    case .player: PlayerStatistic(userViewModel: userViewModel)
                     case .settings: SettingsView(userViewModel: userViewModel)
                     }
                 }
