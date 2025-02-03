@@ -8,7 +8,7 @@ import Foundation
 
 struct StatisticDTO: DTOProtocol {
     var id: UUID
-    var userId: UUID
+    var userAccountId: UUID
     var fouls: Int
     var twoPointAttempts: Int
     var threePointAttempts: Int
@@ -16,9 +16,9 @@ struct StatisticDTO: DTOProtocol {
     var updatedAt: Date
     var deletedAt: Date?
     
-    init(id: UUID, userId: UUID, fouls: Int, twoPointAttempts: Int, threePointAttempts: Int, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil) {
+    init(id: UUID, userAccountId: UUID, fouls: Int, twoPointAttempts: Int, threePointAttempts: Int, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil) {
         self.id = id
-        self.userId = userId
+        self.userAccountId = userAccountId
         self.fouls = fouls
         self.twoPointAttempts = twoPointAttempts
         self.threePointAttempts = threePointAttempts
@@ -32,7 +32,7 @@ struct StatisticDTO: DTOProtocol {
     }
     
     func toModel() -> Statistic {
-        return Statistic(id: id, userId: userId, fouls: fouls, twoPointAttempts: twoPointAttempts, threePointAttempts: threePointAttempts, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
+        return Statistic(id: id, userAccountId: userAccountId, fouls: fouls, twoPointAttempts: twoPointAttempts, threePointAttempts: threePointAttempts, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
 }
 

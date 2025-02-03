@@ -56,9 +56,7 @@ struct SheetStlye<Content: View>: View {
 }
 
 #Preview {
-    ZStack{
-        
-    }
+    ZStack {}
     .sheet(isPresented: .constant(true)) {
         SheetStlye(title: "Title", detents: [.medium], isLoading: .constant(false)) {
             VStack {

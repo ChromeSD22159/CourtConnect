@@ -5,22 +5,175 @@
 //  Created by Frederik Kohler on 01.02.25.
 //
 import SwiftUI
+import Charts
 
-struct PlayerStatistic: View {
-    let statistics: [Statistic]
+@Observable class PlayerStatisticViewModel {
+    let repository: BaseRepository
+    let userAccountId: UUID?
+    var statistics: [Statistic] = []
+    var chartStatistics: [Statistic] = []
     
-    var body: some View {
-        SnapScrollView {
-            LazyHStack {
-                ForEach(statistics) { statistic in
-                    StatisticCard(title: "Durschnitts Wert", description: "asdasd asd adsasd.", statistic: statistic)
+    var hasData: Bool = false
+    
+    @MainActor init(userAccountId: UUID?) {
+        self.repository = Repository.shared
+        self.userAccountId = userAccountId
+        getStatistic(for: .game)
+    }
+    
+    var bestTwoPointAttempts: Statistic? {
+        statistics.sorted {
+            $0.twoPointAttempts > $1.twoPointAttempts
+        }.first
+    }
+    
+    var bestThreePointAttempts: Statistic? {
+        statistics.sorted {
+            $0.threePointAttempts > $1.threePointAttempts
+        }.first
+    }
+    
+    var bestFouls: Statistic? {
+        statistics.sorted {
+            $0.fouls > $1.fouls
+        }.first
+    }
+    
+    var bestPoints: Statistic? {
+        statistics.sorted {
+            $0.points > $1.points
+        }.first
+    }
+    
+    @MainActor func getStatistic(for: TerminType) {
+        statistics = []
+        chartStatistics = []
+        
+        for index in 0...7 {
+            let date = Calendar.current.date(byAdding: .day, value: -(7 * index + 1), to: Date())!
+            let statistc = Statistic(id: UUID(), userAccountId: UUID(), fouls: 1, twoPointAttempts: 0, threePointAttempts: 0, createdAt: date, updatedAt: date)
+            self.chartStatistics.append(statistc)
+            self.statistics.append(statistc)
+        }
+        
+        defer {
+            Task {
+                try await Task.sleep(for: .seconds(0.5))
+                for item in chartStatistics.reversed() {
+                    withAnimation {
+                        item.fouls = Int.random(in: 0...10)
+                        item.twoPointAttempts = Int.random(in: 2...20)
+                        item.threePointAttempts = Int.random(in: 3...20)
+                    }
+                    
+                    try await Task.sleep(for: .seconds(0.1))
                 }
             }
+        }
+        do {
+            guard let userAccountId = userAccountId else { return }
+            let result = try repository.teamRepository.getPlayerStatistics(userAccountId: userAccountId)
+            
+            if !result.isEmpty {
+                self.hasData = true
+                self.statistics = result
+                self.chartStatistics = result
+            }
+        } catch {
+            print(error)
         }
     }
 }
 
-struct StatisticCard: View {
+struct PlayerStatistic: View {
+    @State var viewModel: PlayerStatisticViewModel
+    @State var userViewModel: SharedUserViewModel
+    
+    @State var isValid: Bool
+    
+    init(userViewModel: SharedUserViewModel) {
+        self.userViewModel = userViewModel
+         
+        if let currentAccount = userViewModel.currentAccount?.userId {
+            isValid = true
+            self.viewModel = PlayerStatisticViewModel(userAccountId: currentAccount)
+        } else {
+            isValid = false
+            self.viewModel = PlayerStatisticViewModel(userAccountId: UUID())
+        }
+    }
+    
+    var body: some View {
+        ScrollView(.vertical) {
+            VStack(spacing: 50) {
+                HStack(spacing: 20) {
+                    Image(.basketballPlayer)
+                        .resizable()
+                        .scaledToFit()
+                        .padding(10)
+                        .frame(width: 100)
+                        .clipShape(Circle())
+                        .overlay(
+                            Circle()
+                                .stroke(LinearGradient(colors: [
+                                    Theme.lightOrange,
+                                    Theme.darkOrange
+                                ], startPoint: .topTrailing, endPoint: .bottomLeading), lineWidth: 5)
+                        )
+                    
+                    VStack(alignment: .leading) {
+                        Text("Frederik Kohler")
+                            .font(.headline)
+                        
+                        Text("Point Gard")
+                            .font(.subheadline)
+                    }
+                }
+                
+                ZStack {
+                    SnapScrollView {
+                        LazyHStack {
+                            if let bestTwoPointAttempts = viewModel.bestTwoPointAttempts {
+                                StatisticCard(title: "Most 2er", description: "asdasd asd adsasd.", statistic: bestTwoPointAttempts)
+                            }
+                            
+                            if let bestThreePointAttempts = viewModel.bestThreePointAttempts {
+                                StatisticCard(title: "Most 3er", description: "asdasd asd adsasd.", statistic: bestThreePointAttempts)
+                            }
+                            
+                            if let bestFouls = viewModel.bestFouls {
+                                StatisticCard(title: "Lowest Fouls", description: "asdasd asd adsasd.", statistic: bestFouls)
+                            }
+                            
+                            if let bestPoints = viewModel.bestPoints {
+                                StatisticCard(title: "Most Points", description: "asdasd asd adsasd.", statistic: bestPoints)
+                            }
+                        }
+                    }
+                    .blur(radius: viewModel.hasData ? 0 : 2)
+                    .opacity(viewModel.hasData ? 1.0 : 0.5)
+                    
+                    if !viewModel.hasData {
+                        Text("Soon you will see your data here!")
+                            .font(.footnote)
+                    }
+                }
+                
+                StatisticChart(statistics: viewModel.chartStatistics, hasData: viewModel.hasData) { type in
+                    viewModel.getStatistic(for: type)
+                }
+                
+                Spacer()
+            }
+        }
+        .navigationTitle(userViewModel.userProfile?.fullName ?? "Frederik`s Statistic")
+        .navigationBarTitleDisplayMode(.inline)
+        .contentMargins(.top, 20)
+        .contentMargins(.horizontal, 20)
+    }
+}
+
+private struct StatisticCard: View {
     let title: String
     let description: String
     let statistic: Statistic
@@ -58,16 +211,127 @@ struct StatisticCard: View {
     }
 }
 
-#Preview {
-    var statistcs: [Statistic] {
-        var statistcs: [Statistic] = []
-        for index in 0...9 {
-            let statistc = Statistic(id: UUID(), userId: UUID(), fouls: Int.random(in: 0...9), twoPointAttempts: Int.random(in: 0...9), threePointAttempts: Int.random(in: 0...9), createdAt: Date(), updatedAt: Date())
-            
-            statistcs.append(statistc)
+private struct StatisticChart: View {
+    let statistics: [Statistic]
+    let hasData: Bool
+    
+    var sortedByDate: [Statistic] {
+        self.statistics.sorted {
+            $0.createdAt < $1.createdAt
         }
-        return statistcs
     }
     
-    PlayerStatistic(statistics: statistcs)
+    var yValue: (Statistic) -> Int {
+        switch selected {
+        case .twoPointAttempts:
+            return { statistic in statistic.twoPointAttempts }
+        case .threePointAttempts:
+            return { statistic in statistic.threePointAttempts }
+        case .fouls:
+            return { statistic in statistic.fouls }
+        case .mostPoints:
+            return { statistic in statistic.points }
+        }
+    }
+    
+    let onChange: (TerminType) -> Void
+    
+    @State var selected: SelectionType = .twoPointAttempts
+    @State var selectedType: TerminType = .game
+    @State private var lineOpacity: Double = 0
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            HStack {
+                ForEach(TerminType.allCases, id: \.hashValue) { type in
+                    Button(type.rawValue) {
+                        withAnimation {
+                            selectedType = type
+                            onChange(type)
+                        }
+                    }
+                    .buttonStyle(  RoundedFilledButtonStlye(color: selectedType == type ? Theme.lightOrange : Theme.myGray) )
+                }
+            }
+            
+            ZStack {
+                Chart(sortedByDate) { statistic in
+                    LineMark(
+                        x: .value("Date", statistic.createdAt.formatted(.dateTime.day(.twoDigits).month(.twoDigits))),
+                        y: .value("Value", yValue(statistic))
+                    )
+                    .opacity(hasData ? lineOpacity : 0.5)
+                    .foregroundStyle(Theme.lightOrange)
+                     
+                    AreaMark(
+                        x: .value("Date", statistic.createdAt.formatted(.dateTime.day(.twoDigits).month(.twoDigits))),
+                        y: .value("Value", yValue(statistic))
+                    )
+                    .opacity(hasData ? lineOpacity : 0.5)
+                    .foregroundStyle(
+                        LinearGradient(
+                            gradient: Gradient(colors: [
+                                Theme.lightOrange.opacity(0.8),
+                                Theme.lightOrange.opacity(0.05)
+                            ]),
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                    )
+                }
+                .blur(radius: hasData ? 0 : 2)
+                .opacity(hasData ? 1.0 : 0.5)
+                .chartYScale(domain: [0, selected.maxValue])
+                
+                if !hasData {
+                    Text("Soon you will see your data here!")
+                        .font(.footnote)
+                }
+            }
+           
+            HStack {
+                ForEach(SelectionType.allCases, id: \.hashValue) { type in
+                    Button(type.rawValue) {
+                        withAnimation {
+                            selected = type
+                        }
+                    }
+                    .buttonStyle(  RoundedFilledButtonStlye(color: selected == type ? Theme.darkOrange : Theme.myGray) )
+                }
+            }
+        }
+        .onAppear {
+            withAnimation(.easeInOut(duration: 1.0)) {
+                lineOpacity = 1.0
+            }
+        }
+    }
+    
+    enum SelectionType: LocalizedStringKey, CaseIterable {
+        case twoPointAttempts = "2er"
+        case threePointAttempts = "3er"
+        case fouls = "Fouls"
+        case mostPoints = "Points"
+        
+        var maxValue: Int {
+            switch self {
+            case .twoPointAttempts: 20
+            case .threePointAttempts: 20
+            case .fouls: 10
+            case .mostPoints: 100
+            }
+        }
+    }
+}
+ 
+import Supabase
+#Preview {
+    @Previewable @State var viewModel = SharedUserViewModel(repository: RepositoryPreview.shared)
+    NavigationStack {
+        PlayerStatistic(userViewModel: viewModel)
+    }
+    .onAppear {
+        viewModel.userProfile = MockUser.myUserProfile
+        viewModel.currentAccount = MockUser.myUserAccount
+    }
 }

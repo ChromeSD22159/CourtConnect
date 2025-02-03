@@ -28,6 +28,12 @@
     "0" : {
 
     },
+    "2er" : {
+
+    },
+    "3er" : {
+
+    },
     "Add Document" : {
 
     },
@@ -83,6 +89,9 @@
 
     },
     "Dashboard" : {
+
+    },
+    "Date" : {
 
     },
     "Date?" : {
@@ -160,7 +169,13 @@
     "Firstname" : {
 
     },
+    "Fouls" : {
+
+    },
     "Found New Team" : {
+
+    },
+    "Frederik Kohler" : {
 
     },
     "Game" : {
@@ -259,6 +274,12 @@
     "Player" : {
 
     },
+    "Point Gard" : {
+
+    },
+    "Points" : {
+
+    },
     "Position" : {
 
     },
@@ -304,6 +325,9 @@
     "SignUp" : {
 
     },
+    "Soon you will see your data here!" : {
+
+    },
     "Team" : {
 
     },
@@ -338,6 +362,9 @@
 
     },
     "Upload Document" : {
+
+    },
+    "Value" : {
 
     },
     "Venue" : {

@@ -86,10 +86,8 @@ struct QRCodeHelper {
     }
     
     func startReceivingRequests() {
-        print("Start RECEIVING")
-        repository.teamRepository.receiveTeamJoinRequests { request in
-            
-        }
+        // TODO: print("Start RECEIVING")
+        repository.teamRepository.receiveTeamJoinRequests { _ in }
     }
     
     func saveTermin(termin: Termin) {
