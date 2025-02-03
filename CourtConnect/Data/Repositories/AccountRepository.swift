@@ -23,6 +23,10 @@ class AccountRepository: SyncronizationProtocol {
         try container.mainContext.save()
     }
     
+    func insert(termin:Termin) {
+        container.mainContext.insert(termin)
+    }
+    
     func getAllAccounts(userId: UUID) throws -> [UserAccount] {
         let predicate = #Predicate<UserAccount> { $0.userId == userId && $0.deletedAt == nil }
         let fetchDescruptor = FetchDescriptor<UserAccount>(predicate: predicate)
@@ -44,13 +48,8 @@ class AccountRepository: SyncronizationProtocol {
         return resul
     }
     
-    func getAccount(id: UUID, ignoreSoftDelete: Bool = false) throws -> UserAccount? {
-        let predicate: Predicate<UserAccount>
-        if ignoreSoftDelete {
-            predicate = #Predicate<UserAccount> { $0.id == id }
-        } else {
-            predicate = #Predicate<UserAccount> { $0.id == id && $0.deletedAt == nil }
-        }
+    func getAccount(id: UUID) throws -> UserAccount? {
+        let predicate = #Predicate<UserAccount> { $0.id == id && $0.deletedAt == nil }
         let fetchDescruptor = FetchDescriptor<UserAccount>(predicate: predicate)
         let result = try container.mainContext.fetch(fetchDescruptor).first
         return result
@@ -61,16 +60,7 @@ class AccountRepository: SyncronizationProtocol {
         item.deletedAt = Date()
         
         try usert(item: item)
-    }
-    
-    func debugDelete() throws {
-        let fetchDescruptor = FetchDescriptor<UserAccount>()
-        let result = try container.mainContext.fetch(fetchDescruptor)
-        try result.forEach { item in
-            container.mainContext.delete(item)
-            try container.mainContext.save()
-        }
-    }
+    } 
     
     // MARK: SYNCING
     func sendUpdatedAfterLastSyncToBackend(userId: UUID, lastSync: Date) async { 

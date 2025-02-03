@@ -25,3 +25,24 @@ struct DeletionRequestDTO: DTOProtocol {
         return DeletionRequest(id: id, userId: userId, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
 }
+
+/*
+ -- 1. Trigger-Funktion erstellen
+ CREATE OR REPLACE FUNCTION "LogDeletionRequestCrud"()
+ RETURNS TRIGGER AS $$
+ BEGIN
+     INSERT INTO public."UpdateHistory" ("tableString", "timestamp", "userId")
+     VALUES ('DeletionRequest', NOW(), COALESCE(NEW."userId", OLD."userId"))
+     ON CONFLICT ("tableString", "userId")
+     DO UPDATE SET "timestamp" = NOW();
+
+     RETURN NULL;
+ END;
+ $$ LANGUAGE plpgsql;
+
+ -- 2. Trigger erstellen
+ CREATE TRIGGER "DeletionRequestCrudTrigger"
+ AFTER INSERT OR DELETE OR UPDATE ON "DeletionRequest"
+ FOR EACH ROW
+ EXECUTE FUNCTION "LogDeletionRequestCrud"();
+ */

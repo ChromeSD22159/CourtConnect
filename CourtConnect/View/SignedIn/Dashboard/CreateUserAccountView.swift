@@ -5,20 +5,20 @@
 //  Created by Frederik Kohler on 23.01.25.
 //
 import SwiftUI 
-
+ 
 struct CreateUserAccountView: View {
-    @State var userAccountViewModel: CreateUserAccountViewModel
-    @ObservedObject var userViewModel: SharedUserViewModel
+    @State private var createUserAccountViewModel: CreateUserAccountViewModel
     
-    init(userViewModel: SharedUserViewModel) {
-        self.userViewModel = userViewModel
-        self.userAccountViewModel = CreateUserAccountViewModel(repository: userViewModel.repository)
+    @Environment(\.dismiss) var dismiss
+    
+    init(userId: UUID) {
+        self.createUserAccountViewModel = CreateUserAccountViewModel(repository: Repository.shared, userId: userId)
     }
     
     var body: some View {
         NavigationStack {
             List {
-                Picker("Kind", selection: $userAccountViewModel.role) {
+                Picker("Kind", selection: $createUserAccountViewModel.role) {
                     ForEach(UserRole.registerRoles) { position in
                         Text(position.rawValue).tag(position)
                     }
@@ -27,8 +27,8 @@ struct CreateUserAccountView: View {
                 .tint(.primary)
                 .listRowSeparatorTint(.orange)
 
-                if userAccountViewModel.role == .player {
-                    Picker("Position", selection: $userAccountViewModel.position) {
+                if createUserAccountViewModel.role == .player {
+                    Picker("Position", selection: $createUserAccountViewModel.position) {
                         ForEach(BasketballPosition.allCases) { position in
                             Text(position.rawValue).tag(position)
                         }
@@ -45,11 +45,9 @@ struct CreateUserAccountView: View {
                     Button("Create") {
                         Task {
                             do {
-                                let newAccount = try userAccountViewModel.insertAccount() 
-                                if let newAccount = newAccount {
-                                    try await userAccountViewModel.sendToServer(account: newAccount)
-                                }
-                                userViewModel.setCurrentAccount(newAccount: newAccount)
+                                try await createUserAccountViewModel.insertAccount()
+                                
+                                dismiss()
                             } catch {
                                 print(error.localizedDescription)
                             }
@@ -58,7 +56,7 @@ struct CreateUserAccountView: View {
                 }
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel", action: {
-                        
+                        dismiss()
                     })
                 }
             }
@@ -73,9 +71,7 @@ struct CreateUserAccountView: View {
     ZStack {
     }
     .sheet(isPresented: .constant(true)) {
-        CreateUserAccountView(
-            userViewModel: userViewModel
-        )
+        CreateUserAccountView(userId: MockUser.myUserAccount.userId)
         .shadow(radius: 5)
         .previewEnvirments()
     }

@@ -29,3 +29,24 @@ struct TeamAdminDTO: DTOProtocol {
         return TeamAdmin(id: id, teamId: teamId, userAccountId: userAccountId, role: role, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
 } 
+// --> Get Account from userAccountId to get the UserId
+/*
+ -- 1. Trigger-Funktion erstellen
+ CREATE OR REPLACE FUNCTION "LogTeamAdminCrud"()
+ RETURNS TRIGGER AS $$
+ BEGIN
+     INSERT INTO public."UpdateHistory" ("tableString", "timestamp", "userId")
+     VALUES ('TeamAdmin', NOW(), COALESCE(NEW."userId", OLD."userId"))
+     ON CONFLICT ("tableString", "userId")
+     DO UPDATE SET "timestamp" = NOW();
+
+     RETURN NULL;
+ END;
+ $$ LANGUAGE plpgsql;
+
+ -- 2. Trigger erstellen
+ CREATE TRIGGER "LogTeamAdminCrudTrigger"
+ AFTER INSERT OR DELETE OR UPDATE ON "TeamAdmin"
+ FOR EACH ROW
+ EXECUTE FUNCTION "LogTeamAdminCrud"();
+ */

@@ -15,28 +15,32 @@ enum DatabaseTable: String, CaseIterable {
     case deletionRequest = "DeletionRequest"
     case document = "Document"
     case interest = "Interest"
-    case location = "Location"
     case request = "Request"
     case statistic = "Statistic"
     case team = "Team"
     case teamAdmin = "TeamAdmin"
     case teamMember = "TeamMember"
-    case termine = "Termine"
+    case termin = "Termin"
     case updateHistory = "UpdateHistory"
     case userAccount = "UserAccount"
     case userOnline = "UserOnline"
     case userProfile = "UserProfile"
     
+    static var tablesToSync: [DatabaseTable] {
+        var tables = DatabaseTable.allCases
+        tables.removeAll { $0 == .updateHistory || $0 == .userOnline }
+        return tables
+    }
+    
     var remoteModel: any DTOProtocol.Type {
         switch self {
         case .document: return DocumentDTO.self
         case .interest: return InterestDTO.self
-        case .location: return LocationDTO.self
         case .request: return RequestsDTO.self
         case .statistic: return StatisticDTO.self
         case .teamAdmin: return TeamAdminDTO.self
         case .teamMember: return TeamMemberDTO.self
-        case .termine: return TermineDTO.self
+        case .termin: return TerminDTO.self
         case .attendance: return AttendanceDTO.self
         case .userProfile: return UserProfileDTO.self
         case .userOnline: return UserOnlineDTO.self
@@ -52,12 +56,11 @@ enum DatabaseTable: String, CaseIterable {
         switch self {
         case .document: return "teamId"
         case .interest: return "teamId"
-        case .location: return nil
         case .request: return "teamId"
         case .statistic: return "userId"
         case .teamAdmin: return "teamId"
         case .teamMember: return "teamId"
-        case .termine: return "teamId"
+        case .termin: return "teamId"
         case .attendance: return "trainerId"
         case .userProfile: return "userId"
         case .userOnline: return nil
@@ -73,12 +76,11 @@ enum DatabaseTable: String, CaseIterable {
         switch self {
         case .document: return Document.self
         case .interest: return Interest.self
-        case .location: return Location.self
         case .request: return Requests.self
         case .statistic: return Statistic.self
         case .teamAdmin: return TeamAdmin.self
         case .teamMember: return TeamMember.self
-        case .termine: return Termine.self
+        case .termin: return Termin.self
         case .attendance: return Attendance.self
         case .userProfile: return UserProfile.self
         case .userOnline: return UserOnline.self
@@ -94,12 +96,11 @@ enum DatabaseTable: String, CaseIterable {
         switch self {
         case .document: return "id"
         case .interest: return "id"
-        case .location: return "id"
         case .request: return "id"
         case .statistic: return "id"
         case .teamAdmin: return "id"
         case .teamMember: return "id"
-        case .termine: return "id"
+        case .termin: return "id"
         case .attendance: return "id"
         case .userProfile: return "id"
         case .userOnline: return "id"

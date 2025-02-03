@@ -28,4 +28,26 @@ struct InterestDTO: DTOProtocol {
     func toModel() -> Interest {
         return Interest(id: id, memberId: memberId, terminId: terminId, willParticipate: willParticipate, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
-} 
+}
+
+// --> Get Account from memberId to get the UserId
+/*
+ -- 1. Trigger-Funktion erstellen
+ CREATE OR REPLACE FUNCTION "LogInterestCrud"()
+ RETURNS TRIGGER AS $$
+ BEGIN
+     INSERT INTO public."UpdateHistory" ("tableString", "timestamp", "userId")
+     VALUES ('Interest', NOW(), COALESCE(NEW."userId", OLD."userId"))
+     ON CONFLICT ("tableString", "userId")
+     DO UPDATE SET "timestamp" = NOW();
+
+     RETURN NULL;
+ END;
+ $$ LANGUAGE plpgsql;
+
+ -- 2. Trigger erstellen
+ CREATE TRIGGER "LogInterestCrudTrigger"
+ AFTER INSERT OR DELETE OR UPDATE ON "Interest"
+ FOR EACH ROW
+ EXECUTE FUNCTION "LogInterestCrud"();
+ */

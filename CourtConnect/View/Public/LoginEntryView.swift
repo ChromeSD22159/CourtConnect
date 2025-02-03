@@ -54,20 +54,14 @@ struct LoginEntryView: View {
             Button("SignIn") {
                 isSignInSheet.toggle()
             }
-            .padding()
-            .font(.body.bold())
-            .foregroundStyle(.white)
-            .background(Theme.darkOrange)
-            .clipShape(RoundedRectangle(cornerRadius: 15))
+            .buttonStyle(DarkButtonStlye())
             
             Spacer()
             
             Button("SignUp") {
                 isSignUpSheet.toggle()
             }
-            .font(.body.bold())
-            .padding()
-            .foregroundStyle(Theme.myGray)
+            .buttonStyle(TransparentButtonStyle())
         }
     }
     
@@ -77,13 +71,13 @@ struct LoginEntryView: View {
                 .font(.title.bold())
                 .foregroundStyle(Theme.darkOrange)
                  
-            Text("Bereit für den Sprung? Lass uns starten! Melde dich an, um loszulegen und teil der Community zu werden.")
+            Text("Ready for the jump? Let's start! Register to get started and become part of the community.")
                 .foregroundStyle(Theme.myGray)
                 .lineSpacing(5)
         }
         .lineSpacing(5)
     }
-}
+} 
  
 private struct SignInSheet: View {
     @Binding var isSignInSheet: Bool

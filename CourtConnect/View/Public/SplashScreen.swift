@@ -9,11 +9,11 @@ import Lottie
 
 struct SplashScreen: View {
     
-    @Binding var isVisible: Bool
-    @Environment(SyncServiceViewModel.self) private var syncServiceViewModel
+    @Binding var isVisible: Bool 
     
     let duration: Double // 2
     let userId: UUID?
+    let onStart: () -> Void
     let onComplete: () -> Void
      
     @State var logoVisibility = true
@@ -35,8 +35,10 @@ struct SplashScreen: View {
             } 
             .onAppear {
                 playbackMode = .playing(.fromFrame(1, toFrame: 48, loopMode: .loop))
-                
+                 
                 Timer.scheduledTimer(withTimeInterval: duration, repeats: false) { _ in
+                    onStart()
+                    
                     withAnimation {
                         logoVisibility.toggle()
                     }
@@ -55,7 +57,9 @@ struct SplashScreen: View {
 #Preview {
     @Previewable @State var isSlashScreen = true
     
-    SplashScreen(isVisible: $isSlashScreen, duration: 3.0, userId: nil, onComplete: {
+    SplashScreen(isVisible: $isSlashScreen, duration: 3.0, userId: nil, onStart: {
+        
+    } , onComplete: {
         isSlashScreen.toggle()
     })
     .previewEnvirments()

@@ -53,8 +53,8 @@ struct FoundNewTeamView: View {
                     }
                     
                     VStack(alignment: .leading) {
-                        Text("Choose Image")
-                        PhotosPicker("Bild auswählen", selection: $viewModel.avatarItem, matching: .images)
+                        Text("Select image")
+                        PhotosPicker("Select image", selection: $viewModel.avatarItem, matching: .images)
                             .foregroundStyle(.white)
                             .padding(.horizontal, 12)
                             .padding(.vertical, 6)

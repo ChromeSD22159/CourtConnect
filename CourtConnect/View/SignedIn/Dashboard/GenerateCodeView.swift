@@ -6,10 +6,9 @@
 //
 import SwiftUI
 
-struct GenerateCodeView: View {
+struct GenerateCodeViewSheet: View {
     @Environment(\.dismiss) var dismiss
-    @State private var viewModel = GenerateCodeViewModel(repository: Repository.shared)
-    
+    @State private var viewModel = GenerateCodeViewModel(repository: Repository.shared) 
     var body: some View {
         NavigationStack {
             ZStack {
@@ -21,7 +20,7 @@ struct GenerateCodeView: View {
                         .font(.system(size: 100))
                         .foregroundStyle(.darkOrange, LinearGradient(colors: [Theme.darkOrange, Theme.lightOrange], startPoint: .top, endPoint: .bottom))
                     
-                    Text("Enter Team's Code")
+                    Text("Generate new team's Code")
                         .font(.title2)
                         .fontWeight(.semibold)
                     
@@ -75,7 +74,7 @@ struct GenerateCodeView: View {
                 
                 ToolbarItem(placement: .navigationBarTrailing, content: {
                     Button("Copy") {
-                        viewModel.copy()
+                        viewModel.updateTeamCode()
                         dismiss()
                     }
                     .foregroundStyle(Theme.text)
@@ -91,7 +90,7 @@ struct GenerateCodeView: View {
             ZStack {
                 Theme.background.ignoresSafeArea()
                 
-                GenerateCodeView()
+                GenerateCodeViewSheet()
                     .previewEnvirments()
             }
         })

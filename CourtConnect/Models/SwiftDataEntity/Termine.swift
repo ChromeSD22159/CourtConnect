@@ -8,22 +8,36 @@ import Foundation
 import SwiftData
 
 @Model
-class Termine: ModelProtocol {
+class Termin: ModelProtocol {
     @Attribute(.unique) var id: UUID
-    var locationId: UUID
+    var teamId: UUID
+    var title: String
+    var place: String
+    var infomation: String
+    var typeString: String
+    var durationMinutes: Int
+    var date: Date
+    var createdByUserAccountId: UUID
     var createdAt: Date
     var updatedAt: Date
     var deletedAt: Date?
-    
-    init(id: UUID = UUID(), locationId: UUID, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil) {
+
+    init(id: UUID = UUID(), teamId: UUID, title: String, place: String, infomation: String, typeString: String, durationMinutes: Int, date: Date, createdByUserAccountId: UUID, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil) {
         self.id = id
-        self.locationId = locationId
+        self.teamId = teamId
+        self.title = title
+        self.place = place
+        self.infomation = infomation
+        self.typeString = typeString
+        self.durationMinutes = durationMinutes
+        self.date = date
+        self.createdByUserAccountId = createdByUserAccountId
         self.createdAt = createdAt
         self.updatedAt = updatedAt
         self.deletedAt = deletedAt
     }
     
-    func toDTO() -> TermineDTO {
-        return TermineDTO(id: id, locationId: locationId, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
+    func toDTO() -> TerminDTO {
+        return TerminDTO(id: id, teamId: teamId, title: title, place: place, infomation: infomation, typeString: typeString, durationMinutes: durationMinutes, date: date, createdByUserAccountId: createdByUserAccountId, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
 }

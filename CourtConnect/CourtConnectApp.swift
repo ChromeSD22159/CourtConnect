@@ -29,27 +29,35 @@ struct CourtConnectApp: App {
     }
      
     @State var isSlashScreen = true
-    
+    @State var show = false
     var body: some Scene {
         WindowGroup {
             AppBackground {
                 ZStack {
-                    LoginNavigation(userViewModel: userViewModel)
-                        .opacity(isSlashScreen ? 0 : 1)
+                    Group {
+                        if userViewModel.user != nil {
+                            MainNavigationView(userViewModel: userViewModel)
+                        } else {
+                            LoginEntryView(userViewModel: userViewModel)
+                        }
+                    }
+                    .opacity(isSlashScreen ? 0 : 1)
                     
-                    SplashScreen(isVisible: $isSlashScreen, duration: 1.5, userId: userViewModel.user?.id, onComplete: {
+                    SplashScreen(isVisible: $isSlashScreen, duration: 1.5, userId: userViewModel.user?.id, onStart: {
+                        Task {
+                            await userViewModel.isAuthendicated(syncServiceViewModel: syncServiceViewModel)
+                        }
+                    }, onComplete: {
                         isSlashScreen.toggle()
                         
-                        if userViewModel.userProfile?.onBoardingAt == nil {
-                            userViewModel.showOnBoarding = true
-                        }
+                        userViewModel.showOnBoardingIfNeverShowBefore()
                     })
                 }
             }
             .environment(syncServiceViewModel)
         }
     }
-}
+} 
 
 extension View {
     func previewEnvirments() -> some View {

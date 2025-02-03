@@ -25,7 +25,7 @@ struct UserProfileEditView: View {
                 .focused($focus, equals: Field.firstName)
                 .textFieldStyle(.roundedBorder)
             
-            TextField("LastName", text: $userViewModel.editProfile.lastName)
+            TextField("Lastname", text: $userViewModel.editProfile.lastName)
                 .focused($focus, equals: Field.lastName)
                 .textFieldStyle(.roundedBorder)
             
@@ -70,7 +70,7 @@ struct UserProfileEditView: View {
                 }
                 .buttonStyle(RoundedFilledButtonStlye())
                 .confirmationDialog("Delete your Account", isPresented: $userViewModel.showDeleteConfirmMenu) {
-                    Button("Delete", role: .destructive) {  userViewModel.deleteUserAccount() }
+                    Button("Delete", role: .destructive) {  userViewModel.deleteUser() }
                     Button("Cancel", role: .cancel) { userViewModel.showDeleteConfirmMenu.toggle() }
                 } message: {
                     Text("Delete your Account")

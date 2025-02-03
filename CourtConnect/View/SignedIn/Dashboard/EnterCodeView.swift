@@ -8,7 +8,9 @@ import SwiftUI
 
 struct EnterCodeView: View {
     @Environment(\.dismiss) var dismiss
+    @Environment(\.errorHandler) var errorHandler
     @State private var viewModel = CodeEntryViewModel(repository: Repository.shared)
+    let userAccount: UserAccount
     
     var body: some View {
         NavigationStack {
@@ -42,6 +44,7 @@ struct EnterCodeView: View {
                               })
                         }
                     }
+                    .shake(with: viewModel.numberOfShakes)
                      
                     Button(action: {
                         viewModel.past()
@@ -54,7 +57,11 @@ struct EnterCodeView: View {
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: 3), spacing: 12) {
                         ForEach(1..<10, id: \.self) { number in
                             Button(action: {
-                                viewModel.addDigit("\(number)")
+                                if viewModel.code.count < 6 {
+                                    viewModel.addDigit("\(number)")
+                                } else {
+                                    viewModel.triggerShakeAnimation()
+                                }
                             }, label: {
                                 Text("\(number)")
                                     .foregroundStyle(Theme.white)
@@ -104,26 +111,35 @@ struct EnterCodeView: View {
                 
                 ToolbarItem(placement: .navigationBarTrailing, content: {
                     Button("Join") {
-                        #warning("joinTeamWithCode")
-                        // viewModel.joinTeamWithCode(code: String, userAccount: UserAccount)
+                        Task {
+                            do {
+                                try await viewModel.joinTeamWithCode(userAccount: userAccount)
+                                dismiss()
+                            } catch {
+                                print(error)
+                                viewModel.triggerShakeAnimation() 
+                                errorHandler.handleError(error: error)
+                            }
+                        }
                     }
                     .foregroundStyle(Theme.text)
                 })
             }
         }.navigationStackTint()
     }
-}
-
+} 
+ 
 #Preview("EnterCode") {
+    @Previewable @State var numberOfShakes = 0.0
     ZStack {
-        EnterCodeView()
-            .sheet(isPresented: .constant(false), content: {
-                ZStack {
-                    Theme.background.ignoresSafeArea()
-                    
-                    EnterCodeView()
-                }
-            })
+        
     }
-    .previewEnvirments() 
+    .sheet(isPresented: .constant(true), content: {
+        ZStack {
+            Theme.background.ignoresSafeArea()
+            
+            EnterCodeView(userAccount: MockUser.myUserAccount)
+        }
+    })
+    .previewEnvirments()
 }

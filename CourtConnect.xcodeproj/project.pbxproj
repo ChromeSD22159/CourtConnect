@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B64487C12D4CCC5B0012FB43 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = B64487C02D4CCC5B0012FB43 /* .swiftlint.yml */; };
 		B66529D82D3A81EC00B87D71 /* RNCryptor in Frameworks */ = {isa = PBXBuildFile; productRef = B66529D72D3A81EC00B87D71 /* RNCryptor */; };
 		B6652A512D3DAA2E00B87D71 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = B6652A502D3DAA2E00B87D71 /* FirebaseAuth */; };
-		B6652B402D3E4E8C00B87D71 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = B6652B3F2D3E4E8C00B87D71 /* .swiftlint.yml */; };
 		B66532592D3EC28500B87D71 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = B66532582D3EC28500B87D71 /* .gitignore */; };
 		B665325D2D3EC35300B87D71 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = B665325C2D3EC35300B87D71 /* README.md */; };
 		B66533A12D3F8E0A00B87D71 /* SwiftJWT in Frameworks */ = {isa = PBXBuildFile; productRef = B66533A02D3F8E0A00B87D71 /* SwiftJWT */; };
@@ -48,7 +48,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		B6652B3F2D3E4E8C00B87D71 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
+		B64487C02D4CCC5B0012FB43 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		B66532582D3EC28500B87D71 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		B665325A2D3EC28F00B87D71 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B665325C2D3EC35300B87D71 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -135,7 +135,7 @@
 			children = (
 				B66532582D3EC28500B87D71 /* .gitignore */,
 				B6653C582D42C00D00B87D71 /* Localizable.xcstrings */,
-				B6652B3F2D3E4E8C00B87D71 /* .swiftlint.yml */,
+				B64487C02D4CCC5B0012FB43 /* .swiftlint.yml */,
 				B665325A2D3EC28F00B87D71 /* GoogleService-Info.plist */,
 				B665325C2D3EC35300B87D71 /* README.md */,
 				B698ABFD2D330FC10086AF8C /* CourtConnect */,
@@ -311,8 +311,8 @@
 			files = (
 				B665325D2D3EC35300B87D71 /* README.md in Resources */,
 				B6653C592D42C00D00B87D71 /* Localizable.xcstrings in Resources */,
+				B64487C12D4CCC5B0012FB43 /* .swiftlint.yml in Resources */,
 				B66532592D3EC28500B87D71 /* .gitignore in Resources */,
-				B6652B402D3E4E8C00B87D71 /* .swiftlint.yml in Resources */,
 				B6D69A642D447AE200702FA2 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

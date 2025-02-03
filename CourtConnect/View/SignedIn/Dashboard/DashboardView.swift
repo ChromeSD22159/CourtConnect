@@ -8,7 +8,6 @@ import SwiftUI
 
 struct DashboardView: View {
     @ObservedObject var userViewModel: SharedUserViewModel
-    @Environment(SyncServiceViewModel.self) private var syncServiceViewModel
     @Environment(\.messagehandler) var messagehandler
     @Environment(\.errorHandler) var errorHanler
     @Environment(\.networkMonitor) var networkMonitor
@@ -22,9 +21,9 @@ struct DashboardView: View {
     
     var body: some View {
         ScrollView(.vertical) {
-            if let currentAccount = userViewModel.currentAccount, let role = UserRole(rawValue: currentAccount.role) {
+            if let currentAccount = userViewModel.currentAccount, let role = UserRole(rawValue: currentAccount.role) { 
                 switch role {
-                case .player: PlayerDashboard(userViewModel: userViewModel)
+                case .player: PlayerDashboard(userViewModel: userViewModel, dashBoardViewModel: dashBoardViewModel)
                 case .trainer: TrainerDashboard(userViewModel: userViewModel, dashBoardViewModel: dashBoardViewModel)
                 case .admin: EmptyView()
                 }
@@ -34,8 +33,15 @@ struct DashboardView: View {
         .errorPopover()
         .navigationTitle("Dashboard")
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(isPresented: $userViewModel.isCreateRoleSheet, content: {
-            CreateUserAccountView(userViewModel: userViewModel)
+        .sheet(isPresented: $userViewModel.isCreateRoleSheet, onDismiss: {
+            userViewModel.getAllUserAccountsFromDatabase()
+           
+            guard let userId = userViewModel.user?.id else { return }
+            userViewModel.getCurrentAccount(userId: userId)
+        }, content: {
+            if let userId = userViewModel.user?.id {
+                CreateUserAccountView(userId: userId)
+            }
         })
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -44,6 +50,7 @@ struct DashboardView: View {
                         ForEach(userViewModel.accounts) { account in
                             Button {
                                 userViewModel.setCurrentAccount(newAccount: account)
+                                dashBoardViewModel.getTeam(for: account)
                             } label: {
                                 HStack {
                                     if userViewModel.currentAccount?.id == account.id {
@@ -56,13 +63,19 @@ struct DashboardView: View {
                             }
                         }
                         
+                        // TODO: ???
                         if !userViewModel.userHasBothAccounts() {
                             Button {
                                 userViewModel.isCreateRoleSheet.toggle()
                             } label: {
                                 Label("Create User Account", systemImage: "plus")
                             }
-                            
+                        } else {
+                            Button {
+                                userViewModel.isCreateRoleSheet.toggle()
+                            } label: {
+                                Label("Create User Account", systemImage: "plus")
+                            }
                         }
                     }
                 }
@@ -74,38 +87,7 @@ struct DashboardView: View {
                 userViewModel.getAllUserAccountsFromDatabase()
                 userViewModel.getCurrentAccount(userId: userId)
             }
-        }
-        .task {
-            if let userId = userViewModel.user?.id {
-                do {
-                    try await syncServiceViewModel.syncAllTables(userId: userId)
-                } catch {
-                    print(error.localizedDescription)
-                }
-            }
-        }
-        .fullScreenCover(
-            isPresented: $userViewModel.showOnBoarding,
-            onDismiss: { sync() },
-            content: {
-                if let userProfile = userViewModel.userProfile {
-                    OnBoardingView(firstName: userProfile.firstName)
-                }
-            }
-        )
-    }
-    
-    func sync() {
-        userViewModel.onDismissOnBoarding(onComplete: { userId, error in
-            if let error = error {
-                errorHanler.handleError(error: error) 
-            }
-            if let userId = userId {
-                Task {
-                    try await syncServiceViewModel.sendAllData(userId: userId)
-                }
-            }
-        })
+        } 
     }
 }
  

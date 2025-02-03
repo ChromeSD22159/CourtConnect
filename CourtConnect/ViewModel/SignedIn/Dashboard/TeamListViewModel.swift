@@ -23,8 +23,7 @@ import Foundation
     func searchTeam() {
         Task {
             do {
-                foundTeams = try await repository.teamRepository.searchTeamByName(name: searchTeamName)
-                print(foundTeams.count)
+                foundTeams = try await repository.teamRepository.searchTeamByName(name: searchTeamName) 
             } catch {
                 print(error.localizedDescription)
             }

@@ -7,6 +7,8 @@
 
 import Foundation
 import Realtime
+import UIKit
+import Storage
 
 struct SupabaseService {
     static func search<T: DTOProtocol>(name: String, table: DatabaseTable, column: String) async throws -> [T] {
@@ -37,13 +39,15 @@ struct SupabaseService {
         return isRequestSuccessful(statusCode: response.response.statusCode)
     }
     
-    static func getEquals<T: DTOProtocol>(value: String, table: DatabaseTable, column: String) async throws -> T? {
-        return try await BackendClient.shared.supabase
-            .from(table.rawValue)
-            .select()
-            .eq(column, value: value)
-            .execute()
-            .value
+    static func getEquals<T: DTOProtocol>(value: String, table: DatabaseTable, column: String) async throws -> T? { 
+        let result: [T] = try await BackendClient.shared.supabase
+                .from(table.rawValue)
+                .select()
+                .eq(column, value: value)
+                .execute()
+                .value
+            
+        return result.first
     }
     
     static func getGreaterThan<T: DTOProtocol>(table: DatabaseTable, column: String = "updatedAt", lastSync: Date) async throws -> [T] {
@@ -57,6 +61,14 @@ struct SupabaseService {
     
     static func upsert<T: DTOProtocol>(item: T, table: DatabaseTable, onConflict: String) async throws -> T {
         return try await BackendClient.shared.supabase
+            .from(table.rawValue)
+            .upsert(item, onConflict: onConflict)
+            .execute()
+            .value
+    }
+    
+    static func upsertWithOutResult<T: DTOProtocol>(item: T, table: DatabaseTable, onConflict: String) async throws {
+         try await BackendClient.shared.supabase
             .from(table.rawValue)
             .upsert(item, onConflict: onConflict)
             .execute()
@@ -98,17 +110,42 @@ struct SupabaseService {
         }
 
         return try await query.execute().value
-    }
-    
-    static func insertUpdateTimestampTable(for table: DatabaseTable, userId: UUID) async throws {
-        let entry = UpdateHistoryDTO(tableString: table.rawValue, userId: userId, timestamp: Date())
-        try await BackendClient.shared.supabase
-            .from(DatabaseTable.updateHistory.rawValue)
-            .upsert(entry, onConflict: "tableString, userId")
-            .execute()
-    }
+    } 
     
     static func isRequestSuccessful(statusCode: Int) -> Bool {
         return (200...299).contains(statusCode)
     }
+    
+    static func uploadImageToSupabaseAndCache(image: UIImage, bucket: SupabaseBucket, teamId: UUID) async throws -> DocumentDTO {
+        guard let imageData = image.jpegData(compressionQuality: 0.8) else {
+            throw ImageUploadError.conversionFailed
+        }
+        
+        let fileName = "\(UUID().uuidString).jpg"
+        let path = "team_uploads/\(teamId.uuidString)/\(fileName)"
+        let options = FileOptions(
+            cacheControl: "3600",
+            contentType: "image/png",
+            upsert: false
+          )
+        let response = try await BackendClient.shared.supabase.storage.from(bucket.rawValue).update(path, data: imageData, options: options)
+        
+        let image = try await downloadDocumentAndCache(imageURL: response.path, bucket: bucket)
+        
+        let generatedDocumentDTO = DocumentDTO(teamId: teamId, name: fileName, info: fileName, url: image.absoluteString, roleString: UserRole.player.rawValue, createdAt: Date(), updatedAt: Date())
+ 
+        return try await SupabaseService.insert(item: generatedDocumentDTO, table: .document)
+    }
+    
+    static func downloadDocumentAndCache(imageURL: String, bucket: SupabaseBucket) async throws -> URL {
+        let image = try BackendClient.shared.supabase.storage.from(bucket.rawValue).getPublicURL(path: imageURL)
+        
+        ImageCacheHelper.shared.cacheImage(url: image)
+        
+        return image
+    }
+}
+
+enum SupabaseBucket: String {
+    case teamFiles = "TeamFiles"
 }

@@ -62,12 +62,7 @@ import Foundation
         return try container.mainContext.fetch(fetchDescriptor)
     }
     
-    /// BACKEND
-    func insertUpdateTimestampTable(for table: DatabaseTable, userId: UUID) async throws -> UpdateHistoryDTO {
-        let entry = UpdateHistoryDTO(tableString: table.rawValue, userId: userId, timestamp: Date()) 
-        return try await SupabaseService.upsert<UpdateHistoryDTO>(item: entry, table: .updateHistory, onConflict: "tableString, userId")
-    }
-
+    /// BACKEND 
     func databasesToSync(userId: UUID) async throws -> [(DatabaseTable, Date)] {
         var tablesToSync: [(DatabaseTable, Date)] = []
 

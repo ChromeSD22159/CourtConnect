@@ -10,13 +10,26 @@ import SwiftUI
     let repository: BaseRepository
     var currentTeam: Team?
     var account: UserAccount?
+    var qrCode: UIImage?
+    var showQrCode = false
+    
+    var documents: [Document] = []
     
     init(repository: BaseRepository, account: UserAccount?) {
         self.repository = repository
-        self.currentTeam = currentTeam
         self.account = account
-        
+         
         self.getTeam()
+        self.getAllDocuments()
+    }
+    
+    private func getAllDocuments() {
+        do {
+            guard let team = currentTeam else { return }
+            self.documents = try repository.documentRepository.getDocuments(for: team.id)
+        } catch {
+            print(error)
+        }
     }
     
     private func getTeam() {
@@ -42,8 +55,28 @@ struct TeamView: View {
     }
     
     var body: some View {
-        VStack {
-           
+        ScrollView {
+            VStack {
+                if let qrCode = teamViewViewModel.qrCode, teamViewViewModel.showQrCode {
+                    Image(uiImage: qrCode)
+                        .interpolation(.none)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 100, height: 100)
+                }
+                
+                Text("documents: \(teamViewViewModel.documents.count)")
+                 
+                ForEach(teamViewViewModel.documents) { document in
+                    AsyncImage(url: URL(string: document.url)) { image in
+                        image.resizable()
+                    } placeholder: {
+                        ProgressView()
+                    }
+                    .frame(width: 300, height: 300)
+                }
+                
+            }
         }
         .navigationTitle(teamViewViewModel.currentTeam?.teamName ?? "TeamName")
         .navigationBarTitleDisplayMode(.inline)
@@ -57,6 +90,11 @@ struct TeamView: View {
                             messagehandler.handleMessage(message: InAppMessage(title: "TeamId Kopiert"))
                         } label: {
                             Label("Copy Team ID", systemImage: "arrow.right.doc.on.clipboard")
+                        }
+                        Button {
+                            
+                        } label: {
+                            Label("Show QR Code", systemImage: "qrcode")
                         }
                         ShareLink(item: "TeamID: \(team.joinCode)")
                     }

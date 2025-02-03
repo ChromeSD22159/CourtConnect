@@ -7,11 +7,11 @@
 import SwiftUI
 
 struct OnBoardingView: View {
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.dismiss) var dismiss 
     @State var confetti = ConfettiViewModel.shared
     @State var showName = false
     
-    let firstName: String
+    let userProfile: UserProfile
     
     var body: some View {
         ZStack {
@@ -19,7 +19,7 @@ struct OnBoardingView: View {
             
             ConfettiOverlay {
                 VStack(spacing: 100) {
-                    Text("**Wilkommen** \n\(firstName)!")
+                    Text("**Welcome** \n\(userProfile.firstName)!")
                         .lineSpacing(20)
                         .multilineTextAlignment(.center)
                         .font(.largeTitle)
@@ -28,7 +28,9 @@ struct OnBoardingView: View {
                         .animation(.easeInOut.delay(0.5), value: showName)
                     
                     Button("continue") {
-                        dismiss()
+                        Task {
+                            dismiss()
+                        }
                     }
                     .padding()
                     .font(.body.bold())
@@ -51,6 +53,6 @@ struct OnBoardingView: View {
 }
 
 #Preview {
-    OnBoardingView(firstName: "Frederik")
+    OnBoardingView(userProfile: MockUser.myUserProfile)
         .previewEnvirments()
 }

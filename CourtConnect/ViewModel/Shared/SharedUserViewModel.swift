@@ -15,8 +15,8 @@ class SharedUserViewModel: ObservableObject {
     var user: User? = LocalStorageService.shared.user
     var userProfile: UserProfile?
     var currentAccount: UserAccount?
-    var showOnBoarding = false
-    var showUserEditSheet = false
+    var isOnboardingSheet = false
+    var isEditSheet = false
     var showDeleteConfirmMenu = false
     var editProfile: UserProfile = UserProfile(userId: UUID(), firstName: "", lastName: "", birthday: "", createdAt: Date(), updatedAt: Date())
     var onlineUser: [UserOnlineDTO] = []
@@ -62,23 +62,30 @@ class SharedUserViewModel: ObservableObject {
         }
     }
     
-    func isAuthendicated() {
-        Task {
-            if let user = await self.repository.userRepository.isAuthendicated(),
-               let userProfile = try self.repository.userRepository.getUserProfileFromDatabase(userId: user.id) {
+    func isAuthendicated(syncServiceViewModel: SyncServiceViewModel) async {
+        do {
+            if let user = await self.repository.userRepository.isAuthendicated() {
                 
-                withAnimation {
-                    self.user = user
-                    self.userProfile = userProfile
+                await syncAllTables(syncServiceViewModel: syncServiceViewModel)
+                
+                if let responseUserProfile = try repository.userRepository.getUserProfileFromDatabase(userId: user.id) {
+                    withAnimation {
+                        self.user = user
+                        self.userProfile = responseUserProfile
+                    }
                 }
+                
+                getCurrentAccount(userId: user.id)
             }
+        } catch {
+            print(error)
         }
     }
     
     func openEditProfileSheet() {
         guard let profile = userProfile else { return }
         self.setEditUserProfile(userProfile: profile)
-        self.showUserEditSheet.toggle()
+        self.isEditSheet.toggle()
     }
     
     func setUserOnline() {
@@ -149,18 +156,45 @@ class SharedUserViewModel: ObservableObject {
         }
     }
     
-    func setOnBooarding() {
-        userProfile?.onBoardingAt = Date()
+    func showOnBoardingIfNeverShowBefore() {
+        if userProfile?.onBoardingAt == nil {
+            isOnboardingSheet.toggle()
+        }
     }
     
-    func onDismissOnBoarding(onComplete: @escaping (UUID?, Error?) -> Void) {
+    func syncAllTables(syncServiceViewModel: SyncServiceViewModel) async {
+        do {
+            guard let user = user else { throw UserError.userIdNotFound }
+            
+            if userProfile?.onBoardingAt != nil {
+                print("FETCH WHEN USER AND ONBOARING ALREADY IS SHOWN")
+                try await syncServiceViewModel.fetchAllTables(userId: user.id)
+            } else {
+                print("FETCH WHEN USER")
+                try await syncServiceViewModel.fetchAllTables(userId: user.id)
+            }
+        } catch {
+            print(error)
+        }
+    }
+    
+    func onDismissOnBoarding(syncServiceViewModel: SyncServiceViewModel) {
+        guard let userProfile = userProfile, userProfile.onBoardingAt == nil else { return }
         Task {
             do {
-                setOnBooarding()
-                guard let userId = user?.id else { throw UserError.userIdNotFound }
-                onComplete(userId, nil)
+                userProfile.onBoardingAt = Date()
+                userProfile.updatedAt = Date()
+                try repository.userRepository.container.mainContext.save()
+                
+                try await repository.userRepository.sendUserProfileToBackend(profile: userProfile) 
+                
+                await syncAllTables(syncServiceViewModel: syncServiceViewModel)
+                
+                if await !NotificationService.getAuthStatus() {
+                    await NotificationService.request()
+                }
             } catch {
-                onComplete(nil, error)
+                print(error)
             }
         }
     }
@@ -180,9 +214,7 @@ class SharedUserViewModel: ObservableObject {
         
         Task {
             do {
-                try await self.repository.userRepository.sendUserProfileToBackend(profile: editProfile)
-                
-                let _ = try await self.repository.syncHistoryRepository.insertUpdateTimestampTable(for: .userProfile, userId: user.id)
+                try await self.repository.userRepository.sendUserProfileToBackend(profile: editProfile) 
 
                 self.setUserOffline()
                 self.setUserOnline()
@@ -202,12 +234,12 @@ class SharedUserViewModel: ObservableObject {
     }
     
     // MARK: - UserAccount Methodes
-    func deleteUserAccount() {
+    func deleteUser() {
         guard let user = user else { return }
         Task {
             do {
                 
-                try await repository.userRepository.deleteUserAccount(user: user)
+                try await repository.userRepository.deleteUser(user: user)
                 try await repository.userRepository.signOut()
                 
                 self.user = nil
@@ -221,10 +253,16 @@ class SharedUserViewModel: ObservableObject {
     func getCurrentAccount(userId: UUID) {
         do {
             if let id = LocalStorageService.shared.userAccountId {
-                currentAccount = try repository.accountRepository.getAccount(id: UUID(uuidString: id)!)
+                let userAccount = try repository.accountRepository.getAccount(id: UUID(uuidString: id)!) // nil
+                currentAccount = userAccount
+                
+                self.loadTeam(userAccount: userAccount)
             } else {
                 if let userAccount = try repository.accountRepository.getAllAccounts(userId: userId).first {
-                    currentAccount = try repository.accountRepository.getAllAccounts(userId: userId).first
+                    currentAccount = userAccount
+                    
+                    self.loadTeam(userAccount: userAccount)
+                    
                     LocalStorageService.shared.userAccountId = userAccount.id.uuidString
                 }
             }
@@ -233,10 +271,21 @@ class SharedUserViewModel: ObservableObject {
         }
     }
     
+    private func loadTeam(userAccount: UserAccount?) {
+        guard let userAccount = userAccount else { return }
+    }
+    
     func setCurrentAccount(newAccount: UserAccount?) {
         self.currentAccount = newAccount
         LocalStorageService.shared.userAccountId = newAccount?.id.uuidString
-        isAuthendicated()
+    }
+    
+    func setRandomAccount() throws {
+        guard let userId = user?.id else { return }
+        let newAccountList = try repository.accountRepository.getAllAccounts(userId: userId)
+        self.accounts = newAccountList
+        currentAccount = newAccountList.first
+        LocalStorageService.shared.userAccountId = currentAccount?.id.uuidString
     }
     
     func importAccountsAfterLastSyncFromBackend() {

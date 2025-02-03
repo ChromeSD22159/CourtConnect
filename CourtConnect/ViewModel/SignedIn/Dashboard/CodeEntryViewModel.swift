@@ -5,7 +5,8 @@
 //  Created by Frederik Kohler on 29.01.25.
 //
 import Foundation 
- 
+import SwiftUI
+
 @Observable class CodeEntryViewModel {
     let repository: BaseRepository
     
@@ -13,10 +14,11 @@ import Foundation
         self.repository = repository
     }
     
+    var shake = false
     var code: [Character] = []
-    
     var message: String = " "
-
+    var numberOfShakes = 0.0
+    
     var codeString: [String] {
         return code.map { String($0) }
     }
@@ -42,11 +44,17 @@ import Foundation
         }
     }
     
-    func joinTeamWithCode(code: String, userAccount: UserAccount) async throws {
-        Task {
-            try await repository.teamRepository.joinTeamWithCode(code, userAccount: userAccount)
-            
-            try await repository.syncHistoryRepository.insertLastSyncTimestamp(for: .teamMember, userId: userAccount.userId)
+    func joinTeamWithCode(userAccount: UserAccount) async throws {
+        try await repository.teamRepository.joinTeamWithCode(codeString.joined(), userAccount: userAccount)
+        
+        try await repository.syncHistoryRepository.insertLastSyncTimestamp(for: .teamMember, userId: userAccount.userId)
+    }
+    
+    func triggerShakeAnimation() {
+        withAnimation {
+            numberOfShakes = Double.random(in: 5.01...5.99)
         }
+        
+        numberOfShakes = 0
     }
 }

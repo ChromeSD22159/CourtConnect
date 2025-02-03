@@ -12,18 +12,19 @@ import SwiftUICore
  
 @MainActor class RepositoryPreview: BaseRepository {
     static let shared: BaseRepository = RepositoryPreview()
- 
-    init() {
-        super.init(type: .preview)
+    
+    override init() {
+        super.init()
+        initMock()
+    }
+    
+    func initMock() {
+        container.mainContext.insert(MockUser.myUserAccount)
     }
 }
 
 @MainActor class Repository: BaseRepository {
     static let shared: BaseRepository = Repository()
- 
-    init() {
-        super.init(type: .app)
-    }
 }
 
 @MainActor class BaseRepository {
@@ -31,31 +32,38 @@ import SwiftUICore
     var chatRepository: ChatRepository
     var accountRepository: AccountRepository
     var teamRepository: TeamRepository
+    var documentRepository: DocumentRepository
     var syncHistoryRepository: SyncServiceRepository
     var container: ModelContainer
     
-    init(type: RepositoryType) {
+    init() {
         let schema = Schema([
             Attendance.self,
             Chat.self,
             Document.self,
             Interest.self,
-            Location.self,
             Requests.self,
             Statistic.self,
             SyncHistory.self,
             Team.self,
             TeamAdmin.self,
             TeamMember.self,
-            Termine.self,
+            Termin.self,
             UserAccount.self,
             UserProfile.self
         ])
         
-        let modelConfiguration = ModelConfiguration(isStoredInMemoryOnly: type == .preview)
+        let isStoredInMemoryOnly: Bool
         
-        print("isStoredInMemoryOnly: \(type == .preview)")
-        
+        if let infoDict = Bundle.main.infoDictionary, let isStoredInMemoryOnlyFromPlist = infoDict["isStoredInMemoryOnly"] as? Bool {
+            isStoredInMemoryOnly = isStoredInMemoryOnlyFromPlist
+            print("isStoredInMemoryOnlyFromPlist: \(isStoredInMemoryOnlyFromPlist)")
+        } else {
+            isStoredInMemoryOnly = true
+        }
+         
+        let modelConfiguration = ModelConfiguration(isStoredInMemoryOnly: isStoredInMemoryOnly)
+         
         do {
             let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
             self.container = container
@@ -65,12 +73,9 @@ import SwiftUICore
             self.accountRepository = AccountRepository(container: container)
             self.teamRepository = TeamRepository(container: container)
             self.syncHistoryRepository = SyncServiceRepository(container: container)
+            self.documentRepository = DocumentRepository(container: container)
         } catch {
-            if type == .app {
-                fatalError("Cannot create Database \(error)")
-            } else {
-                fatalError("Cannot create Preview Database \(error)")
-            }
+            fatalError("Cannot create Database \(error)")
         }
     }
 }

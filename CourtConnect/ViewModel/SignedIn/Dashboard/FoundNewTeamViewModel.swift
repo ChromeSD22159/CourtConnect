@@ -33,6 +33,10 @@ import PhotosUI
     }
     
     func createTeam(userAccount: UserAccount, userProfile: UserProfile) async throws {
+        isLoading = true
+        defer {
+            isLoading = false
+        }
         do {
             guard !email.isEmpty && email.count > 5  else { throw InputValidationError.emailTooSmall }
             
@@ -42,11 +46,9 @@ import PhotosUI
 
             let generatedCode = CodeGeneratorHelper.generateCode().map { String($0) }.joined()
             let now = Date()
-            let newTeam = Team(teamName: teamName, createdBy: userProfile.fullName, headcoach: headcoach, joinCode: generatedCode, email: email, createdAt: now, updatedAt: now)
+            let newTeam = Team(teamName: teamName, headcoach: headcoach, joinCode: generatedCode, email: email, createdByUserAccountId: userAccount.id, createdAt: now, updatedAt: now)
             let newMember = TeamMember(userAccountId: userAccount.id, teamId: newTeam.id, role: userAccount.role, createdAt: now, updatedAt: now)
             let newAdmin = TeamAdmin(teamId: newTeam.id, userAccountId: userAccount.id, role: userAccount.role, createdAt: now, updatedAt: now)
-             
-            isLoading = true
             
             try await repository.teamRepository.insertTeam(newTeam: newTeam, userId: userProfile.userId)
             
@@ -57,9 +59,7 @@ import PhotosUI
             userAccount.teamId = newTeam.id
             
             try await Task.sleep(for: .seconds(1))
-            isLoading = false
-        } catch {
-            isLoading = false
+        } catch { 
             throw error
         }
     }
