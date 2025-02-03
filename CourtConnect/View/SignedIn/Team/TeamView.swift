@@ -13,11 +13,23 @@ import SwiftUI
     var qrCode: UIImage?
     var showQrCode = false
     
+    var documents: [Document] = []
+    
     init(repository: BaseRepository, account: UserAccount?) {
         self.repository = repository
         self.account = account
          
         self.getTeam()
+        self.getAllDocuments()
+    }
+    
+    private func getAllDocuments() {
+        do {
+            guard let team = currentTeam else { return }
+            self.documents = try repository.documentRepository.getDocuments(for: team.id)
+        } catch {
+            print(error)
+        }
     }
     
     private func getTeam() {
@@ -43,13 +55,27 @@ struct TeamView: View {
     }
     
     var body: some View {
-        VStack {
-            if let qrCode = teamViewViewModel.qrCode, teamViewViewModel.showQrCode {
-                Image(uiImage: qrCode)
-                    .interpolation(.none)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 100, height: 100)
+        ScrollView {
+            VStack {
+                if let qrCode = teamViewViewModel.qrCode, teamViewViewModel.showQrCode {
+                    Image(uiImage: qrCode)
+                        .interpolation(.none)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 100, height: 100)
+                }
+                
+                Text("documents: \(teamViewViewModel.documents.count)")
+                 
+                ForEach(teamViewViewModel.documents) { document in
+                    AsyncImage(url: URL(string: document.url)) { image in
+                        image.resizable()
+                    } placeholder: {
+                        ProgressView()
+                    }
+                    .frame(width: 300, height: 300)
+                }
+                
             }
         }
         .navigationTitle(teamViewViewModel.currentTeam?.teamName ?? "TeamName")

@@ -51,3 +51,45 @@ class ImageCache {
     
     private init() {}
 }
+
+class ImageCacheHelper {
+    static let shared = ImageCacheHelper()
+    
+    private let urlSession = URLSession.shared
+    private var cancellables: AnyCancellable?
+    
+    func cacheImage(url: URL) {
+        cancellables = URLSession.shared.dataTaskPublisher(for: url)
+            .map { UIImage(data: $0.data) }
+            .replaceError(with: nil)
+            .receive(on: DispatchQueue.main)
+            .sink { image in
+                guard let image = image else { return }
+                ImageCache.shared.setObject(image, forKey: url.absoluteString as NSString)
+            }
+    }
+}
+ 
+extension UIImage {
+    func scaleToWidth(_ width: CGFloat) -> UIImage {
+        let scaleFactor = width / size.width
+        let newHeight = size.height * scaleFactor
+        let newSize = CGSize(width: width, height: newHeight)
+        UIGraphicsBeginImageContextWithOptions(newSize, false, 0.0)
+        draw(in: CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height))
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return newImage ?? self
+    }
+    
+    func scaleToHeight(_ height: CGFloat) -> UIImage {
+        let scaleFactor = height / size.height
+        let newWidth = size.width * scaleFactor
+        let newSize = CGSize(width: newWidth, height: height)
+        UIGraphicsBeginImageContextWithOptions(newSize, false, 0.0)
+        draw(in: CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height))
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return newImage ?? self
+    }
+}

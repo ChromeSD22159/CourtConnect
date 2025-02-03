@@ -33,6 +33,6 @@ struct CourtConnectTests {
     
     @Test func deleteUserAccount() async throws {
         let user = User(id: UUID(), appMetadata: [:], userMetadata: [:], aud: "", createdAt: Date(), updatedAt: Date())
-        try await repository.userRepository.deleteUserAccount(user: user)
+        try await repository.userRepository.deleteUser(user: user)
     }
 }

@@ -7,6 +7,8 @@
 
 import Foundation
 import Realtime
+import UIKit
+import Storage
 
 struct SupabaseService {
     static func search<T: DTOProtocol>(name: String, table: DatabaseTable, column: String) async throws -> [T] {
@@ -113,4 +115,37 @@ struct SupabaseService {
     static func isRequestSuccessful(statusCode: Int) -> Bool {
         return (200...299).contains(statusCode)
     }
+    
+    static func uploadImageToSupabaseAndCache(image: UIImage, bucket: SupabaseBucket, teamId: UUID) async throws -> DocumentDTO {
+        guard let imageData = image.jpegData(compressionQuality: 0.8) else {
+            throw ImageUploadError.conversionFailed
+        }
+        
+        let fileName = "\(UUID().uuidString).jpg"
+        let path = "team_uploads/\(teamId.uuidString)/\(fileName)"
+        let options = FileOptions(
+            cacheControl: "3600",
+            contentType: "image/png",
+            upsert: false
+          )
+        let response = try await BackendClient.shared.supabase.storage.from(bucket.rawValue).update(path, data: imageData, options: options)
+        
+        let image = try await downloadDocumentAndCache(imageURL: response.path, bucket: bucket)
+        
+        let generatedDocumentDTO = DocumentDTO(teamId: teamId, name: fileName, info: fileName, url: image.absoluteString, roleString: UserRole.player.rawValue, createdAt: Date(), updatedAt: Date())
+ 
+        return try await SupabaseService.insert(item: generatedDocumentDTO, table: .document)
+    }
+    
+    static func downloadDocumentAndCache(imageURL: String, bucket: SupabaseBucket) async throws -> URL {
+        let image = try BackendClient.shared.supabase.storage.from(bucket.rawValue).getPublicURL(path: imageURL)
+        
+        ImageCacheHelper.shared.cacheImage(url: image)
+        
+        return image
+    }
+}
+
+enum SupabaseBucket: String {
+    case teamFiles = "TeamFiles"
 }

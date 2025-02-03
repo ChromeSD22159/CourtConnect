@@ -26,7 +26,8 @@ create table
     "createdAt" timestamp without time zone not null default now(),
     "updatedAt" timestamp without time zone not null default now(),
     "deletedAt" timestamp without time zone null,
-    constraint attendance_pkey primary key (id)
+    constraint attendance_pkey primary key (id),
+    constraint unique_id unique (id)
   ) tablespace pg_default;
 
  CREATE OR REPLACE FUNCTION "LogAttendanceInsertUpdate"()
@@ -113,12 +114,12 @@ create table
   public."DeletionRequest" (
     id uuid not null default gen_random_uuid (),
     "userId" uuid not null,
-    "createdAt" timestamp with time zone not null default current_timestamp,
-    "updatedAt" timestamp with time zone not null default current_timestamp,
+    "createdAt" timestamp with time zone not null default now(),
+    "updatedAt" timestamp with time zone not null default now(),
     "deletedAt" timestamp with time zone null,
-    constraint DeletionRequest_pkey primary key (id)
+    constraint deletionrequest_pkey primary key (id),
     constraint DeletionRequest_userId_key unique ("userId")
-  ) tablespace pg_default; 
+  ) tablespace pg_default;
 
 
 
@@ -132,16 +133,15 @@ create table
   public."Document" (
     id uuid not null default gen_random_uuid (),
     "teamId" uuid not null,
-    name character varying(255) not null,
-    info text null,
-    url text null,
-    "roleString" character varying(255) null,
-    "createdAt" timestamp with time zone not null default current_timestamp,
-    "updatedAt" timestamp with time zone not null default current_timestamp,
+    name text not null,
+    info text not null,
+    url text not null,
+    "roleString" text not null,
+    "createdAt" timestamp with time zone not null default now(),
+    "updatedAt" timestamp with time zone not null default now(),
     "deletedAt" timestamp with time zone null,
-    constraint Document_pkey primary key (id)
-  ) tablespace pg_default; 
-
+    constraint document_pkey primary key (id)
+  ) tablespace pg_default;
 
 
 
@@ -156,11 +156,12 @@ create table
     "memberId" uuid not null,
     "terminId" uuid not null,
     "willParticipate" boolean not null,
-    "createdAt" timestamp with time zone not null default current_timestamp,
-    "updatedAt" timestamp with time zone not null default current_timestamp,
+    "createdAt" timestamp with time zone not null default now(),
+    "updatedAt" timestamp with time zone not null default now(),
     "deletedAt" timestamp with time zone null,
-    constraint Interest_pkey primary key (id)
+    constraint interest_pkey primary key (id)
   ) tablespace pg_default;
+
 
  CREATE OR REPLACE FUNCTION "LogInterestInsertUpdate"()
  RETURNS TRIGGER AS $$
@@ -205,10 +206,10 @@ create table
     "accountId" uuid not null,
     "teamId" uuid not null,
     "userId" uuid not null,
-    "createdAt" timestamp with time zone not null default current_timestamp,
-    "updatedAt" timestamp with time zone not null default current_timestamp,
+    "createdAt" timestamp with time zone not null default now(),
+    "updatedAt" timestamp with time zone not null default now(),
     "deletedAt" timestamp with time zone null,
-    constraint Requests_pkey primary key (id)
+    constraint requests_pkey primary key (id)
   ) tablespace pg_default;
 
  CREATE OR REPLACE FUNCTION "LogRequestInsertUpdateTrigger"()
@@ -255,11 +256,11 @@ create table
     "userId" uuid not null,
     fouls integer not null default 0,
     "twoPointAttempts" integer not null default 0,
-    "threePointAttempts" integer not null default 0, 
-    "createdAt" timestamp with time zone not null default current_timestamp,
-    "updatedAt" timestamp with time zone not null default current_timestamp,
+    "threePointAttempts" integer not null default 0,
+    "createdAt" timestamp with time zone not null default now(),
+    "updatedAt" timestamp with time zone not null default now(),
     "deletedAt" timestamp with time zone null,
-    constraint Statistic_pkey primary key (id)
+    constraint statistic_pkey primary key (id)
   ) tablespace pg_default;
 
  CREATE OR REPLACE FUNCTION "LogStatisticInsertUpdate"()
@@ -292,17 +293,17 @@ create table
 
 create table
   public."Team" (
-  id uuid not null default gen_random_uuid (),
-    "teamName" text not null, 
+    id uuid not null default gen_random_uuid (),
+    "teamName" text not null,
+    "createdByUserAccountId" uuid not null default gen_random_uuid (),
     headcoach text not null,
     "joinCode" text not null,
     email text not null,
-    "createdByUserAccountId" uuid not null,
     "createdAt" timestamp with time zone not null default now(),
     "updatedAt" timestamp with time zone not null default now(),
     "deletedAt" timestamp with time zone null,
-    constraint Team_pkey primary key (id),
-    constraint Team_joinCode_key unique ("joinCode")
+    constraint team_pkey primary key (id),
+    constraint team_joincode_key unique ("joinCode")
   ) tablespace pg_default;
 
  CREATE OR REPLACE FUNCTION "LogTeamInsertUpdate"()
@@ -348,11 +349,11 @@ create table
     id uuid not null default gen_random_uuid (),
     "teamId" uuid not null,
     "userAccountId" uuid not null,
-    role character varying(255) not null,
-    "createdAt" timestamp with time zone not null default current_timestamp,
-    "updatedAt" timestamp with time zone not null default current_timestamp,
+    role text not null,
+    "createdAt" timestamp with time zone not null default now(),
+    "updatedAt" timestamp with time zone not null default now(),
     "deletedAt" timestamp with time zone null,
-    constraint TeamAdmin_pkey primary key (id)
+    constraint teamadmin_pkey primary key (id)
   ) tablespace pg_default;
 
 CREATE OR REPLACE FUNCTION "LogTeamAdminInsertUpdate"()
@@ -395,14 +396,14 @@ BEGIN
 -- DROP TRIGGER IF EXISTS "LogUserAccountCrudTrigger" ON public."UserAccount";
 create table
   public."TeamMember" (
-    "id" uuid not null default gen_random_uuid (),
+    id uuid not null default gen_random_uuid (),
     "userAccountId" uuid not null,
     "teamId" uuid not null,
-    "role" text not null,
+    role text not null,
     "createdAt" timestamp with time zone not null default now(),
     "updatedAt" timestamp with time zone not null default now(),
-    "deletedAt" timestamp with time zone null,
-    constraint TeamMember_pkey primary key (id)
+    "deletedAt" timestamp with time zone null default now(),
+    constraint teammember_pkey primary key (id)
   ) tablespace pg_default;
 
 CREATE OR REPLACE FUNCTION "LogTeamMemberInsertUpdate"()
@@ -459,11 +460,6 @@ create table
     constraint termine_pkey primary key (id)
   ) tablespace pg_default;
 
-create trigger "LogTermineInsertUpdateTrigger"
-after insert 
-or update on "Termin" for each row
-execute function "LogTermineInsertUpdate" ();
-
  CREATE OR REPLACE FUNCTION "LogTermineInsertUpdate"()
  RETURNS TRIGGER AS $$
 DECLARE
@@ -491,7 +487,10 @@ BEGIN
 END;
  $$ LANGUAGE plpgsql;
 
-
+create trigger "LogTermineInsertUpdateTrigger"
+after insert 
+or update on "Termin" for each row
+execute function "LogTermineInsertUpdate" ();
 
 
 
@@ -501,16 +500,16 @@ END;
 
 create table
   public."UpdateHistory" (
-    "id" uuid not null default gen_random_uuid (),
+    id uuid not null default gen_random_uuid (),
     "tableString" text not null,
     "userId" uuid not null,
-    "timestamp" timestamp with time zone not null,
+    timestamp timestamp with time zone not null,
     "createdAt" timestamp with time zone not null default now(),
     "updatedAt" timestamp with time zone not null default now(),
     "deletedAt" timestamp with time zone null,
-    constraint UpdateHistory_pkey primary key (id)
-    constraint unique_table_user UNIQUE ("tableString", "userId")
-  ) tablespace pg_default; 
+    constraint updatehistory_pkey primary key (id),
+    constraint unique_table_user unique ("tableString", "userId")
+  ) tablespace pg_default;
 
 
 
@@ -521,11 +520,11 @@ create table
 -- DROP TRIGGER IF EXISTS "LogUserAccountCrudTrigger" ON public."UserAccount";
 create table
   public."UserAccount" (
-    "id" uuid not null default gen_random_uuid (),
-    "userId" uuid null,
-    "teamId" uuid not null,
-    "position" text not null,
-    "role" text not null,
+    id uuid not null default gen_random_uuid (),
+    "userId" uuid not null,
+    "teamId" uuid null,
+    position text not null,
+    role text not null,
     "displayName" text not null,
     "createdAt" timestamp with time zone not null default now(),
     "updatedAt" timestamp with time zone not null default now(),
@@ -561,16 +560,18 @@ create table
 
 create table
   public."UserOnline" (
-    "id" uuid not null default gen_random_uuid (),
+    id uuid not null default gen_random_uuid (),
     "userId" uuid not null,
     "firstName" text not null,
     "lastName" text not null,
     "deviceToken" text not null,
-    "timestamp" timestamp with time zone not null,
+    timestamp timestamp with time zone not null,
     "createdAt" timestamp with time zone not null default now(),
     "updatedAt" timestamp with time zone not null default now(),
     "deletedAt" timestamp with time zone null,
     constraint useronline_pkey primary key (id),
+    constraint UserOnline_userId_key unique ("userId"),
+    constraint UserOnline_deviceToken_key unique ("deviceToken"),
     constraint unique_user_device unique ("userId", "deviceToken")
   ) tablespace pg_default;
 
@@ -580,13 +581,13 @@ create table
 
 
 -- DROP TRIGGER IF EXISTS "LogUserProfileCrudTrigger" ON public."UserProfile";
- create table
+create table
   public."UserProfile" (
-    "id" uuid not null default gen_random_uuid (),
+    id uuid not null default gen_random_uuid (),
     "userId" uuid not null,
     "firstName" text not null,
     "lastName" text not null,
-    "birthday" text not null,
+    birthday text not null,
     "fcmToken" text null,
     "lastOnline" timestamp with time zone not null,
     "createdAt" timestamp with time zone not null default now(),
@@ -615,3 +616,18 @@ create trigger "LogUserProfileInsertUpdateTrigger"
 after insert 
 or update on "UserProfile" for each row
 execute function "LogUserProfileInsertUpdate"();
+ 
+
+
+
+
+
+
+ -- BUCKETS
+insert into storage.buckets (id, name, public)
+values ('TeamFiles', 'TeamFiles', true);
+
+ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
+ 
+-- Richtlinie für ALL (CRUD)
+CREATE POLICY "Authenticated users can CRUD files from TeamFiles" ON storage.objects FOR ALL TO authenticated USING (bucket_id = 'TeamFiles');

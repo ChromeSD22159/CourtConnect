@@ -7,7 +7,7 @@
 import SwiftData
 import Foundation
 import Supabase
-
+ 
 @MainActor class TeamRepository {
     var container: ModelContainer
     

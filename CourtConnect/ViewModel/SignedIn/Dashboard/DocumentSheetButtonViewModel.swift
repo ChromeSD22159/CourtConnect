@@ -6,6 +6,8 @@
 //
 import SwiftUI
 import PhotosUI
+import Storage
+import Combine
  
 @Observable class DocumentSheetButtonViewModel: Sheet {
     var isSheet = false
@@ -13,10 +15,14 @@ import PhotosUI
     var animateOnAppear = false
     var item: PhotosPickerItem?
     var image: Image?
+    var uiImage: UIImage?
     var userAccount: UserAccount?
     
-    init(userAccount: UserAccount? = nil) {
+    let repository: BaseRepository
+    
+    @MainActor init(userAccount: UserAccount? = nil) {
         self.userAccount = userAccount
+        self.repository = Repository.shared
     }
     
     func toggleSheet() {
@@ -28,10 +34,12 @@ import PhotosUI
             if let imageData = try? await item?.loadTransferable(type: Data.self), let uiImage = UIImage(data: imageData) {
                 if uiImage.size.height > uiImage.size.width {
                     let scaledImage = uiImage.scaleToHeight(400)
-                    image = Image(uiImage: scaledImage)
+                    self.uiImage = scaledImage
+                    self.image = Image(uiImage: scaledImage)
                 } else {
                     let scaledImage = uiImage.scaleToHeight(400)
-                    image = Image(uiImage: scaledImage)
+                    self.uiImage = scaledImage
+                    self.image = Image(uiImage: scaledImage)
                 }
             } else {
                 print("Failed to convert Image to UIImage")
@@ -47,7 +55,7 @@ import PhotosUI
         image = nil
     }
     
-    func saveDocuemt() {
+    @MainActor func saveDocuemt() {
         Task {
             self.toggleAnimation()
             
@@ -56,11 +64,15 @@ import PhotosUI
             do {
                 guard let userAccount = userAccount else { throw UserError.userIdNotFound }
                 guard let teamId = userAccount.teamId else { throw UserError.userAccountNotFound }
-                // SendToServer
+                guard let image = uiImage else { throw UserError.userAccountNotFound }
                 
-                let _ = Document(teamId: teamId, name: "", info: "", url: "", roleString: "", createdAt: Date(), updatedAt: Date())
+                let document: DocumentDTO = try await repository.documentRepository.uploadCachedDocument(image: image, bucket: .teamFiles, teamId: teamId)
+ 
+                repository.documentRepository.insert(document: document)
                 
                 try await Task.sleep(for: .seconds(2))
+                
+                print("local: \(try repository.documentRepository.getDocuments(for: teamId).count)")
                 
                 self.toggleSheet()
                 self.resetImage()
@@ -69,28 +81,4 @@ import PhotosUI
             }
         }
     }
-}
-
-extension UIImage {
-    func scaleToWidth(_ width: CGFloat) -> UIImage {
-        let scaleFactor = width / size.width
-        let newHeight = size.height * scaleFactor
-        let newSize = CGSize(width: width, height: newHeight)
-        UIGraphicsBeginImageContextWithOptions(newSize, false, 0.0)
-        draw(in: CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height))
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return newImage ?? self
-    }
-    
-    func scaleToHeight(_ height: CGFloat) -> UIImage {
-        let scaleFactor = height / size.height
-        let newWidth = size.width * scaleFactor
-        let newSize = CGSize(width: newWidth, height: height)
-        UIGraphicsBeginImageContextWithOptions(newSize, false, 0.0)
-        draw(in: CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height))
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return newImage ?? self
-    }
-}
+}  

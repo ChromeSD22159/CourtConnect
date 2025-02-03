@@ -32,6 +32,7 @@ import SwiftUICore
     var chatRepository: ChatRepository
     var accountRepository: AccountRepository
     var teamRepository: TeamRepository
+    var documentRepository: DocumentRepository
     var syncHistoryRepository: SyncServiceRepository
     var container: ModelContainer
     
@@ -72,6 +73,7 @@ import SwiftUICore
             self.accountRepository = AccountRepository(container: container)
             self.teamRepository = TeamRepository(container: container)
             self.syncHistoryRepository = SyncServiceRepository(container: container)
+            self.documentRepository = DocumentRepository(container: container)
         } catch {
             fatalError("Cannot create Database \(error)")
         }
