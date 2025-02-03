@@ -116,7 +116,7 @@ import Supabase
     func softDelete(teamMember: TeamMember) throws {
         teamMember.updatedAt = Date()
         teamMember.deletedAt = Date()
-        
+        print(teamMember)
         try upsertLocal(item: teamMember)
         
         Task {
@@ -164,6 +164,10 @@ import Supabase
         var fetchDescriptor = FetchDescriptor(predicate: predicate, sortBy: [SortDescriptor(\.createdAt, order: .reverse)])
         fetchDescriptor.fetchLimit = fetchLimit
         return try container.mainContext.fetch(fetchDescriptor)
+    }
+    
+    func requestTeam(request: Requests) async throws {
+        try await SupabaseService.upsertWithOutResult(item: request.toDTO(), table: .request, onConflict: "id")
     }
     
     // MARK: - REMOTE

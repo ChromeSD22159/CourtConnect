@@ -49,8 +49,7 @@ struct DashboardView: View {
                     IconMenuButton(icon: "person.3.fill", description: "Create New Account or Switch to Existing Account") {
                         ForEach(userViewModel.accounts) { account in
                             Button {
-                                userViewModel.setCurrentAccount(newAccount: account)
-                                dashBoardViewModel.getTeam(for: account)
+                                userViewModel.setCurrentAccount(newAccount: account) 
                             } label: {
                                 HStack {
                                     if userViewModel.currentAccount?.id == account.id {
