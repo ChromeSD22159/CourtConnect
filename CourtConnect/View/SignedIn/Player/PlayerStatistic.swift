@@ -154,7 +154,7 @@ struct PlayerStatistic: View {
                     .opacity(viewModel.hasData ? 1.0 : 0.5)
                     
                     if !viewModel.hasData {
-                        Text("Bald siehst du deine Daten hier!")
+                        Text("Soon you will see your data here!")
                             .font(.footnote)
                     }
                 }
@@ -284,12 +284,11 @@ private struct StatisticChart: View {
                 .chartYScale(domain: [0, selected.maxValue])
                 
                 if !hasData {
-                    Text("Bald siehst du deine Daten hier!")
+                    Text("Soon you will see your data here!")
                         .font(.footnote)
                 }
             }
            
-            
             HStack {
                 ForEach(SelectionType.allCases, id: \.hashValue) { type in
                     Button(type.rawValue) {
@@ -332,7 +331,7 @@ import Supabase
         PlayerStatistic(userViewModel: viewModel)
     }
     .onAppear {
-        //viewModel.userProfile = MockUser.myUserProfile
-        //viewModel.currentAccount = MockUser.myUserAccount
+        viewModel.userProfile = MockUser.myUserProfile
+        viewModel.currentAccount = MockUser.myUserAccount
     }
 }
