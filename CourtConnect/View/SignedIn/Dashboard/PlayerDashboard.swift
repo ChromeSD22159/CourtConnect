@@ -25,11 +25,33 @@ struct PlayerDashboard: View {
     
     var body: some View {
         VStack {
-            Text(userViewModel.userProfile?.firstName ?? "")
-            Text(userViewModel.currentAccount?.role ?? "")
-           
             // MARK: IF HAS TEAM
-            if let team = dashBoardViewModel.currentTeam {
+            if let _ = dashBoardViewModel.currentTeam {
+                
+                HStack(alignment: .top, spacing: 20) {
+                    Image(systemName: "circle.badge.minus")
+                        .font(.largeTitle)
+                    
+                    VStack(alignment: .leading) {
+                        Text("Absence report!")
+                            .font(.headline)
+                        Text("Find out your trainer and your team very much about your absence.")
+                    }
+                    
+                    Spacer()
+                }
+                .padding()
+                .background(Material.ultraThinMaterial)
+                .clipShape(RoundedRectangle(cornerRadius: 15))
+                .padding(.horizontal)
+                .onTapGesture {
+                    // TODO: ABWESENDMELDUNG
+                }
+                
+                // TODO: TERMINE
+                
+                // TODO: TERMINBESTÄTIGUNGEN
+                
                 ConfirmButtonLabel(confirmButtonDialog: ConfirmButtonDialog(
                     systemImage: "iphone.and.arrow.right.inward",
                     buttonText: "Leave Team",
@@ -94,8 +116,8 @@ struct PlayerDashboard: View {
         }
         .navigationTitle("Spieler")
     }
-} 
-
+}
+ 
 #Preview {
     @Previewable @State var dashBoardViewModel = DashBoardViewModel(repository: RepositoryPreview.shared)
     @Previewable @State var userViewModel = SharedUserViewModel(repository: RepositoryPreview.shared)

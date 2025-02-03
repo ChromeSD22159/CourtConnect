@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "" : {
+
+    },
     " " : {
 
     },
@@ -19,6 +22,16 @@
     "%@" : {
 
     },
+    "%@ (%lld)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ (%2$lld)"
+          }
+        }
+      }
+    },
     "%@ wants to join your team. Would you like to accept the request?" : {
 
     },
@@ -32,6 +45,9 @@
 
     },
     "3er" : {
+
+    },
+    "Absence report!" : {
 
     },
     "Add Document" : {
@@ -127,9 +143,6 @@
     "Do you want to join the team %@?" : {
 
     },
-    "documents: %lld" : {
-
-    },
     "E-Mail" : {
 
     },
@@ -161,6 +174,12 @@
 
     },
     "Error" : {
+
+    },
+    "File %lld" : {
+
+    },
+    "Find out your trainer and your team very much about your absence." : {
 
     },
     "Firstname" : {
@@ -217,9 +236,6 @@
     "Keep me signed in" : {
 
     },
-    "Kein Team gefunden!" : {
-
-    },
     "Kind" : {
 
     },
@@ -253,6 +269,15 @@
     "No Connection" : {
 
     },
+    "No Documents Avaible" : {
+
+    },
+    "No Team" : {
+
+    },
+    "No team found!" : {
+
+    },
     "Nobody is online!" : {
 
     },
@@ -272,6 +297,9 @@
 
     },
     "Point Gard" : {
+
+    },
+    "Point gaurd" : {
 
     },
     "Points" : {
@@ -341,6 +369,9 @@
 
     },
     "Termin Date" : {
+
+    },
+    "The selected user account is not part of a team. Join a team to get started." : {
 
     },
     "Total Online Users: %lld" : {
