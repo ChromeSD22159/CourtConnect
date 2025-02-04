@@ -68,6 +68,9 @@
     "Are you sure you want to leave the Team? This action cannot be undone." : {
 
     },
+    "Association e-mail" : {
+
+    },
     "Birthday" : {
 
     },
@@ -161,9 +164,6 @@
     "Edit User" : {
 
     },
-    "Eintragen" : {
-
-    },
     "Enter Code" : {
 
     },
@@ -185,7 +185,7 @@
     "Error" : {
 
     },
-    "Es sind derzeit keine Termine geplant." : {
+    "Features" : {
 
     },
     "File %lld" : {
@@ -251,9 +251,6 @@
     "Keep me signed in" : {
 
     },
-    "Keine Termine" : {
-
-    },
     "Kind" : {
 
     },
@@ -272,7 +269,7 @@
     "Lastname" : {
 
     },
-    "lastOnline: %@" : {
+    "LastOnline: %@" : {
 
     },
     "Leave Team" : {
@@ -282,6 +279,12 @@
 
     },
     "Logout" : {
+
+    },
+    "No appointments" : {
+
+    },
+    "No appointments are currently planned." : {
 
     },
     "No Connection" : {
@@ -315,6 +318,9 @@
 
     },
     "Player" : {
+
+    },
+    "Player Dashboard" : {
 
     },
     "Point Gard" : {
@@ -377,9 +383,6 @@
     "Soon you will see your data here!" : {
 
     },
-    "Spieler" : {
-
-    },
     "Team" : {
 
     },
@@ -396,6 +399,9 @@
 
     },
     "Termine" : {
+
+    },
+    "The Developer" : {
 
     },
     "The selected user account is not part of a team. Join a team to get started." : {

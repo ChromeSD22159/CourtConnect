@@ -30,6 +30,9 @@ struct DashboardView: View {
             }
         }
         .contentMargins(.top, 20)
+        .contentMargins(.horizontal, 20)
+        .contentMargins(.bottom, 75)
+        .scrollIndicators(.hidden)
         .errorPopover()
         .navigationTitle("Dashboard")
         .navigationBarTitleDisplayMode(.inline)
@@ -88,7 +91,7 @@ struct DashboardView: View {
             }
         } 
     }
-}
+} 
  
 #Preview { 
     @Previewable @State var userViewModel = SharedUserViewModel(repository: RepositoryPreview.shared)

@@ -30,8 +30,7 @@ struct RoundedIconTextCard: View {
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Material.ultraThinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 15))
-        .padding(.horizontal)
+        .clipShape(RoundedRectangle(cornerRadius: 15)) 
     }
 }
 

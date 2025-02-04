@@ -155,6 +155,9 @@ struct TeamView: View {
                     }
                 }
                 .contentMargins(.bottom, 75)
+                .contentMargins(.top, 20)
+                .contentMargins(.horizontal, 20)
+                .scrollIndicators(.hidden)
             } else {
                 TeamUnavailableView()
             }

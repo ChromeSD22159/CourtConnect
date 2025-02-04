@@ -9,9 +9,9 @@ import SwiftUI
 struct TermineUnavailableView: View {
     var body: some View {
         ContentUnavailableView {
-            Label("Keine Termine", systemImage: "calendar")
+            Label("No appointments", systemImage: "calendar")
         } description: {
-            Text("Es sind derzeit keine Termine geplant.")
+            Text("No appointments are currently planned.")
         }
     }
 }

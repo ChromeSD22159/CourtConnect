@@ -136,16 +136,12 @@ import Supabase
         return MemberStatistic(avgFouls: Int(avgFouls), avgTwoPointAttempts: Int(avgTwoPointAttempts), avgThreePointAttempts: Int(avgThreePointAttempts), avgPoints: Int(avgPoints))
     }
      
-    func getPlayerStatistics(userAccountId: UUID, fetchLimit: Int = 7) throws -> [Statistic] {
-        let predicate = #Predicate<Statistic> { $0.userAccountId == userAccountId }
+    func getPlayerStatistics(userAccountId: UUID, fetchLimit: Int = 7, terminType: String) throws -> [Statistic] {
+        let predicate = #Predicate<Statistic> { $0.userAccountId == userAccountId && $0.terminType == terminType }
         
         var fetchDescriptor = FetchDescriptor(predicate: predicate, sortBy: [SortDescriptor(\.createdAt, order: .reverse)])
         fetchDescriptor.fetchLimit = fetchLimit
-        let result = try container.mainContext.fetch(fetchDescriptor)
-        
-        print(result.count)
-        
-        return result
+        return try container.mainContext.fetch(fetchDescriptor)
     }
     
     func getTeamRequests(teamId: UUID) throws -> [Requests] {

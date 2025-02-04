@@ -6,6 +6,7 @@
 //
 import Foundation 
 import SwiftUI
+import WishKit
 
 struct SettingsView: View {
     @Environment(\.networkMonitor) var networkMonitor
@@ -61,6 +62,17 @@ struct SettingsView: View {
                 }
             } header: {
                 Text("App Status")
+            }
+            
+            Section {
+                NavigationLink {
+                    WishKit.FeedbackListView().withNavigation()
+                } label: {
+                    Text("Features")
+                }
+
+            } header: {
+                Text("The Developer")
             }
             
             Section {
@@ -126,9 +138,13 @@ fileprivate struct OnlineUserList: View {
                     }
                 }
             }
-        }
+        } 
         .listBackground()
     }
+}
+
+#Preview {
+    WishKit.FeedbackListView().withNavigation()
 }
 
 #Preview {

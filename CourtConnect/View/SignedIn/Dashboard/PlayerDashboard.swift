@@ -21,57 +21,12 @@ struct PlayerDashboard: View {
     
     var body: some View {
         VStack {
-            // MARK: IF HAS TEAM
-            if dashBoardViewModel.currentTeam != nil {
-                
-                AbsenseCard(isAbsenseSheet: $dashBoardViewModel.isAbsenseSheet, absenseDate: $dashBoardViewModel.absenseDate) {
-                    if let userAccount = userViewModel.currentAccount {
-                        dashBoardViewModel.absenceReport(for: userAccount)
-                    }
-                }
-                   
-                CalendarCard(termine: dashBoardViewModel.termine)
-                    .padding(.horizontal)
-                    .padding(.vertical)
-                
-                ConfirmButtonLabel(confirmButtonDialog: ConfirmButtonDialog(
-                    systemImage: "iphone.and.arrow.right.inward",
-                    buttonText: "Leave Team",
-                    question: "Want Leave the Team",
-                    message: "Are you sure you want to leave the Team? This action cannot be undone.",
-                    action: "Delete",
-                    cancel: "Cancel"
-                ), action: {
-                    do {
-                        try dashBoardViewModel.leaveTeam(for: userViewModel.currentAccount)
-                    } catch {
-                        print(error)
-                    }
-                })
-                
+            if let teamId = dashBoardViewModel.currentTeam?.id {
+                HasTeam(userViewModel: userViewModel, dashBoardViewModel: dashBoardViewModel, teamId: teamId)
             } else {
                 // MARK: IF HAS NO TEAM
-                NavigationLink {
-                    SearchTeam(teamListViewModel: teamListViewModel, userViewModel: userViewModel)
-                } label: {
-                    RoundedIconTextCard(icon: "person.badge.plus", title: "Join a Team!", description: "Send a request to join a team as a trainer and start managing players and training sessions.")
-                }
-                
-                RoundedIconTextCard(icon: "qrcode.viewfinder", title: "Join with Team ID!", description: "Enter a Team ID to instantly join an existing team and start managing players and training sessions.")
-                    .onTapGesture {
-                        isEnterCode.toggle()
-                    }
-                    .sheet(isPresented: $isEnterCode, onDismiss: {
-                        dashBoardViewModel.getTeam(for: userViewModel.currentAccount)
-                    }) {
-                        if let currentAccount = userViewModel.currentAccount {
-                            ZStack {
-                                Theme.background.ignoresSafeArea()
-                                
-                                EnterCodeView(userAccount: currentAccount)
-                            }
-                        }
-                    }
+                HasNoTeam(userViewModel: userViewModel, dashBoardViewModel: dashBoardViewModel, teamListViewModel: teamListViewModel)
+                    .padding(.bottom, 40)
             }
               
             ConfirmButtonLabel(confirmButtonDialog: ConfirmButtonDialog(
@@ -97,10 +52,75 @@ struct PlayerDashboard: View {
             dashBoardViewModel.getTeam(for: userViewModel.currentAccount)
             dashBoardViewModel.getTeamTermine()
         }
-        .navigationTitle("Spieler")
+        .navigationTitle("Player Dashboard")
     }
 } 
  
+fileprivate struct HasNoTeam: View {
+    @ObservedObject var userViewModel: SharedUserViewModel
+    @ObservedObject var dashBoardViewModel: DashBoardViewModel
+    @ObservedObject var teamListViewModel: TeamListViewModel
+    
+    @State var isEnterCode = false
+    
+    var body: some View {
+        NavigationLink {
+            SearchTeam(teamListViewModel: teamListViewModel, userViewModel: userViewModel)
+        } label: {
+            RoundedIconTextCard(icon: "person.badge.plus", title: "Join a Team!", description: "Send a request to join a team as a trainer and start managing players and training sessions.")
+        }
+        
+        RoundedIconTextCard(icon: "qrcode.viewfinder", title: "Join with Team ID!", description: "Enter a Team ID to instantly join an existing team and start managing players and training sessions.")
+            .onTapGesture {
+                isEnterCode.toggle()
+            }
+            .sheet(isPresented: $isEnterCode, onDismiss: {
+                dashBoardViewModel.getTeam(for: userViewModel.currentAccount)
+            }) {
+                if let currentAccount = userViewModel.currentAccount {
+                    ZStack {
+                        Theme.background.ignoresSafeArea()
+                        
+                        EnterCodeView(userAccount: currentAccount)
+                    }
+                }
+            }
+    }
+}
+
+fileprivate struct HasTeam: View {
+    @ObservedObject var userViewModel: SharedUserViewModel
+    @ObservedObject var dashBoardViewModel: DashBoardViewModel
+    let teamId: UUID
+    
+    var body: some View {
+        AbsenseCard(isAbsenseSheet: $dashBoardViewModel.isAbsenseSheet, absenseDate: $dashBoardViewModel.absenseDate) {
+            if let userAccount = userViewModel.currentAccount {
+                dashBoardViewModel.absenceReport(for: userAccount)
+            }
+        }
+           
+        CalendarCard(termine: dashBoardViewModel.termine)
+            .padding(.vertical) 
+        
+        ConfirmButtonLabel(confirmButtonDialog: ConfirmButtonDialog(
+            systemImage: "iphone.and.arrow.right.inward",
+            buttonText: "Leave Team",
+            question: "Want Leave the Team",
+            message: "Are you sure you want to leave the Team? This action cannot be undone.",
+            action: "Delete",
+            cancel: "Cancel"
+        ), action: {
+            do {
+                try dashBoardViewModel.leaveTeam(for: userViewModel.currentAccount)
+            } catch {
+                print(error)
+            }
+        })
+        .padding(.top, 40)
+    }
+}
+
 #Preview {
     @Previewable @State var dashBoardViewModel = DashBoardViewModel(repository: RepositoryPreview.shared)
     @Previewable @State var userViewModel = SharedUserViewModel(repository: RepositoryPreview.shared)
@@ -124,11 +144,7 @@ struct PlayerDashboard: View {
         .sheet(isPresented: .constant(true)) {
             NavigationStack {
                 VStack {
-                    DatePicker("Absense Date", selection: .constant(Date()), displayedComponents: .date)
-                    
-                    Button("Eintragen") {
-                        
-                    }
+                    DatePicker("Absense Date", selection: .constant(Date()), displayedComponents: .date) 
                 }
                 .padding()
                 .toolbar {

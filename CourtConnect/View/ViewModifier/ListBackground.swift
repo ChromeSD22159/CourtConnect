@@ -16,6 +16,7 @@ struct ListBackground: ViewModifier {
     func body(content: Content) -> some View {
         content
             .scrollContentBackground(.hidden)
+            .contentMargins(.horizontal, 20)
             .background(Theme.background)
     }
 }

@@ -12,16 +12,18 @@ struct StatisticDTO: DTOProtocol {
     var fouls: Int
     var twoPointAttempts: Int
     var threePointAttempts: Int
+    var terminType: String
     var createdAt: Date
     var updatedAt: Date
     var deletedAt: Date?
     
-    init(id: UUID, userAccountId: UUID, fouls: Int, twoPointAttempts: Int, threePointAttempts: Int, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil) {
+    init(id: UUID, userAccountId: UUID, fouls: Int, twoPointAttempts: Int, threePointAttempts: Int, terminType: String, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil) {
         self.id = id
         self.userAccountId = userAccountId
         self.fouls = fouls
         self.twoPointAttempts = twoPointAttempts
         self.threePointAttempts = threePointAttempts
+        self.terminType = terminType
         self.createdAt = createdAt
         self.updatedAt = updatedAt
         self.deletedAt = deletedAt
@@ -32,7 +34,7 @@ struct StatisticDTO: DTOProtocol {
     }
     
     func toModel() -> Statistic {
-        return Statistic(id: id, userAccountId: userAccountId, fouls: fouls, twoPointAttempts: twoPointAttempts, threePointAttempts: threePointAttempts, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
+        return Statistic(id: id, userAccountId: userAccountId, fouls: fouls, twoPointAttempts: twoPointAttempts, threePointAttempts: threePointAttempts, terminType: terminType, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
 }
 

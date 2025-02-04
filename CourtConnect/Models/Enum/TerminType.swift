@@ -19,5 +19,9 @@ enum TerminType: String, CaseIterable, Identifiable {
         }
     }
     
+    static var statistics: [TerminType] {
+        [.game, .training]
+    }
+    
     var id: String { rawValue }
 }
