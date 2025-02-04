@@ -12,15 +12,17 @@ class TeamMember: ModelProtocol {
     @Attribute(.unique) var id: UUID
     var userAccountId: UUID
     var teamId: UUID
+    var shirtNumber: Int?
     var role: String
     var createdAt: Date
     var updatedAt: Date
     var deletedAt: Date?
     
-    init(id: UUID = UUID(), userAccountId: UUID, teamId: UUID, role: String, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil) {
+    init(id: UUID = UUID(), userAccountId: UUID, teamId: UUID, shirtNumber: Int? = nil, role: String, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil) {
         self.id = id
         self.userAccountId = userAccountId
         self.teamId = teamId
+        self.shirtNumber = shirtNumber
         self.role = role
         self.createdAt = createdAt
         self.updatedAt = updatedAt
@@ -28,6 +30,6 @@ class TeamMember: ModelProtocol {
     }
     
     func toDTO() -> TeamMemberDTO {
-        return TeamMemberDTO(id: id, userAccountId: userAccountId, teamId: teamId, role: role, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
+        return TeamMemberDTO(id: id, userAccountId: userAccountId, teamId: teamId, shirtNumber: shirtNumber, role: role, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
 }

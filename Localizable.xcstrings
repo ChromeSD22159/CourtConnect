@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "" : {
+
+    },
     " " : {
 
     },
@@ -19,6 +22,16 @@
     "%@" : {
 
     },
+    "%@ (%lld)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ (%2$lld)"
+          }
+        }
+      }
+    },
     "%@ wants to join your team. Would you like to accept the request?" : {
 
     },
@@ -32,6 +45,15 @@
 
     },
     "3er" : {
+
+    },
+    "Absence report!" : {
+
+    },
+    "Absense" : {
+
+    },
+    "Absense Date" : {
 
     },
     "Add Document" : {
@@ -127,9 +149,6 @@
     "Do you want to join the team %@?" : {
 
     },
-    "documents: %lld" : {
-
-    },
     "E-Mail" : {
 
     },
@@ -140,6 +159,9 @@
 
     },
     "Edit User" : {
+
+    },
+    "Eintragen" : {
 
     },
     "Enter Code" : {
@@ -161,6 +183,15 @@
 
     },
     "Error" : {
+
+    },
+    "Es sind derzeit keine Termine geplant." : {
+
+    },
+    "File %lld" : {
+
+    },
+    "Find out your trainer and your team very much about your absence." : {
 
     },
     "Firstname" : {
@@ -196,6 +227,9 @@
     "Headcoach" : {
 
     },
+    "Hide all Termine" : {
+
+    },
     "Home" : {
 
     },
@@ -217,7 +251,7 @@
     "Keep me signed in" : {
 
     },
-    "Kein Team gefunden!" : {
+    "Keine Termine" : {
 
     },
     "Kind" : {
@@ -253,10 +287,22 @@
     "No Connection" : {
 
     },
+    "No Documents Avaible" : {
+
+    },
+    "No Team" : {
+
+    },
+    "No team found!" : {
+
+    },
     "Nobody is online!" : {
 
     },
     "OK" : {
+
+    },
+    "Other" : {
 
     },
     "Password" : {
@@ -307,7 +353,13 @@
     "Select image" : {
 
     },
+    "Send" : {
+
+    },
     "Settings" : {
+
+    },
+    "Show all Termine" : {
 
     },
     "Show Join QR Code" : {
@@ -341,6 +393,12 @@
 
     },
     "Termin Date" : {
+
+    },
+    "Termine" : {
+
+    },
+    "The selected user account is not part of a team. Join a team to get started." : {
 
     },
     "Total Online Users: %lld" : {

@@ -7,7 +7,7 @@
 import SwiftData
 import Foundation
 import Supabase
- 
+
 @MainActor class TeamRepository {
     var container: ModelContainer
     
@@ -19,7 +19,7 @@ import Supabase
     func upsertLocal<T: ModelProtocol>(item: T) throws {
         container.mainContext.insert(item)
         try container.mainContext.save()
-    } 
+    }
  
     func getTeam(for teamId: UUID) throws -> Team? {
         let redicate = #Predicate<Team> { team in
@@ -42,6 +42,15 @@ import Supabase
     func getTeams() throws -> [Team] {
         let redicate = #Predicate<Team> { team in
              team.deletedAt == nil
+        }
+        let fetchDescriptor = FetchDescriptor(predicate: redicate)
+        
+        return try container.mainContext.fetch(fetchDescriptor)
+    }
+    
+    func getTeamAbsense(for teamId: UUID) throws -> [Absence] {
+        let redicate = #Predicate<Absence> { teamMember in
+            teamMember.teamId == teamId
         }
         let fetchDescriptor = FetchDescriptor(predicate: redicate)
         
@@ -103,11 +112,55 @@ import Supabase
         return try container.mainContext.fetch(fetchDescriptor).first
     }
      
-    func getTeamRequests(teamId: UUID) throws -> [Requests] { 
+    func getMemberStatistic(for userAccountId: UUID) throws -> [Statistic] {
+        let predicate = #Predicate<Statistic> { $0.userAccountId == userAccountId }
+        let fetchDescriptor = FetchDescriptor(predicate: predicate)
+        let statistic = try container.mainContext.fetch(fetchDescriptor)
+        print(statistic.count)
+        return statistic
+    }
+    
+    func getMemberAvgStatistic(for userAccountId: UUID) throws -> MemberStatistic? {
+        let predicate = #Predicate<Statistic> { $0.userAccountId == userAccountId }
+        let fetchDescriptor = FetchDescriptor(predicate: predicate)
+        let statistics = try container.mainContext.fetch(fetchDescriptor)
+        let items = statistics.count
+
+        guard items > 0 else { return MemberStatistic(avgFouls: 0, avgTwoPointAttempts: 0, avgThreePointAttempts: 0, avgPoints: 0) }
+
+        let avgFouls = Double(statistics.map { $0.fouls }.reduce(0, +)) / Double(items)
+        let avgTwoPointAttempts = Double(statistics.map { $0.twoPointAttempts }.reduce(0, +)) / Double(items)
+        let avgThreePointAttempts = Double(statistics.map { $0.threePointAttempts }.reduce(0, +)) / Double(items)
+        let avgPoints = Double(statistics.map { $0.points }.reduce(0, +)) / Double(items)
+
+        return MemberStatistic(avgFouls: Int(avgFouls), avgTwoPointAttempts: Int(avgTwoPointAttempts), avgThreePointAttempts: Int(avgThreePointAttempts), avgPoints: Int(avgPoints))
+    }
+     
+    func getPlayerStatistics(userAccountId: UUID, fetchLimit: Int = 7) throws -> [Statistic] {
+        let predicate = #Predicate<Statistic> { $0.userAccountId == userAccountId }
+        
+        var fetchDescriptor = FetchDescriptor(predicate: predicate, sortBy: [SortDescriptor(\.createdAt, order: .reverse)])
+        fetchDescriptor.fetchLimit = fetchLimit
+        let result = try container.mainContext.fetch(fetchDescriptor)
+        
+        print(result.count)
+        
+        return result
+    }
+    
+    func getTeamRequests(teamId: UUID) throws -> [Requests] {
         let predicate = #Predicate<Requests> { $0.teamId == teamId && $0.deletedAt == nil }
         let fetchDescriptor = FetchDescriptor<Requests>(predicate: predicate)
         return try container.mainContext.fetch(fetchDescriptor)
-    } 
+    }
+    
+    func getTeamTermine(for teamId: UUID) throws -> [Termin] {
+        let date = Calendar.current.startOfDay(for: Date())
+        let predicate = #Predicate<Termin> { $0.date > date && $0.teamId == teamId && $0.deletedAt == nil }
+        let fetchDescriptor = FetchDescriptor(predicate: predicate)
+        let result = try container.mainContext.fetch(fetchDescriptor) 
+        return result
+    }
     
     func deleteLocalTeam(for team: Team) {
         container.mainContext.delete(team)
@@ -156,16 +209,6 @@ import Supabase
         userAccount.updatedAt = Date()
     }
     
-    func getPlayerStatistics(userAccountId: UUID, fetchLimit: Int = 7) throws -> [Statistic] {
-        let predicate = #Predicate<Statistic>{ item in
-            item.userAccountId == userAccountId && item.deletedAt == nil
-        }
-        
-        var fetchDescriptor = FetchDescriptor(predicate: predicate, sortBy: [SortDescriptor(\.createdAt, order: .reverse)])
-        fetchDescriptor.fetchLimit = fetchLimit
-        return try container.mainContext.fetch(fetchDescriptor)
-    }
-    
     func requestTeam(request: Requests) async throws {
         try await SupabaseService.upsertWithOutResult(item: request.toDTO(), table: .request, onConflict: "id")
     }
@@ -180,7 +223,7 @@ import Supabase
             // CREATE MEMBER
             let newMember = TeamMember(userAccountId: userAccount.id, teamId: foundTeamDTO.id, role: userAccount.role, createdAt: Date(), updatedAt: Date())
             // INSER MEMBER REMOTE
-            print("before insert") 
+            print("before insert")
             let supabaseMember: TeamMemberDTO = try await SupabaseService.insert(item: newMember.toDTO(), table: .teamMember)
             print("after insert")
             // UPDATE LOCAL CURRENTUSERACCOUNT
@@ -221,6 +264,11 @@ import Supabase
         return try await SupabaseService.search(name: name, table: DatabaseTable.team, column: "teamName")
     }
     
+    func insertAbsense(absence: Absence) async throws {
+        try self.upsertLocal(item: absence)
+        try await SupabaseService.upsertWithOutResult(item: absence.toDTO(), table: .absence, onConflict: "id")
+    }
+    
     // MARK: SOCKET
     func receiveTeamJoinRequests(complete: @escaping (Requests?) -> Void) {
         let channel = BackendClient.shared.supabase.channel("JoinRequests")
@@ -232,7 +280,7 @@ import Supabase
             
             for await insertion in inserts {
                 do {
-                    if let message: RequestsDTO = decodeDTO(from: insertion) { 
+                    if let message: RequestsDTO = decodeDTO(from: insertion) {
                         container.mainContext.insert(message.toModel())
                         try container.mainContext.save()
                         complete(message.toModel())

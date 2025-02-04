@@ -20,7 +20,7 @@ struct SearchTeam: View {
             ForEach(teamListViewModel.foundTeams, id: \.id) { team in
                 Section {
                     if teamListViewModel.foundTeams.isEmpty {
-                        Text("Kein Team gefunden!")
+                        Text("No team found!")
                     } else {
                         HStack {
                             Text(team.teamName)

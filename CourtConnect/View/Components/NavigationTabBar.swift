@@ -28,7 +28,7 @@ struct NavigationTabBar<Content: View>: View {
             .frame(maxWidth: .infinity)
             .background(Material.ultraThinMaterial)
             .clipShape(Capsule())
-            .padding([.horizontal, .bottom], 20)
+            .padding(.horizontal, 20)
             .shadow(color: .black.opacity(0.2), radius: 5, y: 5)
         })
     }

@@ -17,9 +17,11 @@ struct InternetUnavailableView: View {
             }
         }
     }
-}
+} 
 
 #Preview {
+    TeamUnavailableView()
+    
     InternetUnavailableView()
         .previewEnvirments()
 }

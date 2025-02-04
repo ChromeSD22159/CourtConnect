@@ -5,11 +5,7 @@
 //  Created by Frederik Kohler on 27.01.25.
 //
 import SwiftUI
-
-@Observable class PlayerDashboardViewModel {
-    
-}
-
+ 
 struct PlayerDashboard: View {
     @ObservedObject var userViewModel: SharedUserViewModel
     @ObservedObject var dashBoardViewModel: DashBoardViewModel
@@ -25,11 +21,19 @@ struct PlayerDashboard: View {
     
     var body: some View {
         VStack {
-            Text(userViewModel.userProfile?.firstName ?? "")
-            Text(userViewModel.currentAccount?.role ?? "")
-           
             // MARK: IF HAS TEAM
-            if let team = dashBoardViewModel.currentTeam {
+            if dashBoardViewModel.currentTeam != nil {
+                
+                AbsenseCard(isAbsenseSheet: $dashBoardViewModel.isAbsenseSheet, absenseDate: $dashBoardViewModel.absenseDate) {
+                    if let userAccount = userViewModel.currentAccount {
+                        dashBoardViewModel.absenceReport(for: userAccount)
+                    }
+                }
+                   
+                CalendarCard(termine: dashBoardViewModel.termine)
+                    .padding(.horizontal)
+                    .padding(.vertical)
+                
                 ConfirmButtonLabel(confirmButtonDialog: ConfirmButtonDialog(
                     systemImage: "iphone.and.arrow.right.inward",
                     buttonText: "Leave Team",
@@ -91,11 +95,12 @@ struct PlayerDashboard: View {
         .onAppear {
             dashBoardViewModel.currentTeam = nil
             dashBoardViewModel.getTeam(for: userViewModel.currentAccount)
+            dashBoardViewModel.getTeamTermine()
         }
         .navigationTitle("Spieler")
     }
 } 
-
+ 
 #Preview {
     @Previewable @State var dashBoardViewModel = DashBoardViewModel(repository: RepositoryPreview.shared)
     @Previewable @State var userViewModel = SharedUserViewModel(repository: RepositoryPreview.shared)
@@ -112,4 +117,43 @@ struct PlayerDashboard: View {
         dashBoardViewModel.currentTeam = Team(teamName: "Bulls", headcoach: "", joinCode: "", email: "", createdByUserAccountId: MockUser.myUserAccount.id, createdAt: Date(), updatedAt: Date())
       
     }
+}
+
+#Preview {
+    ZStack {}
+        .sheet(isPresented: .constant(true)) {
+            NavigationStack {
+                VStack {
+                    DatePicker("Absense Date", selection: .constant(Date()), displayedComponents: .date)
+                    
+                    Button("Eintragen") {
+                        
+                    }
+                }
+                .padding()
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button("Cancel") {
+                           // dashBoardViewModel.isAbsenseSheet.toggle()
+                        }
+                    }
+                    
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button("Send") {
+                            /*
+                             if let userAccount = userViewModel.currentAccount {
+                                 dashBoardViewModel.absenceReport(for: userAccount, date: Date())
+                             }
+                             */
+                        }
+                    }
+                }
+                .navigationTitle("Absense")
+                .navigationBarTitleDisplayMode(.inline)
+            }
+            .navigationStackTint()
+            .presentationDetents([.height(150)])
+            .presentationBackground(Material.ultraThinMaterial)
+            .presentationCornerRadius(20)
+        }
 }

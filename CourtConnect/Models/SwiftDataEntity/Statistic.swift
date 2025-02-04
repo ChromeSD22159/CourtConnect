@@ -36,4 +36,8 @@ class Statistic: ModelProtocol {
     func toDTO() -> StatisticDTO {
         return StatisticDTO(id: id, userAccountId: userAccountId, fouls: fouls, twoPointAttempts: twoPointAttempts, threePointAttempts: threePointAttempts, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
+    
+    var dateString: String {
+        return createdAt.formatted(.dateTime.day(.twoDigits).month(.twoDigits).year(.twoDigits))
+    }
 }

@@ -9,11 +9,13 @@ import SwiftUI
 enum TerminType: String, CaseIterable, Identifiable {
     case game = "Game"
     case training = "Training"
+    case other = "Other"
     
     var displayName: LocalizedStringKey {
         switch self {
         case .game: return "Game"
         case .training: return "Training"
+        case .other: return "Other"
         }
     }
     

@@ -11,15 +11,19 @@ import UIKit
 @Observable class DashBoardViewModel: ObservableObject {
     var currentTeam: Team?
     var qrCode: UIImage?
+    var termine: [Termin] = []
     
     let repository: BaseRepository
+    
+    var isAbsenseSheet = false
+    var absenseDate = Date()
     
     init(repository: BaseRepository) {
         self.repository = repository
     }
     
     func getTeam(for currentAccount: UserAccount?) {
-        guard let currentUser = currentAccount, let teamId = currentUser.teamId else { return } 
+        guard let currentUser = currentAccount, let teamId = currentUser.teamId else { return }
         do {
             currentTeam = try repository.teamRepository.getTeam(for: teamId)
             
@@ -83,6 +87,29 @@ import UIKit
             } catch {
                 print(error)
             }
+        }
+    }
+    
+    func absenceReport(for userAccount: UserAccount?) {
+        Task {
+            do {
+                guard let userAccount = userAccount else { throw UserError.userAccountNotFound }
+                guard let teamId = currentTeam?.id else { throw TeamError.teamNotFound }
+                let newAbsense = Absence(userAccountId: userAccount.id, teamId: teamId, date: absenseDate, createdAt: Date(), updatedAt: Date())
+                try await repository.teamRepository.insertAbsense(absence: newAbsense)
+                self.isAbsenseSheet.toggle()
+            } catch {
+                print(error)
+            }
+        }
+    }
+     
+    func getTeamTermine() {
+        do {
+            guard let currentTeam = currentTeam else { throw TeamError.userHasNoTeam } 
+            termine = try repository.teamRepository.getTeamTermine(for: currentTeam.id)
+        } catch {
+            print(error)
         }
     }
 }
