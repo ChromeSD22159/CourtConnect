@@ -16,3 +16,10 @@ struct DarkButtonStlye: ButtonStyle {
             .clipShape(RoundedRectangle(cornerRadius: 15))
     }
 } 
+
+#Preview {
+    Button("DarkButtonStlye") {
+        
+    }
+    .buttonStyle(DarkButtonStlye())
+}
