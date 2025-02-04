@@ -83,7 +83,7 @@ struct FoundNewTeamView: View {
                 
                 VStack(alignment: .leading) {
                     Text("* Required").font(.caption2)
-                    TextField("Verbands E-Mail", text: $viewModel.email, prompt: Text("Verbands E-Mail"))
+                    TextField("Association e-mail", text: $viewModel.email, prompt: Text("Association e-mail"))
                         .textFieldStyle(.roundedBorder)
                 }
                 
@@ -111,7 +111,6 @@ struct FoundNewTeamView: View {
             }
             
             LoadingCard(isLoading: $viewModel.isLoading)
-            
         }
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {

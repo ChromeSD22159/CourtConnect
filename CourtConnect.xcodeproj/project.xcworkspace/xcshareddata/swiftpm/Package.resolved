@@ -1,5 +1,5 @@
 {
-  "originHash" : "bfc61e3f0e3ae18fee0e33b86f5b9fda2e441831db0fcc57a946a1ec1233f93a",
+  "originHash" : "2e9052e2d455dfa2de817da4a5dbc73fa16e1be7223eda71f4cb1c7b6e9b6094",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -251,6 +251,24 @@
       "state" : {
         "revision" : "7a3d77f3dd9f91d5cea138e52c20cfceabf352de",
         "version" : "0.58.2"
+      }
+    },
+    {
+      "identity" : "wishkit-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/wishkit/wishkit-ios.git",
+      "state" : {
+        "revision" : "951b17b6b683c72d36627de77e8e26afcfbde6ae",
+        "version" : "4.7.0"
+      }
+    },
+    {
+      "identity" : "wishkit-ios-shared",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/wishkit/wishkit-ios-shared.git",
+      "state" : {
+        "revision" : "cd184932bcdbdc8766137ef8ecac63c424be93a7",
+        "version" : "1.5.0"
       }
     },
     {

@@ -62,7 +62,7 @@ struct UserProfileEditView: View {
                 }
                 
                 if let lastOnline = userViewModel.userProfile?.lastOnline {
-                    Text("lastOnline: \(lastOnline.formatted(date: .long, time: .shortened))").font(.caption)
+                    Text("LastOnline: \(lastOnline.formatted(date: .long, time: .shortened))").font(.caption)
                 }
                 
                 Button("Delete User Account") {

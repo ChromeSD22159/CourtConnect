@@ -46,7 +46,7 @@ import Charts
         }.first
     }
     
-    @MainActor func getStatistic(for: TerminType) {
+    @MainActor func getStatistic(for terminType: TerminType) {
         statistics = []
         chartStatistics = []
 
@@ -78,12 +78,12 @@ import Charts
         }
         do {
             guard let userAccountId = userAccountId else { return } 
-            let result = try repository.teamRepository.getPlayerStatistics(userAccountId: userAccountId)
-            if !result.isEmpty {
+            let result = try repository.teamRepository.getPlayerStatistics(userAccountId: userAccountId, terminType: terminType.rawValue)
+            if result.count >= 2 {
                 orginalStatistics = result
                 self.hasData = true
                 for statistic in result {
-                    let statistc = Statistic(id: statistic.id, userAccountId: statistic.userAccountId, fouls: 0, twoPointAttempts: 0, threePointAttempts: 0, createdAt: statistic.createdAt, updatedAt: statistic.updatedAt)
+                    let statistc = Statistic(id: statistic.id, userAccountId: statistic.userAccountId, fouls: 0, twoPointAttempts: 0, threePointAttempts: 0, terminType: TerminType.game.rawValue, createdAt: statistic.createdAt, updatedAt: statistic.updatedAt)
                     self.chartStatistics.append(statistc)
                     self.statistics.append(statistc)
                 }
@@ -91,7 +91,7 @@ import Charts
                 self.hasData = false
                 for index in 0...7 {
                     let date = Calendar.current.date(byAdding: .day, value: -(7 * index + 1), to: Date())!
-                    let statistc = Statistic(id: UUID(), userAccountId: UUID(), fouls: 1, twoPointAttempts: 0, threePointAttempts: 0, createdAt: date, updatedAt: date)
+                    let statistc = Statistic(id: UUID(), userAccountId: UUID(), fouls: 1, twoPointAttempts: 0, threePointAttempts: 0, terminType: TerminType.game.rawValue, createdAt: date, updatedAt: date)
                     self.chartStatistics.append(statistc)
                     self.statistics.append(statistc)
                 }
@@ -183,10 +183,10 @@ struct PlayerStatistic: View {
                 Spacer()
             }
         }
-        .navigationTitle(userViewModel.userProfile?.fullName ?? "Frederik`s Statistic")
+        .navigationTitle((userViewModel.userProfile?.fullName ?? "") + " Statistics")
         .navigationBarTitleDisplayMode(.inline)
         .contentMargins(.top, 20)
-        .contentMargins(.horizontal, 20)
+        .contentMargins(.bottom, 75)
     }
 }
 
@@ -260,7 +260,7 @@ private struct StatisticChart: View {
     var body: some View {
         VStack(spacing: 20) {
             HStack {
-                ForEach(TerminType.allCases, id: \.hashValue) { type in
+                ForEach(TerminType.statistics, id: \.hashValue) { type in
                     Button(type.rawValue) {
                         withAnimation {
                             selectedType = type

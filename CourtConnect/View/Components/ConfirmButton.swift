@@ -5,7 +5,7 @@
 //  Created by Frederik Kohler on 02.02.25.
 //
 import SwiftUI
-
+// TODO: REFACTOR
 struct ConfirmButton: View {
     @State private var isClicked = false
     let confirmButtonDialog: ConfirmButtonDialog
@@ -55,6 +55,5 @@ struct RowLabelButton: View {
         .padding()
         .background(Material.ultraThinMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 15))
-        .padding(.horizontal)
     }
 }

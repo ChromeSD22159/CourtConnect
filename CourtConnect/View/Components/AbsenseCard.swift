@@ -25,16 +25,11 @@ struct AbsenseCard: View {
         }
         .padding()
         .background(Material.ultraThinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 15))
-        .padding(.horizontal)
+        .clipShape(RoundedRectangle(cornerRadius: 15)) 
         .sheet(isPresented: $isAbsenseSheet, content: {
             NavigationStack {
                 VStack {
-                    DatePicker("Absense Date", selection: $absenseDate, displayedComponents: .date)
-                    
-                    Button("Eintragen") {
-                        
-                    }
+                    DatePicker("Absense Date", selection: $absenseDate, displayedComponents: .date) 
                 }
                 .padding()
                 .toolbar {

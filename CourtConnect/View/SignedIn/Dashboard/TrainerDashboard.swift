@@ -50,6 +50,7 @@ struct TrainerDashboard: View {
                     }
                 }
             })
+            .padding(.top, 40)
         }
         .onAppear {
             dashBoardViewModel.currentTeam = nil

@@ -25,6 +25,7 @@
 		B698AC772D33359C0086AF8C /* Realtime in Frameworks */ = {isa = PBXBuildFile; productRef = B698AC762D33359C0086AF8C /* Realtime */; };
 		B698AC792D33359C0086AF8C /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = B698AC782D33359C0086AF8C /* Storage */; };
 		B698AC7C2D3335F20086AF8C /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = B698AC7B2D3335F20086AF8C /* Supabase */; };
+		B6A2F4192D52810600FF9AD5 /* WishKit in Frameworks */ = {isa = PBXBuildFile; productRef = B6A2F4182D52810600FF9AD5 /* WishKit */; };
 		B6B1D4CD2D3D42A900251542 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = B6B1D4CC2D3D42A900251542 /* FirebaseMessaging */; };
 		B6B1D4CF2D3D434E00251542 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = B6B1D4CE2D3D434E00251542 /* FirebaseCore */; };
 		B6D69A642D447AE200702FA2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B665325A2D3EC28F00B87D71 /* GoogleService-Info.plist */; };
@@ -100,6 +101,7 @@
 				B698AC6B2D3335110086AF8C /* PostgREST in Frameworks */,
 				B698AC692D3335110086AF8C /* Functions in Frameworks */,
 				B698AC7C2D3335F20086AF8C /* Supabase in Frameworks */,
+				B6A2F4192D52810600FF9AD5 /* WishKit in Frameworks */,
 				B6653E262D43893400B87D71 /* Lottie in Frameworks */,
 				B698AC6F2D3335110086AF8C /* Storage in Frameworks */,
 				B6B1D4CF2D3D434E00251542 /* FirebaseCore in Frameworks */,
@@ -195,6 +197,7 @@
 				B6652A502D3DAA2E00B87D71 /* FirebaseAuth */,
 				B66533A02D3F8E0A00B87D71 /* SwiftJWT */,
 				B6653E252D43893400B87D71 /* Lottie */,
+				B6A2F4182D52810600FF9AD5 /* WishKit */,
 			);
 			productName = CourtConnect;
 			productReference = B698ABFB2D330FC10086AF8C /* CourtConnect.app */;
@@ -291,6 +294,7 @@
 				B6652B2C2D3E411B00B87D71 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */,
 				B665339F2D3F8E0A00B87D71 /* XCRemoteSwiftPackageReference "Swift-JWT" */,
 				B6653E242D43893400B87D71 /* XCRemoteSwiftPackageReference "lottie-ios" */,
+				B6A2F4172D52810600FF9AD5 /* XCRemoteSwiftPackageReference "wishkit-ios" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B698ABFC2D330FC10086AF8C /* Products */;
@@ -724,6 +728,14 @@
 				minimumVersion = 2.5.1;
 			};
 		};
+		B6A2F4172D52810600FF9AD5 /* XCRemoteSwiftPackageReference "wishkit-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/wishkit/wishkit-ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.7.0;
+			};
+		};
 		B6B1D4CB2D3D42A900251542 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -804,6 +816,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B698AC652D3335100086AF8C /* XCRemoteSwiftPackageReference "supabase-swift" */;
 			productName = Supabase;
+		};
+		B6A2F4182D52810600FF9AD5 /* WishKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B6A2F4172D52810600FF9AD5 /* XCRemoteSwiftPackageReference "wishkit-ios" */;
+			productName = WishKit;
 		};
 		B6B1D4CC2D3D42A900251542 /* FirebaseMessaging */ = {
 			isa = XCSwiftPackageProductDependency;

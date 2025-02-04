@@ -254,9 +254,10 @@ create table
   public."Statistic" (
     id uuid not null default gen_random_uuid (),
     "userAccountId" uuid not null,
-    fouls integer not null default 0,
+    "fouls" integer not null default 0,
     "twoPointAttempts" integer not null default 0,
     "threePointAttempts" integer not null default 0,
+    "terminType" text not null default ''::text,
     "createdAt" timestamp with time zone not null default now(),
     "updatedAt" timestamp with time zone not null default now(),
     "deletedAt" timestamp with time zone null,
@@ -460,14 +461,15 @@ create table
     "teamId" uuid not null,
     "typeString" text not null,
     date timestamp with time zone not null,
-    "createdAt" timestamp with time zone not null default now(),
-    "updatedAt" timestamp with time zone not null default now(),
-    "deletedAt" timestamp with time zone null,
+     "terminType" text not null default ''::text, 
     title text not null,
     place text not null,
     infomation text not null,
     "durationMinutes" smallint not null default '0'::smallint,
     "createdByUserAccountId" uuid not null,
+    "createdAt" timestamp with time zone not null default now(),
+    "updatedAt" timestamp with time zone not null default now(),
+    "deletedAt" timestamp with time zone null,
     constraint termine_pkey primary key (id)
   ) tablespace pg_default;
 
