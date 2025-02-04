@@ -26,3 +26,40 @@ struct LoadingCard: View {
         }
     }
 }
+ 
+struct ReoloadAnimation: View {
+    @Binding var isLoading: Bool
+    var body: some View {
+        if isLoading {
+            VStack {
+                LottieView(animation: .named("basketballLoading"))
+                    .playbackMode(.playing(.fromFrame(1, toFrame: 48, loopMode: .loop)))
+                    .frame(width: 150)
+                    .frame(height: 75)
+                    .padding(.horizontal)
+            }
+            .background(Material.ultraThinMaterial.opacity(0.9))
+            .clipShape(RoundedRectangle(cornerRadius: 25))
+            .opacity(isLoading ? 1 : 0)
+            .animation(.easeInOut.delay(0.5), value: isLoading)
+            .transition(.move(edge: .top))
+        }
+    }
+}
+
+#Preview {
+    @Previewable @State var animate = false
+    HStack {
+        //ReoloadAnimation(isLoading: $animate)
+    }
+    .overlay(alignment: .top, content: {
+        ReoloadAnimation(isLoading: $animate)
+    })
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .background(.gray.opacity(0.5))
+    .onTapGesture {
+        withAnimation(.easeOut) {
+            animate.toggle()
+        }
+    }
+}

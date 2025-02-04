@@ -317,6 +317,7 @@ private struct StatisticChart: View {
                 }
             }
         }
+        .padding(.horizontal)
         .onAppear {
             withAnimation(.easeInOut(duration: 1.0)) {
                 lineOpacity = 1.0

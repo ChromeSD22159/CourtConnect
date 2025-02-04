@@ -9,27 +9,47 @@ import SwiftUI
 struct NavigationTabBar<Content: View>: View {
     @ObservedObject var navViewModel: NavigationViewModel
     @Namespace private var animation
-    
+    @State var isScrolling = false
+    @State var reload = false
     @ViewBuilder var content: () -> Content
     
     var body: some View {
         ZStack {
             Theme.background.ignoresSafeArea()
             
-            content()
+            ScrollView(.vertical) {
+                content()
+            }
+            .scrollIndicators(.hidden)
+            .onScrollPhaseChange({ _, newPhase in
+                withAnimation(.easeInOut) {
+                    isScrolling = newPhase.isScrolling
+                }
+            })
+        }
+        .overlay(alignment: .top) {
+            ReoloadAnimation(isLoading: $reload)
         }
         .overlay(alignment: .bottom, content: {
-            HStack(spacing: 15) {
-                ForEach(NavigationTab.allCases) { item in
-                    tabItem(item: item)
+            if !isScrolling {
+                ZStack {
+                    Capsule()
+                        .fill(Material.ultraThinMaterial)
+                        .blur(radius: 2)
+                        .padding(5)
+                        .frame(maxWidth: .infinity, maxHeight: 75)
+                        .clipShape(Capsule())
+                        .padding(.horizontal, 20)
+                        .shadow(color: .black.opacity(0.2), radius: 5, y: 5)
+                       
+                    HStack {
+                        ForEach(NavigationTab.allCases) { item in
+                            tabItem(item: item)
+                        }
+                    }
                 }
+                .transition(.move(edge: .bottom))
             }
-            .padding(5)
-            .frame(maxWidth: .infinity)
-            .background(Material.ultraThinMaterial)
-            .clipShape(Capsule())
-            .padding(.horizontal, 20)
-            .shadow(color: .black.opacity(0.2), radius: 5, y: 5)
         })
     }
     
@@ -74,6 +94,7 @@ struct NavigationTabBar<Content: View>: View {
                     
                     Spacer()
                 }
+                .padding()
                 .padding()
                 .padding(.top, 50)
                 .background(color)

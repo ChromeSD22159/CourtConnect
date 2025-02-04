@@ -14,3 +14,10 @@ struct TransparentButtonStyle: ButtonStyle {
             .foregroundStyle(Theme.myGray)
     }
 }
+
+#Preview {
+    Button("TransparentButtonStyle") {
+        
+    }
+    .buttonStyle(TransparentButtonStyle())
+}

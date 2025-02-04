@@ -27,10 +27,14 @@ struct DashboardView: View {
                 case .trainer: TrainerDashboard(userViewModel: userViewModel, dashBoardViewModel: dashBoardViewModel)
                 case .admin: EmptyView()
                 }
+            } else {
+                DashboarAccountSwitch(accounts: userViewModel.accounts) { account in
+                    userViewModel.setCurrentAccount(newAccount: account)
+                }
             }
         }
         .contentMargins(.top, 20)
-        .contentMargins(.horizontal, 20)
+        .contentMargins(.horizontal, 16)
         .contentMargins(.bottom, 75)
         .scrollIndicators(.hidden)
         .errorPopover()
