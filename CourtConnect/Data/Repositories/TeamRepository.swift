@@ -120,12 +120,10 @@ import Supabase
         return statistic
     }
     
-    func getMemberAvgStatistic(for userAccountId: UUID) throws -> MemberStatistic? { // Return an optional
-        print(userAccountId)
+    func getMemberAvgStatistic(for userAccountId: UUID) throws -> MemberStatistic? {
         let predicate = #Predicate<Statistic> { $0.userAccountId == userAccountId }
         let fetchDescriptor = FetchDescriptor(predicate: predicate)
         let statistics = try container.mainContext.fetch(fetchDescriptor)
-        print(statistics.count)
         let items = statistics.count
 
         guard items > 0 else { return MemberStatistic(avgFouls: 0, avgTwoPointAttempts: 0, avgThreePointAttempts: 0, avgPoints: 0) }
@@ -139,13 +137,15 @@ import Supabase
     }
      
     func getPlayerStatistics(userAccountId: UUID, fetchLimit: Int = 7) throws -> [Statistic] {
-        let predicate = #Predicate<Statistic>{ item in
-            item.userAccountId == userAccountId && item.deletedAt == nil
-        }
+        let predicate = #Predicate<Statistic> { $0.userAccountId == userAccountId }
         
         var fetchDescriptor = FetchDescriptor(predicate: predicate, sortBy: [SortDescriptor(\.createdAt, order: .reverse)])
         fetchDescriptor.fetchLimit = fetchLimit
-        return try container.mainContext.fetch(fetchDescriptor)
+        let result = try container.mainContext.fetch(fetchDescriptor)
+        
+        print(result.count)
+        
+        return result
     }
     
     func getTeamRequests(teamId: UUID) throws -> [Requests] {
