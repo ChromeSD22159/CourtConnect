@@ -31,6 +31,10 @@ struct AttendanceDTO: DTOProtocol {
         Attendance(id: id, trainerId: trainerId, terminId: terminId, startTime: startTime, endTime: endTime, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
 } 
+
+
+
+
 // --> Get Account from trainerId to get the UserId
 /*
  -- 1. Trigger-Funktion erstellen

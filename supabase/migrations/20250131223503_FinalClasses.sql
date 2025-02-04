@@ -14,6 +14,7 @@ DROP TABLE IF EXISTS public."Document";
 DROP TABLE IF EXISTS public."DeletionRequest";
 DROP TABLE IF EXISTS public."Chat";
 DROP TABLE IF EXISTS public."Attendance"; 
+DROP TABLE IF EXISTS public."Absence"; 
 -- Erstellen der Tabellen (wie in deinem ursprünglichen Code)
 
 create table
@@ -252,7 +253,7 @@ BEGIN
 create table
   public."Statistic" (
     id uuid not null default gen_random_uuid (),
-    "userId" uuid not null,
+    "userAccountId" uuid not null,
     fouls integer not null default 0,
     "twoPointAttempts" integer not null default 0,
     "threePointAttempts" integer not null default 0,
@@ -264,16 +265,26 @@ create table
 
  CREATE OR REPLACE FUNCTION "LogStatisticInsertUpdate"()
  RETURNS TRIGGER AS $$
- BEGIN
-     INSERT INTO public."UpdateHistory" ("tableString", "timestamp", "userId")
-     VALUES ('Statistic', NOW(), NEW."userId")
-     ON CONFLICT ("tableString", "userId")
-     DO UPDATE SET 
-        "timestamp" = NOW(), 
-        "updatedAt" = NOW(); 
+  DECLARE
+      user_id UUID;
+  BEGIN 
+      SELECT "userId" INTO user_id
+      FROM public."UserAccount"
+      WHERE id = NEW."userAccountId";
 
-     RETURN NULL;
- END;
+      IF user_id IS NULL THEN
+          RAISE NOTICE 'userAccountId % not found in UserAccount', NEW."userAccountId"; 
+      END IF;
+
+    INSERT INTO public."UpdateHistory" ("tableString", "timestamp", "updatedAt", "userId")
+      VALUES ('Statistic', NOW(), NOW(), user_id)
+      ON CONFLICT ("tableString", "userId")
+      DO UPDATE SET 
+          "timestamp" = NOW(), 
+          "updatedAt" = NOW(); 
+
+      RETURN NULL; 
+  END;
  $$ LANGUAGE plpgsql;
 
  -- 2. Trigger erstellen
@@ -399,6 +410,7 @@ create table
     "userAccountId" uuid not null,
     "teamId" uuid not null,
     role text not null,
+     "shirtNumber" smallint null,
     "createdAt" timestamp with time zone not null default now(),
     "updatedAt" timestamp with time zone not null default now(),
     "deletedAt" timestamp with time zone null,
@@ -616,6 +628,52 @@ after insert
 or update on "UserProfile" for each row
 execute function "LogUserProfileInsertUpdate"();
  
+
+
+
+
+create table
+  public."Absence" (
+   id uuid not null default gen_random_uuid (),
+    "userAccountId" uuid not null,
+    "teamId" uuid not null,
+    date text not null,
+    "createdAt" timestamp with time zone not null default now(),
+    "updatedAt" timestamp with time zone not null default now(),
+    "deletedAt" timestamp with time zone null,
+    constraint absence_pkey primary key (id)
+  ) tablespace pg_default;
+
+CREATE OR REPLACE FUNCTION "LogAbsenceInsertUpdate"()
+ RETURNS TRIGGER AS $$
+DECLARE
+    user_id UUID;
+BEGIN 
+    SELECT "userId" INTO user_id
+    FROM public."UserAccount"
+    WHERE id = NEW."userAccountId"; 
+
+     IF user_id IS NULL THEN
+        RAISE NOTICE 'userAccountId % not found in Absence', NEW."userAccountId"; 
+        RAISE EXCEPTION 'userAccountId % not found in Absence', NEW."userAccountId"; 
+    END IF;
+
+    IF user_id IS NOT NULL THEN -- Add this check
+        INSERT INTO public."UpdateHistory" ("tableString", "timestamp", "updatedAt", "userId")
+        VALUES ('Absence', NOW(), NOW(), user_id)
+        ON CONFLICT ("tableString", "userId") DO UPDATE SET 
+            "timestamp" = NOW(),
+            "updatedAt" = NOW();
+    END IF;
+
+    RETURN NULL; 
+ END;
+ $$ LANGUAGE plpgsql;
+
+ CREATE TRIGGER "LogAbsenceInsertUpdateTrigger"
+ AFTER INSERT OR UPDATE ON "Absence"
+ FOR EACH ROW
+ EXECUTE FUNCTION "LogTeamMemberInsertUpdate"(); 
 
 
 

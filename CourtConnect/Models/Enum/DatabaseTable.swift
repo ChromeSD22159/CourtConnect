@@ -25,6 +25,7 @@ enum DatabaseTable: String, CaseIterable {
     case userAccount = "UserAccount"
     case userOnline = "UserOnline"
     case userProfile = "UserProfile"
+    case absence = "Absence"
     
     static var tablesToSync: [DatabaseTable] {
         var tables = DatabaseTable.allCases
@@ -49,6 +50,7 @@ enum DatabaseTable: String, CaseIterable {
         case .team: return TeamDTO.self
         case .deletionRequest: return TeamDTO.self
         case .updateHistory: return TeamDTO.self
+        case .absence: return AbsenceDTO.self
         }
     }
     
@@ -69,6 +71,7 @@ enum DatabaseTable: String, CaseIterable {
         case .team: return "id"
         case .deletionRequest: return nil
         case .updateHistory: return nil
+        case .absence: return "id"
         }
     }
     
@@ -89,6 +92,7 @@ enum DatabaseTable: String, CaseIterable {
         case .team: return Team.self
         case .deletionRequest: return Team.self
         case .updateHistory: return Team.self
+        case .absence: return Absence.self
         }
     }
     
@@ -109,6 +113,7 @@ enum DatabaseTable: String, CaseIterable {
         case .team: return "id"
         case .deletionRequest: return "id"
         case .updateHistory: return "id"
+        case .absence: return "id"
         }
     }
 }

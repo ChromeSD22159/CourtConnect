@@ -50,6 +50,12 @@
     "Absence report!" : {
 
     },
+    "Absense" : {
+
+    },
+    "Absense Date" : {
+
+    },
     "Add Document" : {
 
     },
@@ -155,6 +161,9 @@
     "Edit User" : {
 
     },
+    "Eintragen" : {
+
+    },
     "Enter Code" : {
 
     },
@@ -174,6 +183,9 @@
 
     },
     "Error" : {
+
+    },
+    "Es sind derzeit keine Termine geplant." : {
 
     },
     "File %lld" : {
@@ -215,6 +227,9 @@
     "Headcoach" : {
 
     },
+    "Hide all Termine" : {
+
+    },
     "Home" : {
 
     },
@@ -234,6 +249,9 @@
 
     },
     "Keep me signed in" : {
+
+    },
+    "Keine Termine" : {
 
     },
     "Kind" : {
@@ -284,6 +302,9 @@
     "OK" : {
 
     },
+    "Other" : {
+
+    },
     "Password" : {
 
     },
@@ -297,9 +318,6 @@
 
     },
     "Point Gard" : {
-
-    },
-    "Point gaurd" : {
 
     },
     "Points" : {
@@ -335,7 +353,13 @@
     "Select image" : {
 
     },
+    "Send" : {
+
+    },
     "Settings" : {
+
+    },
+    "Show all Termine" : {
 
     },
     "Show Join QR Code" : {
@@ -369,6 +393,9 @@
 
     },
     "Termin Date" : {
+
+    },
+    "Termine" : {
 
     },
     "The selected user account is not part of a team. Join a team to get started." : {

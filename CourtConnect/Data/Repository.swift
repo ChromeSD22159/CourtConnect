@@ -38,6 +38,7 @@ import SwiftUICore
     
     init() {
         let schema = Schema([
+            Absence.self,
             Attendance.self,
             Chat.self,
             Document.self,

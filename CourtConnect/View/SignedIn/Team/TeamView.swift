@@ -9,9 +9,13 @@ import SwiftUI
 @Observable @MainActor class TeamViewViewModel {
     let repository: BaseRepository
     var currentTeam: Team?
-    var account: UserAccount?  
+    var account: UserAccount?
     
     var documents: [Document] = []
+    var termine: [Termin] = []
+    
+    var teamPlayers: [MemberProfile] = []
+    var teamTrainers: [MemberProfile] = []
     
     init(repository: BaseRepository, account: UserAccount?) {
         self.repository = repository
@@ -19,6 +23,8 @@ import SwiftUI
          
         self.getTeam()
         self.getAllDocuments()
+        self.getTeamTermine()
+        self.getTeamMembers()
     }
     
     private func getAllDocuments() {
@@ -39,7 +45,53 @@ import SwiftUI
             print(error)
         }
     }
-}
+     
+    func getTeamTermine() {
+        do {
+            guard let team = currentTeam else { throw TeamError.userHasNoTeam }
+            termine = try repository.teamRepository.getTeamTermine(for: team.id)
+        } catch {
+            print(error)
+        }
+    }
+    
+    func getTeamMembers() {
+        do {
+            guard let teamId = currentTeam?.id else { throw TeamError.teamNotFound }
+             
+            let teamMember = try repository.teamRepository.getTeamMembers(for: teamId)
+             
+            let teamPlayers = teamMember.filter { $0.role == UserRole.player.rawValue }
+            for player in teamPlayers {
+                if let playerAccount = try repository.accountRepository.getAccount(id: player.userAccountId),
+                    let userProfile = try repository.userRepository.getUserProfileFromDatabase(userId: playerAccount.userId) {
+                    let userStatistic = try repository.teamRepository.getMemberAvgStatistic(for: playerAccount.id)
+                    let profile = MemberProfile(
+                        firstName: userProfile.firstName,
+                        lastName: userProfile.lastName,
+                        shirtNumber: player.shirtNumber,
+                        avgFouls: userStatistic?.avgFouls ?? -0,
+                        avgTwo: userStatistic?.avgTwoPointAttempts ?? 0,
+                        avgtree: userStatistic?.avgThreePointAttempts ?? 0,
+                        avgPoints: userStatistic?.avgPoints ?? 0
+                    )
+                    self.teamPlayers.append(profile)
+                }
+            }
+             
+            let teamTrainers = teamMember.filter { $0.role == UserRole.trainer.rawValue }
+            for trainer in teamTrainers {
+                if let trainerAccount = try repository.accountRepository.getAccount(id: trainer.userAccountId),
+                    let userProfile = try repository.userRepository.getUserProfileFromDatabase(userId: trainerAccount.userId) {
+                    let profile = MemberProfile(firstName: userProfile.firstName, lastName: userProfile.lastName, avgFouls: 0, avgTwo: 0, avgtree: 0, avgPoints: 0)
+                    self.teamTrainers.append(profile)
+                }
+            }
+        } catch {
+            print(error)
+        }
+    }
+} 
 
 struct TeamView: View {
     @Environment(\.messagehandler) var messagehandler
@@ -54,7 +106,7 @@ struct TeamView: View {
     
     var body: some View {
         ZStack {
-            if let currentTeam = teamViewViewModel.currentTeam {
+            if (teamViewViewModel.currentTeam != nil) {
                 ScrollView {
                     VStack {
                         DocumentScrollView(documents: teamViewViewModel.documents)
@@ -62,10 +114,9 @@ struct TeamView: View {
                         LazyVStack(spacing: 20) {
                             Section {
                                 LazyVStack {
-                                    PlayerRow(fullname: "Nico Kohler", number: 14)
-                                    PlayerRow(fullname: "Frederik Kohler", number: 22)
-                                    PlayerRow(fullname: "Sabina Hodel", number: 21)
-                                    PlayerRow(fullname: "Joker Hodel", number: 7)
+                                    ForEach(teamViewViewModel.teamPlayers) { player in
+                                        PlayerRow(member: player, isTrainer: false)
+                                    }
                                 }
                             } header: {
                                 HStack {
@@ -76,7 +127,9 @@ struct TeamView: View {
                             
                             Section {
                                 LazyVStack {
-                                    PlayerRow(fullname: "Trainer Fabio")
+                                    ForEach(teamViewViewModel.teamTrainers) { trainer in
+                                        PlayerRow(member: trainer, isTrainer: true)
+                                    }
                                 }
                             } header: {
                                 HStack {
@@ -86,6 +139,10 @@ struct TeamView: View {
                             }
                         }
                         .padding(.horizontal)
+                        
+                        CalendarCard(termine: teamViewViewModel.termine)
+                            .padding(.horizontal)
+                            .padding(.vertical)
                         
                         ForEach(teamViewViewModel.documents) { document in
                             AsyncImage(url: URL(string: document.url)) { image in
@@ -97,10 +154,10 @@ struct TeamView: View {
                         }
                     }
                 }
+                .contentMargins(.bottom, 75)
             } else {
                 TeamUnavailableView()
             }
-            
         }
         .navigationTitle(teamViewViewModel.currentTeam?.teamName ?? "")
         .navigationBarTitleDisplayMode(.inline)
@@ -201,46 +258,49 @@ fileprivate struct Row<Content: View>: View {
 fileprivate struct PlayerRow: View {
     @State var isExpant = false
     @State var isPlayerSheet = false
-    let fullname: String
-    let number: Int?
+    let member: MemberProfile
+    let isTrainer: Bool
     
-    init(fullname: String, number: Int? = nil) {
-        self.fullname = fullname
-        self.number = number
+    init(member: MemberProfile, isTrainer: Bool) {
+        self.member = member
+        self.isTrainer = isTrainer
     }
     
     var body: some View {
         VStack(spacing: 20) {
             HStack(alignment: .top) {
                 VStack(alignment: .leading) {
-                    if let number = number {
-                        Text("\(fullname) (\(number))")
+                    if let number = member.shirtNumber {
+                        Text("\(member.fullName) (\(number))")
                             .fontWeight(.bold)
                     } else {
-                        Text("\(fullname)")
+                        Text("\(member.fullName)")
                             .fontWeight(.bold)
                     }
                      
-                    Text("Point gaurd")
-                        .font(.footnote)
+                    if let position = member.position {
+                        Text(position)
+                            .font(.footnote)
+                    }
                 }
                 Spacer()
-                VStack {
-                    Image(systemName: "chevron.down")
-                        .rotationEffect(.degrees(isExpant ? 0 : -90))
-                        .animation(.easeInOut, value: isExpant)
-                        .background {
-                            Rectangle()
-                                .fill(.black.opacity(0.0001))
-                                .frame(width: 150, height: 40)
-                                .onTapGesture {
-                                    withAnimation(.easeInOut) {
-                                        isExpant.toggle()
+                if !isTrainer {
+                    VStack {
+                        Image(systemName: "chevron.down")
+                            .rotationEffect(.degrees(isExpant ? 0 : -90))
+                            .animation(.easeInOut, value: isExpant)
+                            .background {
+                                Rectangle()
+                                    .fill(.black.opacity(0.0001))
+                                    .frame(width: 150, height: 40)
+                                    .onTapGesture {
+                                        withAnimation(.easeInOut) {
+                                            isExpant.toggle()
+                                        }
                                     }
-                                }
-                        }
+                            }
+                    }
                 }
-                
             }
             .padding()
             .background(Material.ultraThinMaterial.opacity(0.8))
@@ -248,13 +308,13 @@ fileprivate struct PlayerRow: View {
             
             if isExpant {
                 HStack(spacing: 25) {
-                    valueIcon(icon: "basketball.circle", value: 15)
+                    valueIcon(icon: "basketball.circle", value: member.avgFouls)
                     
-                    valueIcon(icon: "basketball.circle.fill", value: 5)
+                    valueIcon(icon: "basketball.circle.fill", value: member.avgTwo)
                     
-                    valueIcon(icon: "figure.basketball", value: 25)
+                    valueIcon(icon: "figure.basketball", value:  member.avgtree)
                     
-                    valueIcon(icon: "trophy.fill", value: 25)
+                    valueIcon(icon: "trophy.fill", value: member.avgPoints)
                 }
                 .padding(.horizontal)
                 .padding(.bottom)
@@ -288,41 +348,9 @@ extension String {
         return LocalizedStringKey(self)
     }
 }
-
+ 
 #Preview {
-    ScrollView {
-        LazyVStack(spacing: 20) {
-            Section {
-                LazyVStack {
-                    PlayerRow(fullname: "Nico Kohler", number: 14)
-                    PlayerRow(fullname: "Frederik Kohler", number: 22)
-                    PlayerRow(fullname: "Sabina Hodel", number: 21)
-                    PlayerRow(fullname: "Joker Hodel", number: 7)
-                }
-            } header: {
-                HStack {
-                    Text("Player")
-                    Spacer()
-                }
-            }
-            
-            Section {
-                LazyVStack {
-                    PlayerRow(fullname: "Trainer Fabio")
-                }
-            } header: {
-                HStack {
-                    Text("Trainer")
-                    Spacer()
-                }
-            }
-        }
-    }
-    .padding(.horizontal)
-}
-
-#Preview {
-    @Previewable @State var userViewModel = SharedUserViewModel(repository: RepositoryPreview.shared) 
+    @Previewable @State var userViewModel = SharedUserViewModel(repository: RepositoryPreview.shared)
     
     NavigationStack {
         MessagePopover {
