@@ -10,7 +10,7 @@ import Foundation
 @Model
 class Attendance: ModelProtocol {
     @Attribute(.unique) var id: UUID
-    var trainerId: UUID
+    var userAccountId: UUID
     var terminId: UUID
     var startTime: Date
     var endTime: Date
@@ -19,9 +19,9 @@ class Attendance: ModelProtocol {
     var updatedAt: Date
     var deletedAt: Date?
     
-    init(id: UUID = UUID(), trainerId: UUID, terminId: UUID, startTime: Date, endTime: Date, attendanceStatus: AttendanceStatus, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil) {
+    init(id: UUID = UUID(), userAccountId: UUID, terminId: UUID, startTime: Date, endTime: Date, attendanceStatus: AttendanceStatus, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil) {
         self.id = id
-        self.trainerId = trainerId
+        self.userAccountId = userAccountId
         self.terminId = terminId
         self.startTime = startTime
         self.endTime = endTime
@@ -32,7 +32,7 @@ class Attendance: ModelProtocol {
     }
     
     func toDTO() -> AttendanceDTO {
-        return AttendanceDTO(id: id, trainerId: trainerId, terminId: terminId, startTime: startTime, endTime: endTime, attendanceStatus: status, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
+        return AttendanceDTO(id: id, userAccountId: userAccountId, terminId: terminId, startTime: startTime, endTime: endTime, attendanceStatus: status, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
     
     var status: AttendanceStatus {

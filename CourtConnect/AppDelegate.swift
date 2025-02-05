@@ -21,7 +21,10 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
         FirebaseConfiguration.shared.setLoggerLevel(.min)
         FirebaseApp.configure()
         Messaging.messaging().delegate = self
-        UIApplication.shared.registerForRemoteNotifications()
+        
+        UNUserNotificationCenter.current().delegate = self 
+        
+        application.registerForRemoteNotifications()
         return true
     }
     
@@ -32,12 +35,12 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {}
     
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-          let dataDict: [String: String] = ["token": fcmToken ?? ""]
-          NotificationCenter.default.post(
+        let dataDict: [String: String] = ["token": fcmToken ?? ""]
+        NotificationCenter.default.post(
             name: Notification.Name("FCMToken"),
             object: nil,
             userInfo: dataDict
-          )
+        )
     }
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
@@ -98,8 +101,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
 
         // Save Button (Text color)
         WishKit.config.buttons.saveButton.textColor = .set(light: .white, dark: .white)
-        
- 
+     
         WishKit.config.localization.requested = "Angefragt"
         WishKit.config.localization.description = "Beschreinung" 
     }

@@ -22,12 +22,12 @@ create table
     id uuid not null default gen_random_uuid (),
     "userAccountId" uuid not null,
     "terminId" uuid not null,
-    "startTime" timestamp without time zone not null,
-    "endTime" timestamp without time zone not null,
     "attendanceStatus" text not null default 'Pending'::text,
-    "createdAt" timestamp without time zone not null default now(),
-    "updatedAt" timestamp without time zone not null default now(),
-    "deletedAt" timestamp without time zone null,
+    "startTime" timestamp with time zone not null,
+    "endTime" timestamp with time zone not null,
+    "createdAt" timestamp with time zone not null,
+    "updatedAt" timestamp with time zone not null,
+    "deletedAt" timestamp with time zone null,
     constraint attendance_pkey primary key (id),
     constraint unique_id unique (id)
   ) tablespace pg_default;
@@ -463,7 +463,7 @@ create table
     "typeString" text not null,
     "startTime" timestamp without time zone not null,
     "endTime" timestamp without time zone not null,
-     "terminType" text not null default ''::text, 
+    "terminType" text not null default ''::text, 
     title text not null,
     place text not null,
     infomation text not null,
@@ -524,15 +524,13 @@ BEGIN
         SELECT "id" FROM public."UserAccount" WHERE "teamId" = NEW."teamId"
     LOOP
         -- Füge für jeden User einen Eintrag in die Attendance-Tabelle hinzu
-        INSERT INTO public."Attendance" 
-        ("userAccountId", "terminId", "startTime", "endTime", "createdAt", "updatedAt", "deletedAt", "attendanceStatus")
-        VALUES 
-        (team_member."id", NEW."id", NEW."startTime", NEW."endTime", NOW(), NOW(), NULL, 'Pending');
+        INSERT INTO public."Attendance" ("userAccountId", "terminId", "startTime", "endTime", "createdAt", "updatedAt", "deletedAt", "attendanceStatus")
+        VALUES (team_member."id", NEW."id", NEW."startTime", NEW."endTime", NOW(), NOW(), NULL, 'Pending')
         ON CONFLICT ("userAccountId", "terminId") DO UPDATE
         SET 
-            "startTime" = EXCLUDED."startTime",
-            "endTime" = EXCLUDED."endTime",
-            "updatedAt" = NOW()
+            "startTime" = NEW."startTime",
+            "endTime" = NEW."endTime",
+            "updatedAt" = NOW();
     END LOOP;
 
     RETURN NEW;

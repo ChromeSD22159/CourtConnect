@@ -56,4 +56,4 @@ SELECT (SELECT id FROM inserted_user), 'Max', 'Mustermann', '2000-01-01', NOW();
 INSERT INTO public."Team" ("teamName", "createdByUserAccountId", "headcoach", "joinCode", "email", "createdAt", "updatedAt")
 SELECT 'Brooklyn', id, 'Frederik Kohler', '123456', 'frederik@kohler.de', NOW(), NOW()
 FROM auth.users WHERE email = 'test@user.de';
-*/
+*/ 
