@@ -36,7 +36,7 @@ class UserProfile: ModelProtocol {
     }
     
     func toDTO() -> UserProfileDTO {
-        UserProfileDTO(id: id, userId: userId, firstName: firstName, lastName: lastName, birthday: birthday, lastOnline: lastOnline, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt, onBoardingAt: onBoardingAt)
+        UserProfileDTO(id: id, userId: userId, fcmToken: fcmToken, firstName: firstName, lastName: lastName, birthday: birthday, lastOnline: lastOnline, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt, onBoardingAt: onBoardingAt)
     }
 }
   

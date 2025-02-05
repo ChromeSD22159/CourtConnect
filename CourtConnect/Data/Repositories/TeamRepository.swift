@@ -142,7 +142,7 @@ import Supabase
     
     func getTeamTermine(for teamId: UUID) throws -> [Termin] {
         let date = Calendar.current.startOfDay(for: Date())
-        let predicate = #Predicate<Termin> { $0.date > date && $0.teamId == teamId && $0.deletedAt == nil }
+        let predicate = #Predicate<Termin> { $0.startTime > date && $0.teamId == teamId && $0.deletedAt == nil }
         let fetchDescriptor = FetchDescriptor(predicate: predicate)
         let result = try container.mainContext.fetch(fetchDescriptor) 
         return result

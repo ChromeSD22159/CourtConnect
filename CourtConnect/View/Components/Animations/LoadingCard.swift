@@ -49,11 +49,9 @@ struct ReoloadAnimation: View {
 
 #Preview {
     @Previewable @State var animate = false
-    HStack {
-        //ReoloadAnimation(isLoading: $animate)
-    }
+    HStack {}
     .overlay(alignment: .top, content: {
-        ReoloadAnimation(isLoading: $animate)
+        LoadingCard(isLoading: $animate)
     })
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .background(.gray.opacity(0.5))

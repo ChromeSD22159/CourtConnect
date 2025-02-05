@@ -16,13 +16,14 @@ class Termin: ModelProtocol {
     var infomation: String
     var typeString: String
     var durationMinutes: Int
-    var date: Date
+    var startTime: Date
+    var endTime: Date
     var createdByUserAccountId: UUID
     var createdAt: Date
     var updatedAt: Date
     var deletedAt: Date?
 
-    init(id: UUID = UUID(), teamId: UUID, title: String, place: String, infomation: String, typeString: String, durationMinutes: Int, date: Date, createdByUserAccountId: UUID, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil) {
+    init(id: UUID = UUID(), teamId: UUID, title: String, place: String, infomation: String, typeString: String, durationMinutes: Int, startTime: Date, endTime: Date, createdByUserAccountId: UUID, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil) {
         self.id = id
         self.teamId = teamId
         self.title = title
@@ -30,7 +31,8 @@ class Termin: ModelProtocol {
         self.infomation = infomation
         self.typeString = typeString
         self.durationMinutes = durationMinutes
-        self.date = date
+        self.startTime = startTime
+        self.endTime = endTime
         self.createdByUserAccountId = createdByUserAccountId
         self.createdAt = createdAt
         self.updatedAt = updatedAt
@@ -38,6 +40,6 @@ class Termin: ModelProtocol {
     }
     
     func toDTO() -> TerminDTO {
-        return TerminDTO(id: id, teamId: teamId, title: title, place: place, infomation: infomation, typeString: typeString, durationMinutes: durationMinutes, date: date, createdByUserAccountId: createdByUserAccountId, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
+        return TerminDTO(id: id, teamId: teamId, title: title, place: place, infomation: infomation, typeString: typeString, durationMinutes: durationMinutes, startTime: startTime, endTime: endTime, createdByUserAccountId: createdByUserAccountId, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
 }
