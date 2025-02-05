@@ -310,11 +310,11 @@ fileprivate struct PlayerRow: View {
             
             if isExpant {
                 HStack(spacing: 25) {
-                    valueIcon(icon: "basketball.circle", value: member.avgFouls)
+                    valueIcon(icon: .customFigureBasketballFoul, value: member.avgFouls)
                     
-                    valueIcon(icon: "basketball.circle.fill", value: member.avgTwo)
+                    valueIcon(icon: .customBasketball2Fill, value: member.avgTwo)
                     
-                    valueIcon(icon: "figure.basketball", value:  member.avgtree)
+                    valueIcon(icon: .customBasketball3Fill, value:  member.avgtree)
                     
                     valueIcon(icon: "trophy.fill", value: member.avgPoints)
                 }
@@ -335,13 +335,25 @@ fileprivate struct PlayerRow: View {
     }
     
     @ViewBuilder func valueIcon(icon: String, value: Int) -> some View {
-        HStack {
+        HStack(alignment: .center) {
             Image(systemName: icon)
                 .font(.title)
             
             Text(String("x\(value)"))
                 .font(.subheadline)
         }
+        .frame(minWidth: 85)
+    }
+    
+    @ViewBuilder func valueIcon(icon: ImageResource, value: Int) -> some View {
+        HStack(alignment: .center) {
+            Image(icon)
+                .font(.title)
+            
+            Text(String("x\(value)"))
+                .font(.subheadline)
+        }
+        .frame(minWidth: 85)
     }
 }
 
@@ -351,6 +363,44 @@ extension String {
     }
 }
  
+#Preview {
+    HStack {
+        HStack(alignment: .center) {
+            Image(.customFigureBasketballFoul)
+                .font(.title)
+            
+            Text(String("x\(5)"))
+                .font(.subheadline)
+        }
+        .frame(minWidth: 85)
+        HStack(alignment: .center) {
+            Image(.customBasketball2Fill)
+                .font(.title)
+            
+            Text(String("x\(10)"))
+                .font(.subheadline)
+        }
+        .frame(minWidth: 85)
+        HStack(alignment: .center) {
+            Image(.customBasketball3Fill)
+                .font(.title)
+            
+            Text(String("x\(3)"))
+                .font(.subheadline)
+        }
+        .frame(minWidth: 85)
+        HStack(alignment: .center) {
+            Image(.customFigureBasketballFoul)
+                .font(.title)
+            
+            Text(String("x\(45)"))
+                .font(.subheadline)
+        }
+        .background(.gray)
+        .frame(minWidth: 85)
+    }
+}
+
 #Preview {
     @Previewable @State var userViewModel = SharedUserViewModel(repository: RepositoryPreview.shared)
     
