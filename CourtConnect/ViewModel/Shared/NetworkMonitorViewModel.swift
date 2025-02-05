@@ -34,7 +34,8 @@ class NetworkMonitorViewModel: ObservableObject {
     }
     
     private func isPingTest(complete:  @escaping (Bool) -> Void) async {
-        let request = URLRequest(url: URL(string: "https://google.de")!)
+        // TODO: TEST HTTPS
+        let request = URLRequest(url: URL(string: "8.8.8.8")!)
         
         URLSession.shared.dataTask(with: request) { _, _, error in
             complete(error == nil)

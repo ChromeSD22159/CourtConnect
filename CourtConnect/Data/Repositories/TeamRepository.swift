@@ -32,7 +32,7 @@ import Supabase
     
     func getUserProfile(for userId: UUID) throws -> UserProfile? {
         let redicate = #Predicate<UserProfile> { user in
-            user.id == userId
+            user.id == userId && user.deletedAt == nil
         }
         let fetchDescriptor = FetchDescriptor(predicate: redicate)
         
@@ -49,8 +49,8 @@ import Supabase
     }
     
     func getTeamAbsense(for teamId: UUID) throws -> [Absence] {
-        let redicate = #Predicate<Absence> { teamMember in
-            teamMember.teamId == teamId
+        let redicate = #Predicate<Absence> { absence in
+            absence.teamId == teamId && absence.deletedAt == nil
         }
         let fetchDescriptor = FetchDescriptor(predicate: redicate)
         
@@ -59,7 +59,7 @@ import Supabase
     
     func getTeamMembers(for teamId: UUID) throws -> [TeamMember] {
         let redicate = #Predicate<TeamMember> { teamMember in
-            teamMember.teamId == teamId
+            teamMember.teamId == teamId && teamMember.deletedAt == nil
         }
         let fetchDescriptor = FetchDescriptor(predicate: redicate)
         
@@ -78,17 +78,7 @@ import Supabase
     
     func getTeamAdmins(for teamId: UUID) throws -> [TeamAdmin] {
         let redicate = #Predicate<TeamAdmin> { admin in
-            admin.teamId == teamId
-        }
-        let fetchDescriptor = FetchDescriptor(predicate: redicate)
-        
-        return try container.mainContext.fetch(fetchDescriptor)
-    }
-    
-    func getMembers(for teamId: UUID, role: UserRole) throws -> [TeamAdmin] {
-        let roleString = role.rawValue
-        let redicate = #Predicate<TeamAdmin> { teamMember in
-            teamMember.teamId == teamId && teamMember.role == roleString && teamMember.deletedAt == nil
+            admin.teamId == teamId && admin.deletedAt == nil
         }
         let fetchDescriptor = FetchDescriptor(predicate: redicate)
         
@@ -113,7 +103,7 @@ import Supabase
     }
      
     func getMemberStatistic(for userAccountId: UUID) throws -> [Statistic] {
-        let predicate = #Predicate<Statistic> { $0.userAccountId == userAccountId }
+        let predicate = #Predicate<Statistic> { $0.userAccountId == userAccountId && $0.deletedAt == nil }
         let fetchDescriptor = FetchDescriptor(predicate: predicate)
         let statistic = try container.mainContext.fetch(fetchDescriptor)
         print(statistic.count)
@@ -121,7 +111,7 @@ import Supabase
     }
     
     func getMemberAvgStatistic(for userAccountId: UUID) throws -> MemberStatistic? {
-        let predicate = #Predicate<Statistic> { $0.userAccountId == userAccountId }
+        let predicate = #Predicate<Statistic> { $0.userAccountId == userAccountId && $0.deletedAt == nil }
         let fetchDescriptor = FetchDescriptor(predicate: predicate)
         let statistics = try container.mainContext.fetch(fetchDescriptor)
         let items = statistics.count
@@ -137,7 +127,7 @@ import Supabase
     }
      
     func getPlayerStatistics(userAccountId: UUID, fetchLimit: Int = 7, terminType: String) throws -> [Statistic] {
-        let predicate = #Predicate<Statistic> { $0.userAccountId == userAccountId && $0.terminType == terminType }
+        let predicate = #Predicate<Statistic> { $0.userAccountId == userAccountId && $0.terminType == terminType && $0.deletedAt == nil }
         
         var fetchDescriptor = FetchDescriptor(predicate: predicate, sortBy: [SortDescriptor(\.createdAt, order: .reverse)])
         fetchDescriptor.fetchLimit = fetchLimit

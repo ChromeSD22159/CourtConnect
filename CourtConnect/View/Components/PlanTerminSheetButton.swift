@@ -35,10 +35,10 @@ struct PlanTerminSheetButton: View {
                         .zoomFadeIn(delay: 0.45, trigger: $viewModel.animateOnAppear)
                     
                     rowSectionDateSelection(systemName: "calendar.badge.clock", headline: "Date?", date: $viewModel.date)
-                        .zoomFadeIn(delay: 0.45, trigger: $viewModel.animateOnAppear)
+                        .zoomFadeIn(delay: 0.55, trigger: $viewModel.animateOnAppear)
                     
                     rowSectionDurationSelection(systemName: "clock", headline: "How long?", terminType: $viewModel.duration)
-                        .zoomFadeIn(delay: 0.55, trigger: $viewModel.animateOnAppear)
+                        .zoomFadeIn(delay: 0.65, trigger: $viewModel.animateOnAppear)
                     
                     Button("Create Termin") {
                         Task {
@@ -52,6 +52,7 @@ struct PlanTerminSheetButton: View {
                         }
                     }
                     .buttonStyle(DarkButtonStlye())
+                    .zoomFadeIn(delay: 0.75, trigger: $viewModel.animateOnAppear)
                 }
             }
             .onAppear {

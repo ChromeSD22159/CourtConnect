@@ -61,8 +61,7 @@ struct DashboarAccountSwitch: View {
 
                     if index < accounts.count {
                         userAccount = accounts[index]
-                    } else {
-                        print("asdasdasd")
+                    } else { 
                         userAccount = UserAccount(id: UUID(), userId: UUID(), position: "asd", role: "asd", displayName: "asdasd", createdAt: Date(), updatedAt: Date())
                     }
 

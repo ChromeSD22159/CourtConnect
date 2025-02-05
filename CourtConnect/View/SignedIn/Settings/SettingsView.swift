@@ -4,7 +4,7 @@
 //
 //  Created by Frederik Kohler on 16.01.25.
 //
-import Foundation 
+import Foundation
 import SwiftUI
 import WishKit
 
@@ -92,7 +92,7 @@ struct SettingsView: View {
         }
     }
 }
- 
+
 fileprivate struct DebugView: View {
     @ObservedObject var userViewModel: SharedUserViewModel
     var body: some View {
@@ -144,10 +144,6 @@ fileprivate struct OnlineUserList: View {
 }
 
 #Preview {
-    WishKit.FeedbackListView().withNavigation()
-}
-
-#Preview {
     @Previewable @State var userViewModel = SharedUserViewModel(repository: RepositoryPreview.shared) 
     NavigationStack {
         SettingsView(userViewModel: userViewModel)
@@ -155,3 +151,7 @@ fileprivate struct OnlineUserList: View {
     .previewEnvirments()
     .navigationStackTint()
 }
+
+#Preview {
+    WishKit.FeedbackListView().withNavigation()
+} 
