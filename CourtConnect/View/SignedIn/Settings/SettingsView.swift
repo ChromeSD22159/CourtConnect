@@ -13,76 +13,108 @@ struct SettingsView: View {
     @ObservedObject var userViewModel: SharedUserViewModel
     
     var body: some View {
-        List {
+        LazyVStack(spacing: 16) {
             Section {
                 // MARK: - Edit Profile
                 NavigationLink {
                     UserProfileEditView(userViewModel: userViewModel, isSheet: false)
                         .background(Theme.background)
                 } label: {
-                    Text("Your Profile")
+                    IconRow(systemName: "figure", text: "Your Profile")
                 }
-
             } header: {
-                Text("Profile")
+                HStack {
+                    UpperCasedheadline(text: "Profile")
+                    Spacer()
+                }
             }
             
             Section {
-                NavigationLink("DEBUG Options") {
+                NavigationLink {
                     DebugView(userViewModel: userViewModel)
+                } label: {
+                    IconRow(systemName: "figure", text: "Your Profile")
                 }
             } header: {
-                Text("Development")
+                HStack {
+                    UpperCasedheadline(text: "DEBUG Options")
+                    Spacer()
+                }
             }
             
             Section {
-                // MARK: - Total Online Users
-                NavigationLink {
-                    OnlineUserList(userViewModel: userViewModel)
-                } label: {
-                    Text("Total Online Users: \(userViewModel.onlineUserCount)")
-                }
-                
-                // MARK: - LastOnline
-                if let date = userViewModel.userProfile?.lastOnline {
-                    HStack {
-                        Text("Last online:")
-                        Spacer()
-                        Text(date.formattedDate() + " " + date.formattedTime() + " Uhr")
+                VStack(spacing: 6) {
+                    NavigationLink {
+                        OnlineUserList(userViewModel: userViewModel)
+                    } label: {
+                        IconRow(systemName: "figure", text: "Total Online Users: \(userViewModel.onlineUserCount)")
                     }
-                } else {
-                    Text("Last online: -")
-                }
-                
-                // MARK: - Version
-                if let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
-                    Text("Version: \(appVersion)")
-                } else {
-                    Text("Version: -")
+                     
+                    if let date = userViewModel.userProfile?.lastOnline {
+                        IconRow(systemName: "figure", text: "Last online: " + date.formattedDate() + " " + date.formattedTime() + " Uhr")
+                    } else {
+                        IconRow(systemName: "figure", text: "Last online: -")
+                    }
+                    
+                    // MARK: - Version
+                    if let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
+                        IconRow(systemName: "figure", text: "Version: \(appVersion)")
+                    } else {
+                        IconRow(systemName: "figure", text: "Version: -")
+                    }
                 }
             } header: {
-                Text("App Status")
+                HStack {
+                    UpperCasedheadline(text: "App Status")
+                    Spacer()
+                }
             }
             
             Section {
-                NavigationLink {
-                    WishKit.FeedbackListView().withNavigation()
-                } label: {
-                    Text("Features")
-                }
+                VStack(spacing: 6) {
+                    NavigationLink {
+                        WishKit.FeedbackListView().withNavigation()
+                    } label: {
+                        IconRow(systemName: "figure", text: "Features")
+                    }
 
+                    IconRow(systemName: "globe", text: "Instagram of the developer", url: "https://www.instagram.com/frederik.code/")
+                    
+                    IconRow(systemName: "globe", text: "Webseite des Entwicklers", url: "https://www.frederikkohler.de")
+                    
+                    IconRow(systemName: "square.grid.2x2.fill", text: "Apps des Entwicklers", url: "https://apps.apple.com/at/developer/frederik-kohler/id1692240999")
+                }
             } header: {
-                Text("The Developer")
+                HStack {
+                    UpperCasedheadline(text: "The Developer")
+                    Spacer()
+                }
             }
             
             Section {
-                Button("Logout") {
-                    userViewModel.signOut()
+                VStack(spacing: 6) {
+                    IconRow(systemName: "trash", text: "Delete UserAccount")
+                    
+                    IconRow(systemName: "trash", text: "Delete CourtConnect Account")
+                    
+                    IconRow(systemName: "trash", text: "Delete Team")
                 }
-                .foregroundStyle(.white)
-                .listRowBackground(Theme.darkOrange)
+            } header: {
+                HStack {
+                    UpperCasedheadline(text: "Account")
+                    Spacer()
+                }
+            }
+            
+            Section {
+                IconRow(systemName: "iphone.and.arrow.forward", text: "Signout")
+                    .onTapGesture {
+                        userViewModel.signOut()
+                    }
             }
         }
+        .padding(.horizontal, 16)
+        .padding(.bottom, 120)
         .scrollContentBackground(.hidden)
         .navigationTitle("Settings")
         .navigationBarTitleDisplayMode(.inline)
@@ -141,6 +173,47 @@ fileprivate struct OnlineUserList: View {
         } 
         .listBackground()
     }
+}
+
+fileprivate struct IconRow: View {
+    let systemName: String
+    let text: String
+    let url: String?
+    
+    init(systemName: String, text: String) {
+        self.systemName = systemName
+        self.text = text
+        self.url = nil
+    }
+    
+    init(systemName: String, text: String, url: String) {
+        self.systemName = systemName
+        self.text = text
+        self.url = url
+    }
+    
+    var body: some View {
+        HStack {
+            if let url = url {
+                Link(destination: URL(string: url)!) { // Link statt Label und onOpenURL
+                    Label(text, systemImage: systemName)
+                }
+            } else {
+                Label(text, systemImage: systemName)
+            }
+             
+            Spacer()
+        }
+        .padding(.vertical, 10)
+        .padding(.horizontal)
+        .background(Material.ultraThinMaterial)
+        .foregroundStyle(Theme.text)
+        .clipShape(RoundedRectangle(cornerRadius: 15))
+    }
+}
+
+#Preview {
+    IconRow(systemName: "figure", text: "Instagram of the developer", url: "https://www.instagram.com/frederik.code/")
 }
 
 #Preview {

@@ -4,7 +4,7 @@
 //
 //  Created by Frederik Kohler on 06.02.25.
 //
-import SwiftUI
+import SwiftUI 
 
 struct ConfirmationTermin: View {
     let attendanceTermines: [AttendanceTermin]
@@ -19,13 +19,14 @@ struct ConfirmationTermin: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text("Attendances".uppercased())
+            UpperCasedheadline(text: "Attendances")
+            
             LazyVStack {
                 if attendanceTermines.isEmpty {
                     HStack {
                         Text("You have no open appointment confirmations")
                     }
-                    .padding(10)
+                    .padding()
                     .background(Material.ultraThinMaterial)
                     .clipShape(RoundedRectangle(cornerRadius: 15))
                 }
@@ -57,15 +58,10 @@ struct ConfirmationTermin: View {
                     }
                 }
             }
-            if !attendanceTermines.isEmpty {
+            if attendanceTermines.count > 2 {
                 HStack {
                     Spacer()
-                    Text("Show all")
-                        .onTapGesture {
-                            withAnimation {
-                                shortAttendances.toggle()
-                            }
-                        }
+                    ShowModeTextButton(showAll: $shortAttendances) 
                 }
             }
         }
@@ -89,7 +85,7 @@ fileprivate struct CheckRow:View {
                 onClick(false)
             }
         }
-        .padding(10)
+        .padding()
         .background(Material.ultraThinMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 15))
     }

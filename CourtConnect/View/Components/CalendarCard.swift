@@ -47,13 +47,7 @@ struct CalendarCard: View {
                         
                     }
                     
-                    Text(showAll ? "Hide all Termine" : "Show all Termine")
-                        .foregroundStyle(Theme.headline)
-                        .onTapGesture {
-                            withAnimation {
-                                showAll.toggle()
-                            }
-                        }
+                    ShowModeTextButton(showAll: $showAll)
                 } else {
                     TermineUnavailableView()
                 }
@@ -61,7 +55,7 @@ struct CalendarCard: View {
             }
         } header: {
             HStack {
-                Text("Termine")
+                UpperCasedheadline(text: "Termine")
                 Spacer()
             }
         }

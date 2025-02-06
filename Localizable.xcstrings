@@ -59,9 +59,6 @@
     "Add Document" : {
 
     },
-    "App Status" : {
-
-    },
     "Are you sure you want to delete your account? This action cannot be undone." : {
 
     },
@@ -125,9 +122,6 @@
     "DEBUG DELETE All UserAccounts" : {
 
     },
-    "DEBUG Options" : {
-
-    },
     "Delete" : {
 
     },
@@ -144,9 +138,6 @@
 
     },
     "Delete your Account" : {
-
-    },
-    "Development" : {
 
     },
     "Do you want to join the team %@?" : {
@@ -183,9 +174,6 @@
 
     },
     "Error" : {
-
-    },
-    "Features" : {
 
     },
     "File %lld" : {
@@ -227,9 +215,6 @@
     "Headcoach" : {
 
     },
-    "Hide all Termine" : {
-
-    },
     "Home" : {
 
     },
@@ -260,12 +245,6 @@
     "Last online, %@ Uhr" : {
 
     },
-    "Last online:" : {
-
-    },
-    "Last online: -" : {
-
-    },
     "Lastname" : {
 
     },
@@ -276,9 +255,6 @@
 
     },
     "Loading..." : {
-
-    },
-    "Logout" : {
 
     },
     "No appointments" : {
@@ -332,9 +308,6 @@
     "Position" : {
 
     },
-    "Profile" : {
-
-    },
     "Ready for the jump? Let's start! Register to get started and become part of the community." : {
 
     },
@@ -365,13 +338,13 @@
     "Settings" : {
 
     },
-    "Show all" : {
-
-    },
-    "Show all Termine" : {
-
-    },
     "Show Join QR Code" : {
+
+    },
+    "Show less" : {
+
+    },
+    "Show more" : {
 
     },
     "Show QR Code" : {
@@ -401,16 +374,7 @@
     "Termin Date" : {
 
     },
-    "Termine" : {
-
-    },
-    "The Developer" : {
-
-    },
     "The selected user account is not part of a team. Join a team to get started." : {
-
-    },
-    "Total Online Users: %lld" : {
 
     },
     "Total Online: %lld" : {
@@ -437,12 +401,6 @@
     "Venue" : {
 
     },
-    "Version: -" : {
-
-    },
-    "Version: %@" : {
-
-    },
     "Want Leave the Team" : {
 
     },
@@ -459,9 +417,6 @@
 
     },
     "Your Message" : {
-
-    },
-    "Your Profile" : {
 
     },
     "Your Team. \nYour connection. \nYour success." : {

@@ -15,40 +15,55 @@ struct NavigationTabBar<Content: View>: View {
     
     var body: some View {
         ZStack {
-            Theme.background.ignoresSafeArea()
+            Theme.background
             
             ScrollView(.vertical) {
                 content()
             }
             .scrollIndicators(.hidden)
+            .contentMargins(.top, 95)
             .onScrollPhaseChange({ _, newPhase in
                 withAnimation(.easeInOut) {
                     isScrolling = newPhase.isScrolling
                 }
             })
         }
+        .ignoresSafeArea()
         .overlay(alignment: .top) {
             ReoloadAnimation(isLoading: $reload)
         }
         .overlay(alignment: .bottom, content: {
-            if !isScrolling {
-                ZStack {
-                    Capsule()
-                        .fill(Material.ultraThinMaterial)
-                        .blur(radius: 2)
-                        .padding(5)
-                        .frame(maxWidth: .infinity, maxHeight: 75)
-                        .clipShape(Capsule())
-                        .padding(.horizontal, 20)
-                        .shadow(color: .black.opacity(0.2), radius: 5, y: 5)
-                       
-                    HStack {
-                        ForEach(NavigationTab.allCases) { item in
-                            tabItem(item: item)
+            ZStack {
+                if !isScrolling {
+                    ZStack {
+                        Capsule()
+                            .fill(Material.ultraThinMaterial)
+                            .blur(radius: 2)
+                            .padding(5)
+                            .frame(maxWidth: .infinity, maxHeight: 75)
+                            .clipShape(Capsule())
+                            .padding(.horizontal, 20)
+                            .shadow(color: .black.opacity(0.2), radius: 5, y: 5)
+                           
+                        HStack {
+                            ForEach(NavigationTab.allCases) { item in
+                                tabItem(item: item)
+                            }
                         }
                     }
+                    .transition(.move(edge: .bottom))
+                    .background {
+                        LinearGradient(
+                            colors: [
+                                Theme.background.opacity(1.0),
+                                Theme.background.opacity(0.0)
+                            ],
+                            startPoint: .bottom,
+                            endPoint: .top
+                        )
+                        .ignoresSafeArea()
+                    }
                 }
-                .transition(.move(edge: .bottom))
             }
         })
     }

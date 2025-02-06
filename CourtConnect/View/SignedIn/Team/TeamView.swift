@@ -33,7 +33,7 @@ struct TeamView: View {
                                 }
                             } header: {
                                 HStack {
-                                    Text("Player")
+                                    UpperCasedheadline(text: "Player") 
                                     Spacer()
                                 }
                             }
@@ -46,7 +46,7 @@ struct TeamView: View {
                                 }
                             } header: {
                                 HStack {
-                                    Text("Trainer")
+                                    UpperCasedheadline(text: "Trainer")
                                     Spacer()
                                 }
                             }
@@ -162,7 +162,7 @@ fileprivate struct Row<Content: View>: View {
     @ViewBuilder var content: () -> Content
     var body: some View {
         VStack(alignment: .leading) {
-            Text(title)
+            UpperCasedheadline(text: title)
                 .padding(.horizontal)
             
             content()
