@@ -5,13 +5,14 @@
 //  Created by Frederik Kohler on 30.01.25.
 //
 import Foundation
-import UIKit
+import UIKit 
 
 @MainActor
 @Observable class DashBoardViewModel: ObservableObject {
     var currentTeam: Team?
     var qrCode: UIImage?
     var termine: [Termin] = []
+    var attendancesTermines: [AttendanceTermin] = []
     
     let repository: BaseRepository
     
@@ -110,6 +111,35 @@ import UIKit
             termine = try repository.teamRepository.getTeamTermine(for: currentTeam.id)
         } catch {
             print(error)
+        }
+    }
+    
+    func getTerminAttendances(for currentAccountId: UUID?) {
+        do {
+            guard let currentAccountId = currentAccountId else { throw UserError.userAccountNotFound }
+            
+            let attandances = try repository.accountRepository.getAccountPendingAttendances(for: currentAccountId)
+            
+            for attandance in attandances {
+                if let termines = try repository.teamRepository.getTermineBy(id: attandance.terminId) {
+                    let attendanceTermin = AttendanceTermin(attendance: attandance, termin: termines)
+                    
+                    self.attendancesTermines.append(attendanceTermin)
+                }
+            } 
+        } catch {
+            print(error)
+        }
+    }
+    
+    func updateTerminAttendance(attendance: Attendance) {
+        defer { attendancesTermines.removeAll(where: { $0.attendance.terminId == attendance.terminId }) }
+        Task {
+            do {
+                try await repository.teamRepository.upsertTerminAttendance(attendance: attendance)
+            } catch {
+                print(error)
+            }
         }
     }
 }

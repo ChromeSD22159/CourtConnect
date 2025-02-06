@@ -20,6 +20,15 @@ import Supabase
         container.mainContext.insert(item)
         try container.mainContext.save()
     }
+    
+    func upsertlocal<T: ModelProtocol>(item: T) {
+        do {
+            container.mainContext.insert(item)
+            try container.mainContext.save()
+        } catch {
+            print(error)
+        }
+    }
  
     func getTeam(for teamId: UUID) throws -> Team? {
         let redicate = #Predicate<Team> { team in
@@ -148,6 +157,13 @@ import Supabase
         return result
     }
     
+    func getTermineBy(id: UUID) throws -> Termin? {
+        let predicate = #Predicate<Termin> { $0.id == id }
+        let fetchDescriptor = FetchDescriptor(predicate: predicate)
+        let result = try container.mainContext.fetch(fetchDescriptor)
+        return result.first
+    }
+    
     func deleteLocalTeam(for team: Team) {
         container.mainContext.delete(team)
     }
@@ -197,6 +213,15 @@ import Supabase
     
     func requestTeam(request: Requests) async throws {
         try await SupabaseService.upsertWithOutResult(item: request.toDTO(), table: .request, onConflict: "id")
+    }
+    
+    func upsertTerminAttendance(attendance: Attendance) async throws {
+        defer { upsertlocal(item: attendance) }
+        do {
+            try await SupabaseService.upsertWithOutResult(item: attendance.toDTO(), table: .attendance, onConflict: "id")
+        } catch {
+            throw error
+        }
     }
     
     // MARK: - REMOTE
