@@ -61,7 +61,7 @@ struct PlanTerminSheetButton: View {
         }
     }
     
-    @ViewBuilder func rowSectionInputText(systemName: String, headline: LocalizedStringKey, placeholder: LocalizedStringKey, text: Binding<String>) -> some View {
+    @ViewBuilder func rowSectionInputText(systemName: String, headline: String, placeholder: String, text: Binding<String>) -> some View {
         Section {
             HStack(spacing: 15) {
                 IconRoundedRectangle(systemName: systemName, background: Material.ultraThinMaterial)
@@ -81,14 +81,14 @@ struct PlanTerminSheetButton: View {
             .padding(.bottom, 20)
         } header: {
             HStack {
-                Text(headline)
+                UpperCasedheadline(text: headline)
                 Spacer()
             }
             .padding(.horizontal)
         }
     }
     
-    @ViewBuilder func rowSectionKindSelection(systemName: String, headline: LocalizedStringKey, terminType: Binding<TerminType>) -> some View {
+    @ViewBuilder func rowSectionKindSelection(systemName: String, headline: String, terminType: Binding<TerminType>) -> some View {
         Section {
             HStack(spacing: 15) {
                 IconRoundedRectangle(systemName: systemName, background: Material.ultraThinMaterial)
@@ -108,14 +108,14 @@ struct PlanTerminSheetButton: View {
             .padding(.bottom, 20)
         } header: {
             HStack {
-                Text(headline)
+                UpperCasedheadline(text: headline)
                 Spacer()
             }
             .padding(.horizontal)
         }
     }
     
-    @ViewBuilder func rowSectionDateSelection(systemName: String, headline: LocalizedStringKey, date: Binding<Date>) -> some View {
+    @ViewBuilder func rowSectionDateSelection(systemName: String, headline: String, date: Binding<Date>) -> some View {
         Section {
             HStack(spacing: 15) {
                 IconRoundedRectangle(systemName: systemName, background: Material.ultraThinMaterial)
@@ -131,14 +131,14 @@ struct PlanTerminSheetButton: View {
             .padding(.bottom, 20)
         } header: {
             HStack {
-                Text(headline)
+                UpperCasedheadline(text: headline)
                 Spacer()
             }
             .padding(.horizontal)
         }
     }
     
-    @ViewBuilder func rowSectionDurationSelection(systemName: String, headline: LocalizedStringKey, terminType: Binding<TerminDuration>) -> some View {
+    @ViewBuilder func rowSectionDurationSelection(systemName: String, headline: String, terminType: Binding<TerminDuration>) -> some View {
         Section {
             HStack(spacing: 15) {
                 IconRoundedRectangle(systemName: systemName, background: Material.ultraThinMaterial)
@@ -159,13 +159,28 @@ struct PlanTerminSheetButton: View {
             .padding(.bottom, 20)
         } header: {
             HStack {
-                Text(headline)
+                UpperCasedheadline(text: headline)
                 Spacer()
             }
             .padding(.horizontal)
         }
     }
-}  
+}
+
+extension LocalizedStringKey {
+    var stringKey: String? {
+        Mirror(reflecting: self).children.first(where: { $0.label == "key" })?.value as? String
+    }
+    
+    func stringValue(locale: Locale = .current) -> String? {
+        guard let stringKey = self.stringKey else { return nil }
+        let language = locale.language.languageCode?.identifier
+        guard let path = Bundle.main.path(forResource: language, ofType: "lproj") else { return stringKey }
+        guard let bundle = Bundle(path: path) else { return stringKey }
+        let localizedString = NSLocalizedString(stringKey, bundle: bundle, comment: "")
+        return localizedString
+    }
+}
 
 #Preview("Create Termin") {
     let mockAccount = MockUser.myUserAccount

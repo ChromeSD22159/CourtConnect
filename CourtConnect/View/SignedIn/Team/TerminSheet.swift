@@ -39,7 +39,7 @@ struct TerminSheetData {
                 self.terminData.termin = termin
                 
                 self.position  = MapCameraPosition.region(
-                    GeoCoderHelper.getAddress(address: termin.place)!
+                    GeoCoderHelper.getAddress(address: termin.place) ?? GeoCoderHelper.getAddress(address: "Greutwiesenstraße 17, 79787 Lauchringen")!
                 )
                  
                 self.terminData.confirmdUser = try repository.teamRepository.getTeamConfirmedAttendances(for: termin.id)

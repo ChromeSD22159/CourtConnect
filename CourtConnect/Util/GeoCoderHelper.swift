@@ -3,42 +3,42 @@
 //  CourtConnect
 //
 //  Created by Frederik Kohler on 06.02.25.
-// 
+//
 import CoreLocation
 import MapKit
 
 struct GeoCoderHelper {
     static func getAddress(address: String) -> MKCoordinateRegion? {
-        var currentRegion: MKCoordinateRegion? // Zwischenspeicher für die Region
+        var currentRegion: MKCoordinateRegion?
         var geocodingCompleted = false
         let geocoder = CLGeocoder()
-        geocodingCompleted = false // Flag zurücksetzen
+        geocodingCompleted = false
 
         geocoder.geocodeAddressString(address) { (placemarks, error) in
             if let error = error {
                 print("Geocoding Fehler: \(error.localizedDescription)")
-                geocodingCompleted = true // Flag setzen, auch im Fehlerfall
+                geocodingCompleted = true
                 return
             }
 
             guard let placemark = placemarks?.first, let location = placemark.location else {
                 print("Adresse nicht gefunden")
-                geocodingCompleted = true // Flag setzen
+                geocodingCompleted = true
                 return
             }
 
             let coordinate = location.coordinate
             let region = MKCoordinateRegion(center: coordinate, span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02))
-            currentRegion = region // Region im Zwischenspeicher speichern
-            geocodingCompleted = true // Flag setzen
+            currentRegion = region
+            geocodingCompleted = true
         }
  
         while !geocodingCompleted {
-            RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1)) // Kurze Pause
+            RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
         }
 
-        let region = currentRegion // Wert aus dem Zwischenspeicher zurückgeben
-        currentRegion = nil // Zwischenspeicher zurücksetzen
+        let region = currentRegion
+        currentRegion = nil
         return region
     }
 }

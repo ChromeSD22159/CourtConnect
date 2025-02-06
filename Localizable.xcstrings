@@ -119,9 +119,6 @@
     "Date" : {
 
     },
-    "Date?" : {
-
-    },
     "Delete" : {
 
     },
@@ -147,12 +144,6 @@
 
     },
     "E-Mail" : {
-
-    },
-    "e.g. meeting point on site at 10 am." : {
-
-    },
-    "e.g. team training" : {
 
     },
     "Edit User" : {
@@ -221,12 +212,6 @@
     "Home" : {
 
     },
-    "How long?" : {
-
-    },
-    "Important?" : {
-
-    },
     "Join" : {
 
     },
@@ -237,9 +222,6 @@
 
     },
     "Kind" : {
-
-    },
-    "Kind?" : {
 
     },
     "Last online, %@ Uhr" : {
@@ -320,6 +302,9 @@
     "Reload Chat" : {
 
     },
+    "Remove" : {
+
+    },
     "Repeat password" : {
 
     },
@@ -327,6 +312,9 @@
 
     },
     "Requests" : {
+
+    },
+    "Save" : {
 
     },
     "Save Profile" : {
@@ -404,19 +392,10 @@
     "Value" : {
 
     },
-    "Venue" : {
-
-    },
     "Want delete the Team" : {
 
     },
     "Want Leave the Team" : {
-
-    },
-    "What?" : {
-
-    },
-    "Where?" : {
 
     },
     "You have no open appointment confirmations" : {

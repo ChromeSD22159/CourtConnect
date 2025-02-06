@@ -129,9 +129,11 @@ fileprivate struct HasTeam: View {
                     }
                     
                     NavigationLink {
-                        //TeamRequestsView(teamId: teamId)
+                        if let teamId = dashBoardViewModel.currentTeam?.id {
+                            ManageTeamView(teamId: teamId)
+                        }
                     } label: {
-                        IconCard(systemName: "23.square", title: "Add Player", background: Material.ultraThinMaterial)
+                        IconCard(systemName: "23.square", title: "Manage Team", background: Material.ultraThinMaterial)
                     }
                 }
                 .frame(height: 150)
