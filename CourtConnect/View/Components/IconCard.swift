@@ -28,9 +28,9 @@ struct IconCard: View {
     
     var body: some View {
         VStack {
-            RoundedIcon(systemName: "person.fill.questionmark")
+            RoundedIcon(systemName: systemName)
             
-            Text("Join Requests")
+            Text(title)
                 .foregroundStyle(Theme.text)
                 .font(.footnote)
         }
@@ -38,14 +38,14 @@ struct IconCard: View {
         .background {
             if let material = backgroundMaterial {
                 RoundedRectangle(cornerRadius: 15)
-                    .fill(Color.clear) // Fill with clear if you don't want a base color
-                    .background(material) // Apply Material as background
+                    .fill(Color.clear) 
+                    .background(material)
             } else if let color = backgroundColor {
                 RoundedRectangle(cornerRadius: 15)
                     .fill(color)
             } else {
                 RoundedRectangle(cornerRadius: 15)
-                    .fill(Color.white) // Default background color if none provided
+                    .fill(Color.white)
             }
         }
         .clipShape(RoundedRectangle(cornerRadius: 15))

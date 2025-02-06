@@ -47,6 +47,8 @@ struct PlayerDashboard: View {
                 }
             })
         }
+        .padding(.horizontal, 16)
+        .padding(.top, 10)
         .onAppear {
             dashBoardViewModel.currentTeam = nil
             dashBoardViewModel.getTeam(for: userViewModel.currentAccount)

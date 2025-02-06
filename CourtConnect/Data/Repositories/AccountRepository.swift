@@ -57,7 +57,8 @@ class AccountRepository: SyncronizationProtocol {
     
     func getAccountPendingAttendances(for userAccountId: UUID) throws -> [Attendance] {
         let statusString = AttendanceStatus.pending.rawValue
-        let predicate = #Predicate<Attendance> { $0.userAccountId == userAccountId && $0.attendanceStatus == statusString }
+        let today = Date()
+        let predicate = #Predicate<Attendance> { $0.startTime > today && $0.userAccountId == userAccountId && $0.attendanceStatus == statusString }
         let fetchDescriptor = FetchDescriptor(predicate: predicate)
         let result = try container.mainContext.fetch(fetchDescriptor)
         return result
@@ -68,7 +69,7 @@ class AccountRepository: SyncronizationProtocol {
         item.deletedAt = Date()
         
         try usert(item: item)
-    } 
+    }
     
     // MARK: SYNCING
     func sendUpdatedAfterLastSyncToBackend(userId: UUID, lastSync: Date) async { 

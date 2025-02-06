@@ -157,6 +157,30 @@ import Supabase
         return result
     }
     
+    func getTeamConfirmedAttendances(for terminId: UUID) throws -> [String] {
+        let status = AttendanceStatus.confirmed.rawValue
+        let predicate = #Predicate<Attendance> { $0.terminId == terminId && $0.attendanceStatus == status && $0.deletedAt == nil }
+        let fetchDescriptor = FetchDescriptor(predicate: predicate)
+        let attendances = try container.mainContext.fetch(fetchDescriptor)
+        
+        var userList: [String] = []
+        
+        for attendance in attendances {
+            let userAccountId = attendance.userAccountId
+            let predicate = #Predicate<UserAccount> { $0.id == userAccountId && $0.deletedAt == nil }
+            
+            if let userAccount: UserAccount = try container.mainContext.fetch(FetchDescriptor(predicate: predicate)).first {
+                let userId = userAccount.userId
+                let predicate = #Predicate<UserProfile> { $0.userId == userId && $0.deletedAt == nil }
+                if let userProfile = try container.mainContext.fetch(FetchDescriptor(predicate: predicate)).first {
+                    userList.append(userProfile.fullName)
+                }
+                
+            }
+        }
+        return userList
+    }
+    
     func getTermineBy(id: UUID) throws -> Termin? {
         let predicate = #Predicate<Termin> { $0.id == id }
         let fetchDescriptor = FetchDescriptor(predicate: predicate)

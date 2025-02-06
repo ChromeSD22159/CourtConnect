@@ -31,10 +31,10 @@ struct DashboardView: View {
                 DashboarAccountSwitch(accounts: userViewModel.accounts) { account in
                     userViewModel.setCurrentAccount(newAccount: account)
                 }
+                .padding(.horizontal, 16)
             }
         }
         .contentMargins(.top, 20)
-        .contentMargins(.horizontal, 16)
         .contentMargins(.bottom, 75)
         .scrollIndicators(.hidden)
         .errorPopover()

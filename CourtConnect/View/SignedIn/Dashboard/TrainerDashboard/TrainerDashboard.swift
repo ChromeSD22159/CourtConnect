@@ -31,7 +31,8 @@ struct TrainerDashboard: View {
                     foundNewTeamViewModel: foundNewTeamViewModel,
                     teamListViewModel: teamListViewModel
                 )
-            } 
+                .padding(.horizontal, 16)
+            }
             
             ConfirmButtonLabel(confirmButtonDialog: ConfirmButtonDialog(
                 systemImage: "trash",
@@ -51,6 +52,7 @@ struct TrainerDashboard: View {
                 }
             })
             .padding(.top, 40)
+            .padding(.horizontal, 16)
         }
         .onAppear {
             dashBoardViewModel.currentTeam = nil
@@ -119,20 +121,34 @@ fileprivate struct HasTeam: View {
                     } label: {
                         IconCard(systemName: "person.fill.questionmark", title: "Join Requests", background: Material.ultraThinMaterial)
                     }
+                    
+                    NavigationLink {
+                        //TeamRequestsView(teamId: teamId)
+                    } label: {
+                        IconCard(systemName: "chart.xyaxis.line", title: "Add Statistics", background: Material.ultraThinMaterial)
+                    }
+                    
+                    NavigationLink {
+                        //TeamRequestsView(teamId: teamId)
+                    } label: {
+                        IconCard(systemName: "23.square", title: "Add Player", background: Material.ultraThinMaterial)
+                    }
                 }
                 .frame(height: 150)
             }
             
             if let userAccount = userViewModel.currentAccount {
                 DocumentSheetButton(userAccount: userAccount) 
-                
+                    .padding(.horizontal, 16)
                 PlanTerminSheetButton(userAccount: userAccount) { termin in
                     dashBoardViewModel.saveTermin(termin: termin)
                 }
+                .padding(.horizontal, 16)
             }
               
             if let QRCode = dashBoardViewModel.qrCode {
                 ShowTeamJoinQrCode(QRCode: QRCode)
+                    .padding(.horizontal, 16)
             }
             
             ConfirmButtonLabel(confirmButtonDialog: ConfirmButtonDialog(
@@ -149,6 +165,7 @@ fileprivate struct HasTeam: View {
                     errorHandler.handleError(error: error)
                 }
             })
+            .padding(.horizontal, 16)
             
             ConfirmButtonLabel(confirmButtonDialog: ConfirmButtonDialog(
                 systemImage: "trash",
@@ -164,8 +181,8 @@ fileprivate struct HasTeam: View {
                     errorHandler.handleError(error: error)
                 }
             })
+            .padding(.horizontal, 16)
         }
-        
     }
 }
 
@@ -185,7 +202,7 @@ fileprivate struct GenerateNewJoinCodeView: View {
     }
 }
 
-struct ShowTeamJoinQrCode: View {
+fileprivate struct ShowTeamJoinQrCode: View {
     var QRCode: UIImage
     @State var showQrSheet = false
     var body: some View {

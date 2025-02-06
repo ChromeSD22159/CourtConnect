@@ -525,12 +525,7 @@ BEGIN
     LOOP
         -- Füge für jeden User einen Eintrag in die Attendance-Tabelle hinzu
         INSERT INTO public."Attendance" ("userAccountId", "terminId", "startTime", "endTime", "createdAt", "updatedAt", "deletedAt", "attendanceStatus")
-        VALUES (team_member."id", NEW."id", NEW."startTime", NEW."endTime", NOW(), NOW(), NULL, 'Pending')
-        ON CONFLICT ("userAccountId", "terminId") DO UPDATE
-        SET 
-            "startTime" = NEW."startTime",
-            "endTime" = NEW."endTime",
-            "updatedAt" = NOW();
+        VALUES (team_member."id", NEW."id", NEW."startTime", NEW."endTime", NOW(), NOW(), NULL, 'Pending') 
     END LOOP;
 
     RETURN NEW;

@@ -230,9 +230,6 @@
     "Join" : {
 
     },
-    "Join Requests" : {
-
-    },
     "Join Team?" : {
 
     },
@@ -375,6 +372,9 @@
 
     },
     "Teams: %lld" : {
+
+    },
+    "Termin" : {
 
     },
     "Termin Date" : {

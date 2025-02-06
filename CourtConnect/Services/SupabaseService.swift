@@ -144,8 +144,4 @@ struct SupabaseService {
         
         return image
     }
-}
-
-enum SupabaseBucket: String {
-    case teamFiles = "TeamFiles"
-}
+} 

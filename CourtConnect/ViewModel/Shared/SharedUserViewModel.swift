@@ -254,14 +254,10 @@ class SharedUserViewModel: ObservableObject {
         do {
             if let id = LocalStorageService.shared.userAccountId {
                 let userAccount = try repository.accountRepository.getAccount(id: UUID(uuidString: id)!) // nil
-                currentAccount = userAccount
-                
-                self.loadTeam(userAccount: userAccount)
+                currentAccount = userAccount 
             } else {
                 if let userAccount = try repository.accountRepository.getAllAccounts(userId: userId).first {
                     currentAccount = userAccount
-                    
-                    self.loadTeam(userAccount: userAccount)
                     
                     LocalStorageService.shared.userAccountId = userAccount.id.uuidString
                 }
@@ -269,10 +265,6 @@ class SharedUserViewModel: ObservableObject {
         } catch {
             print(error)
         }
-    }
-    
-    private func loadTeam(userAccount: UserAccount?) {
-        guard let userAccount = userAccount else { return }
     }
     
     func setCurrentAccount(newAccount: UserAccount?) {

@@ -14,7 +14,6 @@ struct CalendarCard: View {
         let dic = Dictionary(grouping: termine, by: {
             $0.startTime.formatted(.dateTime.day(.twoDigits).month(.twoDigits).year(.twoDigits))
         })
-        
         return dic
     }
 
@@ -31,20 +30,9 @@ struct CalendarCard: View {
             VStack(alignment: .trailing) {
                 if !sortedGroupedTermine.isEmpty {
                     LazyVStack(spacing: 25) {
-                        if showAll {
-                            ForEach(sortedGroupedTermine, id: \.0) { dateString, termine in
-                                TerminDayView(dateString: dateString, termine: termine)
-                            }
-                        } else {
-                            if let firstTermin = sortedGroupedTermine.first {
-                                TerminDayView(dateString: firstTermin.0, termine: firstTermin.1)
-
-                                if sortedGroupedTermine.count > 1 {
-                                    TerminDayView(dateString: sortedGroupedTermine[1].0, termine: sortedGroupedTermine[1].1)
-                                }
-                            }
+                        ForEach(showAll ? sortedGroupedTermine : Array(sortedGroupedTermine.prefix(2)), id: \.0) { dateString, termin in
+                            TerminDayView(dateString: dateString, termine: termin)
                         }
-                        
                     }
                     
                     ShowModeTextButton(showAll: $showAll)
@@ -61,8 +49,8 @@ struct CalendarCard: View {
         }
        
     }
-} 
-
+}
+ 
 fileprivate struct TerminDayView: View {
     let dateString: String
     let termine: [Termin]
@@ -77,11 +65,13 @@ fileprivate struct TerminDayView: View {
                 }
             }
         }
+        
     }
 }
 
 fileprivate struct TerminRow: View {
     let termin: Termin
+    @State var isSheeet: Bool = false
     var body: some View {
         HStack(alignment: .top) {
             VStack {
@@ -117,6 +107,12 @@ fileprivate struct TerminRow: View {
                     .lineLimit(3, reservesSpace: true)
             }
         }
+        .onTapGesture {
+            isSheeet.toggle()
+        }
+        .sheet(isPresented: $isSheeet) {
+            TerminSheet(terminId: termin.id)
+        }
     }
 }
 
@@ -147,7 +143,7 @@ fileprivate struct StrokesCircleIcon: View {
                 }
             }
     }
-}
+}  
 
 #Preview {
     let termine = MockTermine.termine

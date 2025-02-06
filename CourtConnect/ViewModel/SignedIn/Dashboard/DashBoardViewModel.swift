@@ -90,10 +90,9 @@ import UIKit
         repository.teamRepository.receiveTeamJoinRequests { _ in }
     }
     
-    func saveTermin(termin: Termin) {
-        repository.accountRepository.insert(termin: termin)
-        
+    func saveTermin(termin: Termin) { 
         Task {
+            defer { repository.accountRepository.insert(termin: termin) }
             do {
                 try await SupabaseService.upsertWithOutResult(item: termin.toDTO(), table: .termin, onConflict: "id")
             } catch {
