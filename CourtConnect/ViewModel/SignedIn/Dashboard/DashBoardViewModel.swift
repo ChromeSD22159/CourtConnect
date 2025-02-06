@@ -44,12 +44,15 @@ import UIKit
     /// SOFT DELETE LOCAL ONLY
     func leaveTeam(for currentAccount: UserAccount?) throws {
         guard let currentAccount = currentAccount else { throw UserError.userAccountNotFound }
-         
-        if let myAdmin = try? repository.teamRepository.getAdmin(for: currentAccount.id) {
-            try repository.teamRepository.softDelete(teamAdmin: myAdmin)
+ 
+        if let teamId = currentAccount.teamId {
+            let allAdmins = try repository.teamRepository.getTeamAdmins(for: teamId)
+             
+            if let myAdmin = try? repository.teamRepository.getAdmin(for: currentAccount.id), allAdmins.count > 1 {
+                try repository.teamRepository.softDelete(teamAdmin: myAdmin)
+            }
         }
         
-        print(currentAccount)
         if let myMemberAccount = try repository.teamRepository.getMember(for: currentAccount.id) {
             print(myMemberAccount)
             try repository.teamRepository.softDelete(teamMember: myMemberAccount)
