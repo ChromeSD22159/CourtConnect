@@ -42,43 +42,51 @@ import UIKit
     }
     
     /// SOFT DELETE LOCAL ONLY
-    func leaveTeam(for currentAccount: UserAccount?) throws {
+    func leaveTeam(for currentAccount: UserAccount?, role: UserRole) throws {
         guard let currentAccount = currentAccount else { throw UserError.userAccountNotFound }
  
-        if let teamId = currentAccount.teamId {
-            let allAdmins = try repository.teamRepository.getTeamAdmins(for: teamId)
+        // wenn trainer
+        if role == .trainer, let teamId = currentAccount.teamId {
              
-            if let myAdmin = try? repository.teamRepository.getAdmin(for: currentAccount.id), allAdmins.count > 1 {
+            guard try repository.teamRepository.getTeamAdmins(for: teamId).count > 1 else { throw TeamError.lastAdminCantLeave }
+            
+            if let myAdmin = try? repository.teamRepository.getAdmin(for: currentAccount.id), let myMemberAccount = try repository.teamRepository.getMember(for: currentAccount.id) {
                 try repository.teamRepository.softDelete(teamAdmin: myAdmin)
+                try repository.teamRepository.softDelete(teamMember: myMemberAccount)
             }
+            
+            currentAccount.teamId = nil
+            currentAccount.updatedAt = Date()
+            currentTeam = nil
+            qrCode = nil
         }
-        
-        if let myMemberAccount = try repository.teamRepository.getMember(for: currentAccount.id) {
-            print(myMemberAccount)
+         
+        // wenn Spieler
+        if role == .trainer, let myMemberAccount = try repository.teamRepository.getMember(for: currentAccount.id) {
             try repository.teamRepository.softDelete(teamMember: myMemberAccount)
+            
+            currentAccount.teamId = nil
+            currentAccount.updatedAt = Date()
+            currentTeam = nil
+            qrCode = nil
         }
-        
-        currentAccount.teamId = nil
-        currentAccount.updatedAt = Date()
-        
-        currentTeam = nil
-        qrCode = nil
     }
     
     /// SOFT DELETE LOCAL ONLY
     func deleteUserAccount(for currentAccount: UserAccount?) async throws {
         guard let currentAccount = currentAccount else { return }
-        // TODO: delete all UserAccount Data
         try repository.accountRepository.softDelete(item: currentAccount)
         try await repository.accountRepository.sendToBackend(item: currentAccount)
     }
     
-    func deleteTeam(currentAccount: UserAccount?) {
-        // getAll
+    func deleteTeam() throws {
+        guard let currentTeam = currentTeam else { return }
+        Task {
+            try repository.teamRepository.softDelete(team: currentTeam)
+        }
     }
     
-    func startReceivingRequests() {
-        // TODO: print("Start RECEIVING")
+    func startReceivingRequests() { 
         repository.teamRepository.receiveTeamJoinRequests { _ in }
     }
     

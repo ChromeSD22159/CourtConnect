@@ -18,7 +18,7 @@ class AccountRepository: SyncronizationProtocol {
     }
     
     // MARK: - Local
-    func usert(item: UserAccount) throws {
+    func usert<T: ModelProtocol>(item: T) throws {
         container.mainContext.insert(item)
         try container.mainContext.save()
     }

@@ -107,6 +107,7 @@ fileprivate struct HasNoTeam: View {
 fileprivate struct HasTeam: View {
     @ObservedObject var userViewModel: SharedUserViewModel
     @ObservedObject var dashBoardViewModel: DashBoardViewModel
+    @Environment(\.errorHandler) var errorHandler
     let teamId: UUID
     
     var body: some View {
@@ -139,13 +140,28 @@ fileprivate struct HasTeam: View {
                 buttonText: "Leave Team",
                 question: "Want Leave the Team",
                 message: "Are you sure you want to leave the Team? This action cannot be undone.",
+                action: "Leave",
+                cancel: "Cancel"
+            ), action: {
+                do {
+                    try dashBoardViewModel.leaveTeam(for: userViewModel.currentAccount, role: .trainer)
+                } catch {
+                    errorHandler.handleError(error: error)
+                }
+            })
+            
+            ConfirmButtonLabel(confirmButtonDialog: ConfirmButtonDialog(
+                systemImage: "trash",
+                buttonText: "Delete Team",
+                question: "Want delete the Team",
+                message: "Are you sure you want to delete the Team? This action cannot be undone.",
                 action: "Delete",
                 cancel: "Cancel"
             ), action: {
                 do {
-                    try dashBoardViewModel.leaveTeam(for: userViewModel.currentAccount)
+                    try dashBoardViewModel.deleteTeam()
                 } catch {
-                    print(error)
+                    errorHandler.handleError(error: error)
                 }
             })
         }

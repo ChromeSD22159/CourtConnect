@@ -113,11 +113,11 @@ fileprivate struct HasTeam: View {
             buttonText: "Leave Team",
             question: "Want Leave the Team",
             message: "Are you sure you want to leave the Team? This action cannot be undone.",
-            action: "Delete",
+            action: "Leave",
             cancel: "Cancel"
         ), action: {
             do {
-                try dashBoardViewModel.leaveTeam(for: userViewModel.currentAccount)
+                try dashBoardViewModel.leaveTeam(for: userViewModel.currentAccount, role: .player)
             } catch {
                 print(error)
             }

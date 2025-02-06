@@ -13,6 +13,7 @@ import SwiftUI
     var message: InAppMessage?
     
     func handleMessage(message: InAppMessage) {
+        guard self.message == nil else { return }
         self.message = message
         
         Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: { _ in

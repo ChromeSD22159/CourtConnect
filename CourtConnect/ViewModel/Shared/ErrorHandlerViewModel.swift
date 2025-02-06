@@ -13,6 +13,7 @@ import SwiftUI
     var error: Error?
     
     func handleError(error: Error) {
+        guard self.error == nil else { return }
         self.error = error
         
         print(error.localizedDescription)
