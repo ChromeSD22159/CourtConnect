@@ -55,6 +55,14 @@ class AccountRepository: SyncronizationProtocol {
         return result
     }
     
+    func getAccountPendingAttendances(for userAccountId: UUID) throws -> [Attendance] {
+        let statusString = AttendanceStatus.pending.rawValue
+        let predicate = #Predicate<Attendance> { $0.userAccountId == userAccountId && $0.attendanceStatus == statusString }
+        let fetchDescriptor = FetchDescriptor(predicate: predicate)
+        let result = try container.mainContext.fetch(fetchDescriptor)
+        return result
+    }
+    
     func softDelete(item: UserAccount) throws {
         item.updatedAt = Date()
         item.deletedAt = Date()

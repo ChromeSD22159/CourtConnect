@@ -102,4 +102,19 @@ struct MockTermine {
             updatedAt: Date()
         )
     ]
+    
+    static let attendanceTermine = [
+        AttendanceTermin(
+            attendance: Attendance(userAccountId: UUID(), terminId: MockTermine.termine[0].id, startTime: Date(), endTime: Date(), attendanceStatus: AttendanceStatus.pending, createdAt: Date(), updatedAt: Date()),
+            termin: MockTermine.termine[0]
+        ),
+        AttendanceTermin(
+            attendance: Attendance(userAccountId: UUID(), terminId: MockTermine.termine[1].id, startTime: Date(), endTime: Date(), attendanceStatus: AttendanceStatus.pending, createdAt: Date(), updatedAt: Date()),
+            termin: MockTermine.termine[1]
+        ),
+        AttendanceTermin(
+            attendance: Attendance(userAccountId: UUID(), terminId: MockTermine.termine[2].id, startTime: Date(), endTime: Date(), attendanceStatus: AttendanceStatus.pending, createdAt: Date(), updatedAt: Date()),
+            termin: MockTermine.termine[2]
+        )
+    ]
 }

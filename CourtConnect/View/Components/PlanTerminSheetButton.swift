@@ -64,7 +64,7 @@ struct PlanTerminSheetButton: View {
     @ViewBuilder func rowSectionInputText(systemName: String, headline: LocalizedStringKey, placeholder: LocalizedStringKey, text: Binding<String>) -> some View {
         Section {
             HStack(spacing: 15) {
-                IconRoundedRectangle(systemName: systemName)
+                IconRoundedRectangle(systemName: systemName, background: Material.ultraThinMaterial)
                 
                 VStack {
                     TextField(placeholder, text: text, prompt: Text(placeholder))
@@ -91,7 +91,7 @@ struct PlanTerminSheetButton: View {
     @ViewBuilder func rowSectionKindSelection(systemName: String, headline: LocalizedStringKey, terminType: Binding<TerminType>) -> some View {
         Section {
             HStack(spacing: 15) {
-                IconRoundedRectangle(systemName: systemName)
+                IconRoundedRectangle(systemName: systemName, background: Material.ultraThinMaterial)
                 
                 VStack {
                     Picker(headline, selection: terminType) {
@@ -118,7 +118,7 @@ struct PlanTerminSheetButton: View {
     @ViewBuilder func rowSectionDateSelection(systemName: String, headline: LocalizedStringKey, date: Binding<Date>) -> some View {
         Section {
             HStack(spacing: 15) {
-                IconRoundedRectangle(systemName: systemName)
+                IconRoundedRectangle(systemName: systemName, background: Material.ultraThinMaterial)
                 
                 VStack {
                     DatePicker("Termin Date", selection: date, displayedComponents: [.date, .hourAndMinute])
@@ -141,7 +141,7 @@ struct PlanTerminSheetButton: View {
     @ViewBuilder func rowSectionDurationSelection(systemName: String, headline: LocalizedStringKey, terminType: Binding<TerminDuration>) -> some View {
         Section {
             HStack(spacing: 15) {
-                IconRoundedRectangle(systemName: systemName)
+                IconRoundedRectangle(systemName: systemName, background: Material.ultraThinMaterial)
                 
                 VStack {
                     Picker(headline, selection: terminType) {

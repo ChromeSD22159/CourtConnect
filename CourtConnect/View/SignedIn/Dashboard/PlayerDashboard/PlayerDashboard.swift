@@ -51,6 +51,7 @@ struct PlayerDashboard: View {
             dashBoardViewModel.currentTeam = nil
             dashBoardViewModel.getTeam(for: userViewModel.currentAccount)
             dashBoardViewModel.getTeamTermine()
+            dashBoardViewModel.getTerminAttendances(for: userViewModel.currentAccount?.id)
         }
         .navigationTitle("Player Dashboard")
     }
@@ -102,6 +103,10 @@ fileprivate struct HasTeam: View {
            
         CalendarCard(termine: dashBoardViewModel.termine)
             .padding(.vertical) 
+        
+        ConfirmationTermin(attendanceTermines: dashBoardViewModel.attendancesTermines) { attendance in
+            dashBoardViewModel.updateTerminAttendance(attendance: attendance)
+        }
         
         ConfirmButtonLabel(confirmButtonDialog: ConfirmButtonDialog(
             systemImage: "iphone.and.arrow.right.inward",
