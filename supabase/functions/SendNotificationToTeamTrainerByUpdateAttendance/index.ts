@@ -95,9 +95,30 @@ Deno.serve(async (req) => {
                                   token: userProfile.fcmToken,
                                   notification: {
                                       title: notificationTitle,
-                                      body: notificationBody,
+                                      body: notificationBody
+                                  }, 
+                                  apns: {  
+                                      payload: {
+                                        aps: {
+                                          badge: 0,
+                                          sound: "trainer-whistle.mp3"
+                                        } 
+                                      }
                                   },
-                              },
+                                  /* BACKGROUND NOTIFICATION
+                                  data: {
+                                    customKey: "refetch"
+                                  },
+                                  apns: { 
+                                      payload: {
+                                        aps: {
+                                          badge: 0, 
+                                          //"content_available" : 1
+                                        } 
+                                      }
+                                  },
+                                  */     
+                              }
                           }),
                       });
 

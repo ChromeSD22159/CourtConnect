@@ -11,9 +11,9 @@ import Foundation
     var backendClient = BackendClient.shared
     let repository: BaseRepository
     
-    init(backendClient: BackendClient = BackendClient.shared, repository: BaseRepository) {
+    init(backendClient: BackendClient = BackendClient.shared) {
         self.backendClient = backendClient
-        self.repository = repository
+        self.repository = Repository.shared
     }
     
     func syncAllTablesAfterLastSync(userId: UUID) async throws {

@@ -17,7 +17,7 @@ struct CourtConnectApp: App {
     init() {
         let repo = Repository.shared
         userViewModel = SharedUserViewModel(repository: repo)
-        syncServiceViewModel = SyncServiceViewModel(repository: repo)
+        syncServiceViewModel = SyncServiceViewModel()
          
         #if targetEnvironment(simulator)
         guard (Bundle(path: "/Applications/RocketSim.app/Contents/Frameworks/RocketSimConnectLinker.nocache.framework")?.load() == true) else {
@@ -71,7 +71,7 @@ struct PreviewEnvirments: ViewModifier {
     let repo = RepositoryPreview.shared
     func body(content: Content) -> some View {
         content 
-            .environment(SyncServiceViewModel(repository: repo))
+            .environment(SyncServiceViewModel())
             .environment(\.messagehandler, InAppMessagehandlerViewModel())
             .environment(\.networkMonitor, NetworkMonitorViewModel())
             .environment(\.errorHandler, errorHandlerViewModel)
