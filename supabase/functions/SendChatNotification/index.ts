@@ -4,23 +4,9 @@
 
 // Setup type definitions for built-in Supabase Runtime APIs
 import "jsr:@supabase/functions-js/edge-runtime.d.ts"
-import { createClient } from 'npm:@supabase/supabase-js@2'
-import { JWT } from 'npm:google-auth-library@9'
-import serviceAccount from '../SendChatNotification/service-account.json' with { type: 'json' } 
-
-interface Apns {
-  alert: {
-    title: string
-    body: string
-  }
-  badge: number
-  sound: string
-}
-
-interface ApnsNotification {
-  aps: Apns
-  customKey: string
-}
+import { createClient } from 'npm:@supabase/supabase-js@2' 
+import { getAccessToken, InsertWebhookPayload } from '../FirebaseOAuth.ts'
+import serviceAccount from '../service-account.json' with { type: 'json' } 
 
 interface Messages {
   id: string
@@ -28,15 +14,7 @@ interface Messages {
   recipientId: string
   message: string
   token: string
-}
-
-interface WebhookPayload {
-  type: 'INSERT'
-  table: string
-  record: Messages
-  schema: 'public'
-  old_record: null | Messages
-}
+} 
 
 const supabase = createClient(
     Deno.env.get('SUPABASE_URL')!,
@@ -44,8 +22,8 @@ const supabase = createClient(
 ) 
 
 Deno.serve(async (req) => {
-    const payload: WebhookPayload = await req.json()
- 
+    const payload: InsertWebhookPayload<Messages> = await req.json()
+    console.log("Raw Request Body:", payload);
       try {
         const { data: sender } = await supabase
           .from('UserProfile')
@@ -97,27 +75,4 @@ Deno.serve(async (req) => {
               headers: { 'Content-Type': 'application/json' },
           })
       } 
-})  
-
-const getAccessToken = ({
-  clientEmail,
-  privateKey,
-}: {
-  clientEmail: string
-  privateKey: string
-}): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    const jwtClient = new JWT({
-      email: clientEmail,
-      key: privateKey,
-      scopes: ['https://www.googleapis.com/auth/firebase.messaging'],
-    })
-    jwtClient.authorize((err, tokens) => {
-      if (err) {
-        reject(err)
-        return
-      }
-      resolve(tokens!.access_token!)
-    })
-  })
-}
+})

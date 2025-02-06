@@ -91,7 +91,7 @@ import Charts
                 self.hasData = false
                 for index in 0...7 {
                     let date = Calendar.current.date(byAdding: .day, value: -(7 * index + 1), to: Date())!
-                    let statistc = Statistic(id: UUID(), userAccountId: UUID(), fouls: 1, twoPointAttempts: 0, threePointAttempts: 0, terminType: TerminType.game.rawValue, createdAt: date, updatedAt: date)
+                    let statistc = Statistic(id: UUID(), userAccountId: UUID(), fouls: 0, twoPointAttempts: 0, threePointAttempts: 0, terminType: TerminType.game.rawValue, createdAt: date, updatedAt: date)
                     self.chartStatistics.append(statistc)
                     self.statistics.append(statistc)
                 }

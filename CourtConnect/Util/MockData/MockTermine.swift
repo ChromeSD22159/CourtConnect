@@ -15,7 +15,8 @@ struct MockTermine {
             infomation: "Tryouts for the upcoming U16 season. All skill levels welcome!",
             typeString: TerminType.training.rawValue,
             durationMinutes: 120,
-            date: Calendar.current.date(byAdding: .day, value: 7, to: Date())!, // Next week
+            startTime: Calendar.current.date(byAdding: .day, value: 7, to: Date())!,
+            endTime: Calendar.current.date(byAdding: .day, value: 8, to: Date())!,
             createdByUserAccountId: UUID(),
             createdAt: Date(),
             updatedAt: Date()
@@ -27,7 +28,8 @@ struct MockTermine {
             infomation: "Away game against Mannheim. Be there to support the team!",
             typeString: TerminType.game.rawValue,
             durationMinutes: 90,
-            date: Calendar.current.date(byAdding: .day, value: 14, to: Date())!, // Two weeks from now
+            startTime: Calendar.current.date(byAdding: .day, value: 14, to: Date())!,
+            endTime: Calendar.current.date(byAdding: .day, value: 15, to: Date())!,
             createdByUserAccountId: UUID(),
             createdAt: Date(),
             updatedAt: Date()
@@ -39,7 +41,8 @@ struct MockTermine {
             infomation: "Casual practice session, open to all members. Come and have some fun!",
             typeString: TerminType.training.rawValue,
             durationMinutes: 90,
-            date: Calendar.current.date(byAdding: .day, value: 2, to: Date())!, // In two days
+            startTime: Calendar.current.date(byAdding: .day, value: 2, to: Date())!,
+            endTime: Calendar.current.date(byAdding: .day, value: 3, to: Date())!,
             createdByUserAccountId: UUID(),
             createdAt: Date(),
             updatedAt: Date()
@@ -51,7 +54,8 @@ struct MockTermine {
             infomation: "Important team meeting to discuss upcoming games and strategies.",
             typeString: TerminType.other.rawValue,
             durationMinutes: 60,
-            date: Calendar.current.date(byAdding: .day, value: 21, to: Date())!, // Three weeks from now
+            startTime: Calendar.current.date(byAdding: .day, value: 21, to: Date())!,
+            endTime: Calendar.current.date(byAdding: .day, value: 22, to: Date())!,
             createdByUserAccountId: UUID(),
             createdAt: Date(),
             updatedAt: Date()
@@ -63,7 +67,8 @@ struct MockTermine {
             infomation: "Home game against Heidelberg. Let's pack the stands!",
             typeString: TerminType.game.rawValue,
             durationMinutes: 90,
-            date: Calendar.current.date(byAdding: .day, value: 30, to: Date())!, // A month from now
+            startTime: Calendar.current.date(byAdding: .day, value: 31, to: Date())!,
+            endTime: Calendar.current.date(byAdding: .day, value: 32, to: Date())!,
             createdByUserAccountId: UUID(),
             createdAt: Date(),
             updatedAt: Date()
@@ -76,7 +81,8 @@ struct MockTermine {
             infomation: "Practice for the U12 team. Focus on fundamentals.",
             typeString: TerminType.training.rawValue,
             durationMinutes: 60,
-            date: Calendar.current.date(byAdding: .day, value: 1, to: Date())!, // Tomorrow
+            startTime: Calendar.current.date(byAdding: .day, value: 1, to: Date())!,
+            endTime: Calendar.current.date(byAdding: .day, value: 2, to: Date())!,
             createdByUserAccountId: UUID(),
             createdAt: Date(),
             updatedAt: Date()
@@ -89,7 +95,8 @@ struct MockTermine {
             infomation: "Scrimmage game for the U16 team. Good opportunity to practice game situations.",
             typeString: TerminType.game.rawValue,
             durationMinutes: 90,
-            date: Calendar.current.date(byAdding: .day, value: 5, to: Date())!, // In five days
+            startTime: Calendar.current.date(byAdding: .day, value: 5, to: Date())!,
+            endTime: Calendar.current.date(byAdding: .day, value: 6, to: Date())!,
             createdByUserAccountId: UUID(),
             createdAt: Date(),
             updatedAt: Date()

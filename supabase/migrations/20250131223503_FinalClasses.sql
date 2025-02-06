@@ -14,19 +14,20 @@ DROP TABLE IF EXISTS public."Document";
 DROP TABLE IF EXISTS public."DeletionRequest";
 DROP TABLE IF EXISTS public."Chat";
 DROP TABLE IF EXISTS public."Attendance"; 
-DROP TABLE IF EXISTS public."Absence"; 
--- Erstellen der Tabellen (wie in deinem ursprünglichen Code)
+DROP TABLE IF EXISTS public."Absence";
 
+-- Erstellen der Tabellen (wie in deinem ursprünglichen Code)
 create table
   public."Attendance" (
     id uuid not null default gen_random_uuid (),
-    "trainerId" uuid not null,
+    "userAccountId" uuid not null,
     "terminId" uuid not null,
-    "startTime" timestamp without time zone not null,
-    "endTime" timestamp without time zone not null,
-    "createdAt" timestamp without time zone not null default now(),
-    "updatedAt" timestamp without time zone not null default now(),
-    "deletedAt" timestamp without time zone null,
+    "attendanceStatus" text not null default 'Pending'::text,
+    "startTime" timestamp with time zone not null,
+    "endTime" timestamp with time zone not null,
+    "createdAt" timestamp with time zone not null,
+    "updatedAt" timestamp with time zone not null,
+    "deletedAt" timestamp with time zone null,
     constraint attendance_pkey primary key (id),
     constraint unique_id unique (id)
   ) tablespace pg_default;
@@ -39,10 +40,10 @@ BEGIN
    -- Get the userId from the UserAccount table based on the trainerId
     SELECT "userId" INTO user_id
     FROM public."UserAccount"
-    WHERE id = NEW."createdBy";
+    WHERE id = NEW."userAccountId";
 
     IF user_id IS NULL THEN
-        RAISE NOTICE 'trainerId % not found in UserAccount', NEW."trainerId"; 
+        RAISE NOTICE 'userAccountId % not found in UserAccount', NEW."userAccountId"; 
     END IF;
 
   INSERT INTO public."UpdateHistory" ("tableString", "timestamp", "updatedAt", "userId")
@@ -460,8 +461,9 @@ create table
     id uuid not null default gen_random_uuid (),
     "teamId" uuid not null,
     "typeString" text not null,
-    date timestamp with time zone not null,
-     "terminType" text not null default ''::text, 
+    "startTime" timestamp without time zone not null,
+    "endTime" timestamp without time zone not null,
+    "terminType" text not null default ''::text, 
     title text not null,
     place text not null,
     infomation text not null,
@@ -473,6 +475,7 @@ create table
     constraint termine_pkey primary key (id)
   ) tablespace pg_default;
 
+
  CREATE OR REPLACE FUNCTION "LogTermineInsertUpdate"()
  RETURNS TRIGGER AS $$
 DECLARE
@@ -483,14 +486,18 @@ BEGIN
     FROM public."UserAccount"
     WHERE id = NEW."createdByUserAccountId";
 
-     IF user_id IS NULL THEN
+    SELECT id INTO user_id
+    FROM public."UserAccount"
+    WHERE id = NEW."createdByUserAccountId";
+
+      IF user_id IS NULL THEN
         RAISE NOTICE 'userId % not found in UserAccount', NEW."createdByUserAccountId"; 
         RAISE EXCEPTION 'userId % not found in UserAccount', NEW."createdByUserAccountId"; 
       END IF;
 
     IF user_id IS NOT NULL THEN -- Add this check
         INSERT INTO public."UpdateHistory" ("tableString", "timestamp", "updatedAt", "userId")
-        VALUES ('TeamMember', NOW(), NOW(), user_id)
+        VALUES ('Termin', NOW(), NOW(), user_id)
         ON CONFLICT ("tableString", "userId") DO UPDATE SET 
             "timestamp" = NOW(),
             "updatedAt" = NOW();
@@ -504,8 +511,36 @@ create trigger "LogTermineInsertUpdateTrigger"
 after insert 
 or update on "Termin" for each row
 execute function "LogTermineInsertUpdate" ();
+ 
 
 
+CREATE OR REPLACE FUNCTION InsertAttendanceOnTerminInsert()
+RETURNS TRIGGER AS $$
+DECLARE
+    team_member RECORD;
+BEGIN
+    -- Iteriere über alle User, die die gleiche teamId haben
+    FOR team_member IN 
+        SELECT "id" FROM public."UserAccount" WHERE "teamId" = NEW."teamId"
+    LOOP
+        -- Füge für jeden User einen Eintrag in die Attendance-Tabelle hinzu
+        INSERT INTO public."Attendance" ("userAccountId", "terminId", "startTime", "endTime", "createdAt", "updatedAt", "deletedAt", "attendanceStatus")
+        VALUES (team_member."id", NEW."id", NEW."startTime", NEW."endTime", NOW(), NOW(), NULL, 'Pending')
+        ON CONFLICT ("userAccountId", "terminId") DO UPDATE
+        SET 
+            "startTime" = NEW."startTime",
+            "endTime" = NEW."endTime",
+            "updatedAt" = NOW();
+    END LOOP;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER triggerInsertAttendanceOnTerminInsert
+AFTER INSERT ON public."Termin"
+FOR EACH ROW 
+EXECUTE FUNCTION InsertAttendanceOnTerminInsert();
 
 
 

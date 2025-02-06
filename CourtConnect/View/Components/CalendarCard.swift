@@ -12,7 +12,7 @@ struct CalendarCard: View {
     
     var groupedTermine: [String: [Termin]] {
         let dic = Dictionary(grouping: termine, by: {
-            $0.date.formatted(.dateTime.day(.twoDigits).month(.twoDigits).year(.twoDigits))
+            $0.startTime.formatted(.dateTime.day(.twoDigits).month(.twoDigits).year(.twoDigits))
         })
         
         return dic
@@ -20,7 +20,7 @@ struct CalendarCard: View {
 
     var sortedGroupedTermine: [(String, [Termin])] {
        groupedTermine.map { (dateString, termine) in
-           (dateString, termine.sorted(by: { $0.date < $1.date })) 
+           (dateString, termine.sorted(by: { $0.startTime < $1.startTime }))
        }.sorted(by: { $0.0 < $1.0 })
     }
     
@@ -112,7 +112,7 @@ fileprivate struct TerminRow: View {
 
                     Spacer()
 
-                    DateString(date: termin.date, style: .hourMinute)
+                    DateString(date: termin.startTime, style: .hourMinute)
                         .lineLimit(1)
                         .font(.callout.bold())
                         .foregroundStyle(Theme.myGray)

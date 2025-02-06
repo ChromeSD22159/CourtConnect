@@ -34,7 +34,8 @@ import SwiftUI
                 infomation: infomation,
                 typeString: kind.rawValue,
                 durationMinutes: duration.durationMinutes,
-                date: date,
+                startTime: date,
+                endTime: Calendar.current.date(byAdding: .minute, value: duration.durationMinutes, to: date)!,
                 createdByUserAccountId: userAccount.id,
                 createdAt: Date(),
                 updatedAt: Date()

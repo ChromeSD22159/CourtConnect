@@ -48,8 +48,8 @@ enum DatabaseTable: String, CaseIterable {
         case .chat: return ChatDTO.self
         case .userAccount: return UserAccountDTO.self
         case .team: return TeamDTO.self
-        case .deletionRequest: return TeamDTO.self
-        case .updateHistory: return TeamDTO.self
+        case .deletionRequest: return DeletionRequestDTO.self
+        case .updateHistory: return UpdateHistoryDTO.self
         case .absence: return AbsenceDTO.self
         }
     }
@@ -90,8 +90,8 @@ enum DatabaseTable: String, CaseIterable {
         case .chat: return Chat.self
         case .userAccount: return UserAccount.self
         case .team: return Team.self
-        case .deletionRequest: return Team.self
-        case .updateHistory: return Team.self
+        case .deletionRequest: return DeletionRequest.self
+        case .updateHistory: return UpdateHistory.self
         case .absence: return Absence.self
         }
     }

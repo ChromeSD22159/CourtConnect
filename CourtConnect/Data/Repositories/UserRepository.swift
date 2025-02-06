@@ -109,7 +109,6 @@ class UserRepository {
     
     func sendUserProfileToBackend(profile: UserProfile) async throws {
         try insertOrUpdate(profile: profile)
-        
         try await backendClient.supabase
             .from(DatabaseTable.userProfile.rawValue)
             .upsert(profile.toDTO(), onConflict: "id")
