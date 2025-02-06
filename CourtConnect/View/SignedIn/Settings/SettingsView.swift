@@ -20,7 +20,7 @@ struct SettingsView: View {
                     UserProfileEditView(userViewModel: userViewModel, isSheet: false)
                         .background(Theme.background)
                 } label: {
-                    IconRow(systemName: "figure", text: "Your Profile")
+                    IconRow(systemName: "person.fill", text: "Your Profile")
                 }
             } header: {
                 HStack {
@@ -30,37 +30,24 @@ struct SettingsView: View {
             }
             
             Section {
-                NavigationLink {
-                    DebugView(userViewModel: userViewModel)
-                } label: {
-                    IconRow(systemName: "figure", text: "Your Profile")
-                }
-            } header: {
-                HStack {
-                    UpperCasedheadline(text: "DEBUG Options")
-                    Spacer()
-                }
-            }
-            
-            Section {
                 VStack(spacing: 6) {
                     NavigationLink {
                         OnlineUserList(userViewModel: userViewModel)
                     } label: {
-                        IconRow(systemName: "figure", text: "Total Online Users: \(userViewModel.onlineUserCount)")
+                        IconRow(systemName: "person.2.fill", text: "Total Online Users: \(userViewModel.onlineUserCount)")
                     }
                      
                     if let date = userViewModel.userProfile?.lastOnline {
-                        IconRow(systemName: "figure", text: "Last online: " + date.formattedDate() + " " + date.formattedTime() + " Uhr")
+                        IconRow(systemName: "person.badge.clock.fill", text: "Last online: " + date.formattedDate() + " " + date.formattedTime() + " Uhr")
                     } else {
-                        IconRow(systemName: "figure", text: "Last online: -")
+                        IconRow(systemName: "person.badge.clock.fill", text: "Last online: -")
                     }
                     
                     // MARK: - Version
                     if let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
-                        IconRow(systemName: "figure", text: "Version: \(appVersion)")
+                        IconRow(systemName: "info.circle.fill", text: "Version: \(appVersion)")
                     } else {
-                        IconRow(systemName: "figure", text: "Version: -")
+                        IconRow(systemName: "info.circle.fill", text: "Version: -")
                     }
                 }
             } header: {
@@ -75,7 +62,7 @@ struct SettingsView: View {
                     NavigationLink {
                         WishKit.FeedbackListView().withNavigation()
                     } label: {
-                        IconRow(systemName: "figure", text: "Features")
+                        IconRow(systemName: "list.bullet.clipboard.fill", text: "Features")
                     }
 
                     IconRow(systemName: "globe", text: "Instagram of the developer", url: "https://www.instagram.com/frederik.code/")
@@ -122,18 +109,6 @@ struct SettingsView: View {
             userViewModel.getAllOnlineUser()
             userViewModel.startListeners()
         }
-    }
-}
-
-fileprivate struct DebugView: View {
-    @ObservedObject var userViewModel: SharedUserViewModel
-    var body: some View {
-        Form {
-            Button("DEBUG DELETE All UserAccounts") { 
-                userViewModel.setCurrentAccount(newAccount: nil)
-            }
-        }
-        .listBackground()
     }
 }
 
