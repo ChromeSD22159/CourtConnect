@@ -16,8 +16,17 @@ import UIKit
         self.container = container
     }
     
-    func insert(document: DocumentDTO) {
-        container.mainContext.insert(document.toModel())
+    func insert(document: DocumentDTO, userId: UUID) {
+        do {
+            container.mainContext.insert(document.toModel())
+            
+            // TODO: newSyncHistoryTimeStamp REMEMBER
+            let newSyncHistoryTimeStamp = SyncHistory(table: .document, userId: userId)
+            container.mainContext.insert(newSyncHistoryTimeStamp)
+            try container.mainContext.save()
+        } catch {
+            print(error)
+        }
     }
     
     func getDocuments(for teamId: UUID) throws -> [Document] {
@@ -36,10 +45,14 @@ import UIKit
         return try await SupabaseService.downloadDocumentAndCache(imageURL: imageURL, bucket: bucket)
     }
      
-    func softDelete(document: Document) async throws {
+    func softDelete(document: Document, userId: UUID) async throws {
         document.updatedAt = Date()
         document.deletedAt = Date()
         container.mainContext.insert(document)
+       
+        // TODO: newSyncHistoryTimeStamp REMEMBER
+        let newSyncHistoryTimeStamp = SyncHistory(table: .document, userId: userId)
+        container.mainContext.insert(newSyncHistoryTimeStamp)
         try container.mainContext.save()
         
         try await SupabaseService.upsertWithOutResult(item: document.toDTO(), table: .document, onConflict: "id")

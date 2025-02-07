@@ -173,8 +173,8 @@ class SharedUserViewModel: ObservableObject {
                 print("FETCH WHEN USER")
                 try await syncServiceViewModel.fetchAllTables(userId: user.id)
             }
-        } catch {
-            print(error)
+        } catch { 
+            ErrorHandlerViewModel.shared.handleError(error: error)
         }
     }
     
@@ -255,13 +255,9 @@ class SharedUserViewModel: ObservableObject {
             if let id = LocalStorageService.shared.userAccountId {
                 let userAccount = try repository.accountRepository.getAccount(id: UUID(uuidString: id)!) // nil
                 currentAccount = userAccount
-                
-                self.loadTeam(userAccount: userAccount)
             } else {
                 if let userAccount = try repository.accountRepository.getAllAccounts(userId: userId).first {
                     currentAccount = userAccount
-                    
-                    self.loadTeam(userAccount: userAccount)
                     
                     LocalStorageService.shared.userAccountId = userAccount.id.uuidString
                 }
@@ -269,10 +265,6 @@ class SharedUserViewModel: ObservableObject {
         } catch {
             print(error)
         }
-    }
-    
-    private func loadTeam(userAccount: UserAccount?) {
-        guard let userAccount = userAccount else { return }
     }
     
     func setCurrentAccount(newAccount: UserAccount?) {
@@ -296,7 +288,7 @@ class SharedUserViewModel: ObservableObject {
                 let result = try await repository.accountRepository.fetchFromServer(after: lastSync)
                 
                 for account in result {
-                    try repository.accountRepository.usert(item: account.toModel())
+                    try repository.accountRepository.usert(item: account.toModel(), table: .userAccount, userId: userId)
                 }
                 
                 try self.repository.syncHistoryRepository.insertLastSyncTimestamp(for: .userAccount, userId: userId)

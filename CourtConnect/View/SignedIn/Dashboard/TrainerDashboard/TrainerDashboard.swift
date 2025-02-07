@@ -31,7 +31,8 @@ struct TrainerDashboard: View {
                     foundNewTeamViewModel: foundNewTeamViewModel,
                     teamListViewModel: teamListViewModel
                 )
-            } 
+                .padding(.horizontal, 16)
+            }
             
             ConfirmButtonLabel(confirmButtonDialog: ConfirmButtonDialog(
                 systemImage: "trash",
@@ -51,6 +52,7 @@ struct TrainerDashboard: View {
                 }
             })
             .padding(.top, 40)
+            .padding(.horizontal, 16)
         }
         .onAppear {
             dashBoardViewModel.currentTeam = nil
@@ -115,9 +117,25 @@ fileprivate struct HasTeam: View {
             SnapScrollView(horizontalSpacing: 16) {
                 LazyHStack(spacing: 16) {
                     NavigationLink {
-                        TeamRequestsView(teamId: teamId)
+                        if let userId = userViewModel.user?.id {
+                            TeamRequestsView(teamId: teamId, userId: userId)
+                        }
                     } label: {
                         IconCard(systemName: "person.fill.questionmark", title: "Join Requests", background: Material.ultraThinMaterial)
+                    }
+                    
+                    NavigationLink {
+                        //TeamRequestsView(teamId: teamId)
+                    } label: {
+                        IconCard(systemName: "chart.xyaxis.line", title: "Add Statistics", background: Material.ultraThinMaterial)
+                    }
+                    
+                    NavigationLink {
+                        if let teamId = dashBoardViewModel.currentTeam?.id {
+                            ManageTeamView(teamId: teamId)
+                        }
+                    } label: {
+                        IconCard(systemName: "23.square", title: "Manage Team", background: Material.ultraThinMaterial)
                     }
                 }
                 .frame(height: 150)
@@ -125,14 +143,16 @@ fileprivate struct HasTeam: View {
             
             if let userAccount = userViewModel.currentAccount {
                 DocumentSheetButton(userAccount: userAccount) 
-                
+                    .padding(.horizontal, 16)
                 PlanTerminSheetButton(userAccount: userAccount) { termin in
-                    dashBoardViewModel.saveTermin(termin: termin)
+                    dashBoardViewModel.saveTermin(termin: termin, userId: userAccount.userId)
                 }
+                .padding(.horizontal, 16)
             }
               
             if let QRCode = dashBoardViewModel.qrCode {
                 ShowTeamJoinQrCode(QRCode: QRCode)
+                    .padding(.horizontal, 16)
             }
             
             ConfirmButtonLabel(confirmButtonDialog: ConfirmButtonDialog(
@@ -149,6 +169,7 @@ fileprivate struct HasTeam: View {
                     errorHandler.handleError(error: error)
                 }
             })
+            .padding(.horizontal, 16)
             
             ConfirmButtonLabel(confirmButtonDialog: ConfirmButtonDialog(
                 systemImage: "trash",
@@ -159,13 +180,14 @@ fileprivate struct HasTeam: View {
                 cancel: "Cancel"
             ), action: {
                 do {
-                    try dashBoardViewModel.deleteTeam()
+                    guard let userId = userViewModel.currentAccount?.userId else { return }
+                    try dashBoardViewModel.deleteTeam(userId: userId)
                 } catch {
                     errorHandler.handleError(error: error)
                 }
             })
+            .padding(.horizontal, 16)
         }
-        
     }
 }
 
@@ -185,7 +207,7 @@ fileprivate struct GenerateNewJoinCodeView: View {
     }
 }
 
-struct ShowTeamJoinQrCode: View {
+fileprivate struct ShowTeamJoinQrCode: View {
     var QRCode: UIImage
     @State var showQrSheet = false
     var body: some View {
@@ -214,7 +236,7 @@ struct ShowTeamJoinQrCode: View {
             SnapScrollView(horizontalSpacing: 16) {
                 LazyHStack(spacing: 16) {
                     NavigationLink {
-                        TeamRequestsView(teamId: UUID(uuidString: "99580a57-81dc-4f4d-adde-0e871505c679")!)
+                        TeamRequestsView(teamId: UUID(uuidString: "99580a57-81dc-4f4d-adde-0e871505c679")!, userId: UUID(uuidString: "99580a57-81dc-4f4d-adde-0e871505c679")!)
                     } label: {
                         IconCard(systemName: "person.fill.questionmark", title: "Join Requests", background: Material.ultraThinMaterial)
                     }

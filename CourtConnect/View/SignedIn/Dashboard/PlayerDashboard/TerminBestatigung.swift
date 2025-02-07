@@ -25,6 +25,7 @@ struct ConfirmationTermin: View {
                 if attendanceTermines.isEmpty {
                     HStack {
                         Text("You have no open appointment confirmations")
+                        Spacer()
                     }
                     .padding()
                     .background(Material.ultraThinMaterial)

@@ -7,7 +7,7 @@
 import Foundation
 import SwiftData
 
-@MainActor protocol SyncronizationProtocol {
+ protocol SyncronizationProtocol {
     associatedtype LocalModel: PersistentModel
     associatedtype RemoteDTO: Codable
     var backendClient: BackendClient { get set }

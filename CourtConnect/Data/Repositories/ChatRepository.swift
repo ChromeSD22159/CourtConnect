@@ -36,7 +36,7 @@ class ChatRepository {
   
     func sendMessageToBackend(message: Chat) async throws {
         do {
-            let result: Bool = try await SupabaseService.insert(item: message.toDTO(), table: .chat) 
+            let _: Bool = try await SupabaseService.insert(item: message.toDTO(), table: .chat) 
         } catch {
             print(error.localizedDescription)
         }

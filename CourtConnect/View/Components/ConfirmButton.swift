@@ -34,6 +34,4 @@ struct ConfirmButton: View {
     )
     
     ConfirmButton(confirmButtonDialog: dialog) { }
-}
-
-
+} 

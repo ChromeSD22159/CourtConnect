@@ -68,7 +68,7 @@ import Combine
                 
                 let document: DocumentDTO = try await repository.documentRepository.uploadCachedDocument(image: image, bucket: .teamFiles, teamId: teamId)
  
-                repository.documentRepository.insert(document: document)
+                repository.documentRepository.insert(document: document, userId: userAccount.userId)
                 
                 try await Task.sleep(for: .seconds(2))
                 

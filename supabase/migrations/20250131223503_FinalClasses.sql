@@ -16,6 +16,9 @@ DROP TABLE IF EXISTS public."Chat";
 DROP TABLE IF EXISTS public."Attendance"; 
 DROP TABLE IF EXISTS public."Absence";
 
+DROP TABLE IF EXISTS public."Location";
+DROP TABLE IF EXISTS public."Termin";
+
 -- Erstellen der Tabellen (wie in deinem ursprünglichen Code)
 create table
   public."Attendance" (
@@ -525,12 +528,7 @@ BEGIN
     LOOP
         -- Füge für jeden User einen Eintrag in die Attendance-Tabelle hinzu
         INSERT INTO public."Attendance" ("userAccountId", "terminId", "startTime", "endTime", "createdAt", "updatedAt", "deletedAt", "attendanceStatus")
-        VALUES (team_member."id", NEW."id", NEW."startTime", NEW."endTime", NOW(), NOW(), NULL, 'Pending')
-        ON CONFLICT ("userAccountId", "terminId") DO UPDATE
-        SET 
-            "startTime" = NEW."startTime",
-            "endTime" = NEW."endTime",
-            "updatedAt" = NOW();
+        VALUES (team_member."id", NEW."id", NEW."startTime", NEW."endTime", NOW(), NOW(), NULL, 'Pending');
     END LOOP;
 
     RETURN NEW;

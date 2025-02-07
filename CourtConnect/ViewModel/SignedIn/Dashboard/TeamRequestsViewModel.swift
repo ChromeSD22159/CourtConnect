@@ -13,10 +13,12 @@ import Foundation
     
     let repository: BaseRepository
     let teamId: UUID
+    let userId: UUID
     
-    init(repository: BaseRepository, teamId: UUID) {
+    init(repository: BaseRepository, teamId: UUID, userId: UUID) {
         self.repository = repository
         self.teamId = teamId
+        self.userId = userId
     }
     
     func getLocalRequests() async {
@@ -38,7 +40,8 @@ import Foundation
         let requests = requestsDTO.map { $0.toModel() }
         
         try requests.forEach { request in
-            try repository.teamRepository.upsertLocal(item: request)
+            
+            try repository.teamRepository.upsertLocal(item: request, table: .request, userId: userId)
             
             Task {
                 await syncRemoteUseraccounts(accountId: request.accountId)
@@ -50,7 +53,7 @@ import Foundation
         do {
             let foundUserProfileDtoOrNil: [UserProfileDTO] = try await SupabaseService.getAllFromTable(table: .userProfile, match: ["userId": userId.uuidString])
             if let foundUserProfile = foundUserProfileDtoOrNil.first?.toModel() {
-                try repository.teamRepository.upsertLocal(item: foundUserProfile)
+                try repository.teamRepository.upsertLocal(item: foundUserProfile, table: .userProfile, userId: userId)
             }
         } catch {
             print("syncRemoteUserProfiles: \(error)")
@@ -61,7 +64,7 @@ import Foundation
         do {
             let foundUserAccountDtoOrNil: [UserAccountDTO] = try await SupabaseService.getAllFromTable(table: .userAccount, match: ["id": accountId.uuidString])
             if let foundUserAccount = foundUserAccountDtoOrNil.first?.toModel() {
-                try repository.teamRepository.upsertLocal(item: foundUserAccount)
+                try repository.teamRepository.upsertLocal(item: foundUserAccount, table: .userAccount, userId: foundUserAccount.userId)
                 await syncRemoteUserProfiles(userId: foundUserAccount.userId)
             }
         } catch {

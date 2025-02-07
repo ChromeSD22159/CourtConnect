@@ -11,7 +11,7 @@ struct MockTermine {
         Termin(
             teamId: UUID(),
             title: "U16 Tryout",
-            place: "Sporthalle Nord",
+            place: "Saderlacherweg 1, 79761 Waldshut",
             infomation: "Tryouts for the upcoming U16 season. All skill levels welcome!",
             typeString: TerminType.training.rawValue,
             durationMinutes: 120,
@@ -24,7 +24,7 @@ struct MockTermine {
         Termin(
             teamId: UUID(),
             title: "U14 Game vs. Mannheim",
-            place: "Mannheim Arena",
+            place: "Vom-Berge-Weg 34, 22159 Hamburg",
             infomation: "Away game against Mannheim. Be there to support the team!",
             typeString: TerminType.game.rawValue,
             durationMinutes: 90,

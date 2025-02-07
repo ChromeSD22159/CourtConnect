@@ -13,16 +13,18 @@ import SwiftUI
     var error: Error?
     
     func handleError(error: Error) {
+        guard !ErrorIdentifier.isInternetLost(error: error) else {
+            print("Internet error ignored")
+            return
+        }
         guard self.error == nil else { return }
         self.error = error
-        
-        print(error.localizedDescription)
         
         Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: { _ in
             self.error = nil
         })
     }
-}
+} 
  
 struct ErrorHandlerKey: EnvironmentKey {
     static let defaultValue: ErrorHandlerViewModel = ErrorHandlerViewModel.shared
@@ -33,4 +35,4 @@ extension EnvironmentValues {
         get { self[ErrorHandlerKey.self] }
         set { self[ErrorHandlerKey.self] = newValue }
     }
-} 
+}

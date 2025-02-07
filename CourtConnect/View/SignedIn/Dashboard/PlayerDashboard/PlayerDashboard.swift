@@ -47,6 +47,8 @@ struct PlayerDashboard: View {
                 }
             })
         }
+        .padding(.horizontal, 16)
+        .padding(.top, 10)
         .onAppear {
             dashBoardViewModel.currentTeam = nil
             dashBoardViewModel.getTeam(for: userViewModel.currentAccount)
@@ -105,7 +107,8 @@ fileprivate struct HasTeam: View {
             .padding(.vertical) 
         
         ConfirmationTermin(attendanceTermines: dashBoardViewModel.attendancesTermines) { attendance in
-            dashBoardViewModel.updateTerminAttendance(attendance: attendance)
+            guard let userId = userViewModel.currentAccount?.userId else { return }
+            dashBoardViewModel.updateTerminAttendance(attendance: attendance, userId: userId)
         }
         
         ConfirmButtonLabel(confirmButtonDialog: ConfirmButtonDialog(
