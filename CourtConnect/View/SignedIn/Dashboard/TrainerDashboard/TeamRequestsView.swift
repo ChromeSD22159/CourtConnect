@@ -16,6 +16,8 @@ import SwiftUI
     var body: some View {
         ZStack {
             List {
+                ListInfomationSection(text: "This list shows all open accession requests for your team.  Select an inquiry to see the details and edit them.")
+                
                 if viewModel.requests.isEmpty {
                     Section {
                         HStack {

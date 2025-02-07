@@ -18,8 +18,9 @@ class Attendance: ModelProtocol {
     var createdAt: Date
     var updatedAt: Date
     var deletedAt: Date?
+    var trainerConfirmedAt: Date?
     
-    init(id: UUID = UUID(), userAccountId: UUID, terminId: UUID, startTime: Date, endTime: Date, attendanceStatus: AttendanceStatus, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil) {
+    init(id: UUID = UUID(), userAccountId: UUID, terminId: UUID, startTime: Date, endTime: Date, attendanceStatus: AttendanceStatus, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil, trainerConfirmedAt: Date? = nil) {
         self.id = id
         self.userAccountId = userAccountId
         self.terminId = terminId
@@ -29,10 +30,11 @@ class Attendance: ModelProtocol {
         self.createdAt = createdAt
         self.updatedAt = updatedAt
         self.deletedAt = deletedAt
+        self.trainerConfirmedAt = trainerConfirmedAt
     }
     
     func toDTO() -> AttendanceDTO {
-        return AttendanceDTO(id: id, userAccountId: userAccountId, terminId: terminId, startTime: startTime, endTime: endTime, attendanceStatus: status, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
+        return AttendanceDTO(id: id, userAccountId: userAccountId, terminId: terminId, startTime: startTime, endTime: endTime, attendanceStatus: status, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt, trainerConfirmedAt: trainerConfirmedAt)
     }
     
     var status: AttendanceStatus {

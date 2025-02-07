@@ -83,7 +83,7 @@ import Charts
                 orginalStatistics = result
                 self.hasData = true
                 for statistic in result {
-                    let statistc = Statistic(id: statistic.id, userAccountId: statistic.userAccountId, fouls: 0, twoPointAttempts: 0, threePointAttempts: 0, terminType: TerminType.game.rawValue, createdAt: statistic.createdAt, updatedAt: statistic.updatedAt)
+                    let statistc = Statistic(id: statistic.id, userAccountId: statistic.userAccountId, fouls: 0, twoPointAttempts: 0, threePointAttempts: 0, terminType: TerminType.game.rawValue, terminId: statistic.terminId, createdAt: statistic.createdAt, updatedAt: statistic.updatedAt)
                     self.chartStatistics.append(statistc)
                     self.statistics.append(statistc)
                 }
@@ -91,7 +91,7 @@ import Charts
                 self.hasData = false
                 for index in 0...7 {
                     let date = Calendar.current.date(byAdding: .day, value: -(7 * index + 1), to: Date())!
-                    let statistc = Statistic(id: UUID(), userAccountId: UUID(), fouls: 0, twoPointAttempts: 0, threePointAttempts: 0, terminType: TerminType.game.rawValue, createdAt: date, updatedAt: date)
+                    let statistc = Statistic(id: UUID(), userAccountId: UUID(), fouls: 0, twoPointAttempts: 0, threePointAttempts: 0, terminType: TerminType.game.rawValue, terminId: UUID(), createdAt: date, updatedAt: date)
                     self.chartStatistics.append(statistc)
                     self.statistics.append(statistc)
                 }
@@ -123,47 +123,48 @@ struct PlayerStatistic: View {
     var body: some View {
         ScrollView(.vertical) {
             VStack(spacing: 50) {
-                HStack(spacing: 20) {
-                    Image(.basketballPlayer)
-                        .resizable()
-                        .scaledToFit()
-                        .padding(10)
-                        .frame(width: 100)
-                        .clipShape(Circle())
-                        .overlay(
-                            Circle()
-                                .stroke(LinearGradient(colors: [
-                                    Theme.lightOrange,
-                                    Theme.darkOrange
-                                ], startPoint: .topTrailing, endPoint: .bottomLeading), lineWidth: 5)
-                        )
-                    
-                    VStack(alignment: .leading) {
-                        Text("Frederik Kohler")
-                            .font(.headline)
-                        
-                        Text("Point Gard")
-                            .font(.subheadline)
-                    }
-                }
+               
+                 HStack(spacing: 20) {
+                     Image(.basketballPlayer)
+                         .resizable()
+                         .scaledToFit()
+                         .padding(10)
+                         .frame(width: 100)
+                         .clipShape(Circle())
+                         .overlay(
+                             Circle()
+                                 .stroke(LinearGradient(colors: [
+                                     Theme.lightOrange,
+                                     Theme.darkOrange
+                                 ], startPoint: .topTrailing, endPoint: .bottomLeading), lineWidth: 5)
+                         )
+                     
+                     VStack(alignment: .leading) {
+                         Text("Frederik Kohler")
+                             .font(.headline)
+                         
+                         Text("Point Gard")
+                             .font(.subheadline)
+                     }
+                 }
                 
                 ZStack {
                     SnapScrollView {
                         LazyHStack {
                             if let bestTwoPointAttempts = viewModel.bestTwoPointAttempts {
-                                StatisticCard(title: "Most 2er", description: bestTwoPointAttempts.dateString, statistic: bestTwoPointAttempts)
+                                StatisticCard(title: "Most 2er", description: bestTwoPointAttempts.createdAt.toDateString(), statistic: bestTwoPointAttempts)
                             }
                             
                             if let bestThreePointAttempts = viewModel.bestThreePointAttempts {
-                                StatisticCard(title: "Most 3er", description: bestThreePointAttempts.dateString, statistic: bestThreePointAttempts)
+                                StatisticCard(title: "Most 3er", description: bestThreePointAttempts.createdAt.toDateString(), statistic: bestThreePointAttempts)
                             }
                             
                             if let bestFouls = viewModel.bestFouls {
-                                StatisticCard(title: "Lowest Fouls", description: bestFouls.dateString, statistic: bestFouls)
+                                StatisticCard(title: "Lowest Fouls", description: bestFouls.createdAt.toDateString(), statistic: bestFouls)
                             }
                             
                             if let bestPoints = viewModel.bestPoints {
-                                StatisticCard(title: "Most Points", description: bestPoints.dateString, statistic: bestPoints)
+                                StatisticCard(title: "Most Points", description: bestPoints.createdAt.toDateString(), statistic: bestPoints)
                             }
                         }
                     }
@@ -274,14 +275,14 @@ private struct StatisticChart: View {
             ZStack {
                 Chart(sortedByDate) { statistic in
                     LineMark(
-                        x: .value("Date", statistic.createdAt.formatted(.dateTime.day(.twoDigits).month(.twoDigits))),
+                        x: .value("Date", statistic.createdAt.toDateStringDDMM()),
                         y: .value("Value", yValue(statistic))
                     )
                     .opacity(hasData ? lineOpacity : 0.5)
                     .foregroundStyle(Theme.lightOrange)
                      
                     AreaMark(
-                        x: .value("Date", statistic.createdAt.formatted(.dateTime.day(.twoDigits).month(.twoDigits))),
+                        x: .value("Date", statistic.createdAt.toDateStringDDMM()),
                         y: .value("Value", yValue(statistic))
                     )
                     .opacity(hasData ? lineOpacity : 0.5)

@@ -31,6 +31,7 @@ create table
     "createdAt" timestamp with time zone not null,
     "updatedAt" timestamp with time zone not null,
     "deletedAt" timestamp with time zone null,
+    "trainerConfirmedAt" timestamp with time zone null,
     constraint attendance_pkey primary key (id),
     constraint unique_id unique (id)
   ) tablespace pg_default;
@@ -262,6 +263,7 @@ create table
     "twoPointAttempts" integer not null default 0,
     "threePointAttempts" integer not null default 0,
     "terminType" text not null default ''::text,
+    "terminId" uuid not null,
     "createdAt" timestamp with time zone not null default now(),
     "updatedAt" timestamp with time zone not null default now(),
     "deletedAt" timestamp with time zone null,
@@ -415,7 +417,7 @@ create table
     "userAccountId" uuid not null,
     "teamId" uuid not null,
     role text not null,
-     "shirtNumber" smallint null,
+    "shirtNumber" smallint null,
     "createdAt" timestamp with time zone not null default now(),
     "updatedAt" timestamp with time zone not null default now(),
     "deletedAt" timestamp with time zone null,

@@ -132,7 +132,7 @@ fileprivate struct MessageRow: View {
             
             HStack(spacing: 15) {
                 if message.senderId == myUserId {
-                    Text(message.createdAt.formatted(.dateTime.hour().minute()))
+                    Text(message.createdAt.toTimeString())
                         .font(.caption)
                     
                     Image(systemName: "checkmark")
@@ -142,7 +142,7 @@ fileprivate struct MessageRow: View {
                     Spacer()
                 } else if message.recipientId == myUserId {
                     Spacer()
-                    Text(message.createdAt.formatted(.dateTime.hour().minute()))
+                    Text(message.createdAt.toTimeString())
                         .font(.caption)
                     
                     Image(systemName: "checkmark")

@@ -15,6 +15,8 @@ struct ManageTeamView: View {
     
     var body: some View {
         List {
+            ListInfomationSection(text: "In this area you can assign an individual player number to every player in your team. Choose a number from the list for every player.")
+            
             Section {
                 ForEach(viewModel.teamPlayer, id: \.userProfile.id) { team in
                     MemberRow(teamMember: team.teamMember, userProfile: team.userProfile, isPlayer: true)
@@ -27,11 +29,7 @@ struct ManageTeamView: View {
                         }
                 }
             } header: {
-                HStack {
-                    UpperCasedheadline(text: "Player")
-                    Spacer()
-                }
-                .padding(.horizontal)
+                UpperCasedheadline(text: "Player")
             }
             
             Section {
@@ -46,11 +44,7 @@ struct ManageTeamView: View {
                         }
                 }
             } header: {
-                HStack {
-                    UpperCasedheadline(text: "Trainer")
-                    Spacer()
-                }
-                .padding(.horizontal)
+                UpperCasedheadline(text: "Trainer")
             }
         }
         .listBackground()
@@ -73,71 +67,20 @@ fileprivate struct MemberRow: View {
             Text(userProfile.fullName)
             Spacer()
             if isPlayer {
-                TextField("", text: Binding(
-                    get: {
-                        teamMember.shirtNumber == nil ? "" : String(teamMember.shirtNumber!)
-                    },
-                    set: { newValue in
-                        if let intValue = Int(newValue) {
-                             teamMember.shirtNumber = intValue
-                             // Here you would likely want to also update the database
-                             // viewModel.updateShirtNumber(for: teamMember, newShirtNumber: intValue)
-                         } else if newValue.isEmpty {
-                             teamMember.shirtNumber = nil
-                             // viewModel.updateShirtNumber(for: teamMember, newShirtNumber: nil)
-                         }
-                    }
-                ))
-                .textFieldStyle(.plain)
-                .padding(8)
-                .background(Material.ultraThickMaterial)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-                .frame(width: 75)
-            }
-        }
-    }
-}
-
-@Observable @MainActor class ManageTeamViewModel {
-    let repository: BaseRepository
-    let teamId: UUID
-    
-    var teamPlayer: [TeamMemberProfile] = []
-    var teamTrainer: [TeamMemberProfile] = []
-    
-    init(repository: BaseRepository, teamId: UUID) {
-        self.repository = repository
-        self.teamId = teamId
-        
-        self.getTeamMember()
-    }
-    
-    func getTeamMember() {
-        do {
-            let teamMember = try repository.teamRepository.getTeamMembers(for: teamId)
-            
-            for member in teamMember {
-                if let userAccount = try repository.accountRepository.getAccount(id: member.userAccountId),
-                   let userProfil = try repository.userRepository.getUserProfileFromDatabase(userId: userAccount.userId) {
-                    
-                    if userAccount.roleEnum == .player {
-                        self.teamPlayer.append(TeamMemberProfile(userProfile: userProfil, teamMember: member))
-                    }
-                    if userAccount.roleEnum == .trainer {
-                        self.teamTrainer.append(TeamMemberProfile(userProfile: userProfil, teamMember: member))
+                let shirtNumberOptions = (0...99).map { ShirtNumberOption(number: $0) }
+                Picker("", selection: $teamMember.shirtNumber) {
+                    if teamMember.shirtNumber == nil {
+                        Text("Bitte Wählen").tag(nil as Int?)
+                    } 
+                   
+                    ForEach(shirtNumberOptions) { option in
+                            Text("\(option.number)").tag(option.number)
                     }
                 }
             }
-        } catch {
-            print(error)
         }
     }
-}
-
-struct TeamMemberProfile {
-    var userProfile: UserProfile
-    var teamMember: TeamMember
-}
+} 
 
 #Preview {
     ManageTeamView(teamId: UUID())

@@ -13,9 +13,9 @@ struct DateString: View {
     var body: some View {
         switch style {
         case .dayMonthYear:
-            Text(date.formatted(.dateTime.day(.twoDigits).month(.twoDigits).year(.twoDigits)))
+            Text(date.toDateString())
         case .hourMinute:
-            Text(date.formatted(.dateTime.hour().minute()))
+            Text(date.toTimeString())
         }
     }
 
