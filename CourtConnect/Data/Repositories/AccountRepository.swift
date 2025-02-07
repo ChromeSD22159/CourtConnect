@@ -8,7 +8,7 @@
 import SwiftData
 import SwiftUI 
  
-class AccountRepository: SyncronizationProtocol {
+@MainActor class AccountRepository {
     
     var backendClient = BackendClient.shared
     var container: ModelContainer
@@ -18,13 +18,22 @@ class AccountRepository: SyncronizationProtocol {
     }
     
     // MARK: - Local
-    func usert<T: ModelProtocol>(item: T) throws {
+    func usert<T: ModelProtocol>(item: T, table: DatabaseTable, userId: UUID) throws {
         container.mainContext.insert(item)
+        
+        // TODO: newSyncHistoryTimeStamp REMEMBER
+        let newSyncHistoryTimeStamp = SyncHistory(table: .document, userId: userId)
+        container.mainContext.insert(newSyncHistoryTimeStamp)
         try container.mainContext.save()
     }
     
-    func insert(termin:Termin) {
+    func insert(termin:Termin, table: DatabaseTable, userId: UUID) throws {
         container.mainContext.insert(termin)
+        
+        // TODO: newSyncHistoryTimeStamp REMEMBER
+        let newSyncHistoryTimeStamp = SyncHistory(table: .document, userId: userId)
+        container.mainContext.insert(newSyncHistoryTimeStamp)
+        try container.mainContext.save()
     }
     
     func getAllAccounts(userId: UUID) throws -> [UserAccount] {
@@ -68,7 +77,7 @@ class AccountRepository: SyncronizationProtocol {
         item.updatedAt = Date()
         item.deletedAt = Date()
         
-        try usert(item: item)
+        try usert(item: item, table: .userAccount, userId: item.userId)
     }
     
     // MARK: SYNCING

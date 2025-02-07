@@ -117,7 +117,9 @@ fileprivate struct HasTeam: View {
             SnapScrollView(horizontalSpacing: 16) {
                 LazyHStack(spacing: 16) {
                     NavigationLink {
-                        TeamRequestsView(teamId: teamId)
+                        if let userId = userViewModel.user?.id {
+                            TeamRequestsView(teamId: teamId, userId: userId)
+                        }
                     } label: {
                         IconCard(systemName: "person.fill.questionmark", title: "Join Requests", background: Material.ultraThinMaterial)
                     }
@@ -143,7 +145,7 @@ fileprivate struct HasTeam: View {
                 DocumentSheetButton(userAccount: userAccount) 
                     .padding(.horizontal, 16)
                 PlanTerminSheetButton(userAccount: userAccount) { termin in
-                    dashBoardViewModel.saveTermin(termin: termin)
+                    dashBoardViewModel.saveTermin(termin: termin, userId: userAccount.userId)
                 }
                 .padding(.horizontal, 16)
             }
@@ -178,7 +180,8 @@ fileprivate struct HasTeam: View {
                 cancel: "Cancel"
             ), action: {
                 do {
-                    try dashBoardViewModel.deleteTeam()
+                    guard let userId = userViewModel.currentAccount?.userId else { return }
+                    try dashBoardViewModel.deleteTeam(userId: userId)
                 } catch {
                     errorHandler.handleError(error: error)
                 }
@@ -233,7 +236,7 @@ fileprivate struct ShowTeamJoinQrCode: View {
             SnapScrollView(horizontalSpacing: 16) {
                 LazyHStack(spacing: 16) {
                     NavigationLink {
-                        TeamRequestsView(teamId: UUID(uuidString: "99580a57-81dc-4f4d-adde-0e871505c679")!)
+                        TeamRequestsView(teamId: UUID(uuidString: "99580a57-81dc-4f4d-adde-0e871505c679")!, userId: UUID(uuidString: "99580a57-81dc-4f4d-adde-0e871505c679")!)
                     } label: {
                         IconCard(systemName: "person.fill.questionmark", title: "Join Requests", background: Material.ultraThinMaterial)
                     }

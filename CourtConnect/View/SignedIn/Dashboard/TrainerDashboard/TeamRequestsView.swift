@@ -9,8 +9,8 @@ import SwiftUI
 @MainActor struct TeamRequestsView: View {
     @State var viewModel: TeamRequestsViewModel
     
-    init(teamId: UUID) {
-        self.viewModel = TeamRequestsViewModel(repository: Repository.shared, teamId: teamId)
+    init(teamId: UUID, userId: UUID) {
+        self.viewModel = TeamRequestsViewModel(repository: Repository.shared, teamId: teamId, userId: userId)
     }
     
     var body: some View {
@@ -113,5 +113,5 @@ fileprivate struct RequestAcceptionField: View {
 }
  
 #Preview {
-    TeamRequestsView(teamId: MockUser.teamId)
+    TeamRequestsView(teamId: MockUser.teamId, userId: MockUser.myUserAccount.userId)
 }

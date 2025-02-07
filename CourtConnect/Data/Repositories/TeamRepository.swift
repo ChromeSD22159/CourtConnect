@@ -16,14 +16,24 @@ import Supabase
     }
      
     // MARK: - Local
-    func upsertLocal<T: ModelProtocol>(item: T) throws {
+    func upsertLocal<T: ModelProtocol>(item: T, table: DatabaseTable, userId: UUID) throws {
         container.mainContext.insert(item)
+        
+        // TODO: newSyncHistoryTimeStamp REMEMBER
+        let newSyncHistoryTimeStamp = SyncHistory(table: table, userId: userId)
+        container.mainContext.insert(newSyncHistoryTimeStamp)
+        
         try container.mainContext.save()
     }
     
-    func upsertlocal<T: ModelProtocol>(item: T) {
+    func upsertlocal<T: ModelProtocol>(item: T, table: DatabaseTable, userId: UUID) {
         do {
             container.mainContext.insert(item)
+            
+            // TODO: newSyncHistoryTimeStamp REMEMBER
+            let newSyncHistoryTimeStamp = SyncHistory(table: table, userId: userId)
+            container.mainContext.insert(newSyncHistoryTimeStamp)
+            
             try container.mainContext.save()
         } catch {
             print(error)
@@ -192,33 +202,33 @@ import Supabase
         container.mainContext.delete(team)
     }
     
-    func softDelete(teamMember: TeamMember) throws {
+    func softDelete(teamMember: TeamMember, userId: UUID) throws {
         teamMember.updatedAt = Date()
         teamMember.deletedAt = Date()
         print(teamMember)
-        try upsertLocal(item: teamMember)
+        try upsertLocal(item: teamMember, table: .teamMember, userId: userId)
         
         Task {
             try await SupabaseService.upsertWithOutResult(item: teamMember.toDTO(), table: .teamMember, onConflict: "id")
         }
     }
     
-    func softDelete(teamAdmin: TeamAdmin) throws {
+    func softDelete(teamAdmin: TeamAdmin, userId: UUID) throws {
         teamAdmin.updatedAt = Date()
         teamAdmin.deletedAt = Date()
         
-        try upsertLocal(item: teamAdmin)
+        try upsertLocal(item: teamAdmin, table: .teamAdmin, userId: userId)
         
         Task {
             try await SupabaseService.upsertWithOutResult(item: teamAdmin.toDTO(), table: .teamAdmin, onConflict: "id")
         }
     }
     
-    func softDelete(team: Team) throws {
+    func softDelete(team: Team, userId: UUID) throws {
         team.updatedAt = Date()
         team.deletedAt = Date()
         
-        try upsertLocal(item: team)
+        try upsertLocal(item: team, table: .attendance, userId: userId)
         
         Task {
            try await SupabaseService.upsertWithOutResult(item: team.toDTO(), table: .team, onConflict: "id")
@@ -239,8 +249,8 @@ import Supabase
         try await SupabaseService.upsertWithOutResult(item: request.toDTO(), table: .request, onConflict: "id")
     }
     
-    func upsertTerminAttendance(attendance: Attendance) async throws {
-        defer { upsertlocal(item: attendance) }
+    func upsertTerminAttendance(attendance: Attendance, userId: UUID) async throws {
+        defer { upsertlocal(item: attendance, table: .attendance, userId: userId) }
         do {
             try await SupabaseService.upsertWithOutResult(item: attendance.toDTO(), table: .attendance, onConflict: "id")
         } catch {
@@ -266,8 +276,8 @@ import Supabase
             userAccount.updatedAt = Date()
             
             // INSERT LOCAL MEMBER
-            try self.upsertLocal(item: foundTeamDTO.toModel())
-            try self.upsertLocal(item: supabaseMember.toModel())
+            try self.upsertLocal(item: foundTeamDTO.toModel(), table: .team, userId: userAccount.userId)
+            try self.upsertLocal(item: supabaseMember.toModel(), table: .teamMember, userId: userAccount.userId)
        
             print("before upsert")
             try await SupabaseService.upsertWithOutResult(item: userAccount.toDTO(), table: .userAccount, onConflict: "id")
@@ -280,27 +290,27 @@ import Supabase
     func insertTeam(newTeam: Team, userId: UUID) async throws {
         let entry: TeamDTO = try await SupabaseService.insert(item: newTeam.toDTO(), table: .team)
          
-        try self.upsertLocal(item: entry.toModel())
+        try self.upsertLocal(item: entry.toModel(), table: .team, userId: userId)
     }
     
     func insertTeamMember(newMember: TeamMember, userId: UUID) async throws {
         let entry: TeamMemberDTO = try await SupabaseService.insert(item: newMember.toDTO(), table: .teamMember)
          
-        try self.upsertLocal(item: entry.toModel())
+        try self.upsertLocal(item: entry.toModel(), table: .teamMember, userId: userId)
     }
     
     func insertTeamAdmin(newAdmin: TeamAdmin, userId: UUID) async throws {
         let entry: TeamAdminDTO = try await SupabaseService.insert(item: newAdmin.toDTO(), table: .teamAdmin)
          
-        try self.upsertLocal(item: entry.toModel())
+        try self.upsertLocal(item: entry.toModel(), table: .teamAdmin, userId: userId)
     }
     
     func searchTeamByName(name: String) async throws -> [TeamDTO] {
         return try await SupabaseService.search(name: name, table: DatabaseTable.team, column: "teamName")
     }
     
-    func insertAbsense(absence: Absence) async throws {
-        try self.upsertLocal(item: absence)
+    func insertAbsense(absence: Absence, userId: UUID) async throws {
+        try self.upsertLocal(item: absence, table: .absence, userId: userId)
         try await SupabaseService.upsertWithOutResult(item: absence.toDTO(), table: .absence, onConflict: "id")
     }
     

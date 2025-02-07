@@ -82,33 +82,21 @@ class UserRepository {
             .value 
             
         if let newProfile = date.first {
-            try insertOrUpdate(profile: newProfile.toModel())
+            try insertOrUpdate(profile: newProfile.toModel(), table: .userProfile, userId: userId)
         }
     }
     
-    func insertOrUpdate(profile: UserProfile) throws {
+    func insertOrUpdate(profile: UserProfile, table: DatabaseTable, userId: UUID) throws {
         container.mainContext.insert(profile)
+        // TODO: newSyncHistoryTimeStamp REMEMBER
+        let newSyncHistoryTimeStamp = SyncHistory(table: table, userId: userId)
+        container.mainContext.insert(newSyncHistoryTimeStamp)
+        
         try container.mainContext.save()
     }
     
-    /// SAVE CHANGES LOCAL AND SEND TO SUPABASE
-    func fetchUserProfile(userId: UUID) async throws -> UserProfile? {
-        if !NetworkMonitorViewModel.shared.isConnected {
-            return try self.getUserProfileFromDatabase(userId: userId)
-        } else {
-            let userProfile: UserProfileDTO? = try await SupabaseService.getEquals(value: userId.uuidString, table: .userProfile, column: "userId")
-            
-            if let userProfile = userProfile?.toModel() {
-                container.mainContext.insert(userProfile)
-                return userProfile
-            } else {
-                return nil
-            }
-        }
-    }
-    
     func sendUserProfileToBackend(profile: UserProfile) async throws {
-        try insertOrUpdate(profile: profile)
+        try insertOrUpdate(profile: profile, table: .userProfile, userId: profile.userId)
         try await backendClient.supabase
             .from(DatabaseTable.userProfile.rawValue)
             .upsert(profile.toDTO(), onConflict: "id")

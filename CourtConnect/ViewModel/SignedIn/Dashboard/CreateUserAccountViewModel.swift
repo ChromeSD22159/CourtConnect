@@ -22,7 +22,7 @@ import Foundation
     func insertAccount() async throws {
         let account = UserAccount(userId: userId, teamId: nil, position: position.rawValue, role: role.rawValue, displayName: role.rawValue, createdAt: Date(), updatedAt: Date())
         
-        try repository.accountRepository.usert(item: account)
+        try repository.accountRepository.usert(item: account, table: .userAccount, userId: userId)
         
         self.getAllFromDatabase()
         

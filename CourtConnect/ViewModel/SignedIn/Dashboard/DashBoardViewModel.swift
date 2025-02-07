@@ -51,8 +51,8 @@ import UIKit
             guard try repository.teamRepository.getTeamAdmins(for: teamId).count > 1 else { throw TeamError.lastAdminCantLeave }
             
             if let myAdmin = try? repository.teamRepository.getAdmin(for: currentAccount.id), let myMemberAccount = try repository.teamRepository.getMember(for: currentAccount.id) {
-                try repository.teamRepository.softDelete(teamAdmin: myAdmin)
-                try repository.teamRepository.softDelete(teamMember: myMemberAccount)
+                try repository.teamRepository.softDelete(teamAdmin: myAdmin, userId: currentAccount.userId)
+                try repository.teamRepository.softDelete(teamMember: myMemberAccount, userId: currentAccount.userId)
             }
             
             currentAccount.teamId = nil
@@ -63,7 +63,7 @@ import UIKit
          
         // wenn Spieler
         if role == .trainer, let myMemberAccount = try repository.teamRepository.getMember(for: currentAccount.id) {
-            try repository.teamRepository.softDelete(teamMember: myMemberAccount)
+            try repository.teamRepository.softDelete(teamMember: myMemberAccount, userId: currentAccount.userId)
             
             currentAccount.teamId = nil
             currentAccount.updatedAt = Date()
@@ -79,10 +79,10 @@ import UIKit
         try await repository.accountRepository.sendToBackend(item: currentAccount)
     }
     
-    func deleteTeam() throws {
+    func deleteTeam(userId: UUID) throws {
         guard let currentTeam = currentTeam else { return }
         Task {
-            try repository.teamRepository.softDelete(team: currentTeam)
+            try repository.teamRepository.softDelete(team: currentTeam, userId: userId)
         }
     }
     
@@ -90,13 +90,16 @@ import UIKit
         repository.teamRepository.receiveTeamJoinRequests { _ in }
     }
     
-    func saveTermin(termin: Termin) { 
+    func saveTermin(termin: Termin, userId: UUID) {
         Task {
-            defer { repository.accountRepository.insert(termin: termin) }
             do {
                 try await SupabaseService.upsertWithOutResult(item: termin.toDTO(), table: .termin, onConflict: "id")
+                
+                try repository.accountRepository.insert(termin: termin, table: .termin, userId: userId)
             } catch {
-                print(error)
+                ErrorHandlerViewModel.shared.handleError(error: error)
+                
+                try repository.accountRepository.insert(termin: termin, table: .termin, userId: userId)
             }
         }
     }
@@ -107,7 +110,7 @@ import UIKit
                 guard let userAccount = userAccount else { throw UserError.userAccountNotFound }
                 guard let teamId = currentTeam?.id else { throw TeamError.teamNotFound }
                 let newAbsense = Absence(userAccountId: userAccount.id, teamId: teamId, date: absenseDate, createdAt: Date(), updatedAt: Date())
-                try await repository.teamRepository.insertAbsense(absence: newAbsense)
+                try await repository.teamRepository.insertAbsense(absence: newAbsense, userId: userAccount.userId)
                 self.isAbsenseSheet.toggle()
             } catch {
                 print(error)
@@ -142,11 +145,11 @@ import UIKit
         }
     }
     
-    func updateTerminAttendance(attendance: Attendance) {
+    func updateTerminAttendance(attendance: Attendance, userId: UUID) {
         defer { attendancesTermines.removeAll(where: { $0.attendance.terminId == attendance.terminId }) }
         Task {
             do {
-                try await repository.teamRepository.upsertTerminAttendance(attendance: attendance)
+                try await repository.teamRepository.upsertTerminAttendance(attendance: attendance, userId: userId)
             } catch {
                 print(error)
             }
