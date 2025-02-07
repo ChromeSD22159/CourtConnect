@@ -125,7 +125,10 @@ fileprivate struct HasTeam: View {
                     }
                     
                     NavigationLink {
-                        //TeamRequestsView(teamId: teamId)
+                        if let teamId = dashBoardViewModel.currentTeam?.id,
+                           let userId = userViewModel.user?.id {
+                            AddStatisticView(teamId: teamId, userId: userId)
+                        } 
                     } label: {
                         IconCard(systemName: "chart.xyaxis.line", title: "Add Statistics", background: Material.ultraThinMaterial)
                     }

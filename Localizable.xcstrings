@@ -59,6 +59,9 @@
     "Add Document" : {
 
     },
+    "Add Statistic" : {
+
+    },
     "Are you sure you want to delete the Team? This action cannot be undone." : {
 
     },
@@ -71,7 +74,13 @@
     "Association e-mail" : {
 
     },
+    "Attandance" : {
+
+    },
     "Birthday" : {
+
+    },
+    "Bitte Wählen" : {
 
     },
     "Cancel" : {
@@ -212,6 +221,12 @@
     "Home" : {
 
     },
+    "In this area you can assign an individual player number to every player in your team. Choose a number from the list for every player." : {
+
+    },
+    "Infomation" : {
+
+    },
     "Join" : {
 
     },
@@ -282,6 +297,9 @@
 
     },
     "Player Dashboard" : {
+
+    },
+    "Please enter the statistics for every player here.  Use the steppers to set the number of 2-point throws, 3-point throws and fouls.  The total number of points is automatically calculated." : {
 
     },
     "Point Gard" : {
@@ -371,7 +389,13 @@
     "The selected user account is not part of a team. Join a team to get started." : {
 
     },
+    "This list shows all open accession requests for your team.  Select an inquiry to see the details and edit them." : {
+
+    },
     "Total Online: %lld" : {
+
+    },
+    "Total Points: %lld" : {
 
     },
     "Trainer" : {
@@ -396,6 +420,9 @@
 
     },
     "Want Leave the Team" : {
+
+    },
+    "x%lld" : {
 
     },
     "You have no open appointment confirmations" : {

@@ -167,6 +167,14 @@ import Supabase
         return result
     }
     
+    func getPastTeamTermine(for teamId: UUID) throws -> [Termin] {
+        let date = Date()
+        let predicate = #Predicate<Termin> { $0.startTime < date && $0.teamId == teamId && $0.deletedAt == nil }
+        let fetchDescriptor = FetchDescriptor(predicate: predicate)
+        let result = try container.mainContext.fetch(fetchDescriptor)
+        return result
+    }
+    
     func getTeamConfirmedAttendances(for terminId: UUID) throws -> [String] {
         let status = AttendanceStatus.confirmed.rawValue
         let predicate = #Predicate<Attendance> { $0.terminId == terminId && $0.attendanceStatus == status && $0.deletedAt == nil }
@@ -258,6 +266,15 @@ import Supabase
         }
     }
     
+    func upsertPlayerStatistic(statistic: Statistic, userId: UUID) async throws {
+        defer { upsertlocal(item: statistic, table: .statistic, userId: userId) }
+        do {
+            try await SupabaseService.upsertWithOutResult(item: statistic.toDTO(), table: .statistic, onConflict: "id")
+        } catch {
+            throw error
+        }
+    }
+    
     // MARK: - REMOTE
     func getTeamRemote(code: String) async throws -> TeamDTO? {
         return try await SupabaseService.getEquals(value: code, table: .team, column: "joinCode")
@@ -312,7 +329,7 @@ import Supabase
     func insertAbsense(absence: Absence, userId: UUID) async throws {
         try self.upsertLocal(item: absence, table: .absence, userId: userId)
         try await SupabaseService.upsertWithOutResult(item: absence.toDTO(), table: .absence, onConflict: "id")
-    }
+    } 
     
     // MARK: SOCKET
     func receiveTeamJoinRequests(complete: @escaping (Requests?) -> Void) {

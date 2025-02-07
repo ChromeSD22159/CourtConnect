@@ -78,9 +78,9 @@ struct TerminSheet: View {
                         .padding([.horizontal, .top])
                         
                         HStack {
-                            Text(viewModel.terminData.termin.startTime.formatted(.dateTime.day(.twoDigits).month(.twoDigits).year(.twoDigits)))
+                            Text(viewModel.terminData.termin.startTime.toDateString())
                             Spacer()
-                            Text(viewModel.terminData.termin.startTime.formatted(.dateTime.hour().minute()) + "Uhr")
+                            Text(viewModel.terminData.termin.startTime.toTimeString())
                         }
                         .padding()
                         .background(Material.ultraThinMaterial)
@@ -92,7 +92,7 @@ struct TerminSheet: View {
                 }
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
-                        Text(viewModel.terminData.termin.startTime.formatted(.dateTime.day(.twoDigits).month(.twoDigits).year(.twoDigits)))
+                        Text(viewModel.terminData.termin.startTime.toDateString())
                     }
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Menu {

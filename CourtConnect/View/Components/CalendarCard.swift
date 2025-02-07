@@ -12,7 +12,7 @@ struct CalendarCard: View {
     
     var groupedTermine: [String: [Termin]] {
         let dic = Dictionary(grouping: termine, by: {
-            $0.startTime.formatted(.dateTime.day(.twoDigits).month(.twoDigits).year(.twoDigits))
+            $0.startTime.toDateString()
         })
         return dic
     }
