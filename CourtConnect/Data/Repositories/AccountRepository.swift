@@ -19,21 +19,34 @@ import SwiftUI
     
     // MARK: - Local
     func usert<T: ModelProtocol>(item: T, table: DatabaseTable, userId: UUID) throws {
-        container.mainContext.insert(item)
-        
-        // TODO: newSyncHistoryTimeStamp REMEMBER
-        let newSyncHistoryTimeStamp = SyncHistory(table: .document, userId: userId)
-        container.mainContext.insert(newSyncHistoryTimeStamp)
-        try container.mainContext.save()
-    }
+        // 1. Daten immer lokal in Core Data speichern
+           container.mainContext.insert(item)
+           let newSyncHistoryTimeStamp = SyncHistory(table: .document, userId: userId)
+           container.mainContext.insert(newSyncHistoryTimeStamp)
+           try container.mainContext.save()
+ 
+           Task {
+               do {
+                   try await SupabaseService.upsertWithOutResult(item: item.toDTO(), table: .userAccount, onConflict: "id")
+               } catch {
+                   throw error
+               }
+           }
+       }
     
     func insert(termin:Termin, table: DatabaseTable, userId: UUID) throws {
         container.mainContext.insert(termin)
-        
-        // TODO: newSyncHistoryTimeStamp REMEMBER
         let newSyncHistoryTimeStamp = SyncHistory(table: .document, userId: userId)
         container.mainContext.insert(newSyncHistoryTimeStamp)
         try container.mainContext.save()
+        
+        Task {
+            do {
+                try await SupabaseService.upsertWithOutResult(item: termin.toDTO(), table: .termin, onConflict: "id")
+            } catch {
+                throw error
+            }
+        }
     }
     
     func getAllAccounts(userId: UUID) throws -> [UserAccount] {
@@ -81,7 +94,8 @@ import SwiftUI
     }
     
     // MARK: SYNCING
-    func sendUpdatedAfterLastSyncToBackend(userId: UUID, lastSync: Date) async { 
+    #warning("REMOVE REFACTOR")
+    func sendUpdatedAfterLastSyncToBackend(userId: UUID, lastSync: Date) async {
         Task {
             do {
                 try await Task.sleep(for: .seconds(1))
@@ -99,6 +113,7 @@ import SwiftUI
         }
     }
     
+    #warning("REMOVE REFACTOR")
     func sendToBackend(item: UserAccount) async throws {
         try await backendClient.supabase
             .from(DatabaseTable.userAccount.rawValue)
@@ -107,6 +122,7 @@ import SwiftUI
             .value
     }
     
+    #warning("REMOVE REFACTOR")
     func fetchFromServer(after: Date) async throws -> [UserAccountDTO] {
         return try await backendClient.supabase
             .from(DatabaseTable.userAccount.rawValue)

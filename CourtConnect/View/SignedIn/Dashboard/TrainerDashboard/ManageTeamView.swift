@@ -20,13 +20,13 @@ struct ManageTeamView: View {
             Section {
                 ForEach(viewModel.teamPlayer, id: \.userProfile.id) { team in
                     MemberRow(teamMember: team.teamMember, userProfile: team.userProfile, isPlayer: true)
-                        .swipeActions {
-                            Button(role: .destructive) {
-                                // TODO
-                            } label: {
-                                Label("Remove", systemImage: "trash.fill")
-                            }
+                    .swipeActions {
+                        Button(role: .destructive) {
+                            // TODO
+                        } label: {
+                            Label("Remove", systemImage: "trash.fill")
                         }
+                    }
                 }
             } header: {
                 UpperCasedheadline(text: "Player")
@@ -35,13 +35,21 @@ struct ManageTeamView: View {
             Section {
                 ForEach(viewModel.teamTrainer, id: \.userProfile.id) { team in
                     MemberRow(teamMember: team.teamMember, userProfile: team.userProfile, isPlayer: false)
-                        .swipeActions {
-                            Button(role: .destructive) {
-                                // TODO
-                            } label: {
-                                Label("Remove", systemImage: "trash.fill")
+                    .swipeActions {
+                        Button(role: .destructive) {
+                            Task {
+                                do {
+                                    team.teamMember.deletedAt = Date()
+                                    // TODO: DEBUG;
+                                    try await SupabaseService.upsertWithOutResult(item: team.teamMember.toDTO(), table: .teamMember, onConflict: "id")
+                                } catch {
+                                    print(error)
+                                }
                             }
+                        } label: {
+                            Label("Remove", systemImage: "trash.fill")
                         }
+                    }
                 }
             } header: {
                 UpperCasedheadline(text: "Trainer")
@@ -75,6 +83,15 @@ fileprivate struct MemberRow: View {
                    
                     ForEach(shirtNumberOptions) { option in
                             Text("\(option.number)").tag(option.number)
+                    }
+                }
+                .onChange(of: teamMember.shirtNumber) {
+                    Task {
+                        do {
+                            try await SupabaseService.upsertWithOutResult(item: teamMember.toDTO(), table: .teamMember, onConflict: "id")
+                        } catch {
+                            print(error)
+                        }
                     }
                 }
             }

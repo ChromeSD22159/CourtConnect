@@ -142,7 +142,7 @@ fileprivate struct HasTeam: View {
     }
     .onAppear {
         userViewModel.currentAccount = MockUser.myUserAccount
-        dashBoardViewModel.currentTeam = Team(teamName: "Bulls", headcoach: "", joinCode: "", email: "", createdByUserAccountId: MockUser.myUserAccount.id, createdAt: Date(), updatedAt: Date())
+        dashBoardViewModel.currentTeam = Team(teamImageURL: nil, teamName: "Bulls", headcoach: "", joinCode: "", email: "", createdByUserAccountId: MockUser.myUserAccount.id, createdAt: Date(), updatedAt: Date())
       
     }
 }

@@ -18,12 +18,9 @@ import Supabase
     // MARK: - Local
     func upsertLocal<T: ModelProtocol>(item: T, table: DatabaseTable, userId: UUID) throws {
         container.mainContext.insert(item)
-        
-        // TODO: newSyncHistoryTimeStamp REMEMBER
         let newSyncHistoryTimeStamp = SyncHistory(table: table, userId: userId)
         container.mainContext.insert(newSyncHistoryTimeStamp)
-        
-        try container.mainContext.save()
+        try container.mainContext.save() 
     }
     
     func upsertlocal<T: ModelProtocol>(item: T, table: DatabaseTable, userId: UUID) {
@@ -314,6 +311,10 @@ import Supabase
         let entry: TeamMemberDTO = try await SupabaseService.insert(item: newMember.toDTO(), table: .teamMember)
          
         try self.upsertLocal(item: entry.toModel(), table: .teamMember, userId: userId)
+    }
+    
+    func upsertTeamMemberRemote(teamMember: TeamMember) async throws {
+        try await SupabaseService.upsertWithOutResult(item: teamMember.toDTO(), table: .teamMember, onConflict: "id")
     }
     
     func insertTeamAdmin(newAdmin: TeamAdmin, userId: UUID) async throws {

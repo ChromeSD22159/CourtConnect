@@ -312,6 +312,7 @@ create table
   public."Team" (
     id uuid not null default gen_random_uuid (),
     "teamName" text not null,
+    "teamImageURL" text not null,
     "createdByUserAccountId" uuid not null default gen_random_uuid (),
     headcoach text not null,
     "joinCode" text not null,
@@ -720,8 +721,10 @@ BEGIN
  -- BUCKETS
 insert into storage.buckets (id, name, public)
 values ('TeamFiles', 'TeamFiles', true);
-
-ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
- 
--- Richtlinie für ALL (CRUD)
+ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY; 
 CREATE POLICY "Authenticated users can CRUD files from TeamFiles" ON storage.objects FOR ALL TO authenticated USING (bucket_id = 'TeamFiles');
+
+insert into storage.buckets (id, name, public)
+values ('TeamImages', 'TeamImages', true);
+ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY; 
+CREATE POLICY "Authenticated users can CRUD files from TeamImages" ON storage.objects FOR ALL TO authenticated USING (bucket_id = 'TeamImages');

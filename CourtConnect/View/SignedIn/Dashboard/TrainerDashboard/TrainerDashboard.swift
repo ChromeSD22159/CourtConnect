@@ -75,6 +75,9 @@ fileprivate struct HasNoTeam: View {
             NavigationLink {
                 if let userAccount = userViewModel.currentAccount, let userProfile = userViewModel.userProfile {
                     FoundNewTeamView(viewModel: foundNewTeamViewModel, userAccount: userAccount, userProfile: userProfile)
+                        .onDisappear { 
+                            dashBoardViewModel.getTeam(for: userAccount)
+                        }
                 }
             } label: {
                 RoundedIconTextCard(icon: "person.crop.circle.badge.plus", title: "Found team now!", description: "Start your own team and manage players and training sessions.")

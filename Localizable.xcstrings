@@ -260,6 +260,9 @@
     "No appointments" : {
 
     },
+    "No Appointments" : {
+
+    },
     "No appointments are currently planned." : {
 
     },
@@ -387,6 +390,9 @@
 
     },
     "The selected user account is not part of a team. Join a team to get started." : {
+
+    },
+    "There are no appointments to insert statistics for the players." : {
 
     },
     "This list shows all open accession requests for your team.  Select an inquiry to see the details and edit them." : {

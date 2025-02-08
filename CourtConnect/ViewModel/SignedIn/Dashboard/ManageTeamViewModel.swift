@@ -40,6 +40,16 @@ import Foundation
             print(error)
         }
     }
+    
+    func sendToBackend(teamMember: TeamMember) {
+        Task {
+            do {
+                try await repository.teamRepository.upsertTeamMemberRemote(teamMember: teamMember)
+            } catch {
+                print(error)
+            }
+        }
+    }
 }
 
 struct ShirtNumberOption: Identifiable {

@@ -10,6 +10,7 @@ import PhotosUI
 @Observable class FoundNewTeamViewModel: ObservableObject {
     var avatarItem: PhotosPickerItem?
     var avatarImage: Image?
+    var uiAvatarImage: UIImage?
     
     var teamName = ""
     var headcoach = ""
@@ -24,8 +25,9 @@ import PhotosUI
     
     func changeImage() {
         Task {
-            if let loaded = try? await avatarItem?.loadTransferable(type: Image.self) {
-                avatarImage = loaded
+            if let loaded = try? await avatarItem?.loadTransferable(type: Data.self),  let uiImage = UIImage(data: loaded) {
+                avatarImage =  Image(uiImage: uiImage)
+                uiAvatarImage = uiImage
             } else {
                 print("Failed")
             }
@@ -43,12 +45,18 @@ import PhotosUI
             guard !teamName.isEmpty && teamName.count > 5 else { throw InputValidationError.teamNameTooSmall }
              
             guard headcoach.isEmpty || headcoach.count >= 5 else { throw InputValidationError.headcoachTooSmall }
-
+            
             let generatedCode = CodeGeneratorHelper.generateCode().map { String($0) }.joined()
             let now = Date()
-            let newTeam = Team(teamName: teamName, headcoach: headcoach, joinCode: generatedCode, email: email, createdByUserAccountId: userAccount.id, createdAt: now, updatedAt: now)
+            
+            let newTeam = Team(teamImageURL: nil, teamName: teamName, headcoach: headcoach, joinCode: generatedCode, email: email, createdByUserAccountId: userAccount.id, createdAt: now, updatedAt: now)
             let newMember = TeamMember(userAccountId: userAccount.id, teamId: newTeam.id, role: userAccount.role, createdAt: now, updatedAt: now)
             let newAdmin = TeamAdmin(teamId: newTeam.id, userAccountId: userAccount.id, role: userAccount.role, createdAt: now, updatedAt: now)
+            
+            if let uiAvatarImage = uiAvatarImage {
+               let document: DocumentDTO = try await repository.documentRepository.uploadCachedDocument(image: uiAvatarImage, bucket: .teamFiles, teamId: newTeam.id)
+                newTeam.teamImageURL = document.url
+            }
             
             try await repository.teamRepository.insertTeam(newTeam: newTeam, userId: userProfile.userId)
             
@@ -58,8 +66,12 @@ import PhotosUI
             
             userAccount.teamId = newTeam.id
             
+            try await repository.accountRepository.usert(item: userAccount, table: .userAccount, userId: userAccount.userId)
+            try await SupabaseService.upsertWithOutResult(item: userAccount.toDTO(), table: .userAccount, onConflict: "id")
+     
             try await Task.sleep(for: .seconds(1))
-        } catch { 
+        } catch {
+            print(error)
             throw error
         }
     }

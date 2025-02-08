@@ -29,6 +29,7 @@ struct OnBoardingView: View {
                     
                     Button("continue") {
                         Task {
+                            userProfile.onBoardingAt = Date()
                             dismiss()
                         }
                     }

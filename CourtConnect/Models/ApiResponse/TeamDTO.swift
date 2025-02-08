@@ -8,6 +8,7 @@ import Foundation
 
 struct TeamDTO: DTOProtocol {
     var id: UUID
+    var teamImageURL: String?
     var teamName: String
     var headcoach: String
     var joinCode: String
@@ -17,8 +18,20 @@ struct TeamDTO: DTOProtocol {
     var updatedAt: Date
     var deletedAt: Date?
     
-    init(id: UUID = UUID(), teamName: String, headcoach: String, joinCode: String, email: String, createdByUserAccountId: UUID, createdAt: Date, updatedAt: Date, deletedAt: Date? = nil) {
+    init(
+        id: UUID = UUID(),
+        teamImageURL: String?,
+        teamName: String,
+        headcoach: String,
+        joinCode: String,
+        email: String,
+        createdByUserAccountId: UUID,
+        createdAt: Date,
+        updatedAt: Date,
+        deletedAt: Date? = nil
+    ) {
         self.id = id
+        self.teamImageURL = teamImageURL
         self.teamName = teamName
         self.headcoach = headcoach
         self.joinCode = joinCode
@@ -30,7 +43,7 @@ struct TeamDTO: DTOProtocol {
     }
     
     func toModel() -> Team {
-        return Team(id: id, teamName: teamName, headcoach: headcoach, joinCode: joinCode, email: email, createdByUserAccountId: createdByUserAccountId, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
+        return Team(id: id, teamImageURL: teamImageURL, teamName: teamName, headcoach: headcoach, joinCode: joinCode, email: email, createdByUserAccountId: createdByUserAccountId, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
 }
 

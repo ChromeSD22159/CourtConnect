@@ -18,14 +18,8 @@ struct CourtConnectApp: App {
         let repo = Repository.shared
         userViewModel = SharedUserViewModel(repository: repo)
         syncServiceViewModel = SyncServiceViewModel()
-         
-        #if targetEnvironment(simulator)
-        guard (Bundle(path: "/Applications/RocketSim.app/Contents/Frameworks/RocketSimConnectLinker.nocache.framework")?.load() == true) else {
-            print("RocketSim: Failed to load linker framework")
-            return
-        }
-        #warning("RocketSim Connect successfully linked")
-        #endif
+          
+        loadRocketSimConnect()
     }
      
     @State var isSlashScreen = true
@@ -81,3 +75,13 @@ struct PreviewEnvirments: ViewModifier {
     }
 }
    
+private func loadRocketSimConnect() {
+    #warning("RocketSim Connect successfully linked")
+    #if DEBUG
+    guard (Bundle(path: "/Applications/RocketSim.app/Contents/Frameworks/RocketSimConnectLinker.nocache.framework")?.load() == true) else {
+        print("Failed to load linker framework")
+        return
+    }
+    print("RocketSim Connect successfully linked")
+    #endif
+}
