@@ -10,14 +10,12 @@ import Lottie
 @main
 struct CourtConnectApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    
-    @State var syncServiceViewModel: SyncServiceViewModel 
+     
     @State var userViewModel: SharedUserViewModel = SharedUserViewModel(repository: Repository.shared)
     
     init() {
         let repo = Repository.shared
         userViewModel = SharedUserViewModel(repository: repo)
-        syncServiceViewModel = SyncServiceViewModel()
           
         loadRocketSimConnect()
     }
@@ -39,16 +37,13 @@ struct CourtConnectApp: App {
                     
                     SplashScreen(isVisible: $isSlashScreen, duration: 1.5, userId: userViewModel.user?.id, onStart: {
                         Task {
-                            await userViewModel.isAuthendicated(syncServiceViewModel: syncServiceViewModel)
+                            await userViewModel.isAuthendicated()
                         }
                     }, onComplete: {
-                        isSlashScreen.toggle()
-                        
-                        userViewModel.showOnBoardingIfNeverShowBefore()
+                        isSlashScreen.toggle() 
                     })
                 }
             }
-            .environment(syncServiceViewModel)
         }
     }
 } 
@@ -64,14 +59,12 @@ struct PreviewEnvirments: ViewModifier {
     @State var inAppMessagehandlerViewModel = InAppMessagehandlerViewModel.shared
     let repo = RepositoryPreview.shared
     func body(content: Content) -> some View {
-        content 
-            .environment(SyncServiceViewModel())
+        content  
             .environment(\.messagehandler, InAppMessagehandlerViewModel())
             .environment(\.networkMonitor, NetworkMonitorViewModel())
             .environment(\.errorHandler, errorHandlerViewModel)
             .errorPopover()
             .messagePopover()
-        
     }
 }
    

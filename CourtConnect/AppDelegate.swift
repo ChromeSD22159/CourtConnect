@@ -49,20 +49,6 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
             return
         }
         
-        /*
-        print("📩 Background Push Received:", userInfo)
-        
-        // Prüfen, ob ein benutzerdefiniertes `data`-Feld existiert
-        if let customKey = userInfo["customKey"] as? String, let userId = LocalStorageService.shared.user?.id {
-            if customKey == "refetch" {
-                Task {
-                    try await SyncServiceViewModel().fetchAllTables(userId: userId)
-                }
-                return
-            }
-        }
-         */
-        
         guard let alert = aps["alert"] as? [AnyHashable: Any] else {
             print("Error: Could not find alert dictionary in aps dictionary")
             return

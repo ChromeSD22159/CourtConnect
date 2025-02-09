@@ -143,6 +143,20 @@ fileprivate struct HasTeam: View {
                     } label: {
                         IconCard(systemName: "23.square", title: "Manage Team", background: Material.ultraThinMaterial)
                     }
+                     
+                    if dashBoardViewModel.isAdmin(currentAccount: userViewModel.currentAccount) {
+                        NavigationLink {
+                            // TODO: ADMINPAGE
+                            // TODO: Stunden PDF Erstellen
+                            // TODO: stundenzettel downloaden
+                            // TODO: Andere Admin ernennen
+                            // TODO: team umbennen
+                            // TODO: team löschen
+                            EmptyView()
+                        } label: {
+                            IconCard(systemName: "square.grid.2x2", title: "Admin Dashboard", background: Material.ultraThinMaterial)
+                        }
+                    }
                 }
                 .frame(height: 150)
             }

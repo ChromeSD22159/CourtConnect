@@ -93,6 +93,18 @@ import SwiftUI
         try usert(item: item, table: .userAccount, userId: item.userId)
     }
     
+    func isUserAdmin(account: UserAccount) -> Bool {
+        do {
+            let accoundId = account.id
+            let predicate = #Predicate<TeamAdmin> { $0.userAccountId == accoundId && $0.deletedAt == nil }
+            let fetchDescruptor = FetchDescriptor<TeamAdmin>(predicate: predicate)
+            let resul = try container.mainContext.fetch(fetchDescruptor).first
+            return resul != nil
+        } catch {
+            return false
+        }
+    }
+    
     // MARK: SYNCING
     #warning("REMOVE REFACTOR")
     func sendUpdatedAfterLastSyncToBackend(userId: UUID, lastSync: Date) async {

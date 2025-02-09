@@ -7,10 +7,11 @@
 import SwiftUI
 import PhotosUI
 
-@Observable class FoundNewTeamViewModel: ObservableObject {
-    var avatarItem: PhotosPickerItem?
-    var avatarImage: Image?
-    var uiAvatarImage: UIImage?
+@Observable class FoundNewTeamViewModel: ObservableObject, ImagePickerProtocol {
+    var item: PhotosPickerItem?
+    var image: Image?
+    var uiImage: UIImage?
+    var fileName: String = ""
     
     var teamName = ""
     var headcoach = ""
@@ -21,17 +22,6 @@ import PhotosUI
     
     init(repository: BaseRepository) {
         self.repository = repository
-    }
-    
-    func changeImage() {
-        Task {
-            if let loaded = try? await avatarItem?.loadTransferable(type: Data.self),  let uiImage = UIImage(data: loaded) {
-                avatarImage =  Image(uiImage: uiImage)
-                uiAvatarImage = uiImage
-            } else {
-                print("Failed")
-            }
-        }
     }
     
     func createTeam(userAccount: UserAccount, userProfile: UserProfile) async throws {
@@ -53,8 +43,8 @@ import PhotosUI
             let newMember = TeamMember(userAccountId: userAccount.id, teamId: newTeam.id, role: userAccount.role, createdAt: now, updatedAt: now)
             let newAdmin = TeamAdmin(teamId: newTeam.id, userAccountId: userAccount.id, role: userAccount.role, createdAt: now, updatedAt: now)
             
-            if let uiAvatarImage = uiAvatarImage {
-               let document: DocumentDTO = try await repository.documentRepository.uploadCachedDocument(image: uiAvatarImage, bucket: .teamFiles, teamId: newTeam.id)
+            if let uiImage = uiImage {
+                let document: DocumentDTO = try await repository.documentRepository.uploadCachedDocument(image: uiImage, fileName: "\(teamName)_image", bucket: .teamFiles, teamId: newTeam.id)
                 newTeam.teamImageURL = document.url
             }
             

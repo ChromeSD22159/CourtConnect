@@ -28,11 +28,10 @@
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
-		<string>fetch</string>
 	</array>
 	<key>WishKit</key>
 	<string>4C85F9C7-BA32-4D98-9E5D-A421B4CD648F</string>
 	<key>isStoredInMemoryOnly</key>
-	<true/>
+	<false/>
 </dict>
 </plist>

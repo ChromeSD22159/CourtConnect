@@ -6,10 +6,18 @@
 //
 import SwiftUI
 import PhotosUI
-import Storage
-import Combine
- 
-@Observable class DocumentSheetButtonViewModel: Sheet {
+  
+enum DocumentError: Error, LocalizedError {
+    case fileNameToShot
+    
+    var errorDescription: String? {
+        switch self {
+        case .fileNameToShot: return "The Filename ist less tham 5 characters"
+        }
+    }
+}
+
+@Observable class DocumentSheetButtonViewModel: Sheet, ImagePickerProtocol {
     var isSheet = false
     var isLoading = false
     var animateOnAppear = false
@@ -17,7 +25,7 @@ import Combine
     var image: Image?
     var uiImage: UIImage?
     var userAccount: UserAccount?
-    
+    var fileName: String = ""
     let repository: BaseRepository
     
     @MainActor init(userAccount: UserAccount? = nil) {
@@ -29,30 +37,8 @@ import Combine
         isSheet.toggle()
     }
     
-    func setImage() {
-        Task {
-            if let imageData = try? await item?.loadTransferable(type: Data.self), let uiImage = UIImage(data: imageData) {
-                if uiImage.size.height > uiImage.size.width {
-                    let scaledImage = uiImage.scaleToHeight(400)
-                    self.uiImage = scaledImage
-                    self.image = Image(uiImage: scaledImage)
-                } else {
-                    let scaledImage = uiImage.scaleToHeight(400)
-                    self.uiImage = scaledImage
-                    self.image = Image(uiImage: scaledImage)
-                }
-            } else {
-                print("Failed to convert Image to UIImage")
-            }
-        }
-    }
-    
     private func toggleAnimation() {
         isLoading.toggle()
-    }
-    
-    private func resetImage() {
-        image = nil
     }
     
     @MainActor func saveDocuemt() {
@@ -65,20 +51,25 @@ import Combine
                 guard let userAccount = userAccount else { throw UserError.userIdNotFound }
                 guard let teamId = userAccount.teamId else { throw UserError.userAccountNotFound }
                 guard let image = uiImage else { throw UserError.userAccountNotFound }
+                guard fileName.count >= 5 else { throw DocumentError.fileNameToShot }
                 
-                let document: DocumentDTO = try await repository.documentRepository.uploadCachedDocument(image: image, bucket: .teamFiles, teamId: teamId)
+                let document: DocumentDTO = try await repository.documentRepository.uploadCachedDocument(image: image, fileName: fileName, bucket: .teamFiles, teamId: teamId)
  
                 repository.documentRepository.insert(document: document, userId: userAccount.userId)
                 
                 try await Task.sleep(for: .seconds(2))
                 
                 print("local: \(try repository.documentRepository.getDocuments(for: teamId).count)")
-                
                 self.toggleSheet()
-                self.resetImage()
+                disappear()
             } catch {
                 print(error)
             }
         }
     }
-}  
+    
+    func disappear() {
+        self.resetImage()
+        self.fileName = ""
+    }
+}

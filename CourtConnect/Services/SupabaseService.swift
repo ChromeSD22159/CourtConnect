@@ -116,12 +116,11 @@ struct SupabaseService {
         return (200...299).contains(statusCode)
     }
     
-    static func uploadImageToSupabaseAndCache(image: UIImage, bucket: SupabaseBucket, teamId: UUID) async throws -> DocumentDTO {
+    static func uploadImageToSupabaseAndCache(image: UIImage, fileName: String, bucket: SupabaseBucket, teamId: UUID) async throws -> DocumentDTO {
         guard let imageData = image.jpegData(compressionQuality: 0.8) else {
             throw ImageUploadError.conversionFailed
         }
-        
-        let fileName = "\(UUID().uuidString).jpg"
+         
         let path = "team_uploads/\(teamId.uuidString)/\(fileName)"
         let options = FileOptions(
             cacheControl: "3600",

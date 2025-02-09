@@ -5,7 +5,7 @@
 //  Created by Frederik Kohler on 06.02.25.
 //
 import SwiftUI
-
+ 
 struct ManageTeamView: View {
     var viewModel: ManageTeamViewModel
     
@@ -18,13 +18,17 @@ struct ManageTeamView: View {
             ListInfomationSection(text: "In this area you can assign an individual player number to every player in your team. Choose a number from the list for every player.")
             
             Section {
-                ForEach(viewModel.teamPlayer, id: \.userProfile.id) { team in
-                    MemberRow(teamMember: team.teamMember, userProfile: team.userProfile, isPlayer: true)
-                    .swipeActions {
-                        Button(role: .destructive) {
-                            // TODO
-                        } label: {
-                            Label("Remove", systemImage: "trash.fill")
+                if viewModel.teamPlayer.isEmpty {
+                    NoTeamMemberAvaible()
+                } else {
+                    ForEach(viewModel.teamPlayer, id: \.userProfile.id) { team in
+                        MemberRow(teamMember: team.teamMember, userProfile: team.userProfile, isPlayer: true)
+                        .swipeActions {
+                            Button(role: .destructive) {
+                                // TODO
+                            } label: {
+                                Label("Remove", systemImage: "trash.fill")
+                            }
                         }
                     }
                 }
@@ -33,21 +37,25 @@ struct ManageTeamView: View {
             }
             
             Section {
-                ForEach(viewModel.teamTrainer, id: \.userProfile.id) { team in
-                    MemberRow(teamMember: team.teamMember, userProfile: team.userProfile, isPlayer: false)
-                    .swipeActions {
-                        Button(role: .destructive) {
-                            Task {
-                                do {
-                                    team.teamMember.deletedAt = Date()
-                                    // TODO: DEBUG;
-                                    try await SupabaseService.upsertWithOutResult(item: team.teamMember.toDTO(), table: .teamMember, onConflict: "id")
-                                } catch {
-                                    print(error)
+                if viewModel.teamPlayer.isEmpty {
+                    NoTeamTrainerAvaible()
+                } else {
+                    ForEach(viewModel.teamTrainer, id: \.userProfile.id) { team in
+                        MemberRow(teamMember: team.teamMember, userProfile: team.userProfile, isPlayer: false)
+                        .swipeActions {
+                            Button(role: .destructive) {
+                                Task {
+                                    do {
+                                        team.teamMember.deletedAt = Date()
+                                        // TODO: DEBUG;
+                                        try await SupabaseService.upsertWithOutResult(item: team.teamMember.toDTO(), table: .teamMember, onConflict: "id")
+                                    } catch {
+                                        print(error)
+                                    }
                                 }
+                            } label: {
+                                Label("Remove", systemImage: "trash.fill")
                             }
-                        } label: {
-                            Label("Remove", systemImage: "trash.fill")
                         }
                     }
                 }
@@ -56,13 +64,6 @@ struct ManageTeamView: View {
             }
         }
         .listBackground()
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button("Save") {
-                    
-                }
-            }
-        }
     }
 }
 

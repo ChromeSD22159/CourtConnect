@@ -152,6 +152,9 @@
     "Do you want to join the team %@?" : {
 
     },
+    "Document name e.g. Instruction" : {
+
+    },
     "E-Mail" : {
 
     },
@@ -182,6 +185,9 @@
     "File %lld" : {
 
     },
+    "Filename" : {
+
+    },
     "Find out your trainer and your team very much about your absence." : {
 
     },
@@ -210,9 +216,6 @@
 
     },
     "Grant" : {
-
-    },
-    "Handle Message" : {
 
     },
     "Headcoach" : {
@@ -276,6 +279,18 @@
 
     },
     "No team found!" : {
+
+    },
+    "No Team Member" : {
+
+    },
+    "No Team Member currently found." : {
+
+    },
+    "No Team Trainer" : {
+
+    },
+    "No Team Trainer currently found." : {
 
     },
     "Nobody is online!" : {

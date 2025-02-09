@@ -82,11 +82,10 @@ struct LoginEntryView: View {
 private struct SignInSheet: View {
     @Binding var isSignInSheet: Bool
     @ObservedObject var userViewModel: SharedUserViewModel
-    @ObservedObject var loginViewModel: LoginViewModel
-    
+    @ObservedObject var loginViewModel: LoginViewModel 
     @Environment(\.errorHandler) var errorHanler
-    @State var isLoadingAnimation: Bool = false
     
+    @State var isLoadingAnimation: Bool = false
     @FocusState var focus: LoginViewModel.Field?
     
     let navigate: () -> Void
@@ -161,10 +160,11 @@ private struct SignInSheet: View {
                                 
                                 if let user = user {
                                     userViewModel.user = user
+                                    try await userViewModel.syncAllTablesAfterLastSync(userId: user.id)
                                 }
                                 
                                 userViewModel.userProfile = userProfile
-                                
+                                 
                                 isLoadingAnimation.toggle()
                                 
                                 try await Task.sleep(for: .seconds(1))
@@ -190,8 +190,7 @@ private struct SignInSheet: View {
 private struct SignUpSheet: View {
     @Binding var isSignUpSheet: Bool
     @ObservedObject var userViewModel: SharedUserViewModel
-    @ObservedObject var registerViewModel: RegisterViewModel
-    
+    @ObservedObject var registerViewModel: RegisterViewModel 
     @Environment(\.errorHandler) var errorHanler
     @State var isLoadingAnimation = false
     @FocusState var focus: RegisterViewModel.Field?
@@ -310,6 +309,7 @@ private struct SignUpSheet: View {
                                 try await Task.sleep(for: .seconds(1))
                                 
                                 isSignUpSheet.toggle()
+                                userViewModel.isOnboardingSheet = true
                             } catch {
                                 errorHanler.handleError(error: error)
                                 isLoadingAnimation.toggle()
@@ -319,6 +319,17 @@ private struct SignUpSheet: View {
                     .foregroundStyle(.primary)
                 })
             }
+            .fullScreenCover(
+                isPresented: $userViewModel.isOnboardingSheet,
+                content: {
+                    if let userProfile = userViewModel.userProfile {
+                        OnBoardingView(userProfile: userProfile)
+                            .onDisappear {
+                                userViewModel.onDismissOnBoarding()
+                            }
+                    }
+                }
+            )
         }
         .errorAlert()
         .presentationDragIndicator(.visible)

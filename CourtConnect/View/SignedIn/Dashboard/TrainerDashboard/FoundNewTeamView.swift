@@ -22,9 +22,9 @@ struct FoundNewTeamView: View {
             VStack(spacing: 20) {
                 HStack(alignment: .bottom, spacing: 20) {
                     
-                    if let avatarImage = viewModel.avatarImage {
+                    if let image = viewModel.image {
                         ZStack {
-                            avatarImage
+                            image
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 100, height: 100)
@@ -54,7 +54,7 @@ struct FoundNewTeamView: View {
                     
                     VStack(alignment: .leading) {
                         Text("Select image")
-                        PhotosPicker("Select image", selection: $viewModel.avatarItem, matching: .images)
+                        PhotosPicker("Select image", selection: $viewModel.item, matching: .images)
                             .foregroundStyle(.white)
                             .padding(.horizontal, 12)
                             .padding(.vertical, 6)
@@ -106,8 +106,8 @@ struct FoundNewTeamView: View {
             .padding(.horizontal, 20)
             .blur(radius: viewModel.isLoading ? 2 : 0)
             .animation(.easeInOut, value: viewModel.isLoading)
-            .onChange(of: viewModel.avatarItem) {
-                viewModel.changeImage()
+            .onChange(of: viewModel.item) {
+                viewModel.setImage()
             }
             
             LoadingCard(isLoading: $viewModel.isLoading)

@@ -11,7 +11,7 @@ import Supabase
  
 @Observable
 @MainActor
-class SharedUserViewModel: ObservableObject {
+class SharedUserViewModel: ObservableObject, SyncHistoryProtocol {
     var user: User? = LocalStorageService.shared.user
     var userProfile: UserProfile?
     var currentAccount: UserAccount?
@@ -37,7 +37,7 @@ class SharedUserViewModel: ObservableObject {
         }
     }
 
-    let repository: BaseRepository
+    var repository: BaseRepository
     
     @MainActor init(repository: BaseRepository) {
         self.repository = repository
@@ -62,11 +62,11 @@ class SharedUserViewModel: ObservableObject {
         }
     }
     
-    func isAuthendicated(syncServiceViewModel: SyncServiceViewModel) async {
+    func isAuthendicated() async {
         do {
             if let user = await self.repository.userRepository.isAuthendicated() {
                 
-                await syncAllTables(syncServiceViewModel: syncServiceViewModel)
+                try await self.syncAllTablesAfterLastSync(userId: user.id)
                 
                 if let responseUserProfile = try repository.userRepository.getUserProfileFromDatabase(userId: user.id) {
                     withAnimation {
@@ -155,40 +155,19 @@ class SharedUserViewModel: ObservableObject {
             }
         }
     }
-    
-    func showOnBoardingIfNeverShowBefore() {
-        if userProfile?.onBoardingAt == nil {
-            isOnboardingSheet.toggle()
-        }
-    }
-    
-    func syncAllTables(syncServiceViewModel: SyncServiceViewModel) async {
-        do {
-            guard let user = user else { throw UserError.userIdNotFound }
-            
-            if userProfile?.onBoardingAt != nil {
-                print("FETCH WHEN USER AND ONBOARING ALREADY IS SHOWN")
-                try await syncServiceViewModel.fetchAllTables(userId: user.id)
-            } else {
-                print("FETCH WHEN USER")
-                try await syncServiceViewModel.fetchAllTables(userId: user.id)
-            }
-        } catch { 
-            ErrorHandlerViewModel.shared.handleError(error: error)
-        }
-    }
-    
-    func onDismissOnBoarding(syncServiceViewModel: SyncServiceViewModel) {
+     
+    func onDismissOnBoarding() {
         guard let userProfile = userProfile, userProfile.onBoardingAt == nil else { return }
         Task {
             do {
                 userProfile.onBoardingAt = Date()
                 userProfile.updatedAt = Date()
+                
                 try repository.userRepository.container.mainContext.save()
                 
                 try await repository.userRepository.sendUserProfileToBackend(profile: userProfile) 
                 
-                await syncAllTables(syncServiceViewModel: syncServiceViewModel)
+                try await syncAllTablesAfterLastSync(userId: userProfile.userId)
                 
                 if await !NotificationService.getAuthStatus() {
                     await NotificationService.request()

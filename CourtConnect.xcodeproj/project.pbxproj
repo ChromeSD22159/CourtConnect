@@ -507,7 +507,7 @@
 				CODE_SIGN_ENTITLEMENTS = CourtConnect/CourtConnect.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_ASSET_PATHS = CourtConnect/Resources/Assets.xcassets;
 				DEVELOPMENT_TEAM = ZD275Y62U7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -544,7 +544,7 @@
 				CODE_SIGN_ENTITLEMENTS = CourtConnect/CourtConnect.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"CourtConnect/Resources/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = CourtConnect/Resources/Assets.xcassets;
 				DEVELOPMENT_TEAM = ZD275Y62U7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;

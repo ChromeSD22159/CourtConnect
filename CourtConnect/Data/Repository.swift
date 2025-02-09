@@ -55,18 +55,34 @@ import SwiftUICore
         ])
         
         let isStoredInMemoryOnly: Bool
+        let modelConfiguration: ModelConfiguration
         
         if let infoDict = Bundle.main.infoDictionary, let isStoredInMemoryOnlyFromPlist = infoDict["isStoredInMemoryOnly"] as? Bool {
             isStoredInMemoryOnly = isStoredInMemoryOnlyFromPlist
             print("isStoredInMemoryOnlyFromPlist: \(isStoredInMemoryOnlyFromPlist)")
+            
+            if isStoredInMemoryOnlyFromPlist {
+                modelConfiguration = ModelConfiguration(
+                    isStoredInMemoryOnly: isStoredInMemoryOnly,
+                    groupContainer: .identifier("group.CourtConnect")
+                )
+            } else {
+                modelConfiguration = ModelConfiguration( 
+                    groupContainer: .identifier("group.CourtConnect")
+                )
+            }
+            
         } else {
             isStoredInMemoryOnly = true
+            
+            modelConfiguration = ModelConfiguration(
+                isStoredInMemoryOnly: isStoredInMemoryOnly,
+                groupContainer: .identifier("group.CourtConnect")
+            )
         }
          
-        let modelConfiguration = ModelConfiguration(isStoredInMemoryOnly: isStoredInMemoryOnly)
-         
         do {
-            let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
+            let container = try ModelContainer(for: schema, configurations: modelConfiguration)
             self.container = container
             
             self.userRepository = UserRepository(container: container)

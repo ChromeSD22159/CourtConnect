@@ -6,30 +6,35 @@
 // 
 import Foundation
 import Supabase
+import WidgetKit
 
 struct LocalStorageService {
     static var shared = LocalStorageService()
+    static var store = UserDefaults(suiteName: "group.CourtConnect")
     
     var userAccountId: String? {
         get {
-            UserDefaults.standard.string(forKey: "userAccountId")
+            LocalStorageService.store?.string(forKey: "userAccountId")
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: "userAccountId")
+            LocalStorageService.store?.set(newValue, forKey: "userAccountId")
+            LocalStorageService.store?.synchronize()
         }
     }
     
     var user: User? {
         get {
-           guard let data = UserDefaults.standard.data(forKey: "SupabaseUser") else { return nil }
+            guard let data = LocalStorageService.store?.data(forKey: "SupabaseUser") else { return nil }
             return try? JSONDecoder().decode(User.self, from: data)
         }
         set {
            if let newValue = newValue {
                let data = try? JSONEncoder().encode(newValue)
-               UserDefaults.standard.set(data, forKey: "SupabaseUser")
+               LocalStorageService.store?.set(data, forKey: "SupabaseUser")
+               WidgetCenter.shared.reloadAllTimelines()
            } else {
-               UserDefaults.standard.removeObject(forKey: "SupabaseUser")
+               LocalStorageService.store?.removeObject(forKey: "SupabaseUser")
+               LocalStorageService.store?.synchronize()
            }
         }
     }

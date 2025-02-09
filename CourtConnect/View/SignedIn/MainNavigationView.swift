@@ -12,7 +12,6 @@ struct MainNavigationView: View {
     @Environment(\.networkMonitor) var networkMonitor
     @State var navViewModel = NavigationViewModel.shared
     @ObservedObject var userViewModel: SharedUserViewModel
-    @Environment(SyncServiceViewModel.self) var syncServiceViewModel
     var body: some View {
         MessagePopover {
             NavigationStack {
@@ -42,17 +41,6 @@ struct MainNavigationView: View {
         .onChange(of: scenePhase) { _, newPhase in
             userViewModel.changeOnlineStatus(phase: newPhase) 
         }
-        .fullScreenCover(
-            isPresented: $userViewModel.isOnboardingSheet,
-            content: {
-                if let userProfile = userViewModel.userProfile {
-                    OnBoardingView(userProfile: userProfile)
-                        .onDisappear {
-                            userViewModel.onDismissOnBoarding(syncServiceViewModel: syncServiceViewModel)
-                        }
-                }
-            }
-        )
     }
 }
  

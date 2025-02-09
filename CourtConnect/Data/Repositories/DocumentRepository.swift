@@ -37,8 +37,8 @@ import UIKit
         return try container.mainContext.fetch(fetchDescriptor)
     }
     
-    func uploadCachedDocument(image: UIImage, bucket: SupabaseBucket, teamId: UUID) async throws -> DocumentDTO {
-        try await SupabaseService.uploadImageToSupabaseAndCache(image: image, bucket: bucket, teamId: teamId)
+    func uploadCachedDocument(image: UIImage, fileName: String, bucket: SupabaseBucket, teamId: UUID) async throws -> DocumentDTO {
+        try await SupabaseService.uploadImageToSupabaseAndCache(image: image, fileName: fileName, bucket: bucket, teamId: teamId)
     }
     
     func downloadDocument(imageURL: String, bucket: SupabaseBucket) async throws -> URL {

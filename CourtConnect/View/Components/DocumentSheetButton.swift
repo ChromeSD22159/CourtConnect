@@ -43,10 +43,16 @@ struct DocumentSheetButton: View {
                             .background(Theme.darkOrange)
                             .clipShape(RoundedRectangle(cornerRadius: 15))
                     }
-                    .padding(.bottom, 30)
                     .onChange(of: viewModel.item) {
                         viewModel.setImage()
                     }
+                    
+                    TextField("Filename", text: $viewModel.fileName, prompt: Text("Document name e.g. Instruction"))
+                        .textFieldStyle(.roundedBorder)
+                        .padding(.horizontal)
+                        .opacity(viewModel.uiImage != nil ? 1.0 : 0.0)
+                        .animation(.easeInOut, value: viewModel.uiImage)
+                        .padding(.bottom, 30)
                     
                     Button("Upload Document") {
                         viewModel.saveDocuemt()
@@ -56,9 +62,10 @@ struct DocumentSheetButton: View {
                     .buttonStyle(DarkButtonStlye())
                 }
             }
+            .onDisappear(perform: viewModel.disappear)
         }
     }
-} 
+}
 
 #Preview("Add Document") {
     let mockAccount = MockUser.myUserAccount

@@ -155,4 +155,9 @@ import UIKit
             }
         }
     }
+    
+    func isAdmin(currentAccount: UserAccount?) -> Bool {
+        guard let currentAccount = currentAccount else { return false }
+        return repository.accountRepository.isUserAdmin(account: currentAccount)
+    }
 }
