@@ -136,7 +136,7 @@ struct SupabaseService {
         return try await SupabaseService.insert(item: generatedDocumentDTO, table: .document)
     }
     
-    static func uploadUserImageToSupabaseAndCache(image: UIImage, bucket: SupabaseBucket = .userImages, userProfile: UserProfile) async throws -> UserProfileDTO  {
+    static func uploadUserImageToSupabaseAndCache(image: UIImage, bucket: SupabaseBucket = .userImages, userProfile: UserProfile) async throws -> String {
         guard let imageData = image.jpegData(compressionQuality: 0.8) else {
             throw ImageUploadError.conversionFailed
         }
@@ -150,17 +150,17 @@ struct SupabaseService {
         
         let response = try await BackendClient.shared.supabase.storage.from(bucket.rawValue).update(path, data: imageData, options: options)
         
+        print("response: \(response)")
+        
         let image = try await downloadDocumentAndCache(imageURL: response.path, bucket: bucket)
         
-        userProfile.imageURL = image.absoluteString
+        print("image: \(image)")
         
-        return try await SupabaseService.upsert(item: userProfile.toDTO(), table: .userProfile, onConflict: "id")
+        return image.absoluteString
     }
     
     static func downloadDocumentAndCache(imageURL: String, bucket: SupabaseBucket) async throws -> URL {
-        let options = TransformOptions()
-        
-        let image = try BackendClient.shared.supabase.storage.from(bucket.rawValue).getPublicURL(path: imageURL, options: options)
+        let image = try BackendClient.shared.supabase.storage.from(bucket.rawValue).getPublicURL(path: imageURL)
         
         ImageCacheHelper.shared.cacheImage(url: image)
         

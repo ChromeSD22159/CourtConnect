@@ -120,6 +120,7 @@
 			membershipExceptions = (
 				APIClients/BackendClient.swift,
 				Repositories/AccountRepository.swift,
+				Repositories/AuthRepositoy.swift,
 				Repositories/ChatRepository.swift,
 				Repositories/DatabaseProtocol.swift,
 				Repositories/DocumentRepository.swift,
@@ -175,6 +176,7 @@
 				InAppMessage.swift,
 				MemberProfile.swift,
 				MemberStatistic.swift,
+				Protocol/AuthProtocol.swift,
 				Protocol/DatabaseHistoryProtocol.swift,
 				Protocol/DTOProtocol.swift,
 				Protocol/ImagePickerProtocol.swift,
@@ -291,6 +293,7 @@
 				InAppMessage.swift,
 				MemberProfile.swift,
 				MemberStatistic.swift,
+				Protocol/AuthProtocol.swift,
 				Protocol/DatabaseHistoryProtocol.swift,
 				Protocol/DTOProtocol.swift,
 				Protocol/ImagePickerProtocol.swift,

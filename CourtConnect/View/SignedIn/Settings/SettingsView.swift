@@ -4,20 +4,19 @@
 //
 //  Created by Frederik Kohler on 16.01.25.
 //
-import Foundation
 import SwiftUI
 import WishKit
-
+ 
 struct SettingsView: View {
     @Environment(\.networkMonitor) var networkMonitor
-    @ObservedObject var userViewModel: SharedUserViewModel
+    @State var viewModel = SettingViewModel()
     
     var body: some View {
         LazyVStack(spacing: 16) {
             Section {
                 // MARK: - Edit Profile
                 NavigationLink {
-                    UserProfileEditView(userViewModel: userViewModel, isSheet: false)
+                    UserProfileEditView(isSheet: false)
                         .background(Theme.background)
                 } label: {
                     IconRow(systemName: "person.fill", text: "Your Profile")
@@ -32,12 +31,12 @@ struct SettingsView: View {
             Section {
                 VStack(spacing: 6) {
                     NavigationLink {
-                        OnlineUserList(userViewModel: userViewModel)
+                        OnlineUserList(viewModel: viewModel)
                     } label: {
-                        IconRow(systemName: "person.2.fill", text: "Total Online Users: \(userViewModel.onlineUserCount)")
+                        IconRow(systemName: "person.2.fill", text: "Total Online Users: \(viewModel.onlineUserCount)")
                     }
                      
-                    if let date = userViewModel.userProfile?.lastOnline {
+                    if let date = viewModel.userProfile?.lastOnline {
                         IconRow(systemName: "person.badge.clock.fill", text: "Last online: " + date.formattedDate() + " " + date.formattedTime() + " Uhr")
                     } else {
                         IconRow(systemName: "person.badge.clock.fill", text: "Last online: -")
@@ -91,7 +90,7 @@ struct SettingsView: View {
                         ),
                         color: .red
                     ) {
-                        userViewModel.deleteUser()
+                        viewModel.deleteUser()
                     }
                 }
             } header: {
@@ -103,8 +102,8 @@ struct SettingsView: View {
             
             Section {
                 RowLabelButton(text: "Signout", systemImage: "iphone.and.arrow.forward", material: .ultraThinMaterial) {
-                    userViewModel.signOut()
-                } 
+                    viewModel.signOut()
+                }
             }
         }
         .padding(.horizontal, 16)
@@ -113,33 +112,36 @@ struct SettingsView: View {
         .navigationTitle("Settings")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
-            userViewModel.getAllOnlineUser()
-            userViewModel.startListeners()
+            viewModel.getUser()
+            viewModel.getUserAccount()
+            viewModel.getUserProfile()
+            viewModel.getAllOnlineUser()
+            viewModel.startListeners()
         }
     }
 }
 
 fileprivate struct OnlineUserList: View {
-    @ObservedObject var userViewModel: SharedUserViewModel
+    var viewModel: SettingViewModel
     @Environment(\.networkMonitor) var networkMonitor
     
     var body: some View {
         List {
             Section {
-                Text("Total Online: \(userViewModel.onlineUserCount)")
+                Text("Total Online: \(viewModel.onlineUserCount)")
             }
             Section {
                 if networkMonitor.isConnected == false {
                     HStack {
                         Image(systemName: networkMonitor.isConnected ? "wifi" : "wifi.exclamationmark")
                     }
-                } else if userViewModel.onlineUser.isEmpty {
+                } else if viewModel.onlineUser.isEmpty {
                     Text("Nobody is online!")
                 } else {
-                    ForEach(userViewModel.onlineUser, id: \.id) { onlineUser in
+                    ForEach(viewModel.onlineUser, id: \.id) { onlineUser in
                         HStack {
                             
-                            if let myUser: UserProfile = userViewModel.userProfile {
+                            if let myUser: UserProfile = viewModel.userProfile {
                                 NavigationLink {
                                     ChatView(myUser: myUser, recipientUser: onlineUser.toUserProfile())
                                 } label: {
@@ -198,9 +200,8 @@ fileprivate struct IconRow: View {
 }
 
 #Preview {
-    @Previewable @State var userViewModel = SharedUserViewModel(repository: RepositoryPreview.shared) 
     NavigationStack {
-        SettingsView(userViewModel: userViewModel)
+        SettingsView(viewModel: SettingViewModel())
     }
     .previewEnvirments()
     .navigationStackTint()

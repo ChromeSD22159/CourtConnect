@@ -7,42 +7,12 @@
 import SwiftUI
 import PhotosUI
 
-@Observable @MainActor class UserProfileEditViewModel: ImagePickerProtocol {
-    let repository: BaseRepository
-    var item: PhotosPickerItem?
-    var image: Image?
-    var uiImage: UIImage?
-    var fileName: String = ""
-    
-    @MainActor init() {
-        self.repository = Repository.shared
-    }
-    
-    @MainActor func uploadImage(userProfile: UserProfile) {
-        guard let image = uiImage else { return }
-        Task {
-            do {
-                let userprifile = try await SupabaseService.uploadUserImageToSupabaseAndCache(image: image, userProfile: userProfile)
-                try repository.userRepository.insertOrUpdate(profile: userprifile.toModel(), table: .userProfile, userId: userprifile.userId)
-            } catch {
-                print(error)
-            }
-        }
-    }
-}
-
 struct UserProfileEditView: View {
-    @ObservedObject var userViewModel: SharedUserViewModel
     @State var userProfileEditViewModel = UserProfileEditViewModel()
     
     @Environment(\.dismiss) var dismiss
     @FocusState var focus: Field?
-    let isSheet: Bool
-    
-    init(userViewModel: SharedUserViewModel, isSheet: Bool) {
-        self.userViewModel = userViewModel
-        self.isSheet = isSheet
-    }
+    let isSheet: Bool 
     
     var body: some View {
         VStack(spacing: 25) {
@@ -81,16 +51,16 @@ struct UserProfileEditView: View {
                     userProfileEditViewModel.setImage()
                 }
             }
-             
-            TextField("Firstname", text: $userViewModel.editProfile.firstName)
+              
+            TextField("Firstname", text: $userProfileEditViewModel.editProfile.firstName)
                 .focused($focus, equals: Field.firstName)
                 .textFieldStyle(.roundedBorder)
             
-            TextField("Lastname", text: $userViewModel.editProfile.lastName)
+            TextField("Lastname", text: $userProfileEditViewModel.editProfile.lastName)
                 .focused($focus, equals: Field.lastName)
                 .textFieldStyle(.roundedBorder)
             
-            DatePicker("Birthday", selection: userViewModel.birthBinding, displayedComponents: .date)
+            DatePicker("Birthday", selection: userProfileEditViewModel.birthBinding, displayedComponents: .date)
             .datePickerStyle(.compact)
             
             if !isSheet {
@@ -101,10 +71,16 @@ struct UserProfileEditView: View {
                     .buttonStyle(RoundedFilledButtonStlye())
                     
                     Button("Save Profile", role: .destructive) {
-                        if (userViewModel.user != nil), let userProfile = userViewModel.userProfile {
-                            userViewModel.saveUserProfile()
-                            userProfileEditViewModel.uploadImage(userProfile: userProfile)
-                            dismiss()
+                        if (userProfileEditViewModel.user != nil), let userProfile = userProfileEditViewModel.userProfile {
+                            Task {
+                                do {
+                                    userProfileEditViewModel.userProfile?.imageURL = try await userProfileEditViewModel.uploadImage(userProfile: userProfile)
+                                    userProfileEditViewModel.saveUserProfile()
+                                    dismiss()
+                                } catch {
+                                    print(error)
+                                }
+                            }
                         }
                     }
                     .buttonStyle(RoundedFilledButtonStlye())
@@ -126,8 +102,8 @@ struct UserProfileEditView: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Save Profile", role: .destructive) {
-                        if (userViewModel.user != nil) {
-                            userViewModel.saveUserProfile()
+                        if (userProfileEditViewModel.user != nil) {
+                            userProfileEditViewModel.saveUserProfile()
                             dismiss()
                         }
                     }
@@ -139,10 +115,14 @@ struct UserProfileEditView: View {
         .navigationTitle("Edit User")
         .padding()
         .onAppear {
-            if let profile = userViewModel.userProfile {
-                userViewModel.setEditUserProfile(userProfile: profile)
+            userProfileEditViewModel.getUser()
+            userProfileEditViewModel.getUserProfile()
+            userProfileEditViewModel.getUserAccount()
+            
+            if let profile = userProfileEditViewModel.userProfile {
+                userProfileEditViewModel.setEditUserProfile(userProfile: profile)
             } else {
-                userViewModel.resetEditUserProfile()
+                userProfileEditViewModel.resetEditUserProfile()
             }
         }
     }
@@ -152,8 +132,7 @@ struct UserProfileEditView: View {
     }
 } 
 
-#Preview {
-    @Previewable @State var userViewModel = SharedUserViewModel(repository: RepositoryPreview.shared)
-    UserProfileEditView(userViewModel: userViewModel, isSheet: true)
+#Preview { 
+    UserProfileEditView(isSheet: false)
         .previewEnvirments()
 }

@@ -9,6 +9,7 @@
 import Foundation
 import SwiftData
 import SwiftUICore
+import Auth
  
 @MainActor class RepositoryPreview: BaseRepository {
     static let shared: BaseRepository = RepositoryPreview()
@@ -28,6 +29,7 @@ import SwiftUICore
 }
 
 @MainActor class BaseRepository {
+    var authRepository: AuthRepositoy
     var userRepository: UserRepository
     var chatRepository: ChatRepository
     var accountRepository: AccountRepository
@@ -61,16 +63,9 @@ import SwiftUICore
             isStoredInMemoryOnly = isStoredInMemoryOnlyFromPlist
             print("isStoredInMemoryOnlyFromPlist: \(isStoredInMemoryOnlyFromPlist)")
             
-            if isStoredInMemoryOnlyFromPlist {
-                modelConfiguration = ModelConfiguration(
-                    isStoredInMemoryOnly: isStoredInMemoryOnly,
-                    groupContainer: .identifier("group.CourtConnect")
-                )
-            } else {
-                modelConfiguration = ModelConfiguration( 
-                    groupContainer: .identifier("group.CourtConnect")
-                )
-            }
+            modelConfiguration = ModelConfiguration(
+                groupContainer: .identifier("group.CourtConnect")
+            )
             
         } else {
             isStoredInMemoryOnly = true
@@ -85,6 +80,7 @@ import SwiftUICore
             let container = try ModelContainer(for: schema, configurations: modelConfiguration)
             self.container = container
             
+            self.authRepository = AuthRepositoy(container: container)
             self.userRepository = UserRepository(container: container)
             self.chatRepository = ChatRepository(container: container)
             self.accountRepository = AccountRepository(container: container)
@@ -95,4 +91,4 @@ import SwiftUICore
             fatalError("Cannot create Database \(error)")
         }
     }
-}
+} 

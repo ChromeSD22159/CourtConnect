@@ -8,7 +8,8 @@ import Foundation
 import SwiftUI 
 import PhotosUI
 
-@MainActor protocol ImagePickerProtocol: ObservableObject {
+@MainActor
+protocol ImagePickerProtocol: ObservableObject {
     var item: PhotosPickerItem? { get set }
     var image: Image? { get set }
     var uiImage: UIImage? { get set }

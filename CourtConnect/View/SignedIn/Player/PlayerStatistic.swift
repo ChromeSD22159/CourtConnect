@@ -8,29 +8,13 @@ import SwiftUI
 import Charts 
 
 struct PlayerStatistic: View {
-    @State var viewModel: PlayerStatisticViewModel
-    @State var userViewModel: SharedUserViewModel
-    
-    @State var isValid: Bool
-    
-    init(userViewModel: SharedUserViewModel) {
-        self.userViewModel = userViewModel
-         
-        if let currentAccount = userViewModel.currentAccount {
-            isValid = true
-            self.viewModel = PlayerStatisticViewModel(userAccount: currentAccount)
-        } else {
-            isValid = false
-            self.viewModel = PlayerStatisticViewModel(userAccount: nil)
-        }
-    }
+    @State var viewModel = PlayerStatisticViewModel()
     
     var body: some View {
         ScrollView(.vertical) {
             VStack(spacing: 50) {
-               
+              
                  HStack(spacing: 20) {
-                     
                      if let imageURL = viewModel.userProfile?.imageURL {
                          AsyncCachedImage(url: URL(string: imageURL)!) { image in
                              image
@@ -66,14 +50,14 @@ struct PlayerStatistic: View {
                      }
                      
                      VStack(alignment: .leading) {
-                         Text("Frederik Kohler")
+                         Text(viewModel.userProfile?.fullName ?? "")
                              .font(.headline)
                          
-                         Text("Point Gard")
+                         Text(viewModel.userAccount?.position ?? "")
                              .font(.subheadline)
                      }
                  }
-                
+           
                 ZStack {
                     SnapScrollView {
                         LazyHStack {
@@ -106,14 +90,20 @@ struct PlayerStatistic: View {
                 StatisticChart(statistics: viewModel.chartStatistics, hasData: viewModel.hasData) { type in
                     viewModel.getStatistic(for: type)
                 }
-                
+               
                 Spacer()
+               
             }
         }
-        .navigationTitle((userViewModel.userProfile?.fullName ?? "") + " Statistics")
+        .navigationTitle((viewModel.userProfile?.fullName ?? "") + " Statistics")
         .navigationBarTitleDisplayMode(.inline)
         .contentMargins(.top, 20)
         .contentMargins(.bottom, 75)
+        .onAppear {
+            viewModel.getUserAccount()
+            viewModel.getUserProfile()
+            viewModel.getStatistic(for: .game)
+        }
     }
 }
 
@@ -270,12 +260,7 @@ private struct StatisticChart: View {
 }
  
 #Preview {
-    @Previewable @State var viewModel = SharedUserViewModel(repository: RepositoryPreview.shared)
     NavigationStack {
-        PlayerStatistic(userViewModel: viewModel)
-    }
-    .onAppear {
-        viewModel.userProfile = MockUser.myUserProfile
-        viewModel.currentAccount = MockUser.myUserAccount
+        PlayerStatistic()
     }
 }

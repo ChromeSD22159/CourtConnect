@@ -19,15 +19,12 @@ struct MainNavigationView: View {
                     switch navViewModel.current {
                     case .home: DashboardView(userViewModel: userViewModel)
                     case .team: TeamView(userViewModel: userViewModel)
-                    case .player: PlayerStatistic(userViewModel: userViewModel)
-                    case .settings: SettingsView(userViewModel: userViewModel)
+                    case .player: PlayerStatistic()
+                    case .settings: SettingsView()
                     }
                 }
             }.navigationStackTint()
         }
-        .sheet(isPresented: $userViewModel.isEditSheet, content: {
-            UserProfileEditView(userViewModel: userViewModel, isSheet: true)
-        })
         .onAppear {
             userViewModel.importAccountsAfterLastSyncFromBackend()
         }

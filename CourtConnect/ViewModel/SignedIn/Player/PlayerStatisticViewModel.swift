@@ -8,19 +8,14 @@ import Foundation
 import SwiftUI
 
 @Observable @MainActor class PlayerStatisticViewModel {
-    let repository: BaseRepository
+    var repository: BaseRepository = Repository.shared
     var userAccount: UserAccount?
+    var userProfile: UserProfile?
+     
     var orginalStatistics: [Statistic] = []
     var statistics: [Statistic] = []
     var chartStatistics: [Statistic] = []
-    var userProfile: UserProfile?
     var hasData: Bool = false
-    
-    init(userAccount: UserAccount?) {
-        self.repository = Repository.shared
-        self.userAccount = userAccount
-        getStatistic(for: .game)
-    }
     
     var bestTwoPointAttempts: Statistic? {
         statistics.sorted {
@@ -101,13 +96,20 @@ import SwiftUI
         }
     }
     
-    func getUserProfile() {
-        guard let userAccount = userAccount else { return }
-        
+    func getUserAccount() {
         do {
-            self.userProfile = try repository.userRepository.getUserProfileFromDatabase(userId: userAccount.userId)
+            userAccount = try repository.authRepository.getcurrentUserAccount()
+        } catch {
+            print(error)
+        }
+    }
+    
+    func getUserProfile() {
+        do {
+            userProfile = try repository.authRepository.getCurrentUserProfile()
         } catch {
             print(error)
         }
     }
 }
+
