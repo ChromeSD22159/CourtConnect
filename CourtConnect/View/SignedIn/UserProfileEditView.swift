@@ -5,9 +5,35 @@
 //  Created by Frederik Kohler on 12.01.25.
 //
 import SwiftUI
+import PhotosUI
+
+@Observable @MainActor class UserProfileEditViewModel: ImagePickerProtocol {
+    let repository: BaseRepository
+    var item: PhotosPickerItem?
+    var image: Image?
+    var uiImage: UIImage?
+    var fileName: String = ""
+    
+    @MainActor init() {
+        self.repository = Repository.shared
+    }
+    
+    @MainActor func uploadImage(userProfile: UserProfile) {
+        guard let image = uiImage else { return }
+        Task {
+            do {
+                let userprifile = try await SupabaseService.uploadUserImageToSupabaseAndCache(image: image, userProfile: userProfile)
+                try repository.userRepository.insertOrUpdate(profile: userprifile.toModel(), table: .userProfile, userId: userprifile.userId)
+            } catch {
+                print(error)
+            }
+        }
+    }
+}
 
 struct UserProfileEditView: View {
     @ObservedObject var userViewModel: SharedUserViewModel
+    @State var userProfileEditViewModel = UserProfileEditViewModel()
     
     @Environment(\.dismiss) var dismiss
     @FocusState var focus: Field?
@@ -21,6 +47,41 @@ struct UserProfileEditView: View {
     var body: some View {
         VStack(spacing: 25) {
             
+            HStack(spacing: 20) {
+                if let image = userProfileEditViewModel.image {
+                    image
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 100)
+                        .clipShape(Circle())
+                        .overlay(
+                            Circle()
+                               .stroke(Theme.topTrailingbottomLeadingGradient, lineWidth: 5)
+                        )
+                } else {
+                    Image(.basketballPlayerProfile)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 100)
+                        .clipShape(Circle())
+                        .overlay(
+                            Circle()
+                               .stroke(Theme.topTrailingbottomLeadingGradient, lineWidth: 5)
+                        )
+                }
+                
+                PhotosPicker(selection: $userProfileEditViewModel.item) {
+                    Label(userProfileEditViewModel.item == nil ? "Choose Document" : "Change Document", systemImage: "text.page.badge.magnifyingglass")
+                        .padding()
+                        .foregroundStyle(.white)
+                        .background(Theme.darkOrange)
+                        .clipShape(RoundedRectangle(cornerRadius: 15))
+                }
+                .onChange(of: userProfileEditViewModel.item) {
+                    userProfileEditViewModel.setImage()
+                }
+            }
+             
             TextField("Firstname", text: $userViewModel.editProfile.firstName)
                 .focused($focus, equals: Field.firstName)
                 .textFieldStyle(.roundedBorder)
@@ -40,8 +101,9 @@ struct UserProfileEditView: View {
                     .buttonStyle(RoundedFilledButtonStlye())
                     
                     Button("Save Profile", role: .destructive) {
-                        if (userViewModel.user != nil) {
+                        if (userViewModel.user != nil), let userProfile = userViewModel.userProfile {
                             userViewModel.saveUserProfile()
+                            userProfileEditViewModel.uploadImage(userProfile: userProfile)
                             dismiss()
                         }
                     }
@@ -50,32 +112,7 @@ struct UserProfileEditView: View {
                 }
             }
             
-            Spacer()
-             
-            VStack(spacing: 10) {
-                if let createdAt = userViewModel.userProfile?.createdAt {
-                    Text("createdAt: \(createdAt.formatted(date: .long, time: .shortened))").font(.caption)
-                }
-                
-                if let updatedAt = userViewModel.userProfile?.updatedAt {
-                    Text("updatedAt: \(updatedAt.formatted(date: .long, time: .shortened))").font(.caption)
-                }
-                
-                if let lastOnline = userViewModel.userProfile?.lastOnline {
-                    Text("LastOnline: \(lastOnline.formatted(date: .long, time: .shortened))").font(.caption)
-                }
-                
-                Button("Delete User Account") {
-                    userViewModel.showDeleteConfirmMenu.toggle()
-                }
-                .buttonStyle(RoundedFilledButtonStlye())
-                .confirmationDialog("Delete your Account", isPresented: $userViewModel.showDeleteConfirmMenu) {
-                    Button("Delete", role: .destructive) {  userViewModel.deleteUser() }
-                    Button("Cancel", role: .cancel) { userViewModel.showDeleteConfirmMenu.toggle() }
-                } message: {
-                    Text("Delete your Account")
-                }
-            }
+            Spacer() 
         }
         .presentationDetents([.medium])
         .presentationDragIndicator(.visible)

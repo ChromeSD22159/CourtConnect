@@ -137,6 +137,7 @@ struct NavigationTabBar<Content: View>: View {
                 .padding(.horizontal)
             }
         }
+        .scrollIndicators(.hidden)
         .background(Theme.background)
     }
     .preferredColorScheme(.light)

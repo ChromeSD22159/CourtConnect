@@ -129,12 +129,7 @@ fileprivate struct StrokesCircleIcon: View {
             .background {
                 ZStack {
                     Circle()
-                        .fill(
-                            LinearGradient(colors: [
-                                Theme.lightOrange,
-                                Theme.darkOrange
-                            ], startPoint: .topTrailing, endPoint: .bottomLeading)
-                        )
+                        .fill(Theme.topTrailingbottomLeadingGradient)
                     
                     Circle()
                         .stroke(colorScheme == .dark ? Theme.white.opacity(0.25) : Theme.myGray.opacity(0.25), lineWidth: 4)

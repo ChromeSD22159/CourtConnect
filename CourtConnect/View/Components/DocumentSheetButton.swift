@@ -15,7 +15,7 @@ struct DocumentSheetButton: View {
     }
     
     var body: some View { 
-        RowLabelButton(text: "Add Document", systemImage: "text.document") {
+        RowLabelButton(text: "Add Document", systemImage: "text.document", material: .ultraThinMaterial) {
             viewModel.isSheet.toggle()
         }
         .sheet(isPresented: $viewModel.isSheet, onDismiss: {}) {

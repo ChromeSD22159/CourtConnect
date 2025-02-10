@@ -7,44 +7,7 @@
 import Foundation
 import UIKit
 import Combine
-
-class AsyncImageLoader: ObservableObject {
-    @Published var image: UIImage?
-
-    private var cancellable: AnyCancellable?
-    private static let cache = ImageCache.shared
-
-    init(url: URL?) {
-        loadImage(from: url)
-    }
-
-    private func loadImage(from url: URL?) {
-        guard let url = url else {
-            return
-        }
-
-        /// Überprüfen, ob das Bild bereits im Cache ist
-        if let cachedImage = AsyncImageLoader.cache.object(forKey: url.absoluteString as NSString) {
-            self.image = cachedImage
-            return
-        }
-
-        /// Bild herunterladen und cachen
-        cancellable = URLSession.shared.dataTaskPublisher(for: url)
-            .map { UIImage(data: $0.data) }
-            .replaceError(with: nil)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] image in
-                guard let self = self, let image = image else { return }
-                AsyncImageLoader.cache.setObject(image, forKey: url.absoluteString as NSString)
-                self.image = image
-            }
-    }
-
-    deinit {
-        cancellable?.cancel()
-    }
-}
+import SwiftUI
 
 class ImageCache {
     static let shared = NSCache<NSString, UIImage>()
@@ -69,27 +32,65 @@ class ImageCacheHelper {
             }
     }
 }
- 
-extension UIImage {
-    func scaleToWidth(_ width: CGFloat) -> UIImage {
-        let scaleFactor = width / size.width
-        let newHeight = size.height * scaleFactor
-        let newSize = CGSize(width: width, height: newHeight)
-        UIGraphicsBeginImageContextWithOptions(newSize, false, 0.0)
-        draw(in: CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height))
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return newImage ?? self
+  
+@MainActor
+struct AsyncCachedImage<ImageView: View, PlaceholderView: View>: View {
+    // Input dependencies
+    var url: URL?
+    @ViewBuilder var content: (Image) -> ImageView
+    @ViewBuilder var placeholder: () -> PlaceholderView
+    
+    // Downloaded image
+    @State var image: UIImage? = nil
+    
+    init(
+        url: URL?,
+        @ViewBuilder content: @escaping (Image) -> ImageView,
+        @ViewBuilder placeholder: @escaping () -> PlaceholderView
+    ) {
+        self.url = url
+        self.content = content
+        self.placeholder = placeholder
     }
     
-    func scaleToHeight(_ height: CGFloat) -> UIImage {
-        let scaleFactor = height / size.height
-        let newWidth = size.width * scaleFactor
-        let newSize = CGSize(width: newWidth, height: height)
-        UIGraphicsBeginImageContextWithOptions(newSize, false, 0.0)
-        draw(in: CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height))
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return newImage ?? self
+    var body: some View {
+        VStack {
+            if let uiImage = image {
+                content(Image(uiImage: uiImage))
+            } else {
+                placeholder()
+                    .onAppear {
+                        Task {
+                            image = await downloadPhoto()
+                        }
+                    }
+            }
+        }
+    }
+    
+    // Downloads if the image is not cached already
+    // Otherwise returns from the cache
+    private func downloadPhoto() async -> UIImage? {
+        do {
+            guard let url else { return nil }
+             
+            if let cachedResponse = URLCache.shared.cachedResponse(for: .init(url: url)) {
+                return UIImage(data: cachedResponse.data)
+            } else {
+                let (data, response) = try await URLSession.shared.data(from: url)
+                
+                // Save returned image data into the cache
+                URLCache.shared.storeCachedResponse(.init(response: response, data: data), for: .init(url: url))
+                
+                guard let image = UIImage(data: data) else {
+                    return nil
+                }
+                
+                return image
+            }
+        } catch {
+            print("Error downloading: \(error)")
+            return nil
+        }
     }
 }

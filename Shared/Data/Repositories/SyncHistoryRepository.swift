@@ -80,6 +80,19 @@ import Foundation
         
         return tablesToSync
     }
+    
+    func databasesToFetch(userId: UUID) async throws -> [(DatabaseTable, Date)] {
+        var tablesToSync: [(DatabaseTable, Date)] = []
+
+        for table in DatabaseTable.allCases {
+            if table == .updateHistory || table == .userOnline || table == .userProfile || table == .deletionRequest { continue }
+            let cal = Calendar.current
+            let defaultdate = cal.date(byAdding: .year, value: -10, to: Date())!
+            tablesToSync.append((table, defaultdate))
+        }
+        
+        return tablesToSync
+    }
 
     private func getUpdatesTablesAfter(for table: DatabaseTable, userId: UUID) async throws -> UpdateHistoryDTO? {
         let result: [UpdateHistoryDTO] = try await backendClient.supabase

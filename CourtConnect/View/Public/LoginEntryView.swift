@@ -160,10 +160,13 @@ private struct SignInSheet: View {
                                 
                                 if let user = user {
                                     userViewModel.user = user
-                                    try await userViewModel.syncAllTablesAfterLastSync(userId: user.id)
+                                    try await userViewModel.syncAllTables(userId: user.id)
                                 }
                                 
                                 userViewModel.userProfile = userProfile
+                                
+                                // TODO: SET CURRENT USERACCOUNT
+                                // TODO: GET TEAM FROM USERACCOUNT
                                  
                                 isLoadingAnimation.toggle()
                                 

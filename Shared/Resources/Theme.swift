@@ -18,4 +18,14 @@ struct Theme {
     
     static let text: Color = Color(.text)
     static let headline: Color = Color(.headline)
+    
+    static let topTrailingbottomLeadingGradient = LinearGradient(colors: [
+        Theme.lightOrange,
+        Theme.darkOrange
+    ], startPoint: .topTrailing, endPoint: .bottomLeading)
+    
+    static let topBottomLinearGradientReverse = LinearGradient(colors: [
+        Theme.darkOrange,
+        Theme.lightOrange
+    ], startPoint: .top, endPoint: .bottom)
 }

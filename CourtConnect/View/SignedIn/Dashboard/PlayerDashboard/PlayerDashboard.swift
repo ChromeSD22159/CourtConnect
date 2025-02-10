@@ -36,7 +36,7 @@ struct PlayerDashboard: View {
                 message: "Are you sure you want to delete your account? This action cannot be undone.",
                 action: "Delete",
                 cancel: "Cancel"
-            ), action: {
+            ), material: .ultraThinMaterial) {
                 Task {
                     do {
                         try await dashBoardViewModel.deleteUserAccount(for: userViewModel.currentAccount)
@@ -45,7 +45,7 @@ struct PlayerDashboard: View {
                         print(error)
                     }
                 }
-            })
+            }
         }
         .padding(.horizontal, 16)
         .padding(.top, 10)
@@ -111,20 +111,24 @@ fileprivate struct HasTeam: View {
             dashBoardViewModel.updateTerminAttendance(attendance: attendance, userId: userId)
         }
         
-        ConfirmButtonLabel(confirmButtonDialog: ConfirmButtonDialog(
-            systemImage: "iphone.and.arrow.right.inward",
-            buttonText: "Leave Team",
-            question: "Want Leave the Team",
-            message: "Are you sure you want to leave the Team? This action cannot be undone.",
-            action: "Leave",
-            cancel: "Cancel"
-        ), action: {
+        ConfirmButtonLabel(
+            confirmButtonDialog: ConfirmButtonDialog(
+                systemImage: "iphone.and.arrow.right.inward",
+                buttonText: "Leave Team",
+                question: "Want Leave the Team",
+                message: "Are you sure you want to leave the Team? This action cannot be undone.",
+                action: "Leave",
+                cancel: "Cancel"
+            ),
+            material: .ultraThinMaterial
+        ) {
             do {
+                #warning("FUNCTIONIERT NICHT RICHTIG")
                 try dashBoardViewModel.leaveTeam(for: userViewModel.currentAccount, role: .player)
             } catch {
                 print(error)
             }
-        })
+        }
         .padding(.top, 40)
     }
 }

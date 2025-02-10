@@ -35,7 +35,7 @@ import Supabase
         } catch {
             print(error)
         }
-    }
+    } 
  
     func getTeam(for teamId: UUID) throws -> Team? {
         let redicate = #Predicate<Team> { team in
@@ -209,7 +209,6 @@ import Supabase
     func softDelete(teamMember: TeamMember, userId: UUID) throws {
         teamMember.updatedAt = Date()
         teamMember.deletedAt = Date()
-        print(teamMember)
         try upsertLocal(item: teamMember, table: .teamMember, userId: userId)
         
         Task {
@@ -316,10 +315,21 @@ import Supabase
         try await SupabaseService.upsertWithOutResult(item: teamMember.toDTO(), table: .teamMember, onConflict: "id")
     }
     
+    func upsertTeamRemote(team: Team) async throws {
+        try await SupabaseService.upsertWithOutResult(item: team.toDTO(), table: .team, onConflict: "id")
+    }
+    
+    // TODO: UMBAU ZU IGNORE UPSERT BEI KEIN INTERNET
     func insertTeamAdmin(newAdmin: TeamAdmin, userId: UUID) async throws {
-        let entry: TeamAdminDTO = try await SupabaseService.insert(item: newAdmin.toDTO(), table: .teamAdmin)
-         
-        try self.upsertLocal(item: entry.toModel(), table: .teamAdmin, userId: userId)
+        do {
+            newAdmin.updatedAt = Date()
+            try await SupabaseService.upsertWithOutResult(item: newAdmin.toDTO(), table: .teamAdmin, onConflict: "userAccountId")
+            try self.upsertLocal(item: newAdmin, table: .teamAdmin, userId: userId)
+        } catch {
+            if ErrorIdentifier.isConnectionTimedOut(error: error) {
+                try self.upsertLocal(item: newAdmin, table: .teamAdmin, userId: userId)
+            }
+        }
     }
     
     func searchTeamByName(name: String) async throws -> [TeamDTO] {

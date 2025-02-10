@@ -21,7 +21,7 @@ struct EnterCodeView: View {
                     
                     Image(systemName: "keyboard.badge.ellipsis")
                         .font(.system(size: 100))
-                        .foregroundStyle(.darkOrange, LinearGradient(colors: [Theme.darkOrange, Theme.lightOrange], startPoint: .top, endPoint: .bottom))
+                        .foregroundStyle(.darkOrange, Theme.topBottomLinearGradientReverse)
                     
                     HStack {
                         

@@ -38,8 +38,8 @@ import Foundation
     
     private func getTeam() {
         guard let account = account, let teamId = account.teamId else { return }
-        
-        do {
+       
+        do { 
             currentTeam = try self.repository.teamRepository.getTeam(for: teamId)
         } catch {
             print(error)

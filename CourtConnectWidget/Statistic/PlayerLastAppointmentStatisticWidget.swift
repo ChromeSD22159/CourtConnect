@@ -8,7 +8,6 @@ import WidgetKit
 import SwiftUI
 
 @MainActor fileprivate struct LastAppointmentProvider: @preconcurrency TimelineProvider {
-    private let repository: BaseRepository = Repository.shared
     
     func placeholder(in context: Context) -> LastAppointmentWidgetEntry {
         LastAppointmentWidgetEntry(date: Date(), title: "Newest Statistic", statistic: MemberStatistic(avgFouls: 2, avgTwoPointAttempts: 2, avgThreePointAttempts: 0, avgPoints: 4))
@@ -32,6 +31,7 @@ import SwiftUI
         let timeline = Timeline(entries: entries, policy: .atEnd)
         completion(timeline)
     }
+    
     private func loadNewestStatistic() throws -> LastAppointmentWidgetEntry {
         guard let currentAccountIdString = LocalStorageService.shared.userAccountId else {
             throw UserError.userAccountNotFound
@@ -41,7 +41,7 @@ import SwiftUI
             throw UserError.userAccountNotFound
         }
 
-        let statistics = try repository.teamRepository.getMemberStatistic(for: currentAccountId)
+        let statistics = try Repository.shared.teamRepository.getMemberStatistic(for: currentAccountId)
 
         guard let newestStatistic = statistics.max(by: { $0.createdAt < $1.createdAt }) else {
             return LastAppointmentWidgetEntry(

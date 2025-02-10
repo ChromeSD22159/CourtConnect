@@ -80,11 +80,19 @@ struct SettingsView: View {
             
             Section {
                 VStack(spacing: 6) {
-                    IconRow(systemName: "trash", text: "Delete UserAccount")
-                    
-                    IconRow(systemName: "trash", text: "Delete CourtConnect Account")
-                    
-                    IconRow(systemName: "trash", text: "Delete Team")
+                    ConfirmButtonLabel(
+                        confirmButtonDialog: ConfirmButtonDialog(
+                            systemImage: "trash",
+                            buttonText: "Delete CourtConnect Account",
+                            question: "Want delete the CourtConnect Account",
+                            message: "Are you sure you want to delete your CourtConnect Account? This action cannot be undone.",
+                            action: "Delete",
+                            cancel: "Cancel"
+                        ),
+                        color: .red
+                    ) {
+                        userViewModel.deleteUser()
+                    }
                 }
             } header: {
                 HStack {
@@ -94,10 +102,9 @@ struct SettingsView: View {
             }
             
             Section {
-                IconRow(systemName: "iphone.and.arrow.forward", text: "Signout")
-                    .onTapGesture {
-                        userViewModel.signOut()
-                    }
+                RowLabelButton(text: "Signout", systemImage: "iphone.and.arrow.forward", material: .ultraThinMaterial) {
+                    userViewModel.signOut()
+                } 
             }
         }
         .padding(.horizontal, 16)
@@ -170,7 +177,7 @@ fileprivate struct IconRow: View {
     var body: some View {
         HStack {
             if let url = url {
-                Link(destination: URL(string: url)!) { // Link statt Label und onOpenURL
+                Link(destination: URL(string: url)!) { 
                     Label(text, systemImage: systemName)
                 }
             } else {
@@ -179,8 +186,7 @@ fileprivate struct IconRow: View {
              
             Spacer()
         }
-        .padding(.vertical, 10)
-        .padding(.horizontal)
+        .padding()
         .background(Material.ultraThinMaterial)
         .foregroundStyle(Theme.text)
         .clipShape(RoundedRectangle(cornerRadius: 15))

@@ -14,7 +14,7 @@ struct PlanTerminSheetButton: View {
     let onComplete: (Termin) -> Void
     
     var body: some View {
-        RowLabelButton(text: "Plan Termin", systemImage: "calendar") {
+        RowLabelButton(text: "Plan Termin", systemImage: "calendar", material: .ultraThinMaterial) {
             viewModel.isSheet.toggle()
         }
         .sheet(isPresented: $viewModel.isSheet, onDismiss: {

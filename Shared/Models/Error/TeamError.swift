@@ -11,6 +11,8 @@ enum TeamError: Error, LocalizedError {
     case teamNotFound
     case noTeamFoundwithThisJoinCode
     case lastAdminCantLeave
+    case teamNameEmtpy
+    case teamNameLessCharacter
     
     var errorDescription: String? {
         switch self {
@@ -18,6 +20,8 @@ enum TeamError: Error, LocalizedError {
         case .teamNotFound: return "Team not found."
         case .noTeamFoundwithThisJoinCode: return "No Team Found with the provided Join Code."
         case .lastAdminCantLeave: return "Last Admin cant Leave the Team"
+        case .teamNameEmtpy: return "Recovery suggestion: Enter a team name"
+        case .teamNameLessCharacter: return "Recovery suggestion: Enter a team name with at least 5 characters"
         }
     }
 }

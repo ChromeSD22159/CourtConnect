@@ -47,25 +47,34 @@
     "3er" : {
 
     },
-    "Absence report!" : {
-
-    },
     "Absense" : {
 
     },
     "Absense Date" : {
 
     },
+    "Add Admin" : {
+
+    },
     "Add Document" : {
 
     },
+    "Add Report" : {
+
+    },
     "Add Statistic" : {
+
+    },
+    "Admindashboard" : {
 
     },
     "Are you sure you want to delete the Team? This action cannot be undone." : {
 
     },
     "Are you sure you want to delete your account? This action cannot be undone." : {
+
+    },
+    "Are you sure you want to delete your CourtConnect Account? This action cannot be undone." : {
 
     },
     "Are you sure you want to leave the Team? This action cannot be undone." : {
@@ -89,6 +98,9 @@
     "Change Document" : {
 
     },
+    "Change Team name" : {
+
+    },
     "Choose Document" : {
 
     },
@@ -99,6 +111,9 @@
 
     },
     "Copy Team ID" : {
+
+    },
+    "Copy Team: %@" : {
 
     },
     "Create" : {
@@ -116,12 +131,6 @@
     "Create User Account" : {
 
     },
-    "createdAt: %@" : {
-
-    },
-    "Currently no Requests!" : {
-
-    },
     "Dashboard" : {
 
     },
@@ -129,6 +138,9 @@
 
     },
     "Delete" : {
+
+    },
+    "Delete CourtConnect Account" : {
 
     },
     "Delete Local Chat" : {
@@ -143,10 +155,10 @@
     "Delete Trainer Account" : {
 
     },
-    "Delete User Account" : {
+    "Delete your Account" : {
 
     },
-    "Delete your Account" : {
+    "Dezember 2024" : {
 
     },
     "Do you want to join the team %@?" : {
@@ -188,9 +200,6 @@
     "Filename" : {
 
     },
-    "Find out your trainer and your team very much about your absence." : {
-
-    },
     "Firstname" : {
 
     },
@@ -224,6 +233,9 @@
     "Headcoach" : {
 
     },
+    "Here you can manage the team admins, change the team names or delete the team." : {
+
+    },
     "Home" : {
 
     },
@@ -251,9 +263,6 @@
     "Lastname" : {
 
     },
-    "LastOnline: %@" : {
-
-    },
     "Leave" : {
 
     },
@@ -276,6 +285,9 @@
 
     },
     "No Documents Avaible" : {
+
+    },
+    "No join requests" : {
 
     },
     "No Team" : {
@@ -332,7 +344,13 @@
     "Position" : {
 
     },
+    "Prevents or sick?!" : {
+
+    },
     "Ready for the jump? Let's start! Register to get started and become part of the community." : {
+
+    },
+    "Register your absence to the coaching team." : {
 
     },
     "Reject" : {
@@ -342,6 +360,9 @@
 
     },
     "Remove" : {
+
+    },
+    "Remove Admin" : {
 
     },
     "Repeat password" : {
@@ -383,10 +404,16 @@
     "SignIn" : {
 
     },
+    "Signout" : {
+
+    },
     "SignUp" : {
 
     },
     "Soon you will see your data here!" : {
+
+    },
+    "Soon.." : {
 
     },
     "Team" : {
@@ -413,6 +440,9 @@
     "There are no appointments to insert statistics for the players." : {
 
     },
+    "There is currently no accession request." : {
+
+    },
     "This list shows all open accession requests for your team.  Select an inquiry to see the details and edit them." : {
 
     },
@@ -431,13 +461,13 @@
     "Try checking the Network Connection." : {
 
     },
-    "updatedAt: %@" : {
-
-    },
     "Upload Document" : {
 
     },
     "Value" : {
+
+    },
+    "Want delete the CourtConnect Account" : {
 
     },
     "Want delete the Team" : {

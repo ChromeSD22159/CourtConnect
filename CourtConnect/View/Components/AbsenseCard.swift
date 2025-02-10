@@ -16,9 +16,9 @@ struct AbsenseCard: View {
                 .font(.largeTitle)
             
             VStack(alignment: .leading) {
-                Text("Absence report!")
+                Text("Prevents or sick?!")
                     .font(.headline)
-                Text("Find out your trainer and your team very much about your absence.")
+                Text("Register your absence to the coaching team.")
             }
             
             Spacer()

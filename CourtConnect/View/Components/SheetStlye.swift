@@ -18,6 +18,7 @@ struct SheetStlye<Content: View>: View {
                 ScrollView {
                     content()
                 }
+                .scrollIndicators(.hidden)
                 .contentMargins(.top, 10)
                 .blur(radius: isLoading ? 2 : 0)
                 .animation(.easeIn, value: isLoading)

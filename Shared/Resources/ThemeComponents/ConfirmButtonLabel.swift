@@ -9,17 +9,52 @@ import SwiftUI
 struct ConfirmButtonLabel: View {
     @State private var isClicked = false
     let confirmButtonDialog: ConfirmButtonDialog
+    let color: Color?
+    let material: Material?
     let action: () -> Void
     var body: some View {
-        RowLabelButton(text: confirmButtonDialog.buttonText, systemImage: confirmButtonDialog.systemImage ?? "person") {
-            isClicked.toggle()
-        } 
-        .confirmationDialog(confirmButtonDialog.question, isPresented: $isClicked) {
-            Button(confirmButtonDialog.action, role: .destructive) { action() }
-            Button(confirmButtonDialog.cancel, role: .cancel) { isClicked.toggle() }
-        } message: {
-            Text(confirmButtonDialog.message)
+        if let color = color {
+            RowLabelButton(text: confirmButtonDialog.buttonText, systemImage: confirmButtonDialog.systemImage ?? "person", color: color) {
+                isClicked.toggle()
+            }
+            .confirmationDialog(confirmButtonDialog.question, isPresented: $isClicked) {
+                Button(confirmButtonDialog.action, role: .destructive) { action() }
+                Button(confirmButtonDialog.cancel, role: .cancel) { isClicked.toggle() }
+            } message: {
+                Text(confirmButtonDialog.message)
+            }
         }
+        
+        if let material = material {
+            RowLabelButton(text: confirmButtonDialog.buttonText, systemImage: confirmButtonDialog.systemImage ?? "person", material: material) {
+                isClicked.toggle()
+            }
+            .confirmationDialog(confirmButtonDialog.question, isPresented: $isClicked) {
+                Button(confirmButtonDialog.action, role: .destructive) { action() }
+                Button(confirmButtonDialog.cancel, role: .cancel) { isClicked.toggle() }
+            } message: {
+                Text(confirmButtonDialog.message)
+            }
+        }
+        
+    }
+}
+
+extension ConfirmButtonLabel {
+    init(isClicked: Bool = false, confirmButtonDialog: ConfirmButtonDialog, color: Color?, action: @escaping () -> Void) {
+        self.isClicked = isClicked
+        self.confirmButtonDialog = confirmButtonDialog
+        self.color = color
+        self.material = nil
+        self.action = action
+    }
+    
+    init(isClicked: Bool = false, confirmButtonDialog: ConfirmButtonDialog, material: Material?, action: @escaping () -> Void) {
+        self.isClicked = isClicked
+        self.confirmButtonDialog = confirmButtonDialog
+        self.color = nil
+        self.material = material
+        self.action = action
     }
 }
 
@@ -33,5 +68,5 @@ struct ConfirmButtonLabel: View {
         cancel: "Cancel"
     )
     
-    ConfirmButtonLabel(confirmButtonDialog: dialog) { }
+    ConfirmButtonLabel(confirmButtonDialog: dialog, material: .ultraThinMaterial) { }
 }

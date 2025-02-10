@@ -32,6 +32,7 @@
 		B6ACE50D2D595DB500D1941B /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = B6ACE50C2D595DB500D1941B /* PostgREST */; };
 		B6ACE50F2D595DBB00D1941B /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = B6ACE50E2D595DBB00D1941B /* Supabase */; };
 		B6ACE5112D595DCE00D1941B /* RNCryptor in Frameworks */ = {isa = PBXBuildFile; productRef = B6ACE5102D595DCE00D1941B /* RNCryptor */; };
+		B6ACE5222D5A284100D1941B /* CachedAsyncImage in Frameworks */ = {isa = PBXBuildFile; productRef = B6ACE5212D5A284100D1941B /* CachedAsyncImage */; };
 		B6B1D4CD2D3D42A900251542 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = B6B1D4CC2D3D42A900251542 /* FirebaseMessaging */; };
 		B6B1D4CF2D3D434E00251542 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = B6B1D4CE2D3D434E00251542 /* FirebaseCore */; };
 		B6D69A642D447AE200702FA2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B665325A2D3EC28F00B87D71 /* GoogleService-Info.plist */; };
@@ -201,6 +202,7 @@
 				SwiftDataEntity/UserAccount.swift,
 				SwiftDataEntity/UserOnline.swift,
 				SwiftDataEntity/UserProfile.swift,
+				TeamAdminProfile.swift,
 				TeamMemberProfile.swift,
 				UserAccountProfile.swift,
 			);
@@ -316,6 +318,7 @@
 				SwiftDataEntity/UserAccount.swift,
 				SwiftDataEntity/UserOnline.swift,
 				SwiftDataEntity/UserProfile.swift,
+				TeamAdminProfile.swift,
 				TeamMemberProfile.swift,
 				UserAccountProfile.swift,
 			);
@@ -421,6 +424,7 @@
 				B6653E262D43893400B87D71 /* Lottie in Frameworks */,
 				B698AC6F2D3335110086AF8C /* Storage in Frameworks */,
 				B6B1D4CF2D3D434E00251542 /* FirebaseCore in Frameworks */,
+				B6ACE5222D5A284100D1941B /* CachedAsyncImage in Frameworks */,
 				B66533A12D3F8E0A00B87D71 /* SwiftJWT in Frameworks */,
 				B698AC6D2D3335110086AF8C /* Realtime in Frameworks */,
 			);
@@ -562,6 +566,7 @@
 				B66533A02D3F8E0A00B87D71 /* SwiftJWT */,
 				B6653E252D43893400B87D71 /* Lottie */,
 				B6A2F4182D52810600FF9AD5 /* WishKit */,
+				B6ACE5212D5A284100D1941B /* CachedAsyncImage */,
 			);
 			productName = CourtConnect;
 			productReference = B698ABFB2D330FC10086AF8C /* CourtConnect.app */;
@@ -662,6 +667,7 @@
 				B665339F2D3F8E0A00B87D71 /* XCRemoteSwiftPackageReference "Swift-JWT" */,
 				B6653E242D43893400B87D71 /* XCRemoteSwiftPackageReference "lottie-ios" */,
 				B6A2F4172D52810600FF9AD5 /* XCRemoteSwiftPackageReference "wishkit-ios" */,
+				B6ACE5202D5A284100D1941B /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B698ABFC2D330FC10086AF8C /* Products */;
@@ -1200,6 +1206,14 @@
 				minimumVersion = 4.7.0;
 			};
 		};
+		B6ACE5202D5A284100D1941B /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/lorenzofiamingo/swiftui-cached-async-image";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.1.1;
+			};
+		};
 		B6B1D4CB2D3D42A900251542 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -1300,6 +1314,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B66529D62D3A81EC00B87D71 /* XCRemoteSwiftPackageReference "RNCryptor" */;
 			productName = RNCryptor;
+		};
+		B6ACE5212D5A284100D1941B /* CachedAsyncImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B6ACE5202D5A284100D1941B /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */;
+			productName = CachedAsyncImage;
 		};
 		B6B1D4CC2D3D42A900251542 /* FirebaseMessaging */ = {
 			isa = XCSwiftPackageProductDependency;

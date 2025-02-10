@@ -17,7 +17,28 @@ extension SyncHistoryProtocol {
         
         print("Tables to Sync: \(databasesToSync.count)")
         
+        for (table, lastSync) in databasesToSync { 
+            
+            let result = try await repository.syncHistoryRepository.getUpdatedRows(for: table, lastSync: lastSync, type: table.remoteModel)
+            
+            try result.forEach { item in
+                try repository.syncHistoryRepository.inserData(dto: item)
+            }
+            
+            if !result.isEmpty {
+                try repository.syncHistoryRepository.insertLastSyncTimestamp(for: table, userId: userId)
+                print("\(table.rawValue) - reseceived \(result.count)")
+            }
+        }
+    }
+    
+    func syncAllTables(userId: UUID) async throws {
+        let databasesToSync: [(DatabaseTable, Date)] = try await repository.syncHistoryRepository.databasesToFetch(userId: userId)
+        
+        print("Tables to Fetch: \(databasesToSync.count)")
+        
         for (table, lastSync) in databasesToSync {
+            
             let result = try await repository.syncHistoryRepository.getUpdatedRows(for: table, lastSync: lastSync, type: table.remoteModel)
             
             try result.forEach { item in

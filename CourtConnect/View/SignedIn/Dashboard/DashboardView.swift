@@ -51,6 +51,22 @@ struct DashboardView: View {
             }
         })
         .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Image(systemName: "figure")
+                    .onTapGesture {
+                        Task {
+                            do {
+                                if let userId = userViewModel.user?.id {
+                                    try await userViewModel.syncAllTables(userId: userId)
+                                    userViewModel.getAllUserAccountsFromDatabase()
+                                    userViewModel.getCurrentAccount(userId: userId)
+                                }
+                            } catch {
+                                print(error)
+                            }
+                        }
+                    }
+            }
             ToolbarItem(placement: .navigationBarTrailing) {
                 HStack {
                     IconMenuButton(icon: "person.3.fill", description: "Create New Account or Switch to Existing Account") {
@@ -69,19 +85,10 @@ struct DashboardView: View {
                             }
                         }
                         
-                        #warning("????")
-                        if !userViewModel.userHasBothAccounts() {
-                            Button {
-                                userViewModel.isCreateRoleSheet.toggle()
-                            } label: {
-                                Label("Create User Account", systemImage: "plus")
-                            }
-                        } else {
-                            Button {
-                                userViewModel.isCreateRoleSheet.toggle()
-                            } label: {
-                                Label("Create User Account", systemImage: "plus")
-                            }
+                        Button {
+                            userViewModel.isCreateRoleSheet.toggle()
+                        } label: {
+                            Label("Create User Account", systemImage: "plus")
                         }
                     }
                 }

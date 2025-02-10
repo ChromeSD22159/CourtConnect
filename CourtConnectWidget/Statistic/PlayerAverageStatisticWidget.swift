@@ -7,8 +7,7 @@
 import WidgetKit
 import SwiftUI
 
-@MainActor struct PlayerAverageStatisticProvider: @preconcurrency TimelineProvider {
-    let repository: BaseRepository = Repository.shared
+@MainActor struct PlayerAverageStatisticProvider: @preconcurrency TimelineProvider { 
     
     func placeholder(in context: Context) -> PlayerAverageStatisticWidgetEntry {
         PlayerAverageStatisticWidgetEntry(date: Date(), title: "Average Statistic", statistic: MemberStatistic(avgFouls: 2, avgTwoPointAttempts: 2, avgThreePointAttempts: 0, avgPoints: 4))
@@ -37,11 +36,11 @@ import SwiftUI
         
         let timeline = Timeline(entries: entries, policy: .atEnd)
         completion(timeline)
-    } 
+    }
     
-    func loadMemberAvgStatistic() throws -> MemberStatistic? {
+    private func loadMemberAvgStatistic() throws -> MemberStatistic? {
         guard let currentAccountIdString = LocalStorageService.shared.userAccountId else { throw UserError.userAccountNotFound }
-        if let currentAccountId = UUID(uuidString: currentAccountIdString), let avg = try repository.teamRepository.getMemberAvgStatistic(for: currentAccountId) {
+        if let currentAccountId = UUID(uuidString: currentAccountIdString), let avg = try Repository.shared.teamRepository.getMemberAvgStatistic(for: currentAccountId) {
             return avg
         } else {
             return nil

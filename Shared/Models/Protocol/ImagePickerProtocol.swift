@@ -8,7 +8,7 @@ import Foundation
 import SwiftUI 
 import PhotosUI
 
-protocol ImagePickerProtocol: ObservableObject {
+@MainActor protocol ImagePickerProtocol: ObservableObject {
     var item: PhotosPickerItem? { get set }
     var image: Image? { get set }
     var uiImage: UIImage? { get set }
@@ -37,5 +37,29 @@ extension ImagePickerProtocol {
     func resetImage() {
         uiImage = nil
         image = nil
+    }
+}
+
+extension UIImage {
+    func scaleToWidth(_ width: CGFloat) -> UIImage {
+        let scaleFactor = width / size.width
+        let newHeight = size.height * scaleFactor
+        let newSize = CGSize(width: width, height: newHeight)
+        UIGraphicsBeginImageContextWithOptions(newSize, false, 0.0)
+        draw(in: CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height))
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return newImage ?? self
+    }
+    
+    func scaleToHeight(_ height: CGFloat) -> UIImage {
+        let scaleFactor = height / size.height
+        let newWidth = size.width * scaleFactor
+        let newSize = CGSize(width: newWidth, height: height)
+        UIGraphicsBeginImageContextWithOptions(newSize, false, 0.0)
+        draw(in: CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height))
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return newImage ?? self
     }
 }

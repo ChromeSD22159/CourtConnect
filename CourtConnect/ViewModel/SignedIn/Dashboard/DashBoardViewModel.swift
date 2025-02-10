@@ -61,8 +61,9 @@ import UIKit
             qrCode = nil
         }
          
-        // wenn Spieler
-        if role == .trainer, let myMemberAccount = try repository.teamRepository.getMember(for: currentAccount.id) {
+        // wenn Spieler 
+        if role == .player, let myMemberAccount = try repository.teamRepository.getMember(for: currentAccount.id) {
+            print("myMemberAccount: \(myMemberAccount)")
             try repository.teamRepository.softDelete(teamMember: myMemberAccount, userId: currentAccount.userId)
             
             currentAccount.teamId = nil

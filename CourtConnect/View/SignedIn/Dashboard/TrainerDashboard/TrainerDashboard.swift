@@ -41,7 +41,7 @@ struct TrainerDashboard: View {
                 message: "Are you sure you want to delete your account? This action cannot be undone.",
                 action: "Delete",
                 cancel: "Cancel"
-            ), action: {
+            ), material: .ultraThinMaterial) {
                 Task {
                     do {
                         try await dashBoardViewModel.deleteUserAccount(for: userViewModel.currentAccount)
@@ -50,7 +50,7 @@ struct TrainerDashboard: View {
                         print(error)
                     }
                 }
-            })
+            }
             .padding(.top, 40)
             .padding(.horizontal, 16)
         }
@@ -146,13 +146,7 @@ fileprivate struct HasTeam: View {
                      
                     if dashBoardViewModel.isAdmin(currentAccount: userViewModel.currentAccount) {
                         NavigationLink {
-                            // TODO: ADMINPAGE
-                            // TODO: Stunden PDF Erstellen
-                            // TODO: stundenzettel downloaden
-                            // TODO: Andere Admin ernennen
-                            // TODO: team umbennen
-                            // TODO: team löschen
-                            EmptyView()
+                            AdminDashboard(userId: userViewModel.user?.id, currentAccount: userViewModel.currentAccount, currentTeam: dashBoardViewModel.currentTeam)
                         } label: {
                             IconCard(systemName: "square.grid.2x2", title: "Admin Dashboard", background: Material.ultraThinMaterial)
                         }
@@ -170,8 +164,8 @@ fileprivate struct HasTeam: View {
                 .padding(.horizontal, 16)
             }
               
-            if let QRCode = dashBoardViewModel.qrCode {
-                ShowTeamJoinQrCode(QRCode: QRCode)
+            if let QRCode = dashBoardViewModel.qrCode, let joinCode = dashBoardViewModel.currentTeam?.joinCode {
+                ShowTeamJoinQrCode(QRCode: QRCode, joinCode: joinCode)
                     .padding(.horizontal, 16)
             }
             
@@ -182,39 +176,22 @@ fileprivate struct HasTeam: View {
                 message: "Are you sure you want to leave the Team? This action cannot be undone.",
                 action: "Leave",
                 cancel: "Cancel"
-            ), action: {
+            ), material: .ultraThinMaterial) {
                 do {
                     try dashBoardViewModel.leaveTeam(for: userViewModel.currentAccount, role: .trainer)
                 } catch {
                     errorHandler.handleError(error: error)
                 }
-            })
-            .padding(.horizontal, 16)
-            
-            ConfirmButtonLabel(confirmButtonDialog: ConfirmButtonDialog(
-                systemImage: "trash",
-                buttonText: "Delete Team",
-                question: "Want delete the Team",
-                message: "Are you sure you want to delete the Team? This action cannot be undone.",
-                action: "Delete",
-                cancel: "Cancel"
-            ), action: {
-                do {
-                    guard let userId = userViewModel.currentAccount?.userId else { return }
-                    try dashBoardViewModel.deleteTeam(userId: userId)
-                } catch {
-                    errorHandler.handleError(error: error)
-                }
-            })
+            }
             .padding(.horizontal, 16)
         }
     }
-}
+} 
 
 fileprivate struct GenerateNewJoinCodeView: View {
     @State var isGenerateCode = false
     var body: some View {
-        RowLabelButton(text: "Generate new joinCode", systemImage: "qrcode.viewfinder") {
+        RowLabelButton(text: "Generate new joinCode", systemImage: "qrcode.viewfinder", material: .ultraThinMaterial) {
             isGenerateCode.toggle()
         }
         .sheet(isPresented: $isGenerateCode, content: {
@@ -229,18 +206,33 @@ fileprivate struct GenerateNewJoinCodeView: View {
 
 fileprivate struct ShowTeamJoinQrCode: View {
     var QRCode: UIImage
+    var joinCode: String
+    @State var messagehandler: InAppMessagehandlerViewModel = InAppMessagehandlerViewModel.shared
     @State var showQrSheet = false
     var body: some View {
-        RowLabelButton(text: "Show Join QR Code", systemImage: "qrcode.viewfinder") {
+        RowLabelButton(text: "Show Join QR Code", systemImage: "qrcode.viewfinder", material: .ultraThinMaterial) {
             showQrSheet.toggle()
         }
         .sheet(isPresented: $showQrSheet, onDismiss: {}) {
             SheetStlye(title: "Join QR Code", detents: [.medium], isLoading: .constant(false)) {
-                Image(uiImage: QRCode)
-                    .resizable()
-                    .interpolation(.none)
-                    .scaledToFit()
-                    .frame(width: 300, height: 300)
+                VStack(alignment: .center, spacing: 30) {
+                    Image(uiImage: QRCode)
+                        .resizable()
+                        .interpolation(.none)
+                        .scaledToFit()
+                        .frame(width: 300, height: 300)
+                    
+                    HStack {
+                        Button {
+                            ClipboardHelper.copy(text: joinCode)
+                            
+                            messagehandler.handleMessage(message: InAppMessage(title: "Join code copied"))
+                        } label: {
+                            Label("Copy Team: \(joinCode)", systemImage: "arrow.right.doc.on.clipboard")
+                        }
+                    }
+                }
+                .padding()
             }
         }
     }

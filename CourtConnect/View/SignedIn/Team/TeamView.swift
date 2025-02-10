@@ -5,12 +5,14 @@
 //  Created by Frederik Kohler on 29.01.25.
 //
 import SwiftUI 
+import CachedAsyncImage
 
 struct TeamView: View {
     @Environment(\.messagehandler) var messagehandler
     
     @ObservedObject var userViewModel: SharedUserViewModel
     @State var teamViewViewModel: TeamViewViewModel
+    @State var selectedDocument: Document?
     
     init(userViewModel: SharedUserViewModel) {
         self.userViewModel = userViewModel
@@ -22,7 +24,9 @@ struct TeamView: View {
             if (teamViewViewModel.currentTeam != nil) {
                 ScrollView {
                     VStack {
-                        DocumentScrollView(documents: teamViewViewModel.documents)
+                        DocumentScrollView(documents: teamViewViewModel.documents) { document in
+                            selectedDocument = document
+                        }
                         
                         LazyVStack(spacing: 20) {
                             Section {
@@ -56,23 +60,19 @@ struct TeamView: View {
                         CalendarCard(termine: teamViewViewModel.termine)
                             .padding(.horizontal)
                             .padding(.vertical)
-                        
-                        ForEach(teamViewViewModel.documents) { document in
-                            AsyncImage(url: URL(string: document.url)) { image in
-                                image.resizable()
-                            } placeholder: {
-                                ProgressView()
-                            }
-                            .frame(width: 300, height: 300)
-                        }
                     }
                 }
                 .contentMargins(.bottom, 75)
                 .contentMargins(.top, 20)
                 .scrollIndicators(.hidden)
+                .opacity(selectedDocument != nil ? 0.5 : 1.0)
+                .blur(radius: selectedDocument != nil ? 2 : 0)
+                .animation(.easeInOut, value: selectedDocument)
             } else {
                 TeamUnavailableView()
             }
+            
+            DocumentOberlayView(document: $selectedDocument)
         }
         .navigationTitle(teamViewViewModel.currentTeam?.teamName ?? "")
         .navigationBarTitleDisplayMode(.inline)
@@ -99,9 +99,70 @@ struct TeamView: View {
         }
     }
 }
+ 
+fileprivate struct DocumentOberlayView: View {
+    @Binding var document: Document?
+    let viewPort = UIScreen.main.bounds.size
+    
+    var body: some View {
+        if let document = document {
+            VStack {
+                VStack(spacing: 20) { 
+                    
+                    AsyncCachedImage(url: URL(string: document.url)!) { image in
+                        image
+                            .resizable()
+                            .scaledToFill()
+                            .clipped()
+                            .frame(width: viewPort.width * 0.6, height: viewPort.width * 0.6)
+                            .clipShape(RoundedRectangle(cornerRadius: 15))
+                    } placeholder: {
+                        ZStack {
+                            Image(systemName: "doc")
+                                .font(.largeTitle)
+                                .padding(20)
+                        }
+                    }
+                    
+                    HStack {
+                        Text(document.name)
+                        
+                        Spacer()
+                        
+                        Image(systemName: "square.and.arrow.up")
+                    }
+                }
+                .padding()
+                .background(Material.ultraThinMaterial)
+                .clipShape(RoundedRectangle(cornerRadius: 15))
+                .shadow(radius: 10)
+                .transition(
+                    AnyTransition.move(edge: .bottom)
+                        .combined(with: .scale(scale: 0.6, anchor: .top))
+                )
+                .overlay(alignment: .topTrailing, content: {
+                    ZStack {
+                        Circle()
+                            .fill(Material.ultraThinMaterial)
+                            .frame(width: 30)
+                            .shadow(radius: 2, x: -5, y: 5)
+                            
+                        Image(systemName: "xmark")
+                    }
+                    .offset(x: 10, y: -10)
+                    .onTapGesture {
+                        self.document = nil
+                    }
+                })
+                .frame(width: viewPort.width * 0.8, height: viewPort.width * 1.0)
+            }
+        }
+    }
+}
 
 fileprivate struct DocumentScrollView: View {
     var documents: [Document]
+    let onClick: (Document) -> Void
     var body: some View {
         Row(title: "Documents") {
             if !documents.isEmpty {
@@ -113,11 +174,24 @@ fileprivate struct DocumentScrollView: View {
                                     .fill(Material.ultraThinMaterial)
                                 
                                 VStack {
-                                    Image(systemName: "doc")
-                                        .font(.largeTitle)
-                                        .padding(20)
-                                   
+                                    
+                                    AsyncCachedImage(url: URL(string: document.url)!) { image in
+                                        image
+                                            .resizable()
+                                            .frame(width: 100, height: 100)
+                                            .clipShape(RoundedRectangle(cornerRadius: 15))
+                                    } placeholder: {
+                                        ZStack {
+                                            Image(systemName: "doc")
+                                                .font(.largeTitle)
+                                                .padding(20)
+                                        }
+                                    } 
+                                    
                                     Text(document.name)
+                                }
+                                .onTapGesture {
+                                    onClick(document)
                                 }
                             }
                             .frame(width: 150, height: 150)
@@ -274,6 +348,7 @@ extension String {
     }
 }
  
+/*
 #Preview {
     HStack {
         HStack(alignment: .center) {
@@ -323,3 +398,4 @@ extension String {
     .previewEnvirments()
     .navigationStackTint()
 }
+ */

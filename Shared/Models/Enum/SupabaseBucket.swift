@@ -7,4 +7,5 @@
 enum SupabaseBucket: String {
     case teamFiles = "TeamFiles"
     case teamImages = "TeamImages"
+    case userImages = "UserImages"
 }

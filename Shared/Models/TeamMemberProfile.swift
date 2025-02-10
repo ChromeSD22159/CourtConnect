@@ -4,8 +4,10 @@
 //
 //  Created by Frederik Kohler on 07.02.25.
 //
- 
-struct TeamMemberProfile {
+import SwiftUI
+
+struct TeamMemberProfile: Identifiable {
+    var id: UUID = UUID()
     var userProfile: UserProfile
     var teamMember: TeamMember
 }

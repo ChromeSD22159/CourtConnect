@@ -18,16 +18,10 @@ import SwiftUI
             List {
                 ListInfomationSection(text: "This list shows all open accession requests for your team.  Select an inquiry to see the details and edit them.")
                 
-                if viewModel.requests.isEmpty {
-                    Section {
-                        HStack {
-                            Text("Currently no Requests!")
-                            
-                            Spacer()
-                        }
-                    }
-                } else {
-                    Section {
+                Section {
+                    if viewModel.requests.isEmpty {
+                        ContentUnavailableView("No join requests", systemImage: "figure", description: Text("There is currently no accession request."))
+                    } else {
                         ForEach(viewModel.requests) { requestUser in
                             HStack {
                                 RequestAcceptionField(requestUser: requestUser) {
@@ -82,7 +76,7 @@ fileprivate struct RequestAcceptionField: View {
         HStack {
             Text(requestUser.userProfile.fullName)
             
-            Text(requestUser.teamID.uuidString)
+            Text(requestUser.request.createdAt.formattedDate() + " - " + requestUser.request.createdAt.formattedTime())
         }
         .onTapGesture {
             isPresenting.toggle()
@@ -96,6 +90,10 @@ fileprivate struct RequestAcceptionField: View {
         }
 
     }
+}
+
+#Preview {
+    
 }
  
 #Preview {

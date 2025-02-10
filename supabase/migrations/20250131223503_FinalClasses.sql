@@ -312,7 +312,6 @@ create table
   public."Team" (
     id uuid not null default gen_random_uuid (),
     "teamName" text not null,
-    "teamImageURL" text not null,
     "createdByUserAccountId" uuid not null default gen_random_uuid (),
     headcoach text not null,
     "joinCode" text not null,
@@ -321,7 +320,8 @@ create table
     "updatedAt" timestamp with time zone not null default now(),
     "deletedAt" timestamp with time zone null,
     constraint team_pkey primary key (id),
-    constraint team_joincode_key unique ("joinCode")
+    constraint team_joincode_key unique ("joinCode"),
+    constraint Team_teamName_key unique ("teamName")
   ) tablespace pg_default;
 
  CREATE OR REPLACE FUNCTION "LogTeamInsertUpdate"()
@@ -371,7 +371,8 @@ create table
     "createdAt" timestamp with time zone not null default now(),
     "updatedAt" timestamp with time zone not null default now(),
     "deletedAt" timestamp with time zone null,
-    constraint teamadmin_pkey primary key (id)
+    constraint teamadmin_pkey primary key (id),
+    constraint TeamAdmin_userAccountId_key unique ("userAccountId")
   ) tablespace pg_default;
 
 CREATE OR REPLACE FUNCTION "LogTeamAdminInsertUpdate"()
@@ -638,6 +639,7 @@ create table
     "lastName" text not null,
     birthday text not null,
     "fcmToken" text null,
+    "imageURL" text null,
     "lastOnline" timestamp with time zone not null,
     "createdAt" timestamp with time zone not null default now(),
     "updatedAt" timestamp with time zone not null default now(),
@@ -721,10 +723,16 @@ BEGIN
  -- BUCKETS
 insert into storage.buckets (id, name, public)
 values ('TeamFiles', 'TeamFiles', true);
-ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY; 
-CREATE POLICY "Authenticated users can CRUD files from TeamFiles" ON storage.objects FOR ALL TO authenticated USING (bucket_id = 'TeamFiles');
 
 insert into storage.buckets (id, name, public)
 values ('TeamImages', 'TeamImages', true);
-ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY; 
+
+insert into storage.buckets (id, name, public)
+values ('UserImages', 'UserImages', true);
+
+ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
+ 
+-- Richtlinie für ALL (CRUD)
+CREATE POLICY "Authenticated users can CRUD files from TeamFiles" ON storage.objects FOR ALL TO authenticated USING (bucket_id = 'TeamFiles');
 CREATE POLICY "Authenticated users can CRUD files from TeamImages" ON storage.objects FOR ALL TO authenticated USING (bucket_id = 'TeamImages');
+CREATE POLICY "Authenticated users can CRUD files from UserImages" ON storage.objects FOR ALL TO authenticated USING (bucket_id = 'UserImages');
