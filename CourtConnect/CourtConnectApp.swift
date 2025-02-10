@@ -6,11 +6,12 @@
 //
 import SwiftUI
 import Lottie
+import WidgetKit
 
 @main
 struct CourtConnectApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-     
+    @Environment(\.scenePhase) var scenePhase
     @State var userViewModel: SharedUserViewModel = SharedUserViewModel(repository: Repository.shared)
     
     init() {
@@ -44,9 +45,22 @@ struct CourtConnectApp: App {
                     })
                 }
             }
+            .onChange(of: scenePhase, {
+                onScenePhaseChange(newValue: scenePhase)
+            })
         }
     }
-} 
+    
+    func onScenePhaseChange(newValue: ScenePhase) {
+        switch newValue {
+        case .background:
+            WidgetCenter.shared.reloadAllTimelines()
+        case .inactive: break
+        case .active: break
+        @unknown default: break
+        }
+    }
+}
 
 extension View {
     func previewEnvirments() -> some View {

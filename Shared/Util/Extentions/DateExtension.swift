@@ -16,6 +16,14 @@ extension Date {
         )
     }
     
+    func formattedDateDDMM() -> String {
+        self.formatted(
+            .dateTime
+                .day(.twoDigits)
+                .month(.twoDigits)
+        )
+    }
+    
     func formattedTime() -> String {
         self.formatted(
             .dateTime

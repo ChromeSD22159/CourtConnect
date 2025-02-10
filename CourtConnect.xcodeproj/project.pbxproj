@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		B64487C12D4CCC5B0012FB43 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = B64487C02D4CCC5B0012FB43 /* .swiftlint.yml */; };
+		B6509FE02D594CDA0032CB17 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6509FDF2D594CDA0032CB17 /* WidgetKit.framework */; };
+		B6509FE22D594CDA0032CB17 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6509FE12D594CDA0032CB17 /* SwiftUI.framework */; };
+		B6509FED2D594CDB0032CB17 /* CourtConnectWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B6509FDE2D594CDA0032CB17 /* CourtConnectWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		B66529D82D3A81EC00B87D71 /* RNCryptor in Frameworks */ = {isa = PBXBuildFile; productRef = B66529D72D3A81EC00B87D71 /* RNCryptor */; };
 		B66532592D3EC28500B87D71 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = B66532582D3EC28500B87D71 /* .gitignore */; };
 		B665325D2D3EC35300B87D71 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = B665325C2D3EC35300B87D71 /* README.md */; };
@@ -25,12 +28,23 @@
 		B698AC792D33359C0086AF8C /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = B698AC782D33359C0086AF8C /* Storage */; };
 		B698AC7C2D3335F20086AF8C /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = B698AC7B2D3335F20086AF8C /* Supabase */; };
 		B6A2F4192D52810600FF9AD5 /* WishKit in Frameworks */ = {isa = PBXBuildFile; productRef = B6A2F4182D52810600FF9AD5 /* WishKit */; };
+		B6ACE3D92D595BF100D1941B /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = B6ACE3D82D595BF100D1941B /* Auth */; };
+		B6ACE50D2D595DB500D1941B /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = B6ACE50C2D595DB500D1941B /* PostgREST */; };
+		B6ACE50F2D595DBB00D1941B /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = B6ACE50E2D595DBB00D1941B /* Supabase */; };
+		B6ACE5112D595DCE00D1941B /* RNCryptor in Frameworks */ = {isa = PBXBuildFile; productRef = B6ACE5102D595DCE00D1941B /* RNCryptor */; };
 		B6B1D4CD2D3D42A900251542 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = B6B1D4CC2D3D42A900251542 /* FirebaseMessaging */; };
 		B6B1D4CF2D3D434E00251542 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = B6B1D4CE2D3D434E00251542 /* FirebaseCore */; };
 		B6D69A642D447AE200702FA2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B665325A2D3EC28F00B87D71 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		B6509FEB2D594CDB0032CB17 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B698ABF32D330FC10086AF8C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B6509FDD2D594CDA0032CB17;
+			remoteInfo = CourtConnectWidgetExtension;
+		};
 		B698AC0E2D330FC30086AF8C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B698ABF32D330FC10086AF8C /* Project object */;
@@ -47,8 +61,26 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		B6509FEE2D594CDB0032CB17 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				B6509FED2D594CDB0032CB17 /* CourtConnectWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		B64487C02D4CCC5B0012FB43 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
+		B6509FDE2D594CDA0032CB17 /* CourtConnectWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CourtConnectWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		B6509FDF2D594CDA0032CB17 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		B6509FE12D594CDA0032CB17 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		B650A0352D5954620032CB17 /* CourtConnectWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CourtConnectWidgetExtension.entitlements; sourceTree = "<group>"; };
 		B66532582D3EC28500B87D71 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		B665325A2D3EC28F00B87D71 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B665325C2D3EC35300B87D71 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -59,20 +91,259 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		B6B1D4D22D3D449200251542 /* Exceptions for "CourtConnect" folder in "CourtConnect" target */ = {
+		B6509FF22D594CDB0032CB17 /* Exceptions for "CourtConnectWidget" folder in "CourtConnectWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Assets.xcassets,
+				Info.plist,
+			);
+			target = B6509FDD2D594CDA0032CB17 /* CourtConnectWidgetExtension */;
+		};
+		B650A0122D594D180032CB17 /* Exceptions for "Resources" folder in "CourtConnectWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Assets.xcassets,
+				Theme.swift,
+			);
+			target = B6509FDD2D594CDA0032CB17 /* CourtConnectWidgetExtension */;
+		};
+		B6ACE3D52D595B2900D1941B /* Exceptions for "CourtConnect" folder in "CourtConnect" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
 			target = B698ABFA2D330FC10086AF8C /* CourtConnect */;
 		};
+		B6ACE3F22D595CD100D1941B /* Exceptions for "Data" folder in "CourtConnectWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				APIClients/BackendClient.swift,
+				Repositories/AccountRepository.swift,
+				Repositories/ChatRepository.swift,
+				Repositories/DatabaseProtocol.swift,
+				Repositories/DocumentRepository.swift,
+				Repositories/SyncHistoryRepository.swift,
+				Repositories/TeamRepository.swift,
+				Repositories/UserRepository.swift,
+				Repository.swift,
+			);
+			target = B6509FDD2D594CDA0032CB17 /* CourtConnectWidgetExtension */;
+		};
+		B6ACE4B12D595CF500D1941B /* Exceptions for "Models" folder in "CourtConnect" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ApiResponse/AbsenceDTO.swift,
+				ApiResponse/AttendanceDTO.swift,
+				ApiResponse/ChatDTO.swift,
+				ApiResponse/DeletionRequestDTO.swift,
+				ApiResponse/DocumentDTO.swift,
+				ApiResponse/InterestDTO.swift,
+				ApiResponse/RequestsDTO.swift,
+				ApiResponse/StatisticDTO.swift,
+				ApiResponse/supabaseDocs.txt,
+				ApiResponse/TeamAdminDTO.swift,
+				ApiResponse/TeamDTO.swift,
+				ApiResponse/TeamMemberDTO.swift,
+				ApiResponse/TerminDTO.swift,
+				ApiResponse/UpdateHistoryDTO.swift,
+				ApiResponse/UserAccountDTO.swift,
+				ApiResponse/UserOnlineDTO.swift,
+				ApiResponse/UserProfileDTO.swift,
+				AttendanceTermin.swift,
+				ConfirmButtonDialog.swift,
+				Enum/AttendanceStatus.swift,
+				Enum/BasketballPosition.swift,
+				Enum/DatabaseTable.swift,
+				Enum/NavigationTab.swift,
+				Enum/RepositoryType.swift,
+				Enum/SupabaseBucket.swift,
+				Enum/SyncTables.swift,
+				Enum/TerminDuration.swift,
+				Enum/TerminType.swift,
+				Enum/UserRole.swift,
+				Error/CryptError.swift,
+				Error/FileError.swift,
+				Error/ImageUploadError.swift,
+				Error/InputValidationError.swift,
+				Error/LoginError.swift,
+				Error/RegisterError.swift,
+				Error/SupabaseError.swift,
+				Error/TeamError.swift,
+				Error/TerminError.swift,
+				Error/UserError.swift,
+				InAppMessage.swift,
+				MemberProfile.swift,
+				MemberStatistic.swift,
+				Protocol/DatabaseHistoryProtocol.swift,
+				Protocol/DTOProtocol.swift,
+				Protocol/ImagePickerProtocol.swift,
+				Protocol/ModelProtocol.swift,
+				Protocol/OnAppiearAnimation.swift,
+				Protocol/Sheet.swift,
+				Protocol/SupabaseEntitiy.swift,
+				Protocol/SyncHistoryProtocol.swift,
+				Protocol/SyncronizationProtocol.swift,
+				RequestUser.swift,
+				SwiftDataEntity/Absence.swift,
+				SwiftDataEntity/Attendance.swift,
+				SwiftDataEntity/Chat.swift,
+				SwiftDataEntity/DeletionRequest.swift,
+				SwiftDataEntity/Document.swift,
+				SwiftDataEntity/Interest.swift,
+				SwiftDataEntity/Requests.swift,
+				SwiftDataEntity/Statistic.swift,
+				SwiftDataEntity/SyncHistory.swift,
+				SwiftDataEntity/Team.swift,
+				SwiftDataEntity/TeamAdmin.swift,
+				SwiftDataEntity/TeamMember.swift,
+				SwiftDataEntity/Termine.swift,
+				SwiftDataEntity/UpdateHistory.swift,
+				SwiftDataEntity/UserAccount.swift,
+				SwiftDataEntity/UserOnline.swift,
+				SwiftDataEntity/UserProfile.swift,
+				TeamMemberProfile.swift,
+				UserAccountProfile.swift,
+			);
+			target = B698ABFA2D330FC10086AF8C /* CourtConnect */;
+		};
+		B6ACE4B22D595CF500D1941B /* Exceptions for "Services" folder in "CourtConnect" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				AsyncImageLoader.swift,
+				FileManager.swift,
+				LocalStorageService.swift,
+				NotificationService.swift,
+				SupabaseService.swift,
+			);
+			target = B698ABFA2D330FC10086AF8C /* CourtConnect */;
+		};
+		B6ACE4B32D595CF500D1941B /* Exceptions for "Services" folder in "CourtConnectWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				AsyncImageLoader.swift,
+				FileManager.swift,
+				LocalStorageService.swift,
+				NotificationService.swift,
+				SupabaseService.swift,
+			);
+			target = B6509FDD2D594CDA0032CB17 /* CourtConnectWidgetExtension */;
+		};
+		B6ACE4BB2D595CFE00D1941B /* Exceptions for "Util" folder in "CourtConnectWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ClipboardHelper.swift,
+				CodeGeneratorHelper.swift,
+				DateUtil.swift,
+				EncryptionHelper.swift,
+				ErrorIdentifier.swift,
+				Extentions/DateExtension.swift,
+				GeoCoderHelper.swift,
+				MockData/MockTermine.swift,
+				MockData/MockUser.swift,
+				QRCodeHelper.swift,
+			);
+			target = B6509FDD2D594CDA0032CB17 /* CourtConnectWidgetExtension */;
+		};
+		B6ACE4C72D595D2B00D1941B /* Exceptions for "Models" folder in "CourtConnectWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ApiResponse/AbsenceDTO.swift,
+				ApiResponse/AttendanceDTO.swift,
+				ApiResponse/ChatDTO.swift,
+				ApiResponse/DeletionRequestDTO.swift,
+				ApiResponse/DocumentDTO.swift,
+				ApiResponse/InterestDTO.swift,
+				ApiResponse/RequestsDTO.swift,
+				ApiResponse/StatisticDTO.swift,
+				ApiResponse/supabaseDocs.txt,
+				ApiResponse/TeamAdminDTO.swift,
+				ApiResponse/TeamDTO.swift,
+				ApiResponse/TeamMemberDTO.swift,
+				ApiResponse/TerminDTO.swift,
+				ApiResponse/UpdateHistoryDTO.swift,
+				ApiResponse/UserAccountDTO.swift,
+				ApiResponse/UserOnlineDTO.swift,
+				ApiResponse/UserProfileDTO.swift,
+				AttendanceTermin.swift,
+				ConfirmButtonDialog.swift,
+				Enum/AttendanceStatus.swift,
+				Enum/BasketballPosition.swift,
+				Enum/DatabaseTable.swift,
+				Enum/NavigationTab.swift,
+				Enum/RepositoryType.swift,
+				Enum/SupabaseBucket.swift,
+				Enum/SyncTables.swift,
+				Enum/TerminDuration.swift,
+				Enum/TerminType.swift,
+				Enum/UserRole.swift,
+				Error/CryptError.swift,
+				Error/FileError.swift,
+				Error/ImageUploadError.swift,
+				Error/InputValidationError.swift,
+				Error/LoginError.swift,
+				Error/RegisterError.swift,
+				Error/SupabaseError.swift,
+				Error/TeamError.swift,
+				Error/TerminError.swift,
+				Error/UserError.swift,
+				InAppMessage.swift,
+				MemberProfile.swift,
+				MemberStatistic.swift,
+				Protocol/DatabaseHistoryProtocol.swift,
+				Protocol/DTOProtocol.swift,
+				Protocol/ImagePickerProtocol.swift,
+				Protocol/ModelProtocol.swift,
+				Protocol/OnAppiearAnimation.swift,
+				Protocol/Sheet.swift,
+				Protocol/SupabaseEntitiy.swift,
+				Protocol/SyncHistoryProtocol.swift,
+				Protocol/SyncronizationProtocol.swift,
+				RequestUser.swift,
+				SwiftDataEntity/Absence.swift,
+				SwiftDataEntity/Attendance.swift,
+				SwiftDataEntity/Chat.swift,
+				SwiftDataEntity/DeletionRequest.swift,
+				SwiftDataEntity/Document.swift,
+				SwiftDataEntity/Interest.swift,
+				SwiftDataEntity/Requests.swift,
+				SwiftDataEntity/Statistic.swift,
+				SwiftDataEntity/SyncHistory.swift,
+				SwiftDataEntity/Team.swift,
+				SwiftDataEntity/TeamAdmin.swift,
+				SwiftDataEntity/TeamMember.swift,
+				SwiftDataEntity/Termine.swift,
+				SwiftDataEntity/UpdateHistory.swift,
+				SwiftDataEntity/UserAccount.swift,
+				SwiftDataEntity/UserOnline.swift,
+				SwiftDataEntity/UserProfile.swift,
+				TeamMemberProfile.swift,
+				UserAccountProfile.swift,
+			);
+			target = B6509FDD2D594CDA0032CB17 /* CourtConnectWidgetExtension */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		B6509FE32D594CDA0032CB17 /* CourtConnectWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				B6509FF22D594CDB0032CB17 /* Exceptions for "CourtConnectWidget" folder in "CourtConnectWidgetExtension" target */,
+			);
+			path = CourtConnectWidget;
+			sourceTree = "<group>";
+		};
+		B650A0032D594D080032CB17 /* Resources */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				B650A0122D594D180032CB17 /* Exceptions for "Resources" folder in "CourtConnectWidgetExtension" target */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		B698ABFD2D330FC10086AF8C /* CourtConnect */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				B6B1D4D22D3D449200251542 /* Exceptions for "CourtConnect" folder in "CourtConnect" target */,
+				B6ACE3D52D595B2900D1941B /* Exceptions for "CourtConnect" folder in "CourtConnect" target */,
 			);
 			path = CourtConnect;
 			sourceTree = "<group>";
@@ -87,9 +358,56 @@
 			path = CourtConnectUITests;
 			sourceTree = "<group>";
 		};
+		B6ACE3E62D595CC500D1941B /* Data */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				B6ACE3F22D595CD100D1941B /* Exceptions for "Data" folder in "CourtConnectWidgetExtension" target */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		B6ACE4462D595CF500D1941B /* Models */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				B6ACE4B12D595CF500D1941B /* Exceptions for "Models" folder in "CourtConnect" target */,
+				B6ACE4C72D595D2B00D1941B /* Exceptions for "Models" folder in "CourtConnectWidgetExtension" target */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		B6ACE44C2D595CF500D1941B /* Services */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				B6ACE4B22D595CF500D1941B /* Exceptions for "Services" folder in "CourtConnect" target */,
+				B6ACE4B32D595CF500D1941B /* Exceptions for "Services" folder in "CourtConnectWidgetExtension" target */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		B6ACE4592D595CF500D1941B /* Util */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				B6ACE4BB2D595CFE00D1941B /* Exceptions for "Util" folder in "CourtConnectWidgetExtension" target */,
+			);
+			path = Util;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		B6509FDB2D594CDA0032CB17 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B6ACE50F2D595DBB00D1941B /* Supabase in Frameworks */,
+				B6ACE50D2D595DB500D1941B /* PostgREST in Frameworks */,
+				B6ACE5112D595DCE00D1941B /* RNCryptor in Frameworks */,
+				B6509FE22D594CDA0032CB17 /* SwiftUI.framework in Frameworks */,
+				B6509FE02D594CDA0032CB17 /* WidgetKit.framework in Frameworks */,
+				B6ACE3D92D595BF100D1941B /* Auth in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B698ABF82D330FC10086AF8C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -130,9 +448,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B6509FF32D594CF80032CB17 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				B6ACE4462D595CF500D1941B /* Models */,
+				B6ACE44C2D595CF500D1941B /* Services */,
+				B6ACE4592D595CF500D1941B /* Util */,
+				B6ACE3E62D595CC500D1941B /* Data */,
+				B650A0032D594D080032CB17 /* Resources */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
 		B698ABF22D330FC10086AF8C = {
 			isa = PBXGroup;
 			children = (
+				B650A0352D5954620032CB17 /* CourtConnectWidgetExtension.entitlements */,
+				B6509FF32D594CF80032CB17 /* Shared */,
 				B66532582D3EC28500B87D71 /* .gitignore */,
 				B6653C582D42C00D00B87D71 /* Localizable.xcstrings */,
 				B64487C02D4CCC5B0012FB43 /* .swiftlint.yml */,
@@ -141,6 +473,7 @@
 				B698ABFD2D330FC10086AF8C /* CourtConnect */,
 				B698AC102D330FC30086AF8C /* CourtConnectTests */,
 				B698AC1A2D330FC30086AF8C /* CourtConnectUITests */,
+				B6509FE32D594CDA0032CB17 /* CourtConnectWidget */,
 				B698AC7A2D3335F20086AF8C /* Frameworks */,
 				B698ABFC2D330FC10086AF8C /* Products */,
 			);
@@ -152,6 +485,7 @@
 				B698ABFB2D330FC10086AF8C /* CourtConnect.app */,
 				B698AC0D2D330FC30086AF8C /* CourtConnectTests.xctest */,
 				B698AC172D330FC30086AF8C /* CourtConnectUITests.xctest */,
+				B6509FDE2D594CDA0032CB17 /* CourtConnectWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -159,6 +493,8 @@
 		B698AC7A2D3335F20086AF8C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B6509FDF2D594CDA0032CB17 /* WidgetKit.framework */,
+				B6509FE12D594CDA0032CB17 /* SwiftUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -166,6 +502,32 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		B6509FDD2D594CDA0032CB17 /* CourtConnectWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B6509FF12D594CDB0032CB17 /* Build configuration list for PBXNativeTarget "CourtConnectWidgetExtension" */;
+			buildPhases = (
+				B6509FDA2D594CDA0032CB17 /* Sources */,
+				B6509FDB2D594CDA0032CB17 /* Frameworks */,
+				B6509FDC2D594CDA0032CB17 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				B6509FE32D594CDA0032CB17 /* CourtConnectWidget */,
+			);
+			name = CourtConnectWidgetExtension;
+			packageProductDependencies = (
+				B6ACE3D82D595BF100D1941B /* Auth */,
+				B6ACE50C2D595DB500D1941B /* PostgREST */,
+				B6ACE50E2D595DBB00D1941B /* Supabase */,
+				B6ACE5102D595DCE00D1941B /* RNCryptor */,
+			);
+			productName = CourtConnectWidgetExtension;
+			productReference = B6509FDE2D594CDA0032CB17 /* CourtConnectWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		B698ABFA2D330FC10086AF8C /* CourtConnect */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B698AC212D330FC30086AF8C /* Build configuration list for PBXNativeTarget "CourtConnect" */;
@@ -173,14 +535,19 @@
 				B698ABF72D330FC10086AF8C /* Sources */,
 				B698ABF82D330FC10086AF8C /* Frameworks */,
 				B698ABF92D330FC10086AF8C /* Resources */,
+				B6509FEE2D594CDB0032CB17 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				B6652B3E2D3E4E1100B87D71 /* PBXTargetDependency */,
+				B6509FEC2D594CDB0032CB17 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
+				B650A0032D594D080032CB17 /* Resources */,
 				B698ABFD2D330FC10086AF8C /* CourtConnect */,
+				B6ACE3E62D595CC500D1941B /* Data */,
+				B6ACE4592D595CF500D1941B /* Util */,
 			);
 			name = CourtConnect;
 			packageProductDependencies = (
@@ -261,6 +628,9 @@
 				LastSwiftUpdateCheck = 1620;
 				LastUpgradeCheck = 1620;
 				TargetAttributes = {
+					B6509FDD2D594CDA0032CB17 = {
+						CreatedOnToolsVersion = 16.2;
+					};
 					B698ABFA2D330FC10086AF8C = {
 						CreatedOnToolsVersion = 16.2;
 					};
@@ -301,11 +671,19 @@
 				B698ABFA2D330FC10086AF8C /* CourtConnect */,
 				B698AC0C2D330FC30086AF8C /* CourtConnectTests */,
 				B698AC162D330FC30086AF8C /* CourtConnectUITests */,
+				B6509FDD2D594CDA0032CB17 /* CourtConnectWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		B6509FDC2D594CDA0032CB17 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B698ABF92D330FC10086AF8C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -335,6 +713,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		B6509FDA2D594CDA0032CB17 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B698ABF72D330FC10086AF8C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -359,6 +744,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		B6509FEC2D594CDB0032CB17 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B6509FDD2D594CDA0032CB17 /* CourtConnectWidgetExtension */;
+			targetProxy = B6509FEB2D594CDB0032CB17 /* PBXContainerItemProxy */;
+		};
 		B6652B3E2D3E4E1100B87D71 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			productRef = B6652B3D2D3E4E1100B87D71 /* SwiftLintBuildToolPlugin */;
@@ -376,6 +766,72 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		B6509FEF2D594CDB0032CB17 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = CourtConnectWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = Shared/Resources/Assets.xcassets;
+				DEVELOPMENT_TEAM = ZD275Y62U7;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CourtConnectWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = CourtConnectWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = de.frederikkohler.CourtConnect.CourtConnectWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		B6509FF02D594CDB0032CB17 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = CourtConnectWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = Shared/Resources/Assets.xcassets;
+				DEVELOPMENT_TEAM = ZD275Y62U7;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CourtConnectWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = CourtConnectWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = de.frederikkohler.CourtConnect.CourtConnectWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
 		B698AC1F2D330FC30086AF8C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -507,7 +963,7 @@
 				CODE_SIGN_ENTITLEMENTS = CourtConnect/CourtConnect.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = CourtConnect/Resources/Assets.xcassets;
+				DEVELOPMENT_ASSET_PATHS = Shared/Resources/Assets.xcassets;
 				DEVELOPMENT_TEAM = ZD275Y62U7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -544,7 +1000,7 @@
 				CODE_SIGN_ENTITLEMENTS = CourtConnect/CourtConnect.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = CourtConnect/Resources/Assets.xcassets;
+				DEVELOPMENT_ASSET_PATHS = Shared/Resources/Assets.xcassets;
 				DEVELOPMENT_TEAM = ZD275Y62U7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -648,6 +1104,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		B6509FF12D594CDB0032CB17 /* Build configuration list for PBXNativeTarget "CourtConnectWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B6509FEF2D594CDB0032CB17 /* Debug */,
+				B6509FF02D594CDB0032CB17 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		B698ABF62D330FC10086AF8C /* Build configuration list for PBXProject "CourtConnect" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -815,6 +1280,26 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B6A2F4172D52810600FF9AD5 /* XCRemoteSwiftPackageReference "wishkit-ios" */;
 			productName = WishKit;
+		};
+		B6ACE3D82D595BF100D1941B /* Auth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B698AC652D3335100086AF8C /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Auth;
+		};
+		B6ACE50C2D595DB500D1941B /* PostgREST */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B698AC652D3335100086AF8C /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = PostgREST;
+		};
+		B6ACE50E2D595DBB00D1941B /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B698AC652D3335100086AF8C /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+		B6ACE5102D595DCE00D1941B /* RNCryptor */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B66529D62D3A81EC00B87D71 /* XCRemoteSwiftPackageReference "RNCryptor" */;
+			productName = RNCryptor;
 		};
 		B6B1D4CC2D3D42A900251542 /* FirebaseMessaging */ = {
 			isa = XCSwiftPackageProductDependency;

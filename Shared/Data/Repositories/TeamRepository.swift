@@ -122,7 +122,6 @@ import Supabase
         let predicate = #Predicate<Statistic> { $0.userAccountId == userAccountId && $0.deletedAt == nil }
         let fetchDescriptor = FetchDescriptor(predicate: predicate)
         let statistic = try container.mainContext.fetch(fetchDescriptor)
-        print(statistic.count)
         return statistic
     }
     
