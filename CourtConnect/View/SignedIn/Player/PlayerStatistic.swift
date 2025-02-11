@@ -14,7 +14,7 @@ struct PlayerStatistic: View {
         ScrollView(.vertical) {
             VStack(spacing: 50) {
               
-                 HStack(spacing: 20) {
+                HStack(spacing: 20) {
                      if let imageURL = viewModel.userProfile?.imageURL {
                          AsyncCachedImage(url: URL(string: imageURL)!) { image in
                              image

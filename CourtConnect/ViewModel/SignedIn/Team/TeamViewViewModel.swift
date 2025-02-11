@@ -7,13 +7,13 @@
 import Foundation
 import Auth
 
-@Observable @MainActor class TeamViewViewModel: AuthProtocol {
+@Observable @MainActor class TeamViewViewModel: AuthProtocol, SyncHistoryProtocol {
     var repository: BaseRepository = Repository.shared
     var user: User?
     var userAccount: UserAccount?
     var userProfile: UserProfile?
     var currentTeam: Team?
-    
+    var isfetching: Bool = false
     var documents: [Document] = []
     var termine: [Termin] = []
     
@@ -24,6 +24,9 @@ import Auth
     
     func inizialize() {
         self.inizializeAuth()
+        self.getAllDocuments()
+        self.getTeamTermine()
+        self.getTeamMembers()
     }
     
     private func getAllDocuments() {
@@ -84,5 +87,18 @@ import Auth
     
     func setDocument(document: Document) {
         selectedDocument = document
+    }
+    
+    func fetchDataFromRemote() {
+        Task {
+            do {
+                if let userId = user?.id {
+                    try await syncAllTables(userId: userId)
+                    inizialize()
+                }
+            } catch {
+                print(error)
+            }
+        }
     }
 }

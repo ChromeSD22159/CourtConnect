@@ -9,13 +9,15 @@ import Foundation
 import UIKit
 
 @MainActor
-@Observable class PlayerDashboardViewModel: AuthProtocol, ObservableObject {
+@Observable class PlayerDashboardViewModel: AuthProtocol, SyncHistoryProtocol, ObservableObject {
     var repository: BaseRepository = Repository.shared
     var user: User?
     var userAccounts: [UserAccount] = []
     var userAccount: UserAccount?
     var userProfile: UserProfile?
     var currentTeam: Team?
+    
+    var isfetching: Bool = false
     
     var termine: [Termin] = []
     var attendancesTermines: [AttendanceTermin] = []
@@ -52,9 +54,9 @@ import UIKit
     func getTerminAttendances() {
         do {
             guard let userAccount = userAccount else { throw UserError.userAccountNotFound }
-            
+            print(userAccount.id)
             let attandances = try repository.accountRepository.getAccountPendingAttendances(for: userAccount.id)
-            
+            print(attandances.count)
             for attandance in attandances {
                 if let termines = try repository.teamRepository.getTermineBy(id: attandance.terminId) {
                     let attendanceTermin = AttendanceTermin(attendance: attandance, termin: termines)
@@ -116,6 +118,21 @@ import UIKit
             do {
                 guard let user = user else { throw UserError.userIdNotFound }
                 try await repository.teamRepository.upsertTerminAttendance(attendance: attendance, userId: user.id)
+            } catch {
+                print(error)
+            }
+        }
+    }
+    
+    func fetchDataFromRemote() {
+        Task {
+            do {
+                if let userId = user?.id {
+                    try await syncAllTables(userId: userId)
+                    getTeam()
+                    getTeamTermine()
+                    getTerminAttendances()
+                }
             } catch {
                 print(error)
             }

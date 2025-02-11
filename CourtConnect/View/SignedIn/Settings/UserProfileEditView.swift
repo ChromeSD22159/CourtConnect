@@ -18,7 +18,7 @@ struct UserProfileEditView: View {
         VStack(spacing: 25) {
             
             HStack(spacing: 20) {
-                if let image = userProfileEditViewModel.image {
+                if let image = userProfileEditViewModel.image { // User Selected an ProfileImage
                     image
                         .resizable()
                         .scaledToFit()
@@ -29,15 +29,39 @@ struct UserProfileEditView: View {
                                .stroke(Theme.topTrailingbottomLeadingGradient, lineWidth: 5)
                         )
                 } else {
-                    Image(.basketballPlayerProfile)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 100)
-                        .clipShape(Circle())
-                        .overlay(
-                            Circle()
-                               .stroke(Theme.topTrailingbottomLeadingGradient, lineWidth: 5)
-                        )
+                    if let imageURL = userProfileEditViewModel.userProfile?.imageURL { // User has ProfileImage
+                        AsyncCachedImage(url: URL(string: imageURL)!) { image in
+                            image
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 100)
+                                .clipShape(Circle())
+                                .overlay(
+                                    Circle()
+                                       .stroke(Theme.topTrailingbottomLeadingGradient, lineWidth: 5)
+                                )
+                        } placeholder: {
+                            Image(.basketballPlayerProfile)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 100)
+                                .clipShape(Circle())
+                                .overlay(
+                                    Circle()
+                                       .stroke(Theme.topTrailingbottomLeadingGradient, lineWidth: 5)
+                                )
+                        }
+                    } else { // User has no ProfileImage
+                        Image(.basketballPlayerProfile)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 100)
+                            .clipShape(Circle())
+                            .overlay(
+                                Circle()
+                                   .stroke(Theme.topTrailingbottomLeadingGradient, lineWidth: 5)
+                            )
+                    }
                 }
                 
                 PhotosPicker(selection: $userProfileEditViewModel.item) {

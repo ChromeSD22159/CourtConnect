@@ -68,6 +68,13 @@ struct TeamView: View {
         .navigationTitle(teamViewViewModel.currentTeam?.teamName ?? "")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Image(systemName: "arrow.triangle.2.circlepath.circle")
+                    .rotationAnimation(isFetching: $teamViewViewModel.isfetching)
+                    .onTapGesture {
+                        teamViewViewModel.fetchDataFromRemote()
+                    }
+            }
             ToolbarItem(placement: .navigationBarTrailing) {
                 if let team = teamViewViewModel.currentTeam {
                     IconMenuButton(icon: "info.bubble", description: team.teamName.localizedStringKey()) {

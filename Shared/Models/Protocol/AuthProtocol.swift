@@ -39,9 +39,7 @@ extension AuthProtocol {
     func signOut() {
         Task {
             do {
-                try await self.repository.userRepository.signOut()
-                LocalStorageService.shared.userAccountId = nil
-                LocalStorageService.shared.user = nil
+                try await self.repository.userRepository.signOut() 
                 userAccount = nil
                 userProfile = nil
             } catch {
@@ -54,7 +52,7 @@ extension AuthProtocol {
         self.getUser()
         self.getUserAccount()
         self.getUserProfile()
-        self.getTeam()
+        self.getTeam() 
     }
     
     func getTeam() {

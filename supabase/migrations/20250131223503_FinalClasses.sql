@@ -62,7 +62,7 @@ END;
  $$ LANGUAGE plpgsql;
 
  -- 2. Trigger erstellen
- CREATE TRIGGER "AttendanceInsertUpdateTrigger"
+ CREATE OR REPLACE TRIGGER "AttendanceInsertUpdateTrigger"
  AFTER INSERT OR UPDATE ON "Attendance"
  FOR EACH ROW
  EXECUTE FUNCTION "LogAttendanceInsertUpdate"();
@@ -103,7 +103,7 @@ create table
  $$ LANGUAGE plpgsql;
 
  -- 2. Trigger erstellen
- CREATE TRIGGER "LogChatInsertUpdateTrigger"
+ CREATE OR REPLACE TRIGGER "LogChatInsertUpdateTrigger"
  AFTER INSERT OR UPDATE ON "Chat"
  FOR EACH ROW
  EXECUTE FUNCTION "LogChatInsertUpdate"();
@@ -193,7 +193,7 @@ BEGIN
  $$ LANGUAGE plpgsql;
 
  -- 2. Trigger erstellen
- CREATE TRIGGER "LogInterestInsertUpdateTrigger"
+ CREATE OR REPLACE TRIGGER "LogInterestInsertUpdateTrigger"
  AFTER INSERT OR UPDATE ON "Interest"
  FOR EACH ROW
  EXECUTE FUNCTION "LogInterestInsertUpdate"();
@@ -242,7 +242,7 @@ BEGIN
  $$ LANGUAGE plpgsql;
 
  -- 2. Trigger erstellen
- CREATE TRIGGER "LogRequestInsertUpdateTrigger"
+ CREATE OR REPLACE TRIGGER "LogRequestInsertUpdateTrigger"
  AFTER INSERT OR UPDATE ON "Request"
  FOR EACH ROW
  EXECUTE FUNCTION "LogRequestInsertUpdateTrigger"();
@@ -295,7 +295,7 @@ create table
  $$ LANGUAGE plpgsql;
 
  -- 2. Trigger erstellen
- CREATE TRIGGER "LogStatisticInsertUpdateTrigger"
+ CREATE OR REPLACE TRIGGER "LogStatisticInsertUpdateTrigger"
  AFTER INSERT OR UPDATE ON "Statistic"
  FOR EACH ROW
  EXECUTE FUNCTION "LogStatisticInsertUpdate"();
@@ -349,7 +349,7 @@ BEGIN
  $$ LANGUAGE plpgsql;
 
  -- 2. Trigger erstellen
- CREATE TRIGGER "LogTeamInsertUpdateTrigger"
+ CREATE OR REPLACE TRIGGER "LogTeamInsertUpdateTrigger"
  AFTER INSERT OR UPDATE ON "Team"
  FOR EACH ROW
  EXECUTE FUNCTION "LogTeamInsertUpdate"();
@@ -400,7 +400,7 @@ BEGIN
  $$ LANGUAGE plpgsql;
 
  -- 2. Trigger erstellen
- CREATE TRIGGER "LogTeamAdminInsertUpdateTrigger"
+ CREATE OR REPLACE TRIGGER "LogTeamAdminInsertUpdateTrigger"
  AFTER INSERT OR UPDATE ON "TeamAdmin"
  FOR EACH ROW
  EXECUTE FUNCTION "LogTeamAdminInsertUpdate"(); 
@@ -452,12 +452,10 @@ BEGIN
  END;
  $$ LANGUAGE plpgsql;
 
- CREATE TRIGGER "LogTeamMemberInsertUpdateTrigger"
+ CREATE OR REPLACE TRIGGER "LogTeamMemberInsertUpdateTrigger"
  AFTER INSERT OR UPDATE ON "TeamMember"
  FOR EACH ROW
- EXECUTE FUNCTION "LogTeamMemberInsertUpdate"(); 
-
-
+ EXECUTE FUNCTION "LogTeamMemberInsertUpdate"();  
 
 
 
@@ -468,8 +466,8 @@ create table
     id uuid not null default gen_random_uuid (),
     "teamId" uuid not null,
     "typeString" text not null,
-    "startTime" timestamp without time zone not null,
-    "endTime" timestamp without time zone not null,
+    "startTime" timestamp with time zone not null default now(),
+    "endTime" timestamp with time zone not null default now(),
     "terminType" text not null default ''::text, 
     title text not null,
     place text not null,
@@ -597,11 +595,28 @@ create table
  $$ LANGUAGE plpgsql;
 
  -- 2. Trigger erstellen
- CREATE TRIGGER "LogUserAccountInsertUpdateTrigger"
+ CREATE OR REPLACE TRIGGER "LogUserAccountInsertUpdateTrigger"
  AFTER INSERT OR UPDATE ON "UserAccount"
  FOR EACH ROW
  EXECUTE FUNCTION "LogUserAccountInsertUpdate"();
 
+
+CREATE OR REPLACE FUNCTION UpdateUserAccountTeamId()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Update the UserAccount table with the teamId from the TeamMember table
+    UPDATE public."UserAccount"
+    SET "teamId" = NEW."teamId"  -- Set the teamId to the new TeamMember's teamId
+    WHERE id = NEW."userAccountId"; -- Use the userAccountId from the new TeamMember record
+
+    RETURN NEW; -- Return the new TeamMember record
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE TRIGGER TeamMemberInsertTrigger
+AFTER INSERT ON public."TeamMember"
+FOR EACH ROW
+EXECUTE FUNCTION UpdateUserAccountTeamId();
 
 
 
@@ -663,7 +678,9 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-create trigger "LogUserProfileInsertUpdateTrigger"
+-- CREATE OR REPLACE
+
+CREATE OR REPLACE trigger "LogUserProfileInsertUpdateTrigger"
 after insert 
 or update on "UserProfile" for each row
 execute function "LogUserProfileInsertUpdate"();
@@ -710,7 +727,7 @@ BEGIN
  END;
  $$ LANGUAGE plpgsql;
 
- CREATE TRIGGER "LogAbsenceInsertUpdateTrigger"
+ CREATE OR REPLACE TRIGGER "LogAbsenceInsertUpdateTrigger"
  AFTER INSERT OR UPDATE ON "Absence"
  FOR EACH ROW
  EXECUTE FUNCTION "LogTeamMemberInsertUpdate"(); 
@@ -720,15 +737,18 @@ BEGIN
 
 
 
- -- BUCKETS
+-- BUCKETS 
 insert into storage.buckets (id, name, public)
-values ('TeamFiles', 'TeamFiles', true);
+values ('TeamFiles', 'TeamFiles', true)
+ON CONFLICT (id) DO NOTHING;
 
 insert into storage.buckets (id, name, public)
-values ('TeamImages', 'TeamImages', true);
+values ('TeamImages', 'TeamImages', true)
+ON CONFLICT (id) DO NOTHING;
 
 insert into storage.buckets (id, name, public)
-values ('UserImages', 'UserImages', true);
+values ('UserImages', 'UserImages', true)
+ON CONFLICT (id) DO NOTHING;
 
 ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
  
@@ -736,3 +756,20 @@ ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Authenticated users can CRUD files from TeamFiles" ON storage.objects FOR ALL TO authenticated USING (bucket_id = 'TeamFiles');
 CREATE POLICY "Authenticated users can CRUD files from TeamImages" ON storage.objects FOR ALL TO authenticated USING (bucket_id = 'TeamImages');
 CREATE POLICY "Authenticated users can CRUD files from UserImages" ON storage.objects FOR ALL TO authenticated USING (bucket_id = 'UserImages');
+
+
+
+--- INSTALL 
+1. DROP ALL TABLES
+2. CREATE ALL TABLES, TRIGGER AND FUNCTION
+3. CREATE BUCKETS
+4. DROP ALL POLICY
+5. CREATE ALL POLICY
+
+
+
+
+
+
+
+

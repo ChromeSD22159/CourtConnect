@@ -25,7 +25,7 @@ import SwiftUI
                         ForEach(viewModel.requests) { requestUser in
                             HStack {
                                 RequestAcceptionField(requestUser: requestUser) {
-                                    viewModel.grandRequest(request: requestUser.request, userAccount: requestUser.userAccount)
+                                    viewModel.grandRequest(request: requestUser.request, userAccount: requestUser.userAccount) 
                                 } rejectRequest: {
                                     viewModel.rejectRequest(request: requestUser.request)
                                 }
@@ -39,6 +39,7 @@ import SwiftUI
             
             LoadingCard(isLoading: $viewModel.isLoading)
         }
+        .errorPopover()
         .navigationTitle("Requests")
         .navigationBarTitleDisplayMode(.inline)
         .refreshable {

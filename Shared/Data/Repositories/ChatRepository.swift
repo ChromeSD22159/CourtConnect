@@ -105,13 +105,3 @@ class ChatRepository {
         }
     }
 }
-
-enum ChatError: Error, LocalizedError {
-    case whileSendindToServer
-    
-    var errorDescription: String? {
-        switch self {
-        case .whileSendindToServer: return "whileSendindToServer"
-        }
-    }
-}

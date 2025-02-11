@@ -36,6 +36,7 @@ class UserRepository {
     /// LOGOUT FROM SUPABASE
     func signOut() async throws {
         try await backendClient.supabase.auth.signOut()
+        LocalStorageService.shared.userAccountId = nil
         LocalStorageService.shared.user = nil
     }
     
@@ -122,7 +123,7 @@ class UserRepository {
     func setUserOnline(userId: UUID, userProfile: UserProfile) async throws -> Bool {
         let userOnline = UserOnlineDTO(userId: userId, firstName: userProfile.firstName, lastName: userProfile.lastName, deviceToken: self.deviceToken, timestamp: Date())
      
-        return try await SupabaseService.upsert(item: userOnline, table: .userOnline, onConflict: "userId, deviceToken")
+        return try await SupabaseService.upsert(item: userOnline, table: .userOnline, onConflict: "userId")
     }
     
     func setUserOffline(userId: UUID) async throws -> Bool {

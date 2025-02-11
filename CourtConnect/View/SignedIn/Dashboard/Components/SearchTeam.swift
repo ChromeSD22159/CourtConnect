@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct SearchTeam: View {
-    @State var teamListViewModel: TeamListViewModel = TeamListViewModel()
+    @State var teamListViewModel: SearchTeamViewModel = SearchTeamViewModel()
     var body: some View {
         List {
             Section {
@@ -41,6 +41,7 @@ struct SearchTeam: View {
             teamListViewModel.searchTeam()
         }
         .onAppear {
+            teamListViewModel.inizializeAuth()
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0 , execute: {
                 teamListViewModel.isSearchBar.toggle()
             })

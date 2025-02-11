@@ -9,7 +9,7 @@ import PhotosUI
 
 struct FoundNewTeamView: View {
     @Environment(\.dismiss) var dismiss
-    @State var viewModel: FoundNewTeamViewModel = FoundNewTeamViewModel() 
+    @State var viewModel: FoundNewTeamViewModel = FoundNewTeamViewModel()
     var body: some View {
         ZStack {
             Theme.background.ignoresSafeArea()
@@ -99,6 +99,7 @@ struct FoundNewTeamView: View {
             
             LoadingCard(isLoading: $viewModel.isLoading)
         }
+        .messagePopover()
         .onAppear(perform: viewModel.inizializeAuth)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {

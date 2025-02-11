@@ -9,13 +9,15 @@ import Foundation
 import UIKit
 
 @MainActor
-@Observable class TrainerDashboardViewModel: AuthProtocol, ObservableObject {
+@Observable class TrainerDashboardViewModel: AuthProtocol, SyncHistoryProtocol {
     var repository: BaseRepository = Repository.shared
     var user: User?
     var userAccounts: [UserAccount] = []
     var userAccount: UserAccount?
     var userProfile: UserProfile?
     var currentTeam: Team?
+    
+    var isfetching: Bool = false
     
     var qrCode: UIImage?
     var isEnterCode = false
@@ -113,6 +115,19 @@ import UIKit
     private func readQRCode() {
         if let currentTeam = currentTeam {
             qrCode = QRCodeHelper().generateQRCode(from: currentTeam.joinCode)
+        }
+    }
+    
+    func fetchDataFromRemote() {
+        Task {
+            do {
+                if let userId = user?.id {
+                    try await syncAllTables(userId: userId)
+                    getTeam()
+                }
+            } catch {
+                print(error)
+            }
         }
     }
 }

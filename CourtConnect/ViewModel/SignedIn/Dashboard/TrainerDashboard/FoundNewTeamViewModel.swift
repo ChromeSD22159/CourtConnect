@@ -64,6 +64,8 @@ import Auth
                 try await SupabaseService.upsertWithOutResult(item: userAccount.toDTO(), table: .userAccount, onConflict: "id")
          
                 try await Task.sleep(for: .seconds(1))
+                
+                InAppMessage(title: "Team successfully created!")
             } catch {
                 ErrorHandlerViewModel.shared.handleError(error: error)
             }

@@ -11,6 +11,8 @@ struct SettingsView: View {
     @Environment(\.networkMonitor) var networkMonitor
     @State var viewModel = SettingViewModel()
     
+    let onSignOut: () -> Void
+    
     var body: some View {
         LazyVStack(spacing: 16) {
             Section {
@@ -103,6 +105,7 @@ struct SettingsView: View {
             Section {
                 RowLabelButton(text: "Signout", systemImage: "iphone.and.arrow.forward", material: .ultraThinMaterial) {
                     viewModel.signOut()
+                    onSignOut()
                 }
             }
         }
@@ -201,7 +204,7 @@ fileprivate struct IconRow: View {
 
 #Preview {
     NavigationStack {
-        SettingsView(viewModel: SettingViewModel())
+        SettingsView(viewModel: SettingViewModel(), onSignOut: {})
     }
     .previewEnvirments()
     .navigationStackTint()

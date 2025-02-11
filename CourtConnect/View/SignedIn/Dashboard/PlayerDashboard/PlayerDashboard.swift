@@ -28,10 +28,18 @@ struct PlayerDashboard: View {
                  playerDashboardViewModel.deleteUserAccount()
             }
         }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Image(systemName: "arrow.triangle.2.circlepath.circle")
+                    .rotationAnimation(isFetching: $playerDashboardViewModel.isfetching)
+                    .onTapGesture {
+                        playerDashboardViewModel.fetchDataFromRemote()
+                    }
+            } 
+        }
         .padding(.horizontal, 16)
         .padding(.top, 10)
         .onAppear {
-            
             playerDashboardViewModel.inizializeAuth()
             playerDashboardViewModel.getTeam()
             playerDashboardViewModel.getTeamTermine()

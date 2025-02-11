@@ -5,17 +5,7 @@
 //  Created by Frederik Kohler on 02.02.25.
 //
 import SwiftUI
-import PhotosUI
-  
-enum DocumentError: Error, LocalizedError {
-    case fileNameToShot
-    
-    var errorDescription: String? {
-        switch self {
-        case .fileNameToShot: return "The Filename ist less tham 5 characters"
-        }
-    }
-}
+import PhotosUI 
 
 @Observable class DocumentSheetButtonViewModel: Sheet, ImagePickerProtocol {
     var isSheet = false

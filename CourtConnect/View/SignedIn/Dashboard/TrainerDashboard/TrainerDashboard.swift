@@ -31,6 +31,15 @@ struct TrainerDashboard: View {
             .padding(.top, 40)
             .padding(.horizontal, 16)
         }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Image(systemName: "arrow.triangle.2.circlepath.circle")
+                    .rotationAnimation(isFetching: $trainerDashboardViewModel.isfetching)
+                    .onTapGesture {
+                        trainerDashboardViewModel.fetchDataFromRemote()
+                    }
+            }
+        }
         .onAppear {
             trainerDashboardViewModel.inizializeAuth()
             trainerDashboardViewModel.getTeam()
@@ -109,7 +118,7 @@ fileprivate struct HasTeam: View {
                      
                     if trainerDashboardViewModel.isAdmin() {
                         NavigationLink {
-                            AdminDashboard()
+                            AdminDashboardView()
                         } label: {
                             IconCard(systemName: "square.grid.2x2", title: "Admin Dashboard", background: Material.ultraThinMaterial)
                         }
@@ -121,6 +130,7 @@ fileprivate struct HasTeam: View {
             if let userAccount = trainerDashboardViewModel.userAccount {
                 DocumentSheetButton(userAccount: userAccount)
                     .padding(.horizontal, 16)
+                
                 PlanTerminSheetButton(userAccount: userAccount) { termin in
                     trainerDashboardViewModel.saveTermin(termin: termin)
                 }
@@ -144,6 +154,7 @@ fileprivate struct HasTeam: View {
             }
             .padding(.horizontal, 16)
         }
+        
     }
 } 
 
@@ -195,7 +206,7 @@ fileprivate struct ShowTeamJoinQrCode: View {
             }
         }
     }
-}
+} 
  
 #Preview {
     NavigationStack {

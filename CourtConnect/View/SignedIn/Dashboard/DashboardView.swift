@@ -37,13 +37,7 @@ struct DashboardView: View {
                 CreateUserAccountView(userId: user.id)
             }
         })
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Image(systemName: "figure")
-                    .onTapGesture {
-                        viewModel.fetchDataFromRemote()
-                    }
-            }
+        .toolbar { 
             ToolbarItem(placement: .navigationBarTrailing) {
                 HStack {
                     IconMenuButton(icon: "person.3.fill", description: "Create New Account or Switch to Existing Account") {

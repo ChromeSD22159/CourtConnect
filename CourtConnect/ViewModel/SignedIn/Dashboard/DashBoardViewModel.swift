@@ -14,7 +14,7 @@ import Auth
     var userAccount: UserAccount?
     var currentTeam: Team?
     var userAccounts: [UserAccount] = []
-    
+    var isfetching: Bool = false
     var isCreateRoleSheet = false
     
     func inizialize() {

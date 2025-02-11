@@ -9,9 +9,13 @@ import SwiftUI
 
 struct MainNavigationView: View {
     @Environment(\.scenePhase) var scenePhase
-    @Environment(\.networkMonitor) var networkMonitor
+    
     @State var navViewModel = NavigationViewModel.shared
-    @ObservedObject var userViewModel: SharedUserViewModel
+    
+    var authViewModel: AuthViewModel
+    
+    let onSignOut: () -> Void
+    
     var body: some View {
         MessagePopover {
             NavigationStack {
@@ -20,29 +24,40 @@ struct MainNavigationView: View {
                     case .home: DashboardView()
                     case .team: TeamView()
                     case .player: PlayerStatistic()
-                    case .settings: SettingsView()
+                    case .settings: SettingsView(onSignOut: onSignOut)
                     }
                 }
             }.navigationStackTint()
         }
-        .onAppear {
-            userViewModel.importAccountsAfterLastSyncFromBackend()
+        .onAppear { 
+            authViewModel.importAccountsAfterLastSyncFromBackend()
         }
         .task {
-            userViewModel.setUserOnline()
+            authViewModel.setUserOnline()
             
             if await !NotificationService.getAuthStatus() {
                 await NotificationService.request()
             }
+            
+            do {
+                if let user = authViewModel.user {
+                    try await authViewModel.syncAllTables(userId: user.id)
+                }
+            } catch {
+                print(error)
+            }
         }
         .onChange(of: scenePhase) { _, newPhase in
-            userViewModel.changeOnlineStatus(phase: newPhase) 
+            if newPhase == .active {
+                authViewModel.setUserOnline()
+            } else if newPhase == .background {
+                authViewModel.setUserOffline()
+            }
         }
     }
 }
  
 #Preview {
-    @Previewable @State var userViewModel = SharedUserViewModel(repository: RepositoryPreview.shared)
-    MainNavigationView(userViewModel: userViewModel)
+    MainNavigationView(authViewModel: AuthViewModel(), onSignOut: {})
         .previewEnvirments()
 }

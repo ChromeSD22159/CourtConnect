@@ -1,5 +1,5 @@
 //
-//  TeamListViewModel.swift
+//  SearchTeamViewModel.swift
 //  CourtConnect
 //
 //  Created by Frederik Kohler on 29.01.25.
@@ -8,7 +8,7 @@ import Foundation
 import Auth
 
 @MainActor
-@Observable class TeamListViewModel: AuthProtocol, ObservableObject {
+@Observable class SearchTeamViewModel: AuthProtocol, ObservableObject {
     var messagehandler = InAppMessagehandlerViewModel.shared
     var errorHandler = ErrorHandlerViewModel.shared
     var repository: BaseRepository = Repository.shared
@@ -47,7 +47,7 @@ import Auth
     
     func sendJoinRequest() {
         Task {
-            do { 
+            do {
                 try await requestTeam()
                 let msg = InAppMessage(title: "Request send!")
                 messagehandler.handleMessage(message: msg)

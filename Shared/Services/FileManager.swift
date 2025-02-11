@@ -77,10 +77,5 @@ struct FileService {
     
     enum FileKind {
         case image, pdf
-    }
-
-    enum FileManagerError: Error, LocalizedError {
-        case canNotReadImage, canNotReadPdf
-        case canNotSaveImage, canNotSavePdf
-    }
+    } 
 }

@@ -1,5 +1,5 @@
 //
-//  AdminDashboard.swift
+//  AdminDashboardView.swift
 //  CourtConnect
 //
 //  Created by Frederik Kohler on 10.02.25.
@@ -7,8 +7,8 @@
 import SwiftUI
 import Auth
 
-struct AdminDashboard: View {
-    @State var adminDashboardViewModel: AdminDashboardViewModel = AdminDashboardViewModel() 
+struct AdminDashboardView: View {
+    @State var adminDashboardViewModel: AdminDashboardViewModel = AdminDashboardViewModel()
     
     var body: some View {
         List {

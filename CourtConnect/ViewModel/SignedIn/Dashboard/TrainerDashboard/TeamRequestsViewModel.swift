@@ -5,13 +5,20 @@
 //  Created by Frederik Kohler on 30.01.25.
 //
 import Foundation
+import Auth
 
-@Observable @MainActor class TeamRequestsViewModel {
+@Observable @MainActor class TeamRequestsViewModel: AuthProtocol, SyncHistoryProtocol {
+    var repository: BaseRepository = Repository.shared
+    
+    var user: User?
+    var userAccount: UserAccount?
+    var userProfile: UserProfile?
+    var currentTeam: Team?
+    var isfetching: Bool = false
     var isLoading = false
     var requests: [RequestUser] = []
     var userProfiles: [UserProfile] = []
-    
-    let repository: BaseRepository
+     
     let teamId: UUID
     let userId: UUID
     
@@ -100,7 +107,11 @@ import Foundation
                 
                 try await SupabaseService.upsertWithOutResult(item: newMember.toDTO(), table: .teamMember, onConflict: "id")
                 try await SupabaseService.upsertWithOutResult(item: request.toDTO(), table: .request, onConflict: "id")
+                
+                guard let user = user else { throw UserError.userIdNotFound }
+                try await self.syncAllTables(userId: user.id)
             } catch {
+                ErrorHandlerViewModel.shared.handleError(error: error)
                 print(error)
             }
         }
@@ -112,6 +123,18 @@ import Foundation
             await getLocalRequests()
             
             try await SupabaseService.upsertWithOutResult(item: request.toDTO(), table: .request, onConflict: "id")
+        }
+    }
+    
+    func fetchDataFromRemote() {
+        Task {
+            do {
+                if let userId = user?.id {
+                    try await syncAllTables(userId: userId)
+                }
+            } catch {
+                print(error)
+            }
         }
     }
 }

@@ -5,7 +5,7 @@
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<false/>
     <key>DefaultEnvironment</key>
-    <string>Local</string>
+    <string>Remote</string>
 	<key>SupabaseEnvironments</key>
 	<array>
 		<dict>
