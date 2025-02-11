@@ -204,7 +204,7 @@ import Supabase
     }
     
     func getTermineBy(id: UUID) throws -> Termin? {
-        let predicate = #Predicate<Termin> { $0.id == id }
+        let predicate = #Predicate<Termin> { $0.id == id && $0.deletedAt == nil }
         let fetchDescriptor = FetchDescriptor(predicate: predicate)
         let result = try container.mainContext.fetch(fetchDescriptor)
         return result.first

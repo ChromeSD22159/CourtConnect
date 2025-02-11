@@ -12,10 +12,13 @@ struct CalendarCard: View {
     let editable: Bool
     let title: String
     
-    init(title: String = "Termine", termine: [Termin], editable: Bool) {
+    let onChanged: () -> Void
+    
+    init(title: String = "Termine", termine: [Termin], editable: Bool, onChanged: @escaping () -> Void = {}) {
         self.title = title
         self.termine = termine
         self.editable = editable
+        self.onChanged = onChanged
     }
     
     var groupedTermine: [String: [Termin]] {
@@ -39,7 +42,7 @@ struct CalendarCard: View {
                 if !sortedGroupedTermine.isEmpty {
                     LazyVStack(spacing: 25) {
                         ForEach(showAll ? sortedGroupedTermine : Array(sortedGroupedTermine.prefix(2)), id: \.0) { dateString, termin in
-                            TerminDayView(dateString: dateString, termine: termin, editable: editable)
+                            TerminDayView(dateString: dateString, termine: termin, editable: editable, onChanged: onChanged)
                         }
                     }
                     ShowModeTextButton(showAll: $showAll)
@@ -61,6 +64,7 @@ fileprivate struct TerminDayView: View {
     let dateString: String
     let termine: [Termin]
     let editable: Bool
+    let onChanged: () -> Void
     var body: some View {
         HStack(alignment: .top) {
             Text(dateString)
@@ -68,7 +72,7 @@ fileprivate struct TerminDayView: View {
 
             VStack {
                 ForEach(termine.indices, id: \.self) { index in
-                    TerminRow(termin: termine[index], editable: editable)
+                    TerminRow(termin: termine[index], editable: editable, onChanged: onChanged)
                 }
             }
         }
@@ -78,6 +82,7 @@ fileprivate struct TerminDayView: View {
 fileprivate struct TerminRow: View {
     let termin: Termin
     let editable: Bool
+    let onChanged: () -> Void
     
     @State var isSheeet: Bool = false
     @State var selectedTermin: Termin?
@@ -129,6 +134,9 @@ fileprivate struct TerminRow: View {
             selectedTermin = nil
         } content: { termin in
             EditTerminSheetButton(termin: termin)
+                .onDisappear {
+                    onChanged()
+                }
         }
         .sheet(isPresented: $isSheeet) {
             TerminSheet(terminId: termin.id)

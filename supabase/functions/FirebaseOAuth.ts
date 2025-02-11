@@ -38,7 +38,7 @@ interface UpdateWebhookPayload<T> {
   table: string
   record: T
   schema: 'public'
-  old_record: null | T
+  old_record: T
 }
 
 export { getAccessToken, InsertWebhookPayload, UpdateWebhookPayload };

@@ -5,7 +5,7 @@
 // Setup type definitions for built-in Supabase Runtime APIs
 import "jsr:@supabase/functions-js/edge-runtime.d.ts"
 import { createClient } from 'npm:@supabase/supabase-js@2' 
-import { getAccessToken, InsertWebhookPayload } from '../FirebaseOAuth.ts'
+import { getAccessToken, UpdateWebhookPayload } from '../FirebaseOAuth.ts'
 import serviceAccount from '../service-account.json' with { type: 'json' }
  
 interface Termin {
@@ -31,80 +31,81 @@ const supabase = createClient(
 )
 
 Deno.serve(async (req) => {
-  const payload: InsertWebhookPayload<Termin> = await req.json();
-
-  const oldRecord = payload.old;
-  const newRecord = payload.new;
+  const payload: UpdateWebhookPayload<Termin> = await req.json(); 
 
   try {
       console.log(payload.record) 
+
+     if (payload.old_record.startTime !== payload.record.startTime || payload.old_record.infomation !== payload.record.infomation) {
       const { data: allMember } = await supabase 
-        .from('TeamMember')
-        .select('*')  
-        .eq('teamId', payload.record.teamId)
+      .from('TeamMember')
+      .select('*')  
+      .eq('teamId', payload.record.teamId)
 
-      if (allMember && allMember.length > 0) {
-          for (const member of allMember) {
-              const { data: userAccount } = await supabase 
-                  .from('UserAccount')
-                  .select('*')
-                  .eq('id', member.userAccountId)
-                  .single(); 
+    if (allMember && allMember.length > 0) {
+        for (const member of allMember) {
+            const { data: userAccount } = await supabase 
+                .from('UserAccount')
+                .select('*')
+                .eq('id', member.userAccountId)
+                .single(); 
 
-              if (userAccount) {
-                  const { data: userProfile } = await supabase 
-                      .from('UserProfile')
-                      .select('*')
-                      .eq('userId', userAccount.userId)
-                      .single();
+            if (userAccount) {
+                const { data: userProfile } = await supabase 
+                    .from('UserProfile')
+                    .select('*')
+                    .eq('userId', userAccount.userId)
+                    .single();
 
-                  const accessToken = await getAccessToken({
-                      clientEmail: serviceAccount.client_email,
-                      privateKey: serviceAccount.private_key,
-                  });
+                const accessToken = await getAccessToken({
+                    clientEmail: serviceAccount.client_email,
+                    privateKey: serviceAccount.private_key,
+                });
 
-                  const notificationTitle = `Termin Update: ${payload.record.title}`;
-                  const notificationBody = `Der Termin für dein Team wurde aktualisiert. ${payload.record.startTime} - ${payload.record.endTime}`; 
+                const notificationTitle = `Termin Update: ${payload.record.title}`;
+                const notificationBody = `Der Termin für dein Team wurde aktualisiert.`; 
+ 
+                const res = await fetch(`https://fcm.googleapis.com/v1/projects/${serviceAccount.project_id}/messages:send`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                    body: JSON.stringify({
+                        message: {
+                            token: userProfile.fcmToken,
+                            notification: {
+                                title: notificationTitle,
+                                body: notificationBody
+                            }, 
+                            apns: {  
+                                payload: {
+                                  aps: {
+                                    badge: 0,
+                                    sound: "trainer-whistle.mp3"
+                                  } 
+                                }
+                            }    
+                        }
+                    }),
+                });
 
-                  const res = await fetch(`https://fcm.googleapis.com/v1/projects/${serviceAccount.project_id}/messages:send`, {
-                      method: 'POST',
-                      headers: {
-                          'Content-Type': 'application/json',
-                          Authorization: `Bearer ${accessToken}`,
-                      },
-                      body: JSON.stringify({
-                          message: {
-                              token: userProfile.fcmToken,
-                              notification: {
-                                  title: notificationTitle,
-                                  body: notificationBody
-                              }, 
-                              apns: {  
-                                  payload: {
-                                    aps: {
-                                      badge: 0,
-                                      sound: "trainer-whistle.mp3"
-                                    } 
-                                  }
-                              }    
-                          }
-                      }),
-                  });
+                const resData = await res.json();
+                if (!res.ok) { 
+                    console.error("FCM Error:", res.status, resData);
+                    return new Response(JSON.stringify({ error: "FCM Error", details: resData }), {
+                        status: res.status, // Return error status code
+                        headers: { 'Content-Type': 'application/json' },
+                    });
+                }
+            }
+        }
+    } else {
+        console.error("User or Termin not found");
+        return new Response(JSON.stringify({ error: "User or Termin not found" }), { status: 404, headers: { 'Content-Type': 'application/json' } });
+    }
+     }
 
-                  const resData = await res.json();
-                  if (!res.ok) { 
-                      console.error("FCM Error:", res.status, resData);
-                      return new Response(JSON.stringify({ error: "FCM Error", details: resData }), {
-                          status: res.status, // Return error status code
-                          headers: { 'Content-Type': 'application/json' },
-                      });
-                  }
-              }
-          }
-      } else {
-          console.error("User or Termin not found");
-          return new Response(JSON.stringify({ error: "User or Termin not found" }), { status: 404, headers: { 'Content-Type': 'application/json' } });
-      }
   } catch (error) {
       console.error("General Error:", error);
       return new Response(JSON.stringify({ error: "General error", details: error.message }), {

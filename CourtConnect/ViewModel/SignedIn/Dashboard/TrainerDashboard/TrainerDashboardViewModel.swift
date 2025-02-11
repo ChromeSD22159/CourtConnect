@@ -63,7 +63,10 @@ import UIKit
     func saveTermin(termin: Termin) {
         guard let userId = user?.id else { return }
         Task {
-            defer { try? repository.accountRepository.insert(termin: termin, table: .termin, userId: userId) }
+            defer {
+                try? repository.accountRepository.insert(termin: termin, table: .termin, userId: userId)
+                getTeamTermine()
+            }
             do {
                 try await SupabaseService.upsertWithOutResult(item: termin.toDTO(), table: .termin, onConflict: "id")
             } catch {
@@ -136,6 +139,7 @@ import UIKit
                 if let userId = user?.id {
                     try await syncAllTables(userId: userId)
                     getTeam()
+                    getTeamTermine()
                 }
             } catch {
                 print(error)

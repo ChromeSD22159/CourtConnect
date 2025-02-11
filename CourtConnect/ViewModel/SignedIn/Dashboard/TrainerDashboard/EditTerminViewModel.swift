@@ -40,6 +40,18 @@ import Auth
         self.inizializeAuth()
     }
     
+    func deleteTermin() async throws {
+        try await loadingManager {
+            guard let user = user else { throw UserError.userIdNotFound }
+            
+            termin.updatedAt = Date()
+            termin.deletedAt = Date()
+            try repository.teamRepository.upsertLocal(item: termin, table: .termin, userId: user.id)
+            
+            try await SupabaseService.upsertWithOutResult(item: termin.toDTO(), table: .termin, onConflict: "id")
+        }
+    }
+    
     func saveTermin() async throws {
         try await loadingManager {
             guard !title.isEmpty else { throw TerminError.missingTitle }

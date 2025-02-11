@@ -68,16 +68,16 @@ struct DateRange {
     func getTerminAttendances() {
         do {
             guard let userAccount = userAccount else { throw UserError.userAccountNotFound }
-            print(userAccount.id)
+            var attendancesTerminesTmp: [AttendanceTermin] = []
+            
             let attandances = try repository.accountRepository.getAccountPendingAttendances(for: userAccount.id)
-            print(attandances.count)
             for attandance in attandances {
-                if let termines = try repository.teamRepository.getTermineBy(id: attandance.terminId) {
-                    let attendanceTermin = AttendanceTermin(attendance: attandance, termin: termines)
-                    
-                    self.attendancesTermines.append(attendanceTermin)
+                if let termine = try repository.teamRepository.getTermineBy(id: attandance.terminId) {
+                    let attendanceTermin = AttendanceTermin(attendance: attandance, termin: termine)
+                    attendancesTerminesTmp.append(attendanceTermin)
                 }
             }
+            attendancesTermines = attendancesTerminesTmp
         } catch {
             print(error)
         }

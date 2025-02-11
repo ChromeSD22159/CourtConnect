@@ -30,6 +30,14 @@ Deno.serve(async (req) => {
 
   try {
       console.log(payload.record)
+
+      const { data: absence } = await supabase 
+            .from('Absence')
+            .select('*')
+            .eq('userAccountId', payload.record.userAccountId)
+            .gte('startDate', payload.record.startTime)
+            .lte('endDate', payload.record.endTime) 
+
       const { data: userAccount } = await supabase 
           .from('UserAccount')
           .select('*')
@@ -42,7 +50,7 @@ Deno.serve(async (req) => {
           .eq('id', payload.record.terminId)
           .single(); 
 
-      if (userAccount && termin) {
+      if (absence.length === 0 && userAccount && termin) {
           const { data: userProfile } = await supabase 
               .from('UserProfile')
               .select('*')
@@ -61,8 +69,7 @@ Deno.serve(async (req) => {
                       clientEmail: serviceAccount.client_email,
                       privateKey: serviceAccount.private_key,
                   });
-                  console.log("Termin:" + termin.title)
-                  console.log("SendToToken:" + userProfile.fcmToken)
+               
                   const notificationTitle = `Neuer Termin: ${termin.title}`;
                   const notificationBody = `Ein neuer Termin für dein Team ${team.teamName} wurde erstellt. Bitte überprüfe deine Attendance.`; 
 

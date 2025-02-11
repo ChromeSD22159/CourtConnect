@@ -35,19 +35,35 @@ struct EditTerminSheetButton: View {
                 rowSectionDurationSelection(systemName: "clock", headline: "How long?", terminType: $viewModel.duration)
                     .zoomFadeIn(delay: 0.65, trigger: $viewModel.animateOnAppear)
                 
-                Button("Save Termin") {
-                    Task {
-                        do {
-                            try await viewModel.saveTermin()
-                            dismiss()
-                        } catch {
-                            ErrorHandlerViewModel.shared.handleError(error: error)
-                            throw error
+                HStack {
+                    Button("Delete Termin") {
+                        Task {
+                            do {
+                                try await viewModel.deleteTermin()
+                                dismiss()
+                            } catch {
+                                ErrorHandlerViewModel.shared.handleError(error: error)
+                                throw error
+                            }
                         }
                     }
+                    .buttonStyle(DarkButtonStlye())
+                    .zoomFadeIn(delay: 0.75, trigger: $viewModel.animateOnAppear)
+                    
+                    Button("Save Termin") {
+                        Task {
+                            do {
+                                try await viewModel.saveTermin()
+                                dismiss()
+                            } catch {
+                                ErrorHandlerViewModel.shared.handleError(error: error)
+                                throw error
+                            }
+                        }
+                    }
+                    .buttonStyle(DarkButtonStlye())
+                    .zoomFadeIn(delay: 0.75, trigger: $viewModel.animateOnAppear)
                 }
-                .buttonStyle(DarkButtonStlye())
-                .zoomFadeIn(delay: 0.75, trigger: $viewModel.animateOnAppear)
             }
         }
         .onChange(of: viewModel.place, { oldValue, newValue in

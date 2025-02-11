@@ -132,16 +132,18 @@ fileprivate struct HasTeam: View {
                 .frame(height: 150)
             }
             
-            CalendarCard(title: "Edit dates",termine: trainerDashboardViewModel.termine, editable: true)
-                .padding(.vertical, 16)
-                .padding(.horizontal, 16)
+            CalendarCard(title: "Edit dates",termine: trainerDashboardViewModel.termine, editable: true, onChanged: {
+                trainerDashboardViewModel.getTeamTermine()
+            })
+            .padding(.vertical, 16)
+            .padding(.horizontal, 16)
             
             if let userAccount = trainerDashboardViewModel.userAccount {
                 DocumentSheetButton(userAccount: userAccount)
                     .padding(.horizontal, 16)
                 
                 PlanTerminSheetButton(userAccount: userAccount) { termin in
-                    trainerDashboardViewModel.saveTermin(termin: termin)
+                    trainerDashboardViewModel.saveTermin(termin: termin) 
                 }
                 .padding(.horizontal, 16)
             }
