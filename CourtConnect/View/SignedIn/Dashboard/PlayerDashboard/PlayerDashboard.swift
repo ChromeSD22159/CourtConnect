@@ -87,7 +87,7 @@ fileprivate struct HasTeam: View {
             playerDashboardViewModel.absenceRegister()
         }
            
-        CalendarCard(termine: playerDashboardViewModel.termine)
+        CalendarCard(termine: playerDashboardViewModel.termine, editable: false)
             .padding(.vertical)
         
         ConfirmationTermin(attendanceTermines: playerDashboardViewModel.attendancesTermines) { attendance in

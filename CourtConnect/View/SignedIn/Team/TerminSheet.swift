@@ -29,9 +29,9 @@ struct TerminSheet: View {
                             Circle()
                                 .foregroundStyle(Theme.lightOrange.opacity(0.5))
                                 .frame(width: 60, height: 60)
-
+                            
                             Image(systemName: "basketball.fill")
-                                .symbolEffect(.variableColor)
+                                .symbolEffect(.breathe)
                                 .padding(10)
                                 .foregroundStyle(.white)
                                 .background(Theme.lightOrange)
@@ -92,6 +92,23 @@ struct TerminSheet: View {
         .presentationDetents([.medium ,.large])
         .presentationBackground(Material.ultraThinMaterial)
         .presentationCornerRadius(25)
+    }
+}
+
+#Preview {
+    ZStack {
+        Circle()
+            .foregroundStyle(Theme.lightOrange.opacity(0.5))
+            .frame(width: 60, height: 60)
+            
+        
+        Image(systemName: "basketball.fill")
+            .symbolEffect(.breathe)
+            .padding(10)
+            .foregroundStyle(.white, .red)
+            .background(Theme.lightOrange)
+            .clipShape( Circle() )
+            
     }
 }
  

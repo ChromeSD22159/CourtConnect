@@ -16,11 +16,17 @@ import UIKit
     var userAccount: UserAccount?
     var userProfile: UserProfile?
     var currentTeam: Team?
-    
+    var termine: [Termin] = []
     var isfetching: Bool = false
     
     var qrCode: UIImage?
     var isEnterCode = false
+    
+    func inizialize() {
+        inizializeAuth()
+        getTeam()
+        getTeamTermine()
+    }
     
     func getTeam() {
         currentTeam = nil
@@ -63,6 +69,15 @@ import UIKit
             } catch {
                 ErrorHandlerViewModel.shared.handleError(error: error)
             }
+        }
+    }
+    
+    func getTeamTermine() {
+        do {
+            guard let currentTeam = currentTeam else { throw TeamError.userHasNoTeam }
+            termine = try repository.teamRepository.getTeamTermine(for: currentTeam.id)
+        } catch {
+            print(error)
         }
     }
     

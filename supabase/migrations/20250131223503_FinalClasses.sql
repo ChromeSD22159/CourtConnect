@@ -767,11 +767,4 @@ CREATE POLICY "Authenticated users can CRUD files from UserImages" ON storage.ob
 3. CREATE BUCKETS
 4. DROP ALL POLICY
 5. CREATE ALL POLICY
-
-
-
-
-
-
-
-
+ 

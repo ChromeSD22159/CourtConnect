@@ -55,4 +55,4 @@ import SwiftUI
         date = Date()
         duration = .oneTwenty
     } 
-}
+} 

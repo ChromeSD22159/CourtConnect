@@ -30,5 +30,20 @@ enum TerminDuration: String, CaseIterable, Identifiable {
         }
     }
     
+    init?(rawValue: Int) {
+       switch rawValue {
+       case 15: self = .fifteen
+       case 30: self = .thirty
+       case 45: self = .fortyFive
+       case 60: self = .sixty
+       case 90: self = .ninety
+       case 120: self = .oneTwenty
+       case 180: self = .oneEighty
+       case 240: self = .twoForty
+       case 300: self = .threeHundred
+       default: return nil // Return nil for invalid values
+       }
+   }
+    
     var id: String { rawValue }
 }

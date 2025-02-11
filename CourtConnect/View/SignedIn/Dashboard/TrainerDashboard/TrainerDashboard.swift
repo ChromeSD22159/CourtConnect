@@ -42,8 +42,7 @@ struct TrainerDashboard: View {
             }
         }
         .onAppear { 
-            trainerDashboardViewModel.inizializeAuth()
-            trainerDashboardViewModel.getTeam()
+            trainerDashboardViewModel.inizialize() 
         }
         .onChange(of: scenePhase) {
             if scenePhase == .active {
@@ -132,6 +131,10 @@ fileprivate struct HasTeam: View {
                 }
                 .frame(height: 150)
             }
+            
+            CalendarCard(title: "Edit dates",termine: trainerDashboardViewModel.termine, editable: true)
+                .padding(.vertical, 16)
+                .padding(.horizontal, 16)
             
             if let userAccount = trainerDashboardViewModel.userAccount {
                 DocumentSheetButton(userAccount: userAccount)

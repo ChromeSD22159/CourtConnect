@@ -9,6 +9,14 @@ import Foundation
 
 struct CalendarCard: View {
     let termine: [Termin]
+    let editable: Bool
+    let title: String
+    
+    init(title: String = "Termine", termine: [Termin], editable: Bool) {
+        self.title = title
+        self.termine = termine
+        self.editable = editable
+    }
     
     var groupedTermine: [String: [Termin]] {
         let dic = Dictionary(grouping: termine, by: {
@@ -24,26 +32,24 @@ struct CalendarCard: View {
     }
     
     @State var showAll = false
-    
+     
     var body: some View {
         Section {
             VStack(alignment: .trailing) {
                 if !sortedGroupedTermine.isEmpty {
                     LazyVStack(spacing: 25) {
                         ForEach(showAll ? sortedGroupedTermine : Array(sortedGroupedTermine.prefix(2)), id: \.0) { dateString, termin in
-                            TerminDayView(dateString: dateString, termine: termin)
+                            TerminDayView(dateString: dateString, termine: termin, editable: editable)
                         }
                     }
-                    
                     ShowModeTextButton(showAll: $showAll)
                 } else {
                     TermineUnavailableView()
                 }
-                
             }
         } header: {
             HStack {
-                UpperCasedheadline(text: "Termine")
+                UpperCasedheadline(text: title)
                 Spacer()
             }
         }
@@ -54,6 +60,7 @@ struct CalendarCard: View {
 fileprivate struct TerminDayView: View {
     let dateString: String
     let termine: [Termin]
+    let editable: Bool
     var body: some View {
         HStack(alignment: .top) {
             Text(dateString)
@@ -61,21 +68,24 @@ fileprivate struct TerminDayView: View {
 
             VStack {
                 ForEach(termine.indices, id: \.self) { index in
-                    TerminRow(termin: termine[index])
+                    TerminRow(termin: termine[index], editable: editable)
                 }
             }
         }
-        
     }
 }
 
 fileprivate struct TerminRow: View {
     let termin: Termin
+    let editable: Bool
+    
     @State var isSheeet: Bool = false
+    @State var selectedTermin: Termin?
+  
     var body: some View {
         HStack(alignment: .top) {
             VStack {
-                StrokesCircleIcon(systemName: "alarm.fill")
+                StrokesCircleIcon(systemName: editable ? "square.and.pencil" : "alarm.fill")
                     .padding(.horizontal, 20)
 
                 Line()
@@ -108,7 +118,17 @@ fileprivate struct TerminRow: View {
             }
         }
         .onTapGesture {
-            isSheeet.toggle()
+            if editable {
+                selectedTermin = termin
+            } else {
+                isSheeet.toggle()
+            }
+        }
+        .errorAlert()
+        .sheet(item: $selectedTermin) {
+            selectedTermin = nil
+        } content: { termin in
+            EditTerminSheetButton(termin: termin)
         }
         .sheet(isPresented: $isSheeet) {
             TerminSheet(terminId: termin.id)
@@ -138,12 +158,12 @@ fileprivate struct StrokesCircleIcon: View {
                 }
             }
     }
-}  
+}   
 
 #Preview {
     let termine = MockTermine.termine
     ScrollView(.vertical) {
-        CalendarCard(termine: termine)
+        CalendarCard(termine: termine, editable: true)
     }
     .scrollIndicators(.hidden)
     .padding(.horizontal)

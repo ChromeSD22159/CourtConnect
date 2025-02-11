@@ -49,7 +49,7 @@ struct TeamView: View {
                         }
                         .padding(.horizontal)
                         
-                        CalendarCard(termine: teamViewViewModel.termine)
+                        CalendarCard(termine: teamViewViewModel.termine, editable: false)
                             .padding(.horizontal)
                             .padding(.vertical)
                     }
