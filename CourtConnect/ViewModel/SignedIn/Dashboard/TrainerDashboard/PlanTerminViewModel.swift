@@ -15,7 +15,7 @@ import SwiftUI
     var place: String = ""
     var infomation: String = ""
     var kind: TerminType = .training
-    var date: Date = Date()
+    var date: Date = Date.now.addingTimeInterval(86400)
     var duration: TerminDuration = .oneTwenty
     
     func generateTermin(userAccount: UserAccount) async throws -> Termin? {

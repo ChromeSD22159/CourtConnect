@@ -7,7 +7,8 @@
 import SwiftUI 
  
 struct PlayerDashboard: View {
-    @State var playerDashboardViewModel = PlayerDashboardViewModel() 
+    @Environment(\.scenePhase) var scenePhase
+    @State var playerDashboardViewModel = PlayerDashboardViewModel()
     var body: some View {
         VStack {
             if playerDashboardViewModel.currentTeam != nil {
@@ -40,10 +41,12 @@ struct PlayerDashboard: View {
         .padding(.horizontal, 16)
         .padding(.top, 10)
         .onAppear {
-            playerDashboardViewModel.inizializeAuth()
-            playerDashboardViewModel.getTeam()
-            playerDashboardViewModel.getTeamTermine()
-            playerDashboardViewModel.getTerminAttendances()
+            playerDashboardViewModel.inizialize()
+        }
+        .onChange(of: scenePhase) {  
+            if scenePhase == .active {
+                playerDashboardViewModel.fetchDataFromRemote()
+            }
         }
         .navigationTitle("Player Dashboard")
     }

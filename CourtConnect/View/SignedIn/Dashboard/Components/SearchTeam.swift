@@ -41,7 +41,7 @@ struct SearchTeam: View {
             teamListViewModel.searchTeam()
         }
         .onAppear {
-            teamListViewModel.inizializeAuth()
+            teamListViewModel.inizialize()
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0 , execute: {
                 teamListViewModel.isSearchBar.toggle()
             })

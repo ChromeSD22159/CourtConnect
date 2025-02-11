@@ -95,7 +95,7 @@ import Auth
     func grandRequest(request: Requests, userAccount: UserAccount) {
         Task {
             do {
-                let newMember = TeamMember(userAccountId: request.accountId, teamId: request.teamId, role: userAccount.role, createdAt: Date(), updatedAt: Date())
+                let newMember = TeamMember(userAccountId: request.accountId, teamId: request.teamId, shirtNumber: nil, position: "", role: userAccount.role, createdAt: Date(), updatedAt: Date())
                 
                 try repository.teamRepository.softDelete(request: request)
                 await getLocalRequests()

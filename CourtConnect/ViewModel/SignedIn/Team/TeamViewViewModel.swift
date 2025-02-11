@@ -52,9 +52,8 @@ import Auth
             guard let team = currentTeam else { throw TeamError.teamNotFound }
              
             let teamMember = try repository.teamRepository.getTeamMembers(for: team.id)
-             
+            var teamPlayersTmp: [MemberProfile] = []
             let teamPlayers = teamMember.filter { $0.role == UserRole.player.rawValue }
-            
             for player in teamPlayers {
                 if let playerAccount = try repository.accountRepository.getAccount(id: player.userAccountId),
                     let userProfile = try repository.userRepository.getUserProfileFromDatabase(userId: playerAccount.userId) {
@@ -68,18 +67,22 @@ import Auth
                         avgtree: userStatistic?.avgThreePointAttempts ?? 0,
                         avgPoints: userStatistic?.avgPoints ?? 0
                     )
-                    self.teamPlayers.append(profile)
+                    teamPlayersTmp.append(profile)
                 }
             }
              
+            var teamTrainersTmp: [MemberProfile] = []
             let teamTrainers = teamMember.filter { $0.role == UserRole.trainer.rawValue }
             for trainer in teamTrainers {
                 if let trainerAccount = try repository.accountRepository.getAccount(id: trainer.userAccountId),
                     let userProfile = try repository.userRepository.getUserProfileFromDatabase(userId: trainerAccount.userId) {
                     let profile = MemberProfile(firstName: userProfile.firstName, lastName: userProfile.lastName, avgFouls: 0, avgTwo: 0, avgtree: 0, avgPoints: 0)
-                    self.teamTrainers.append(profile)
+                    teamTrainersTmp.append(profile)
                 }
             }
+            
+            self.teamPlayers = teamPlayersTmp
+            self.teamTrainers = teamTrainersTmp
         } catch {
             print(error)
         }

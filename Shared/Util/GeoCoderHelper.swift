@@ -41,4 +41,23 @@ struct GeoCoderHelper {
         currentRegion = nil
         return region
     }
+    
+    static func getCoordinates(address: String) async throws -> CLLocationCoordinate2D {
+        return try await withCheckedThrowingContinuation { continuation in
+            let geocoder = CLGeocoder()
+            geocoder.geocodeAddressString(address) { (placemarks, error) in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                    return
+                }
+                
+                guard let location = placemarks?.first?.location else {
+                    continuation.resume(throwing: NSError(domain: "GeoCoderHelper", code: 1, userInfo: [NSLocalizedDescriptionKey: "Adresse nicht gefunden"]))
+                    return
+                }
+                
+                continuation.resume(returning: location.coordinate)
+            }
+        }
+    }
 }

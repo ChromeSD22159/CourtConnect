@@ -6,12 +6,16 @@
 //
 import Foundation
 import SwiftUI
+import Auth
 
-@Observable @MainActor class PlayerStatisticViewModel {
+@Observable @MainActor class PlayerStatisticViewModel: AuthProtocol, SyncHistoryProtocol {
     var repository: BaseRepository = Repository.shared
     var userAccount: UserAccount?
     var userProfile: UserProfile?
-     
+    var teamMember: TeamMember?
+    var user: User?
+    var currentTeam: Team?
+    var isfetching: Bool = false
     var orginalStatistics: [Statistic] = []
     var statistics: [Statistic] = []
     var chartStatistics: [Statistic] = []
@@ -39,6 +43,13 @@ import SwiftUI
         statistics.sorted {
             $0.points > $1.points
         }.first
+    }
+    
+    func initialze() {
+        self.inizializeAuth()
+        
+        getStatistic(for: .game)
+        getTeamMember()
     }
     
     func getStatistic(for terminType: TerminType) {
@@ -96,19 +107,25 @@ import SwiftUI
         }
     }
     
-    func getUserAccount() {
+    func getTeamMember() {
         do {
-            userAccount = try repository.authRepository.getcurrentUserAccount()
+            guard let userAccount = userAccount else { throw UserError.userAccountNotFound }
+            teamMember = try repository.teamRepository.getMember(for: userAccount.id)
         } catch {
             print(error)
         }
     }
     
-    func getUserProfile() {
-        do {
-            userProfile = try repository.authRepository.getCurrentUserProfile()
-        } catch {
-            print(error)
+    func fetchDataFromRemote() {
+        Task {
+            do {
+                if let userId = user?.id {
+                    try await syncAllTables(userId: userId)
+                    initialze()
+                }
+            } catch {
+                print(error)
+            }
         }
     }
-} 
+}

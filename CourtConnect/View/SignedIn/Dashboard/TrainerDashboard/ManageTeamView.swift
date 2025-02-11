@@ -19,13 +19,13 @@ struct ManageTeamView: View {
                 } else {
                     ForEach(viewModel.teamPlayer, id: \.userProfile.id) { team in
                         MemberRow(teamMember: team.teamMember, userProfile: team.userProfile, isPlayer: true)
-                        .swipeActions {
-                            Button(role: .destructive) {
-                                // TODO
-                            } label: {
-                                Label("Remove", systemImage: "trash.fill")
+                            .swipeActions {
+                                Button(role: .destructive) {
+                                    // TODO
+                                } label: {
+                                    Label("Remove", systemImage: "trash.fill")
+                                }
                             }
-                        }
                     }
                 }
             } header: {
@@ -70,26 +70,51 @@ fileprivate struct MemberRow: View {
     var userProfile: UserProfile
     var isPlayer: Bool
     var body: some View {
-        HStack {
+        VStack(alignment: .leading) {
             Text(userProfile.fullName)
             Spacer()
-            if isPlayer {
-                let shirtNumberOptions = (0...99).map { ShirtNumberOption(number: $0) }
-                Picker("", selection: $teamMember.shirtNumber) {
-                    if teamMember.shirtNumber == nil {
-                        Text("Bitte Wählen").tag(nil as Int?)
-                    } 
-                   
-                    ForEach(shirtNumberOptions) { option in
-                            Text("\(option.number)").tag(option.number)
+            HStack {
+                if isPlayer {
+                    Picker("Position:", selection: $teamMember.position) {
+                        if teamMember.position == "" {
+                            Text("Bitte Wählen").tag("")
+                        }
+                        
+                        ForEach(BasketballPosition.allCases, id: \.id) { position in
+                            Text("\(position.rawValue)").tag(position.rawValue)
+                        }
                     }
-                }
-                .onChange(of: teamMember.shirtNumber) {
-                    Task {
-                        do {
-                            try await SupabaseService.upsertWithOutResult(item: teamMember.toDTO(), table: .teamMember, onConflict: "id")
-                        } catch {
-                            print(error)
+                    .labelsHidden()
+                    .pickerStyle(.menu)
+                    .onChange(of: teamMember.position) {
+                        Task {
+                            do {
+                                try await SupabaseService.upsertWithOutResult(item: teamMember.toDTO(), table: .teamMember, onConflict: "id")
+                            } catch {
+                                print(error)
+                            }
+                        }
+                    }
+                    Spacer()
+                    let shirtNumberOptions = (0...99).map { ShirtNumberOption(number: $0) }
+                    Picker("Shirt Number", selection: $teamMember.shirtNumber) {
+                        if teamMember.shirtNumber == nil {
+                            Text("Bitte Wählen").tag(nil as Int?)
+                        }
+                       
+                        ForEach(shirtNumberOptions) { option in
+                                Text("\(option.number)").tag(option.number)
+                        }
+                    }
+                    .labelsHidden()
+                    .pickerStyle(.menu)
+                    .onChange(of: teamMember.shirtNumber) {
+                        Task {
+                            do {
+                                try await SupabaseService.upsertWithOutResult(item: teamMember.toDTO(), table: .teamMember, onConflict: "id")
+                            } catch {
+                                print(error)
+                            }
                         }
                     }
                 }

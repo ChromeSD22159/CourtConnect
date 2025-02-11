@@ -8,7 +8,6 @@ import SwiftUI
 import Auth
 
 struct LoginEntryView: View {
-    
     @State var viewModel = LoginEntryViewModel()
     
     let onUserChange: () -> Void

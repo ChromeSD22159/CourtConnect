@@ -12,7 +12,8 @@ interface Absence {
   id: string
   userAccountId: string
   teamId: string
-  date: string 
+  startDate: string 
+  endDate: string 
   createdAt: string
   updatedAt: string
   deletedAt: string 

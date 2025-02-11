@@ -63,6 +63,15 @@ import Supabase
         return try container.mainContext.fetch(fetchDescriptor)
     }
     
+    func getAllTeamsAsc() throws -> [TeamDTO] {
+        let redicate = #Predicate<Team> { team in
+             team.deletedAt == nil
+        }
+        let fetchDescriptor = FetchDescriptor(predicate: redicate, sortBy: [SortDescriptor(\.teamName, order: .forward)])
+        
+        return try container.mainContext.fetch(fetchDescriptor).map { $0.toDTO() }
+    }
+    
     func getTeamAbsense(for teamId: UUID) throws -> [Absence] {
         let redicate = #Predicate<Absence> { absence in
             absence.teamId == teamId && absence.deletedAt == nil
@@ -277,7 +286,7 @@ import Supabase
     func joinTeamWithCode(_ code: String, userAccount: UserAccount) async throws {
         if let foundTeamDTO = try await getTeamRemote(code: code) {
             // CREATE MEMBER
-            let newMember = TeamMember(userAccountId: userAccount.id, teamId: foundTeamDTO.id, role: userAccount.role, createdAt: Date(), updatedAt: Date())
+            let newMember = TeamMember(userAccountId: userAccount.id, teamId: foundTeamDTO.id, shirtNumber: nil, position: "", role: userAccount.role, createdAt: Date(), updatedAt: Date())
             // INSER MEMBER REMOTE
             print("before insert")
             let supabaseMember: TeamMemberDTO = try await SupabaseService.insert(item: newMember.toDTO(), table: .teamMember)

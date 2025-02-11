@@ -44,7 +44,7 @@ import Auth
                 let now = Date()
                 
                 let newTeam = Team(teamImageURL: nil, teamName: teamName, headcoach: headcoach, joinCode: generatedCode, email: email, createdByUserAccountId: userAccount.id, createdAt: now, updatedAt: now)
-                let newMember = TeamMember(userAccountId: userAccount.id, teamId: newTeam.id, role: userAccount.role, createdAt: now, updatedAt: now)
+                let newMember = TeamMember(userAccountId: userAccount.id, teamId: newTeam.id, shirtNumber: nil, position: "", role: userAccount.role, createdAt: now, updatedAt: now)
                 let newAdmin = TeamAdmin(teamId: newTeam.id, userAccountId: userAccount.id, role: userAccount.role, createdAt: now, updatedAt: now)
                 
                 if let uiImage = uiImage {

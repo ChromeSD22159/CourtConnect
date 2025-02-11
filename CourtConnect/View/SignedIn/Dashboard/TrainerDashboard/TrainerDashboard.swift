@@ -7,6 +7,7 @@
 import SwiftUI
 
 struct TrainerDashboard: View {
+    @Environment(\.scenePhase) var scenePhase
     @State var trainerDashboardViewModel = TrainerDashboardViewModel()
     
     var body: some View {
@@ -40,9 +41,14 @@ struct TrainerDashboard: View {
                     }
             }
         }
-        .onAppear {
+        .onAppear { 
             trainerDashboardViewModel.inizializeAuth()
             trainerDashboardViewModel.getTeam()
+        }
+        .onChange(of: scenePhase) {
+            if scenePhase == .active {
+                trainerDashboardViewModel.fetchDataFromRemote()
+            }
         }
         .navigationTitle("Trainer")
     }

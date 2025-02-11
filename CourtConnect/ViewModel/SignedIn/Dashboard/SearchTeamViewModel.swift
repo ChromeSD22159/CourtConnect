@@ -23,6 +23,11 @@ import Auth
     var foundTeams: [TeamDTO] = []
     var selectedTeam: TeamDTO?
      
+    func inizialize() {
+        inizializeAuth()
+        getAllTeams()
+    }
+    
     func searchTeam() {
         Task {
             do {
@@ -54,6 +59,15 @@ import Auth
             } catch {
                 errorHandler.handleError(error: error)
             }
+        }
+    }
+    
+    func getAllTeams() {
+        do {
+            let allTeams = try repository.teamRepository.getAllTeamsAsc()
+            foundTeams = allTeams
+        } catch {
+            print(error)
         }
     }
 }

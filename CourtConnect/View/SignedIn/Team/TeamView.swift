@@ -9,8 +9,9 @@ import CachedAsyncImage
 
 struct TeamView: View {
     @Environment(\.messagehandler) var messagehandler
-     
-    @State var teamViewViewModel: TeamViewViewModel =  TeamViewViewModel() 
+    @Environment(\.scenePhase) var scenePhase
+    
+    @State var teamViewViewModel: TeamViewViewModel =  TeamViewViewModel()
     
     var body: some View {
         ZStack {
@@ -63,7 +64,7 @@ struct TeamView: View {
                 TeamUnavailableView()
             }
             
-            DocumentOberlayView(document: $teamViewViewModel.selectedDocument)
+            DocumentOverlayView(document: $teamViewViewModel.selectedDocument)
         }
         .navigationTitle(teamViewViewModel.currentTeam?.teamName ?? "")
         .navigationBarTitleDisplayMode(.inline)
@@ -98,13 +99,18 @@ struct TeamView: View {
         .onAppear {
             teamViewViewModel.inizialize()
         }
+        .onChange(of: scenePhase) {
+            if scenePhase == .active {
+                teamViewViewModel.fetchDataFromRemote()
+            }
+        }
     }
 }
  
-fileprivate struct DocumentOberlayView: View {
+fileprivate struct DocumentOverlayView: View {
     @Binding var document: Document?
     let viewPort = UIScreen.main.bounds.size
-    
+    @State private var shareableImage: Image?
     var body: some View {
         if let document = document {
             VStack {
@@ -117,6 +123,9 @@ fileprivate struct DocumentOberlayView: View {
                             .clipped()
                             .frame(width: viewPort.width * 0.6, height: viewPort.width * 0.6)
                             .clipShape(RoundedRectangle(cornerRadius: 15))
+                            .onAppear {
+                                shareableImage = image
+                            }
                     } placeholder: {
                         ZStack {
                             Image(systemName: "doc")
@@ -130,7 +139,11 @@ fileprivate struct DocumentOberlayView: View {
                         
                         Spacer()
                         
-                        Image(systemName: "square.and.arrow.up")
+                        if let shareableImage = shareableImage {
+                            ShareLink(item: shareableImage, preview: SharePreview(document.name, image: shareableImage)) {
+                                Label("Click to share", systemImage: "square.and.arrow.up")
+                            }
+                        }
                     }
                 }
                 .padding()
@@ -349,54 +362,17 @@ extension String {
     }
 }
  
-/*
-#Preview {
-    HStack {
-        HStack(alignment: .center) {
-            Image(.customFigureBasketballFoul)
-                .font(.title)
-            
-            Text(String("x\(5)"))
-                .font(.subheadline)
-        }
-        .frame(minWidth: 85)
-        HStack(alignment: .center) {
-            Image(.customBasketball2Fill)
-                .font(.title)
-            
-            Text(String("x\(10)"))
-                .font(.subheadline)
-        }
-        .frame(minWidth: 85)
-        HStack(alignment: .center) {
-            Image(.customBasketball3Fill)
-                .font(.title)
-            
-            Text(String("x\(3)"))
-                .font(.subheadline)
-        }
-        .frame(minWidth: 85)
-        HStack(alignment: .center) {
-            Image(.customFigureBasketballFoul)
-                .font(.title)
-            
-            Text(String("x\(45)"))
-                .font(.subheadline)
-        }
-        .background(.gray)
-        .frame(minWidth: 85)
-    }
-}
+extension Image {
+    @MainActor func render(scale displayScale: CGFloat = 1.0) -> UIImage? {
+        let renderer = ImageRenderer(content: self)
 
-#Preview {
-    @Previewable @State var userViewModel = SharedUserViewModel(repository: RepositoryPreview.shared)
-    
-    NavigationStack {
-        MessagePopover {
-            TeamView(userViewModel: userViewModel)
-        }
+        renderer.scale = displayScale
+        
+        return renderer.uiImage
     }
-    .previewEnvirments()
-    .navigationStackTint()
+    
+    @MainActor func convertImageToData() async -> Data? {
+        guard let uiImage = self.render()  else { return nil } // Helper function (see below)
+        return uiImage.jpegData(compressionQuality: 0.8) // Or pngData() for PNG
+    }
 }
- */

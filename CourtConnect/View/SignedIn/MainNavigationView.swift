@@ -48,7 +48,7 @@ struct MainNavigationView: View {
             }
         }
         .onChange(of: scenePhase) { _, newPhase in
-            if newPhase == .active {
+            if newPhase == .active { 
                 authViewModel.setUserOnline()
             } else if newPhase == .background {
                 authViewModel.setUserOffline()

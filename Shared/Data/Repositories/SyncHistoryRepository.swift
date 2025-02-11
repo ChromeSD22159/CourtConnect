@@ -67,7 +67,7 @@ import Foundation
         var tablesToSync: [(DatabaseTable, Date)] = []
 
         for table in DatabaseTable.allCases {
-            if table == .updateHistory || table == .userOnline || table == .userProfile || table == .deletionRequest { continue }
+            if table == .updateHistory || table == .userOnline || table == .deletionRequest { continue }
             
             let lastLocalSync = try self.getLastSyncDate(for: table, userId: userId)
             
@@ -85,7 +85,7 @@ import Foundation
         var tablesToSync: [(DatabaseTable, Date)] = []
 
         for table in DatabaseTable.allCases {
-            if table == .updateHistory || table == .userOnline || table == .userProfile || table == .deletionRequest { continue }
+            if table == .updateHistory || table == .userOnline || table == .deletionRequest { continue }
             let cal = Calendar.current
             let defaultdate = cal.date(byAdding: .year, value: -10, to: Date())!
             tablesToSync.append((table, defaultdate))

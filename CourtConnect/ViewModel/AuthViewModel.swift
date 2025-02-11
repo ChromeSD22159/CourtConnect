@@ -72,8 +72,7 @@ import WidgetKit
     
     func onScenePhaseChange(newValue: ScenePhase) {
         switch newValue {
-        case .background:
-            WidgetCenter.shared.reloadAllTimelines()
+        case .background: WidgetCenter.shared.reloadAllTimelines()
         case .inactive: break
         case .active: break
         @unknown default: break
@@ -95,7 +94,7 @@ import WidgetKit
         Task {
             do {
                 if let userId = user?.id {
-                    try await syncAllTables(userId: userId) 
+                    try await syncAllTables(userId: userId)
                 }
             } catch {
                 print(error)

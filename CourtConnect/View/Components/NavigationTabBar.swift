@@ -28,6 +28,9 @@ struct NavigationTabBar<Content: View>: View {
                 }
             })
         }
+        .onAppear {
+            navViewModel.inizializeAuth()
+        }
         .ignoresSafeArea()
         .overlay(alignment: .top) {
             ReoloadAnimation(isLoading: $reload)
@@ -47,7 +50,17 @@ struct NavigationTabBar<Content: View>: View {
                            
                         HStack {
                             ForEach(NavigationTab.allCases) { item in
-                                tabItem(item: item)
+                                if navViewModel.userAccount?.roleEnum == .player {
+                                    if item == .player {
+                                        tabItem(item: item)
+                                    } else {
+                                        tabItem(item: item)
+                                    }
+                                } else { 
+                                    if item != .player {
+                                        tabItem(item: item)
+                                    }
+                                }
                             }
                         }
                     }

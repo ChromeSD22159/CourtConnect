@@ -8,6 +8,11 @@ import Auth
 import Foundation
 import UIKit
 
+struct DateRange {
+    var start: Date = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
+    var end: Date = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
+}
+
 @MainActor
 @Observable class PlayerDashboardViewModel: AuthProtocol, SyncHistoryProtocol, ObservableObject {
     var repository: BaseRepository = Repository.shared
@@ -26,7 +31,16 @@ import UIKit
     var isEnterCode = false
     
     var isAbsenseSheet = false
-    var absenseDate = Date()
+    var startDate = Date.now.addingTimeInterval(86400)
+    var endDate = Date.now.addingTimeInterval(86400)
+    let range = Date.now...Date.now.addingTimeInterval(86400 * 14)
+    
+    func inizialize() {
+        inizializeAuth()
+        getTeam()
+        getTeamTermine()
+        getTerminAttendances()
+    }
     
     func getTeam() {
         currentTeam = nil
@@ -103,7 +117,7 @@ import UIKit
             do {
                 guard let userAccount = userAccount else { throw UserError.userAccountNotFound }
                 guard let teamId = currentTeam?.id else { throw TeamError.teamNotFound }
-                let newAbsense = Absence(userAccountId: userAccount.id, teamId: teamId, date: absenseDate, createdAt: Date(), updatedAt: Date())
+                let newAbsense = Absence(userAccountId: userAccount.id, teamId: teamId, startDate: startDate, endDate: endDate, createdAt: Date(), updatedAt: Date())
                 try await repository.teamRepository.insertAbsense(absence: newAbsense, userId: userAccount.userId)
                 self.isAbsenseSheet.toggle()
             } catch {

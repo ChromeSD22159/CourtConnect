@@ -58,6 +58,11 @@ class UserRepository {
         let fetchDescriptor = FetchDescriptor<UserProfile>(predicate: predicate)
         return try container.mainContext.fetch(fetchDescriptor).first
     }
+    
+    func getUserProfiles() throws -> [UserProfile] {
+        let fetchDescriptor = FetchDescriptor<UserProfile>()
+        return try container.mainContext.fetch(fetchDescriptor)
+    }
      
     func getRequestedUser(accountId: UUID) async throws -> (UserAccount?, UserProfile?) {
         let accountPredicate = #Predicate<UserAccount> { $0.id == accountId }

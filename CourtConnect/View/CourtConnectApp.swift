@@ -17,7 +17,7 @@ struct CourtConnectApp: App {
             AppBackground {
                 ZStack {
                     Group {
-                        if authViewModel.user != nil {
+                        if authViewModel.user != nil && authViewModel.isSlashScreen == false {
                             MainNavigationView(authViewModel: authViewModel) {
                                 authViewModel.user = nil
                             }

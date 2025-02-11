@@ -9,7 +9,7 @@ import SwiftUI
 struct EnterCodeView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.errorHandler) var errorHandler
-    @State private var viewModel = CodeEntryViewModel(repository: Repository.shared)
+    @State private var viewModel = CodeEntryViewModel()
     let userAccount: UserAccount
     
     var body: some View {

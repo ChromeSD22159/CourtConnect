@@ -50,7 +50,10 @@
     "Absense" : {
 
     },
-    "Absense Date" : {
+    "Absense End Date" : {
+
+    },
+    "Absense Start Date" : {
 
     },
     "Add Admin" : {
@@ -102,6 +105,9 @@
 
     },
     "Choose Document" : {
+
+    },
+    "Click to share" : {
 
     },
     "continue" : {
@@ -338,6 +344,9 @@
     "Position" : {
 
     },
+    "Position:" : {
+
+    },
     "Prevents or sick?!" : {
 
     },
@@ -381,6 +390,9 @@
 
     },
     "Settings" : {
+
+    },
+    "Shirt Number" : {
 
     },
     "Show Join QR Code" : {

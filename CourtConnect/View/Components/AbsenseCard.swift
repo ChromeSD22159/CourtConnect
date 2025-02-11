@@ -27,8 +27,9 @@ struct AbsenseCard: View {
         .clipShape(RoundedRectangle(cornerRadius: 15)) 
         .sheet(isPresented: $playerDashboardViewModel.isAbsenseSheet, content: {
             NavigationStack {
-                VStack {
-                    DatePicker("Absense Date", selection: $playerDashboardViewModel.absenseDate, displayedComponents: .date)
+                VStack { 
+                    DatePicker("Absense Start Date", selection: $playerDashboardViewModel.startDate, in: playerDashboardViewModel.range, displayedComponents: .date)
+                    DatePicker("Absense End Date", selection: $playerDashboardViewModel.endDate, in: playerDashboardViewModel.range, displayedComponents: .date)
                 }
                 .padding()
                 .toolbar {

@@ -32,11 +32,14 @@ struct SettingsView: View {
             
             Section {
                 VStack(spacing: 6) {
-                    NavigationLink {
+                    /*
+                     NavigationLink {
                         OnlineUserList(viewModel: viewModel)
-                    } label: {
+                     } label: {
                         IconRow(systemName: "person.2.fill", text: "Total Online Users: \(viewModel.onlineUserCount)")
-                    }
+                     }
+                     */
+                    IconRow(systemName: "person.2.fill", text: "Total Online Users: \(viewModel.onlineUserCount)")
                      
                     if let date = viewModel.userProfile?.lastOnline {
                         IconRow(systemName: "person.badge.clock.fill", text: "Last online: " + date.formattedDate() + " " + date.formattedTime() + " Uhr")

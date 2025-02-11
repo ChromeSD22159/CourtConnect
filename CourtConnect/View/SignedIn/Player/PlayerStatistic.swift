@@ -8,6 +8,7 @@ import SwiftUI
 import Charts 
 
 struct PlayerStatistic: View {
+    @Environment(\.scenePhase) var scenePhase
     @State var viewModel = PlayerStatisticViewModel()
     
     var body: some View {
@@ -53,7 +54,7 @@ struct PlayerStatistic: View {
                          Text(viewModel.userProfile?.fullName ?? "")
                              .font(.headline)
                          
-                         Text(viewModel.userAccount?.position ?? "")
+                         Text(viewModel.teamMember?.position ?? "")
                              .font(.subheadline)
                      }
                  }
@@ -99,10 +100,22 @@ struct PlayerStatistic: View {
         .navigationBarTitleDisplayMode(.inline)
         .contentMargins(.top, 20)
         .contentMargins(.bottom, 75)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Image(systemName: "arrow.triangle.2.circlepath.circle")
+                    .rotationAnimation(isFetching: $viewModel.isfetching)
+                    .onTapGesture {
+                        viewModel.fetchDataFromRemote()
+                    }
+            }
+        }
         .onAppear {
-            viewModel.getUserAccount()
-            viewModel.getUserProfile()
-            viewModel.getStatistic(for: .game)
+            viewModel.initialze()
+        }
+        .onChange(of: scenePhase) {
+            if scenePhase == .active {
+                viewModel.fetchDataFromRemote()
+            }
         }
     }
 }

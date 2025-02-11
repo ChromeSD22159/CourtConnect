@@ -44,9 +44,7 @@ import UIKit
                 try repository.accountRepository.softDelete(item: currentAccount)
                 try await repository.accountRepository.sendToBackend(item: currentAccount)
             } catch {
-                if ErrorIdentifier.isConnectionTimedOut(error: error) {
-                    print(error)
-                }
+                ErrorHandlerViewModel.shared.handleError(error: error)
             }
         }
     }
@@ -90,8 +88,7 @@ import UIKit
             }
             
             // wenn Spieler
-            if role == .player, let myMemberAccount = try repository.teamRepository.getMember(for: userAccount.id) {
-                print("myMemberAccount: \(myMemberAccount)")
+            if role == .player, let myMemberAccount = try repository.teamRepository.getMember(for: userAccount.id) { 
                 try repository.teamRepository.softDelete(teamMember: myMemberAccount, userId: user.id)
                 
                 userAccount.teamId = nil

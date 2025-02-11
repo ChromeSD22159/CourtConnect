@@ -49,10 +49,10 @@ Deno.serve(async (req) => {
               .eq('teamId', termin.teamId)
 
           const { data: senderUserProfile } = await supabase 
-                      .from('UserProfile')
-                      .select('*')
-                      .eq('userId', sender.userId)
-                      .single();
+              .from('UserProfile')
+              .select('*')
+              .eq('userId', sender.userId)
+              .single();
 
           if (trainers && senderUserProfile && trainers.length > 0) {
               for (const trainer of trainers) {
@@ -134,10 +134,10 @@ Deno.serve(async (req) => {
                       return new Response(JSON.stringify(resData), {
                           headers: { 'Content-Type': 'application/json' },
                       });
-                      } else {
-                        console.error("UserAccount not found");
-                        return new Response(JSON.stringify({ error: "UserAccount not found" }), { status: 404, headers: { 'Content-Type': 'application/json' } });
-                      }
+                  } else {
+                    console.error("UserAccount not found");
+                    return new Response(JSON.stringify({ error: "UserAccount not found" }), { status: 404, headers: { 'Content-Type': 'application/json' } });
+                  }
               } 
           } else {
               console.error("No Trainer not found");
