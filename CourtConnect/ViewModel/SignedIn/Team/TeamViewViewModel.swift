@@ -5,11 +5,14 @@
 //  Created by Frederik Kohler on 05.02.25.
 //
 import Foundation
+import Auth
 
-@Observable @MainActor class TeamViewViewModel {
-    let repository: BaseRepository
+@Observable @MainActor class TeamViewViewModel: AuthProtocol {
+    var repository: BaseRepository = Repository.shared
+    var user: User?
+    var userAccount: UserAccount?
+    var userProfile: UserProfile?
     var currentTeam: Team?
-    var account: UserAccount?
     
     var documents: [Document] = []
     var termine: [Termin] = []
@@ -17,30 +20,16 @@ import Foundation
     var teamPlayers: [MemberProfile] = []
     var teamTrainers: [MemberProfile] = []
     
-    init(repository: BaseRepository, account: UserAccount?) {
-        self.repository = repository
-        self.account = account
-         
-        self.getTeam()
-        self.getAllDocuments()
-        self.getTeamTermine()
-        self.getTeamMembers()
+    var selectedDocument: Document?
+    
+    func inizialize() {
+        self.inizializeAuth()
     }
     
     private func getAllDocuments() {
         do {
             guard let team = currentTeam else { return }
             self.documents = try repository.documentRepository.getDocuments(for: team.id)
-        } catch {
-            print(error)
-        }
-    }
-    
-    private func getTeam() {
-        guard let account = account, let teamId = account.teamId else { return }
-       
-        do { 
-            currentTeam = try self.repository.teamRepository.getTeam(for: teamId)
         } catch {
             print(error)
         }
@@ -57,11 +46,12 @@ import Foundation
     
     func getTeamMembers() {
         do {
-            guard let teamId = currentTeam?.id else { throw TeamError.teamNotFound }
+            guard let team = currentTeam else { throw TeamError.teamNotFound }
              
-            let teamMember = try repository.teamRepository.getTeamMembers(for: teamId)
+            let teamMember = try repository.teamRepository.getTeamMembers(for: team.id)
              
             let teamPlayers = teamMember.filter { $0.role == UserRole.player.rawValue }
+            
             for player in teamPlayers {
                 if let playerAccount = try repository.accountRepository.getAccount(id: player.userAccountId),
                     let userProfile = try repository.userRepository.getUserProfileFromDatabase(userId: playerAccount.userId) {
@@ -91,4 +81,8 @@ import Foundation
             print(error)
         }
     }
-} 
+    
+    func setDocument(document: Document) {
+        selectedDocument = document
+    }
+}

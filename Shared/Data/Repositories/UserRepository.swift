@@ -87,8 +87,7 @@ class UserRepository {
     }
     
     func insertOrUpdate(profile: UserProfile, table: DatabaseTable, userId: UUID) throws {
-        container.mainContext.insert(profile)
-        // TODO: newSyncHistoryTimeStamp REMEMBER
+        container.mainContext.insert(profile) 
         let newSyncHistoryTimeStamp = SyncHistory(table: table, userId: userId)
         container.mainContext.insert(newSyncHistoryTimeStamp)
         

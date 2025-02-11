@@ -41,7 +41,7 @@ struct AsyncCachedImage<ImageView: View, PlaceholderView: View>: View {
     @ViewBuilder var placeholder: () -> PlaceholderView
     
     // Downloaded image
-    @State var image: UIImage? = nil
+    @State var image: UIImage? 
     
     init(
         url: URL?,

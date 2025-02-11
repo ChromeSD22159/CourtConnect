@@ -7,30 +7,14 @@
 import SwiftUI
 
 struct TrainerDashboard: View {
-    @ObservedObject var userViewModel: SharedUserViewModel
-    @ObservedObject var dashBoardViewModel: DashBoardViewModel
-     
-    @State var foundNewTeamViewModel: FoundNewTeamViewModel
-    @State var teamListViewModel: TeamListViewModel
-    
-    init(userViewModel: SharedUserViewModel, dashBoardViewModel: DashBoardViewModel) {
-        self.userViewModel = userViewModel 
-        self.dashBoardViewModel = dashBoardViewModel
-        self.foundNewTeamViewModel = FoundNewTeamViewModel(repository: userViewModel.repository)
-        self.teamListViewModel = TeamListViewModel(repository: userViewModel.repository)
-    }
+    @State var trainerDashboardViewModel = TrainerDashboardViewModel()
     
     var body: some View {
         VStack(spacing: 15) {
-            if let currentTeam = dashBoardViewModel.currentTeam {
-                HasTeam(userViewModel: userViewModel, dashBoardViewModel: dashBoardViewModel, teamId: currentTeam.id)
+            if trainerDashboardViewModel.currentTeam != nil {
+                HasTeam(trainerDashboardViewModel: trainerDashboardViewModel)
             } else {
-                HasNoTeam(
-                    userViewModel: userViewModel,
-                    dashBoardViewModel: dashBoardViewModel,
-                    foundNewTeamViewModel: foundNewTeamViewModel,
-                    teamListViewModel: teamListViewModel
-                )
+                HasNoTeam(trainerDashboardViewModel: trainerDashboardViewModel)
                 .padding(.horizontal, 16)
             }
             
@@ -42,65 +26,49 @@ struct TrainerDashboard: View {
                 action: "Delete",
                 cancel: "Cancel"
             ), material: .ultraThinMaterial) {
-                Task {
-                    do {
-                        try await dashBoardViewModel.deleteUserAccount(for: userViewModel.currentAccount)
-                        try userViewModel.setRandomAccount()
-                    } catch {
-                        print(error)
-                    }
-                }
+                trainerDashboardViewModel.deleteUserAccount()
             }
             .padding(.top, 40)
             .padding(.horizontal, 16)
         }
         .onAppear {
-            dashBoardViewModel.currentTeam = nil
-            dashBoardViewModel.getTeam(for: userViewModel.currentAccount)
+            trainerDashboardViewModel.inizializeAuth()
+            trainerDashboardViewModel.getTeam()
         }
         .navigationTitle("Trainer")
     }
 }
 
 fileprivate struct HasNoTeam: View {
-    @ObservedObject var userViewModel: SharedUserViewModel
-    @ObservedObject var dashBoardViewModel: DashBoardViewModel
-    @ObservedObject var foundNewTeamViewModel: FoundNewTeamViewModel
-    @ObservedObject var teamListViewModel: TeamListViewModel
-    
-    @State var isEnterCode = false
+    @Bindable var trainerDashboardViewModel: TrainerDashboardViewModel
     
     var body: some View {
         VStack {
             NavigationLink {
-                if let userAccount = userViewModel.currentAccount, let userProfile = userViewModel.userProfile {
-                    FoundNewTeamView(viewModel: foundNewTeamViewModel, userAccount: userAccount, userProfile: userProfile)
-                        .onDisappear { 
-                            dashBoardViewModel.getTeam(for: userAccount)
-                        }
-                }
+                FoundNewTeamView()
+                    .onDisappear { trainerDashboardViewModel.getTeam() }
             } label: {
                 RoundedIconTextCard(icon: "person.crop.circle.badge.plus", title: "Found team now!", description: "Start your own team and manage players and training sessions.")
             }
             
             NavigationLink {
-                SearchTeam(teamListViewModel: teamListViewModel, userViewModel: userViewModel)
+                SearchTeam()
             } label: {
                 RoundedIconTextCard(icon: "person.badge.plus", title: "Join a Team!", description: "Send a request to join a team as a trainer and start managing players and training sessions.")
             }
             
             RoundedIconTextCard(icon: "qrcode.viewfinder", title: "Join with Team ID!", description: "Enter a Team ID to instantly join an existing team and start managing players and training sessions.")
                 .onTapGesture {
-                    isEnterCode.toggle()
+                    trainerDashboardViewModel.isEnterCode.toggle()
                 }
-                .sheet(isPresented: $isEnterCode, onDismiss: {
-                    dashBoardViewModel.getTeam(for: userViewModel.currentAccount)
+                .sheet(isPresented: $trainerDashboardViewModel.isEnterCode, onDismiss: {
+                    trainerDashboardViewModel.getTeam()
                 }) {
-                    if let currentAccount = userViewModel.currentAccount {
+                    if let userAccount = trainerDashboardViewModel.userAccount {
                         ZStack {
                             Theme.background.ignoresSafeArea()
                             
-                            EnterCodeView(userAccount: currentAccount)
+                            EnterCodeView(userAccount: userAccount)
                         }
                     }
                 }
@@ -110,17 +78,14 @@ fileprivate struct HasNoTeam: View {
 }
 
 fileprivate struct HasTeam: View {
-    @ObservedObject var userViewModel: SharedUserViewModel
-    @ObservedObject var dashBoardViewModel: DashBoardViewModel
-    @Environment(\.errorHandler) var errorHandler
-    let teamId: UUID
+    var trainerDashboardViewModel: TrainerDashboardViewModel
     
     var body: some View {
         VStack {
             SnapScrollView(horizontalSpacing: 16) {
                 LazyHStack(spacing: 16) {
                     NavigationLink {
-                        if let userId = userViewModel.user?.id {
+                        if let userId = trainerDashboardViewModel.user?.id, let teamId = trainerDashboardViewModel.currentTeam?.id {
                             TeamRequestsView(teamId: teamId, userId: userId)
                         }
                     } label: {
@@ -128,8 +93,8 @@ fileprivate struct HasTeam: View {
                     }
                     
                     NavigationLink {
-                        if let teamId = dashBoardViewModel.currentTeam?.id,
-                           let userId = userViewModel.user?.id {
+                        if let teamId = trainerDashboardViewModel.currentTeam?.id,
+                           let userId = trainerDashboardViewModel.user?.id {
                             AddStatisticView(teamId: teamId, userId: userId)
                         } 
                     } label: {
@@ -137,16 +102,14 @@ fileprivate struct HasTeam: View {
                     }
                     
                     NavigationLink {
-                        if let teamId = dashBoardViewModel.currentTeam?.id {
-                            ManageTeamView(teamId: teamId)
-                        }
+                        ManageTeamView()
                     } label: {
                         IconCard(systemName: "23.square", title: "Manage Team", background: Material.ultraThinMaterial)
                     }
                      
-                    if dashBoardViewModel.isAdmin(currentAccount: userViewModel.currentAccount) {
+                    if trainerDashboardViewModel.isAdmin() {
                         NavigationLink {
-                            AdminDashboard(userId: userViewModel.user?.id, currentAccount: userViewModel.currentAccount, currentTeam: dashBoardViewModel.currentTeam)
+                            AdminDashboard()
                         } label: {
                             IconCard(systemName: "square.grid.2x2", title: "Admin Dashboard", background: Material.ultraThinMaterial)
                         }
@@ -155,16 +118,16 @@ fileprivate struct HasTeam: View {
                 .frame(height: 150)
             }
             
-            if let userAccount = userViewModel.currentAccount {
-                DocumentSheetButton(userAccount: userAccount) 
+            if let userAccount = trainerDashboardViewModel.userAccount {
+                DocumentSheetButton(userAccount: userAccount)
                     .padding(.horizontal, 16)
                 PlanTerminSheetButton(userAccount: userAccount) { termin in
-                    dashBoardViewModel.saveTermin(termin: termin, userId: userAccount.userId)
+                    trainerDashboardViewModel.saveTermin(termin: termin)
                 }
                 .padding(.horizontal, 16)
             }
               
-            if let QRCode = dashBoardViewModel.qrCode, let joinCode = dashBoardViewModel.currentTeam?.joinCode {
+            if let QRCode = trainerDashboardViewModel.qrCode, let joinCode = trainerDashboardViewModel.currentTeam?.joinCode {
                 ShowTeamJoinQrCode(QRCode: QRCode, joinCode: joinCode)
                     .padding(.horizontal, 16)
             }
@@ -177,11 +140,7 @@ fileprivate struct HasTeam: View {
                 action: "Leave",
                 cancel: "Cancel"
             ), material: .ultraThinMaterial) {
-                do {
-                    try dashBoardViewModel.leaveTeam(for: userViewModel.currentAccount, role: .trainer)
-                } catch {
-                    errorHandler.handleError(error: error)
-                }
+                trainerDashboardViewModel.leaveTeam(role: .trainer)
             }
             .padding(.horizontal, 16)
         }
@@ -239,9 +198,6 @@ fileprivate struct ShowTeamJoinQrCode: View {
 }
  
 #Preview {
-    @Previewable @State var dashBoardViewModel = DashBoardViewModel(repository: RepositoryPreview.shared)
-    @Previewable @State var userViewModel = SharedUserViewModel(repository: RepositoryPreview.shared)
-    @Previewable @State var teamViewModel = TeamListViewModel(repository: RepositoryPreview.shared)
     NavigationStack {
         VStack(spacing: 15) {  
                
@@ -263,7 +219,7 @@ fileprivate struct ShowTeamJoinQrCode: View {
             RoundedIconTextCard(icon: "person.crop.circle.badge.plus", title: "Found team now!", description: "Start your own team and manage players and training sessions.")
             
             NavigationLink {
-                SearchTeam(teamListViewModel: teamViewModel, userViewModel: userViewModel)
+                SearchTeam()
             } label: {
                 RoundedIconTextCard(icon: "person.badge.plus", title: "Join a Team!", description: "Send a request to join a team as a trainer and start managing players and training sessions.")
             }

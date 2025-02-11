@@ -19,8 +19,7 @@ import UIKit
     func insert(document: DocumentDTO, userId: UUID) {
         do {
             container.mainContext.insert(document.toModel())
-            
-            // TODO: newSyncHistoryTimeStamp REMEMBER
+             
             let newSyncHistoryTimeStamp = SyncHistory(table: .document, userId: userId)
             container.mainContext.insert(newSyncHistoryTimeStamp)
             try container.mainContext.save()
@@ -49,8 +48,7 @@ import UIKit
         document.updatedAt = Date()
         document.deletedAt = Date()
         container.mainContext.insert(document)
-       
-        // TODO: newSyncHistoryTimeStamp REMEMBER
+        
         let newSyncHistoryTimeStamp = SyncHistory(table: .document, userId: userId)
         container.mainContext.insert(newSyncHistoryTimeStamp)
         try container.mainContext.save()

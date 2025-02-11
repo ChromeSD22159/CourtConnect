@@ -70,8 +70,8 @@ import SwiftUI
         return resul
     }
     
-    func getAccount(id: UUID) throws -> UserAccount? {
-        let predicate = #Predicate<UserAccount> { $0.id == id && $0.deletedAt == nil }
+    func getAccount(id userAccountId: UUID) throws -> UserAccount? {
+        let predicate = #Predicate<UserAccount> { $0.id == userAccountId && $0.deletedAt == nil }
         let fetchDescruptor = FetchDescriptor<UserAccount>(predicate: predicate)
         let result = try container.mainContext.fetch(fetchDescruptor).first
         return result
@@ -106,26 +106,6 @@ import SwiftUI
     }
     
     // MARK: SYNCING
-    #warning("REMOVE REFACTOR")
-    func sendUpdatedAfterLastSyncToBackend(userId: UUID, lastSync: Date) async {
-        Task {
-            do {
-                try await Task.sleep(for: .seconds(1))
-                
-                let predicate = #Predicate<UserAccount> { $0.userId == userId && $0.updatedAt > lastSync }
-                let fetchDescriptor = FetchDescriptor<UserAccount>(predicate: predicate)
-                let result = try container.mainContext.fetch(fetchDescriptor)
-
-                for account in result {
-                    try await self.sendToBackend(item: account)
-                }
-            } catch {
-                print("cannot send: \(error)")
-            }
-        }
-    }
-    
-    #warning("REMOVE REFACTOR")
     func sendToBackend(item: UserAccount) async throws {
         try await backendClient.supabase
             .from(DatabaseTable.userAccount.rawValue)

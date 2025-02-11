@@ -5,25 +5,31 @@
 //  Created by Frederik Kohler on 07.02.25.
 //
 import Foundation
+import Auth
 
-@Observable @MainActor class ManageTeamViewModel {
-    let repository: BaseRepository
-    let teamId: UUID
+@Observable @MainActor class ManageTeamViewModel: AuthProtocol {
+    var repository: BaseRepository = Repository.shared
+    var user: User?
+    var userAccount: UserAccount?
+    var userProfile: UserProfile?
+    var currentTeam: Team?
     
     var teamPlayer: [TeamMemberProfile] = []
     var teamTrainer: [TeamMemberProfile] = []
     
-    init(repository: BaseRepository, teamId: UUID) {
-        self.repository = repository
-        self.teamId = teamId
-        
+    func inizialize() {
+        self.getUser()
+        self.getUserAccount()
+        self.getUserProfile()
+        self.getTeam()
         self.getTeamMember()
     }
     
     func getTeamMember() {
         do {
-            let teamMember = try repository.teamRepository.getTeamMembers(for: teamId)
-            
+            guard let currentTeam = currentTeam else { throw TeamError.teamNotFound }
+            let teamMember = try repository.teamRepository.getTeamMembers(for: currentTeam.id) 
+           
             for member in teamMember {
                 if let userAccount = try repository.accountRepository.getAccount(id: member.userAccountId),
                    let userProfil = try repository.userRepository.getUserProfileFromDatabase(userId: userAccount.userId) {
@@ -33,6 +39,7 @@ import Foundation
                     }
                     if userAccount.roleEnum == .trainer {
                         self.teamTrainer.append(TeamMemberProfile(userProfile: userProfil, teamMember: member))
+                        print(teamTrainer.count)
                     }
                 }
             }

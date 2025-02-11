@@ -4,28 +4,16 @@
 //
 //  Created by Frederik Kohler on 27.01.25.
 //
-import SwiftUI
+import SwiftUI 
  
 struct PlayerDashboard: View {
-    @ObservedObject var userViewModel: SharedUserViewModel
-    @ObservedObject var dashBoardViewModel: DashBoardViewModel
-    
-    @State var teamListViewModel: TeamListViewModel
-    @State var isEnterCode = false
-    
-    init(userViewModel: SharedUserViewModel, dashBoardViewModel: DashBoardViewModel) {
-        self.userViewModel = userViewModel
-        self.dashBoardViewModel = dashBoardViewModel
-        self.teamListViewModel = TeamListViewModel(repository: userViewModel.repository)
-    }
-    
+    @State var playerDashboardViewModel = PlayerDashboardViewModel() 
     var body: some View {
         VStack {
-            if let teamId = dashBoardViewModel.currentTeam?.id {
-                HasTeam(userViewModel: userViewModel, dashBoardViewModel: dashBoardViewModel, teamId: teamId)
+            if playerDashboardViewModel.currentTeam != nil {
+                HasTeam(playerDashboardViewModel: playerDashboardViewModel)
             } else {
-                // MARK: IF HAS NO TEAM
-                HasNoTeam(userViewModel: userViewModel, dashBoardViewModel: dashBoardViewModel, teamListViewModel: teamListViewModel)
+                HasNoTeam(playerDashboardViewModel: playerDashboardViewModel)
                     .padding(.bottom, 40)
             }
               
@@ -37,50 +25,39 @@ struct PlayerDashboard: View {
                 action: "Delete",
                 cancel: "Cancel"
             ), material: .ultraThinMaterial) {
-                Task {
-                    do {
-                        try await dashBoardViewModel.deleteUserAccount(for: userViewModel.currentAccount)
-                        try userViewModel.setRandomAccount()
-                    } catch {
-                        print(error)
-                    }
-                }
+                 playerDashboardViewModel.deleteUserAccount()
             }
         }
         .padding(.horizontal, 16)
         .padding(.top, 10)
         .onAppear {
-            dashBoardViewModel.currentTeam = nil
-            dashBoardViewModel.getTeam(for: userViewModel.currentAccount)
-            dashBoardViewModel.getTeamTermine()
-            dashBoardViewModel.getTerminAttendances(for: userViewModel.currentAccount?.id)
+            
+            playerDashboardViewModel.inizializeAuth()
+            playerDashboardViewModel.getTeam()
+            playerDashboardViewModel.getTeamTermine()
+            playerDashboardViewModel.getTerminAttendances()
         }
         .navigationTitle("Player Dashboard")
     }
 } 
  
 fileprivate struct HasNoTeam: View {
-    @ObservedObject var userViewModel: SharedUserViewModel
-    @ObservedObject var dashBoardViewModel: DashBoardViewModel
-    @ObservedObject var teamListViewModel: TeamListViewModel
-    
-    @State var isEnterCode = false
-    
+    @Bindable var playerDashboardViewModel: PlayerDashboardViewModel
     var body: some View {
         NavigationLink {
-            SearchTeam(teamListViewModel: teamListViewModel, userViewModel: userViewModel)
+            SearchTeam()
         } label: {
             RoundedIconTextCard(icon: "person.badge.plus", title: "Join a Team!", description: "Send a request to join a team as a trainer and start managing players and training sessions.")
         }
         
         RoundedIconTextCard(icon: "qrcode.viewfinder", title: "Join with Team ID!", description: "Enter a Team ID to instantly join an existing team and start managing players and training sessions.")
             .onTapGesture {
-                isEnterCode.toggle()
+                playerDashboardViewModel.isEnterCode.toggle()
             }
-            .sheet(isPresented: $isEnterCode, onDismiss: {
-                dashBoardViewModel.getTeam(for: userViewModel.currentAccount)
+            .sheet(isPresented: $playerDashboardViewModel.isEnterCode, onDismiss: {
+                playerDashboardViewModel.getTeam()
             }) {
-                if let currentAccount = userViewModel.currentAccount {
+                if let currentAccount = playerDashboardViewModel.userAccount {
                     ZStack {
                         Theme.background.ignoresSafeArea()
                         
@@ -92,62 +69,41 @@ fileprivate struct HasNoTeam: View {
 }
 
 fileprivate struct HasTeam: View {
-    @ObservedObject var userViewModel: SharedUserViewModel
-    @ObservedObject var dashBoardViewModel: DashBoardViewModel
-    let teamId: UUID
+    var playerDashboardViewModel: PlayerDashboardViewModel
     
     var body: some View {
-        AbsenseCard(isAbsenseSheet: $dashBoardViewModel.isAbsenseSheet, absenseDate: $dashBoardViewModel.absenseDate) {
-            if let userAccount = userViewModel.currentAccount {
-                dashBoardViewModel.absenceReport(for: userAccount)
-            }
+        AbsenseCard(playerDashboardViewModel: playerDashboardViewModel) {
+            playerDashboardViewModel.absenceRegister()
         }
            
-        CalendarCard(termine: dashBoardViewModel.termine)
-            .padding(.vertical) 
+        CalendarCard(termine: playerDashboardViewModel.termine)
+            .padding(.vertical)
         
-        ConfirmationTermin(attendanceTermines: dashBoardViewModel.attendancesTermines) { attendance in
-            guard let userId = userViewModel.currentAccount?.userId else { return }
-            dashBoardViewModel.updateTerminAttendance(attendance: attendance, userId: userId)
+        ConfirmationTermin(attendanceTermines: playerDashboardViewModel.attendancesTermines) { attendance in
+            playerDashboardViewModel.updateTerminAttendance(attendance: attendance)
         }
         
-        ConfirmButtonLabel(
-            confirmButtonDialog: ConfirmButtonDialog(
+        ConfirmButtonLabel(confirmButtonDialog: ConfirmButtonDialog(
                 systemImage: "iphone.and.arrow.right.inward",
                 buttonText: "Leave Team",
                 question: "Want Leave the Team",
                 message: "Are you sure you want to leave the Team? This action cannot be undone.",
                 action: "Leave",
                 cancel: "Cancel"
-            ),
-            material: .ultraThinMaterial
+            ), material: .ultraThinMaterial
         ) {
-            do {
-                #warning("FUNCTIONIERT NICHT RICHTIG")
-                try dashBoardViewModel.leaveTeam(for: userViewModel.currentAccount, role: .player)
-            } catch {
-                print(error)
-            }
+            playerDashboardViewModel.leaveTeam(role: .player)
         }
         .padding(.top, 40)
     }
 }
 
 #Preview {
-    @Previewable @State var dashBoardViewModel = DashBoardViewModel(repository: RepositoryPreview.shared)
-    @Previewable @State var userViewModel = SharedUserViewModel(repository: RepositoryPreview.shared)
-    
     ZStack {
         NavigationStack {
-            PlayerDashboard(userViewModel: userViewModel, dashBoardViewModel: dashBoardViewModel)
+            PlayerDashboard()
         }
         .navigationStackTint()
-        .previewEnvirments()
-    }
-    .onAppear {
-        userViewModel.currentAccount = MockUser.myUserAccount
-        dashBoardViewModel.currentTeam = Team(teamImageURL: nil, teamName: "Bulls", headcoach: "", joinCode: "", email: "", createdByUserAccountId: MockUser.myUserAccount.id, createdAt: Date(), updatedAt: Date())
-      
     }
 }
 

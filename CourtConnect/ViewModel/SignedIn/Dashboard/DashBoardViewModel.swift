@@ -5,160 +5,65 @@
 //  Created by Frederik Kohler on 30.01.25.
 //
 import Foundation
-import UIKit 
+import Auth
 
-@MainActor
-@Observable class DashBoardViewModel: ObservableObject {
+@Observable @MainActor class DashboardViewModel: AuthProtocol, SyncHistoryProtocol {
+    var repository: BaseRepository = Repository.shared
+    var user: User?
+    var userProfile: UserProfile?
+    var userAccount: UserAccount?
     var currentTeam: Team?
-    var qrCode: UIImage?
-    var termine: [Termin] = []
-    var attendancesTermines: [AttendanceTermin] = []
+    var userAccounts: [UserAccount] = []
     
-    let repository: BaseRepository
+    var isCreateRoleSheet = false
     
-    var isAbsenseSheet = false
-    var absenseDate = Date()
-    
-    init(repository: BaseRepository) {
-        self.repository = repository
+    func inizialize() {
+        inizializeAuth()
+        getAllUserAccounts()
     }
     
-    func getTeam(for currentAccount: UserAccount?) {
-        guard let currentUser = currentAccount, let teamId = currentUser.teamId else { return }
+    func getCurrentAccount() {
         do {
-            currentTeam = try repository.teamRepository.getTeam(for: teamId)
-            
-            readQRCode()
-        } catch {
-            currentTeam = nil
-            qrCode = nil
-        }
-    }
-    
-    func readQRCode() {
-        if let currentTeam = currentTeam {
-            qrCode = QRCodeHelper().generateQRCode(from: currentTeam.joinCode)
-        }
-    }
-    
-    /// SOFT DELETE LOCAL ONLY
-    func leaveTeam(for currentAccount: UserAccount?, role: UserRole) throws {
-        guard let currentAccount = currentAccount else { throw UserError.userAccountNotFound }
- 
-        // wenn trainer
-        if role == .trainer, let teamId = currentAccount.teamId {
-             
-            guard try repository.teamRepository.getTeamAdmins(for: teamId).count > 1 else { throw TeamError.lastAdminCantLeave }
-            
-            if let myAdmin = try? repository.teamRepository.getAdmin(for: currentAccount.id), let myMemberAccount = try repository.teamRepository.getMember(for: currentAccount.id) {
-                try repository.teamRepository.softDelete(teamAdmin: myAdmin, userId: currentAccount.userId)
-                try repository.teamRepository.softDelete(teamMember: myMemberAccount, userId: currentAccount.userId)
-            }
-            
-            currentAccount.teamId = nil
-            currentAccount.updatedAt = Date()
-            currentTeam = nil
-            qrCode = nil
-        }
-         
-        // wenn Spieler 
-        if role == .player, let myMemberAccount = try repository.teamRepository.getMember(for: currentAccount.id) {
-            print("myMemberAccount: \(myMemberAccount)")
-            try repository.teamRepository.softDelete(teamMember: myMemberAccount, userId: currentAccount.userId)
-            
-            currentAccount.teamId = nil
-            currentAccount.updatedAt = Date()
-            currentTeam = nil
-            qrCode = nil
-        }
-    }
-    
-    /// SOFT DELETE LOCAL ONLY
-    func deleteUserAccount(for currentAccount: UserAccount?) async throws {
-        guard let currentAccount = currentAccount else { return }
-        try repository.accountRepository.softDelete(item: currentAccount)
-        try await repository.accountRepository.sendToBackend(item: currentAccount)
-    }
-    
-    func deleteTeam(userId: UUID) throws {
-        guard let currentTeam = currentTeam else { return }
-        Task {
-            try repository.teamRepository.softDelete(team: currentTeam, userId: userId)
-        }
-    }
-    
-    func startReceivingRequests() { 
-        repository.teamRepository.receiveTeamJoinRequests { _ in }
-    }
-    
-    func saveTermin(termin: Termin, userId: UUID) {
-        Task {
-            do {
-                try await SupabaseService.upsertWithOutResult(item: termin.toDTO(), table: .termin, onConflict: "id")
-                
-                try repository.accountRepository.insert(termin: termin, table: .termin, userId: userId)
-            } catch {
-                ErrorHandlerViewModel.shared.handleError(error: error)
-                
-                try repository.accountRepository.insert(termin: termin, table: .termin, userId: userId)
-            }
-        }
-    }
-    
-    func absenceReport(for userAccount: UserAccount?) {
-        Task {
-            do {
-                guard let userAccount = userAccount else { throw UserError.userAccountNotFound }
-                guard let teamId = currentTeam?.id else { throw TeamError.teamNotFound }
-                let newAbsense = Absence(userAccountId: userAccount.id, teamId: teamId, date: absenseDate, createdAt: Date(), updatedAt: Date())
-                try await repository.teamRepository.insertAbsense(absence: newAbsense, userId: userAccount.userId)
-                self.isAbsenseSheet.toggle()
-            } catch {
-                print(error)
-            }
-        }
-    }
-     
-    func getTeamTermine() {
-        do {
-            guard let currentTeam = currentTeam else { throw TeamError.userHasNoTeam } 
-            termine = try repository.teamRepository.getTeamTermine(for: currentTeam.id)
-        } catch {
-            print(error)
-        }
-    }
-    
-    func getTerminAttendances(for currentAccountId: UUID?) {
-        do {
-            guard let currentAccountId = currentAccountId else { throw UserError.userAccountNotFound }
-            
-            let attandances = try repository.accountRepository.getAccountPendingAttendances(for: currentAccountId)
-            
-            for attandance in attandances {
-                if let termines = try repository.teamRepository.getTermineBy(id: attandance.terminId) {
-                    let attendanceTermin = AttendanceTermin(attendance: attandance, termin: termines)
-                    
-                    self.attendancesTermines.append(attendanceTermin)
+            guard let user = user else { throw UserError.userIdNotFound }
+            if let userAccountIdString = LocalStorageService.shared.userAccountId, let userAccountId = UUID(uuidString: userAccountIdString) {
+                self.userAccount = try repository.accountRepository.getAccount(id: userAccountId)
+            } else {
+                if let userAccount = try repository.accountRepository.getAllAccounts(userId: user.id).first {
+                    self.userAccount = userAccount
+                    LocalStorageService.shared.userAccountId = userAccount.id.uuidString
                 }
-            } 
+            }
         } catch {
             print(error)
         }
     }
     
-    func updateTerminAttendance(attendance: Attendance, userId: UUID) {
-        defer { attendancesTermines.removeAll(where: { $0.attendance.terminId == attendance.terminId }) }
+    func getAllUserAccounts() {
+        do {
+            guard let userId = user?.id else { return }
+            let accs = try repository.accountRepository.getAllAccounts(userId: userId) 
+            self.userAccounts = accs
+        } catch {
+            print(error)
+        }
+    }
+    
+    func setCurrentAccount(newAccount: UserAccount?) {
+        userAccount = newAccount
+        LocalStorageService.shared.userAccountId = newAccount?.id.uuidString
+    }
+    
+    func fetchDataFromRemote() {
         Task {
             do {
-                try await repository.teamRepository.upsertTerminAttendance(attendance: attendance, userId: userId)
+                if let userId = user?.id {
+                    try await syncAllTables(userId: userId)
+                    getAllUserAccounts()
+                    getCurrentAccount()
+                }
             } catch {
                 print(error)
             }
         }
-    }
-    
-    func isAdmin(currentAccount: UserAccount?) -> Bool {
-        guard let currentAccount = currentAccount else { return false }
-        return repository.accountRepository.isUserAdmin(account: currentAccount)
     }
 }

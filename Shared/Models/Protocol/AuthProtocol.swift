@@ -12,6 +12,7 @@ import Auth
     var user: User? { get set }
     var userAccount: UserAccount? { get set }
     var userProfile: UserProfile? { get set }
+    var currentTeam: Team? { get set }
 }
 
 extension AuthProtocol {
@@ -46,6 +47,22 @@ extension AuthProtocol {
             } catch {
                 print(error.localizedDescription)
             }
+        }
+    }
+    
+    func inizializeAuth() {
+        self.getUser()
+        self.getUserAccount()
+        self.getUserProfile()
+        self.getTeam()
+    }
+    
+    func getTeam() {
+        guard let userAccount = userAccount, let teamId = userAccount.teamId else { return }
+        do { 
+            currentTeam = try self.repository.teamRepository.getTeam(for: teamId)
+        } catch {
+            print(error)
         }
     }
 }

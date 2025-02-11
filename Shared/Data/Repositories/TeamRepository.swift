@@ -26,8 +26,7 @@ import Supabase
     func upsertlocal<T: ModelProtocol>(item: T, table: DatabaseTable, userId: UUID) {
         do {
             container.mainContext.insert(item)
-            
-            // TODO: newSyncHistoryTimeStamp REMEMBER
+             
             let newSyncHistoryTimeStamp = SyncHistory(table: table, userId: userId)
             container.mainContext.insert(newSyncHistoryTimeStamp)
             

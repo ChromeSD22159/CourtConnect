@@ -8,13 +8,8 @@ import SwiftUI
 import PhotosUI
 
 struct FoundNewTeamView: View {
-    @Environment(\.errorHandler) var errorHandler
     @Environment(\.dismiss) var dismiss
-    @ObservedObject var viewModel: FoundNewTeamViewModel
-  
-    let userAccount: UserAccount
-    let userProfile: UserProfile
-    
+    @State var viewModel: FoundNewTeamViewModel = FoundNewTeamViewModel() 
     var body: some View {
         ZStack {
             Theme.background.ignoresSafeArea()
@@ -88,15 +83,7 @@ struct FoundNewTeamView: View {
                 }
                 
                 Button("Create Team") {
-                    Task {
-                        do {
-                            try await viewModel.createTeam(userAccount: userAccount, userProfile: userProfile)
-                            
-                            dismiss() 
-                        } catch {
-                            errorHandler.handleError(error: error)
-                        }
-                    }
+                    viewModel.createTeam() 
                 }
                 .tint(Theme.darkOrange)
                 .buttonStyle(.borderedProminent)
@@ -112,6 +99,7 @@ struct FoundNewTeamView: View {
             
             LoadingCard(isLoading: $viewModel.isLoading)
         }
+        .onAppear(perform: viewModel.inizializeAuth)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Image(systemName: "figure")
@@ -124,12 +112,8 @@ struct FoundNewTeamView: View {
 }
 
 #Preview {
-    @Previewable @State var viewModel = FoundNewTeamViewModel(repository: RepositoryPreview.shared)
-    @Previewable @State var userProfile = UserProfile(userId: UUID(), firstName: "Spieler", lastName: "Spieler", birthday: "22.11.1986")
-    @Previewable @State var userAccount = UserAccount(userId: UUID(), teamId: UUID(), position: UserRole.player.rawValue, role: UserRole.player.rawValue, displayName: "Spieler", createdAt: Date(), updatedAt: Date())
-    
     NavigationStack {
-        FoundNewTeamView(viewModel: viewModel, userAccount: userAccount, userProfile: userProfile)
+        FoundNewTeamView()
     }
     .previewEnvirments()
     .navigationStackTint()

@@ -17,8 +17,8 @@ struct MainNavigationView: View {
             NavigationStack {
                 NavigationTabBar(navViewModel: navViewModel) {
                     switch navViewModel.current {
-                    case .home: DashboardView(userViewModel: userViewModel)
-                    case .team: TeamView(userViewModel: userViewModel)
+                    case .home: DashboardView()
+                    case .team: TeamView()
                     case .player: PlayerStatistic()
                     case .settings: SettingsView()
                     }

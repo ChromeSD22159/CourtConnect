@@ -7,10 +7,7 @@
 import SwiftUI
 
 struct SearchTeam: View {
-    @ObservedObject var teamListViewModel: TeamListViewModel
-    @ObservedObject var userViewModel: SharedUserViewModel
-    @Environment(\.messagehandler) var messagehandler
-    @Environment(\.errorHandler) var errorHandler
+    @State var teamListViewModel: TeamListViewModel = TeamListViewModel()
     var body: some View {
         List {
             Section {
@@ -41,7 +38,6 @@ struct SearchTeam: View {
         .listBackground()
         .searchable(text: $teamListViewModel.searchTeamName, isPresented: $teamListViewModel.isSearchBar)
         .onSubmit(of: .search) {
-            guard !teamListViewModel.searchTeamName.isEmpty else { return }
             teamListViewModel.searchTeam()
         }
         .onAppear {
@@ -51,16 +47,7 @@ struct SearchTeam: View {
         }
         .alert("Join Team?", isPresented: $teamListViewModel.showJoinTeamAlert) {
             Button("Join", role: .destructive) {
-                Task { 
-                    guard let userAccount = userViewModel.currentAccount else { return }
-                    do {
-                        try await teamListViewModel.requestTeam(userAccount: userAccount)
-                        let msg = InAppMessage(title: "Request send!")
-                        messagehandler.handleMessage(message: msg)
-                    } catch {
-                        errorHandler.handleError(error: error)
-                    }
-                }
+                teamListViewModel.sendJoinRequest()
             }
             Button("Cancel", role: .cancel) { }
         } message: {
@@ -70,6 +57,5 @@ struct SearchTeam: View {
 } 
 
 #Preview {
-    SearchTeam(teamListViewModel: TeamListViewModel(repository: RepositoryPreview.shared), userViewModel: SharedUserViewModel(repository: RepositoryPreview.shared))
-        .previewEnvirments()
+    SearchTeam() 
 }

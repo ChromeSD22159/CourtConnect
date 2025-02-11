@@ -20,6 +20,4 @@ struct RequestUser: Identifiable {
         self.userProfile = userProfile
         self.request = request
     }
-} 
-
-
+}  

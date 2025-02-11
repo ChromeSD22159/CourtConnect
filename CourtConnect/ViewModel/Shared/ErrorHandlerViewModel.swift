@@ -17,6 +17,10 @@ import SwiftUI
             print("Internet error ignored")
             return
         }
+        guard !ErrorIdentifier.isConnectionTimedOut(error: error) else {
+            print("Internet error ignored")
+            return
+        }
         guard self.error == nil else { return }
         self.error = error
         

@@ -13,6 +13,7 @@ enum TeamError: Error, LocalizedError {
     case lastAdminCantLeave
     case teamNameEmtpy
     case teamNameLessCharacter
+    case searchInputIsNull
     
     var errorDescription: String? {
         switch self {
@@ -22,6 +23,7 @@ enum TeamError: Error, LocalizedError {
         case .lastAdminCantLeave: return "Last Admin cant Leave the Team"
         case .teamNameEmtpy: return "Recovery suggestion: Enter a team name"
         case .teamNameLessCharacter: return "Recovery suggestion: Enter a team name with at least 5 characters"
+        case .searchInputIsNull: return "The input must not be empty!"
         }
     }
 }

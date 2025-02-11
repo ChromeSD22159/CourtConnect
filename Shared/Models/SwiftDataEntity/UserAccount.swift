@@ -8,7 +8,7 @@ import SwiftData
 import Foundation
 
 @Model
-class UserAccount: ModelProtocol { 
+class UserAccount: ModelProtocol, Identifiable { 
     @Attribute(.unique) var id: UUID
     var userId: UUID
     var teamId: UUID?

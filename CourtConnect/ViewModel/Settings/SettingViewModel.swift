@@ -14,6 +14,7 @@ import FirebaseMessaging
     var user: User?
     var userAccount: UserAccount?
     var userProfile: UserProfile?
+    var currentTeam: Team?
      
     var onlineUser: [UserOnlineDTO] = []
     var onlineUserCount: Int {

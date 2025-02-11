@@ -9,24 +9,15 @@ import CachedAsyncImage
 
 struct TeamView: View {
     @Environment(\.messagehandler) var messagehandler
-    
-    @ObservedObject var userViewModel: SharedUserViewModel
-    @State var teamViewViewModel: TeamViewViewModel
-    @State var selectedDocument: Document?
-    
-    init(userViewModel: SharedUserViewModel) {
-        self.userViewModel = userViewModel
-        self.teamViewViewModel = TeamViewViewModel(repository: userViewModel.repository, account: userViewModel.currentAccount)
-    }
+     
+    @State var teamViewViewModel: TeamViewViewModel =  TeamViewViewModel() 
     
     var body: some View {
         ZStack {
             if (teamViewViewModel.currentTeam != nil) {
                 ScrollView {
                     VStack {
-                        DocumentScrollView(documents: teamViewViewModel.documents) { document in
-                            selectedDocument = document
-                        }
+                        DocumentScrollView(documents: teamViewViewModel.documents, onClick: teamViewViewModel.setDocument)
                         
                         LazyVStack(spacing: 20) {
                             Section {
@@ -65,14 +56,14 @@ struct TeamView: View {
                 .contentMargins(.bottom, 75)
                 .contentMargins(.top, 20)
                 .scrollIndicators(.hidden)
-                .opacity(selectedDocument != nil ? 0.5 : 1.0)
-                .blur(radius: selectedDocument != nil ? 2 : 0)
-                .animation(.easeInOut, value: selectedDocument)
+                .opacity(teamViewViewModel.selectedDocument != nil ? 0.5 : 1.0)
+                .blur(radius: teamViewViewModel.selectedDocument != nil ? 2 : 0)
+                .animation(.easeInOut, value: teamViewViewModel.selectedDocument)
             } else {
                 TeamUnavailableView()
             }
             
-            DocumentOberlayView(document: $selectedDocument)
+            DocumentOberlayView(document: $teamViewViewModel.selectedDocument)
         }
         .navigationTitle(teamViewViewModel.currentTeam?.teamName ?? "")
         .navigationBarTitleDisplayMode(.inline)
@@ -96,6 +87,9 @@ struct TeamView: View {
                     }
                 }
             }
+        }
+        .onAppear {
+            teamViewViewModel.inizialize()
         }
     }
 }

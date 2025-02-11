@@ -7,11 +7,7 @@
 import SwiftUI
  
 struct ManageTeamView: View {
-    var viewModel: ManageTeamViewModel
-    
-    init(teamId: UUID) {
-        self.viewModel = ManageTeamViewModel(repository: Repository.shared, teamId: teamId)
-    }
+    var viewModel: ManageTeamViewModel = ManageTeamViewModel()
     
     var body: some View {
         List {
@@ -37,7 +33,7 @@ struct ManageTeamView: View {
             }
             
             Section {
-                if viewModel.teamPlayer.isEmpty {
+                if viewModel.teamTrainer.isEmpty {
                     NoTeamTrainerAvaible()
                 } else {
                     ForEach(viewModel.teamTrainer, id: \.userProfile.id) { team in
@@ -46,8 +42,7 @@ struct ManageTeamView: View {
                             Button(role: .destructive) {
                                 Task {
                                     do {
-                                        team.teamMember.deletedAt = Date()
-                                        // TODO: DEBUG;
+                                        team.teamMember.deletedAt = Date() 
                                         try await SupabaseService.upsertWithOutResult(item: team.teamMember.toDTO(), table: .teamMember, onConflict: "id")
                                     } catch {
                                         print(error)
@@ -64,6 +59,9 @@ struct ManageTeamView: View {
             }
         }
         .listBackground()
+        .onAppear {
+            viewModel.inizialize() 
+        }
     }
 }
 
@@ -101,5 +99,5 @@ fileprivate struct MemberRow: View {
 } 
 
 #Preview {
-    ManageTeamView(teamId: UUID())
+    ManageTeamView()
 }
