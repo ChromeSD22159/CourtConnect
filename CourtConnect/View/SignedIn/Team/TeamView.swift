@@ -5,24 +5,20 @@
 //  Created by Frederik Kohler on 29.01.25.
 //
 import SwiftUI 
+import CachedAsyncImage
 
 struct TeamView: View {
     @Environment(\.messagehandler) var messagehandler
+    @Environment(\.scenePhase) var scenePhase
     
-    @ObservedObject var userViewModel: SharedUserViewModel
-    @State var teamViewViewModel: TeamViewViewModel
-    
-    init(userViewModel: SharedUserViewModel) {
-        self.userViewModel = userViewModel
-        self.teamViewViewModel = TeamViewViewModel(repository: userViewModel.repository, account: userViewModel.currentAccount)
-    }
+    @State var teamViewViewModel: TeamViewViewModel =  TeamViewViewModel()
     
     var body: some View {
         ZStack {
             if (teamViewViewModel.currentTeam != nil) {
                 ScrollView {
                     VStack {
-                        DocumentScrollView(documents: teamViewViewModel.documents)
+                        DocumentScrollView(documents: teamViewViewModel.documents, onClick: teamViewViewModel.setDocument)
                         
                         LazyVStack(spacing: 20) {
                             Section {
@@ -56,27 +52,30 @@ struct TeamView: View {
                         CalendarCard(termine: teamViewViewModel.termine)
                             .padding(.horizontal)
                             .padding(.vertical)
-                        
-                        ForEach(teamViewViewModel.documents) { document in
-                            AsyncImage(url: URL(string: document.url)) { image in
-                                image.resizable()
-                            } placeholder: {
-                                ProgressView()
-                            }
-                            .frame(width: 300, height: 300)
-                        }
                     }
                 }
                 .contentMargins(.bottom, 75)
                 .contentMargins(.top, 20)
                 .scrollIndicators(.hidden)
+                .opacity(teamViewViewModel.selectedDocument != nil ? 0.5 : 1.0)
+                .blur(radius: teamViewViewModel.selectedDocument != nil ? 2 : 0)
+                .animation(.easeInOut, value: teamViewViewModel.selectedDocument)
             } else {
                 TeamUnavailableView()
             }
+            
+            DocumentOverlayView(document: $teamViewViewModel.selectedDocument)
         }
         .navigationTitle(teamViewViewModel.currentTeam?.teamName ?? "")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Image(systemName: "arrow.triangle.2.circlepath.circle")
+                    .rotationAnimation(isFetching: $teamViewViewModel.isfetching)
+                    .onTapGesture {
+                        teamViewViewModel.fetchDataFromRemote()
+                    }
+            }
             ToolbarItem(placement: .navigationBarTrailing) {
                 if let team = teamViewViewModel.currentTeam {
                     IconMenuButton(icon: "info.bubble", description: team.teamName.localizedStringKey()) {
@@ -97,11 +96,87 @@ struct TeamView: View {
                 }
             }
         }
+        .onAppear {
+            teamViewViewModel.inizialize()
+        }
+        .onChange(of: scenePhase) {
+            if scenePhase == .active {
+                teamViewViewModel.fetchDataFromRemote()
+            }
+        }
+    }
+}
+ 
+fileprivate struct DocumentOverlayView: View {
+    @Binding var document: Document?
+    let viewPort = UIScreen.main.bounds.size
+    @State private var shareableImage: Image?
+    var body: some View {
+        if let document = document {
+            VStack {
+                VStack(spacing: 20) { 
+                    
+                    AsyncCachedImage(url: URL(string: document.url)!) { image in
+                        image
+                            .resizable()
+                            .scaledToFill()
+                            .clipped()
+                            .frame(width: viewPort.width * 0.6, height: viewPort.width * 0.6)
+                            .clipShape(RoundedRectangle(cornerRadius: 15))
+                            .onAppear {
+                                shareableImage = image
+                            }
+                    } placeholder: {
+                        ZStack {
+                            Image(systemName: "doc")
+                                .font(.largeTitle)
+                                .padding(20)
+                        }
+                    }
+                    
+                    HStack {
+                        Text(document.name)
+                        
+                        Spacer()
+                        
+                        if let shareableImage = shareableImage {
+                            ShareLink(item: shareableImage, preview: SharePreview(document.name, image: shareableImage)) {
+                                Label("Click to share", systemImage: "square.and.arrow.up")
+                            }
+                        }
+                    }
+                }
+                .padding()
+                .background(Material.ultraThinMaterial)
+                .clipShape(RoundedRectangle(cornerRadius: 15))
+                .shadow(radius: 10)
+                .transition(
+                    AnyTransition.move(edge: .bottom)
+                        .combined(with: .scale(scale: 0.6, anchor: .top))
+                )
+                .overlay(alignment: .topTrailing, content: {
+                    ZStack {
+                        Circle()
+                            .fill(Material.ultraThinMaterial)
+                            .frame(width: 30)
+                            .shadow(radius: 2, x: -5, y: 5)
+                            
+                        Image(systemName: "xmark")
+                    }
+                    .offset(x: 10, y: -10)
+                    .onTapGesture {
+                        self.document = nil
+                    }
+                })
+                .frame(width: viewPort.width * 0.8, height: viewPort.width * 1.0)
+            }
+        }
     }
 }
 
 fileprivate struct DocumentScrollView: View {
     var documents: [Document]
+    let onClick: (Document) -> Void
     var body: some View {
         Row(title: "Documents") {
             if !documents.isEmpty {
@@ -113,11 +188,24 @@ fileprivate struct DocumentScrollView: View {
                                     .fill(Material.ultraThinMaterial)
                                 
                                 VStack {
-                                    Image(systemName: "doc")
-                                        .font(.largeTitle)
-                                        .padding(20)
-                                   
+                                    
+                                    AsyncCachedImage(url: URL(string: document.url)!) { image in
+                                        image
+                                            .resizable()
+                                            .frame(width: 100, height: 100)
+                                            .clipShape(RoundedRectangle(cornerRadius: 15))
+                                    } placeholder: {
+                                        ZStack {
+                                            Image(systemName: "doc")
+                                                .font(.largeTitle)
+                                                .padding(20)
+                                        }
+                                    } 
+                                    
                                     Text(document.name)
+                                }
+                                .onTapGesture {
+                                    onClick(document)
                                 }
                             }
                             .frame(width: 150, height: 150)
@@ -274,52 +362,17 @@ extension String {
     }
 }
  
-#Preview {
-    HStack {
-        HStack(alignment: .center) {
-            Image(.customFigureBasketballFoul)
-                .font(.title)
-            
-            Text(String("x\(5)"))
-                .font(.subheadline)
-        }
-        .frame(minWidth: 85)
-        HStack(alignment: .center) {
-            Image(.customBasketball2Fill)
-                .font(.title)
-            
-            Text(String("x\(10)"))
-                .font(.subheadline)
-        }
-        .frame(minWidth: 85)
-        HStack(alignment: .center) {
-            Image(.customBasketball3Fill)
-                .font(.title)
-            
-            Text(String("x\(3)"))
-                .font(.subheadline)
-        }
-        .frame(minWidth: 85)
-        HStack(alignment: .center) {
-            Image(.customFigureBasketballFoul)
-                .font(.title)
-            
-            Text(String("x\(45)"))
-                .font(.subheadline)
-        }
-        .background(.gray)
-        .frame(minWidth: 85)
-    }
-}
+extension Image {
+    @MainActor func render(scale displayScale: CGFloat = 1.0) -> UIImage? {
+        let renderer = ImageRenderer(content: self)
 
-#Preview {
-    @Previewable @State var userViewModel = SharedUserViewModel(repository: RepositoryPreview.shared)
-    
-    NavigationStack {
-        MessagePopover {
-            TeamView(userViewModel: userViewModel)
-        }
+        renderer.scale = displayScale
+        
+        return renderer.uiImage
     }
-    .previewEnvirments()
-    .navigationStackTint()
+    
+    @MainActor func convertImageToData() async -> Data? {
+        guard let uiImage = self.render()  else { return nil } // Helper function (see below)
+        return uiImage.jpegData(compressionQuality: 0.8) // Or pngData() for PNG
+    }
 }

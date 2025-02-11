@@ -9,43 +9,55 @@ import SwiftUI
 
 struct MainNavigationView: View {
     @Environment(\.scenePhase) var scenePhase
-    @Environment(\.networkMonitor) var networkMonitor
+    
     @State var navViewModel = NavigationViewModel.shared
-    @ObservedObject var userViewModel: SharedUserViewModel
+    
+    var authViewModel: AuthViewModel
+    
+    let onSignOut: () -> Void
+    
     var body: some View {
         MessagePopover {
             NavigationStack {
                 NavigationTabBar(navViewModel: navViewModel) {
                     switch navViewModel.current {
-                    case .home: DashboardView(userViewModel: userViewModel)
-                    case .team: TeamView(userViewModel: userViewModel)
-                    case .player: PlayerStatistic(userViewModel: userViewModel)
-                    case .settings: SettingsView(userViewModel: userViewModel)
+                    case .home: DashboardView()
+                    case .team: TeamView()
+                    case .player: PlayerStatistic()
+                    case .settings: SettingsView(onSignOut: onSignOut)
                     }
                 }
             }.navigationStackTint()
         }
-        .sheet(isPresented: $userViewModel.isEditSheet, content: {
-            UserProfileEditView(userViewModel: userViewModel, isSheet: true)
-        })
-        .onAppear {
-            userViewModel.importAccountsAfterLastSyncFromBackend()
+        .onAppear { 
+            authViewModel.importAccountsAfterLastSyncFromBackend()
         }
         .task {
-            userViewModel.setUserOnline()
+            authViewModel.setUserOnline()
             
             if await !NotificationService.getAuthStatus() {
                 await NotificationService.request()
             }
+            
+            do {
+                if let user = authViewModel.user {
+                    try await authViewModel.syncAllTables(userId: user.id)
+                }
+            } catch {
+                print(error)
+            }
         }
         .onChange(of: scenePhase) { _, newPhase in
-            userViewModel.changeOnlineStatus(phase: newPhase) 
+            if newPhase == .active { 
+                authViewModel.setUserOnline()
+            } else if newPhase == .background {
+                authViewModel.setUserOffline()
+            }
         }
     }
 }
  
 #Preview {
-    @Previewable @State var userViewModel = SharedUserViewModel(repository: RepositoryPreview.shared)
-    MainNavigationView(userViewModel: userViewModel)
+    MainNavigationView(authViewModel: AuthViewModel(), onSignOut: {})
         .previewEnvirments()
 }

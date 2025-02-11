@@ -6,9 +6,17 @@
 //
 import Foundation
 import Supabase
+import Auth
 
-@Observable class LoginViewModel: ObservableObject {
-    var repository: BaseRepository
+@Observable @MainActor class LoginViewModel: ObservableObject, SyncHistoryProtocol, AuthProtocol {
+    var repository: BaseRepository = Repository.shared
+    
+    var user: Auth.User?
+    var userAccount: UserAccount?
+    var userProfile: UserProfile?
+    var currentTeam: Team?
+     
+    var isfetching: Bool = false
     
     var email: String = ""
     var password: String = ""
@@ -16,10 +24,9 @@ import Supabase
     var keepSignededIn = true
     var focus: Field?
     var error: Error?
+    var isLoadingAnimation: Bool = false
     
-    init(repository: BaseRepository) {
-        self.repository = repository
-    }
+    var containerSize: CGSize = .zero
     
     func changeFocus() {
         guard let currentFocus = focus else { return }
@@ -29,8 +36,14 @@ import Supabase
         }
     }
     
-    func signIn() async throws -> (User?, UserProfile?) {
+    func signIn() async {
+        isLoadingAnimation.toggle()
+        defer {
+            isLoadingAnimation.toggle()
+        }
         do {
+            try await Task.sleep(for: .seconds(1))
+            
             guard !email.isEmpty else {
                 throw LoginError.emailIsEmpty
             }
@@ -40,16 +53,30 @@ import Supabase
             }
             
             let user = try await repository.userRepository.signIn(email: email, password: password)
+            let userAccounts = try repository.accountRepository.getAllAccounts(userId: user.id)
              
-            if keepSignededIn {
-                LocalStorageService.shared.user = user
-            }
+            LocalStorageService.shared.user = user
+            LocalStorageService.shared.userAccountId = userAccounts.first?.id.uuidString 
             
             try await repository.userRepository.syncUserProfile(userId: user.id)
-            let userProfile = try await repository.userRepository.getUserProfileFromDatabase(userId: user.id)
-            return ( user , userProfile )
+            
+            try await syncAllTables(userId: user.id)
+            
+            try await Task.sleep(for: .seconds(1)) 
         } catch {
-            throw error
+            ErrorHandlerViewModel.shared.handleError(error: error)
+        }
+    }
+    
+    func fetchDataFromRemote() {
+        Task {
+            do {
+                if let userId = user?.id {
+                    try await syncAllTables(userId: userId)
+                }
+            } catch {
+                print(error)
+            }
         }
     }
     

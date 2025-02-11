@@ -6,14 +6,16 @@
 //
 import Foundation 
 import SwiftUI
+import Auth
 
-@Observable class CodeEntryViewModel {
-    let repository: BaseRepository
-    
-    init(repository: BaseRepository) {
-        self.repository = repository
-    }
-    
+@Observable @MainActor class CodeEntryViewModel: AuthProtocol, SyncHistoryProtocol {
+    var repository: BaseRepository = Repository.shared
+    var user: Auth.User?
+    var userAccount: UserAccount?
+    var userProfile: UserProfile?
+    var currentTeam: Team?
+    var isfetching: Bool = false
+     
     var shake = false
     var code: [Character] = []
     var message: String = " "
@@ -47,7 +49,9 @@ import SwiftUI
     func joinTeamWithCode(userAccount: UserAccount) async throws {
         try await repository.teamRepository.joinTeamWithCode(codeString.joined(), userAccount: userAccount)
         
-        try await repository.syncHistoryRepository.insertLastSyncTimestamp(for: .teamMember, userId: userAccount.userId)
+        try repository.syncHistoryRepository.insertLastSyncTimestamp(for: .teamMember, userId: userAccount.userId)
+        
+        try await syncAllTables(userId: userAccount.userId)
     }
     
     func triggerShakeAnimation() {
@@ -57,4 +61,6 @@ import SwiftUI
         
         numberOfShakes = 0
     }
+    
+    func fetchDataFromRemote() {}
 }

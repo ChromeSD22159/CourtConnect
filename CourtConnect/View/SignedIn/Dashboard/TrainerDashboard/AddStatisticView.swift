@@ -98,6 +98,7 @@ fileprivate struct AddStaticSheet: View {
                     UpperCasedheadline(text: "Trainer")
                 }
             }
+            .scrollIndicators(.hidden)
             .navigationTitle("Add Statistic")
             .navigationBarTitleDisplayMode(.inline)
             .contentMargins(20)

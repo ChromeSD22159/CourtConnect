@@ -4,20 +4,21 @@
 //
 //  Created by Frederik Kohler on 16.01.25.
 //
-import Foundation
 import SwiftUI
 import WishKit
-
+ 
 struct SettingsView: View {
     @Environment(\.networkMonitor) var networkMonitor
-    @ObservedObject var userViewModel: SharedUserViewModel
+    @State var viewModel = SettingViewModel()
+    
+    let onSignOut: () -> Void
     
     var body: some View {
         LazyVStack(spacing: 16) {
             Section {
                 // MARK: - Edit Profile
                 NavigationLink {
-                    UserProfileEditView(userViewModel: userViewModel, isSheet: false)
+                    UserProfileEditView(isSheet: false)
                         .background(Theme.background)
                 } label: {
                     IconRow(systemName: "person.fill", text: "Your Profile")
@@ -31,13 +32,16 @@ struct SettingsView: View {
             
             Section {
                 VStack(spacing: 6) {
-                    NavigationLink {
-                        OnlineUserList(userViewModel: userViewModel)
-                    } label: {
-                        IconRow(systemName: "person.2.fill", text: "Total Online Users: \(userViewModel.onlineUserCount)")
-                    }
+                    /*
+                     NavigationLink {
+                        OnlineUserList(viewModel: viewModel)
+                     } label: {
+                        IconRow(systemName: "person.2.fill", text: "Total Online Users: \(viewModel.onlineUserCount)")
+                     }
+                     */
+                    IconRow(systemName: "person.2.fill", text: "Total Online Users: \(viewModel.onlineUserCount)")
                      
-                    if let date = userViewModel.userProfile?.lastOnline {
+                    if let date = viewModel.userProfile?.lastOnline {
                         IconRow(systemName: "person.badge.clock.fill", text: "Last online: " + date.formattedDate() + " " + date.formattedTime() + " Uhr")
                     } else {
                         IconRow(systemName: "person.badge.clock.fill", text: "Last online: -")
@@ -80,11 +84,19 @@ struct SettingsView: View {
             
             Section {
                 VStack(spacing: 6) {
-                    IconRow(systemName: "trash", text: "Delete UserAccount")
-                    
-                    IconRow(systemName: "trash", text: "Delete CourtConnect Account")
-                    
-                    IconRow(systemName: "trash", text: "Delete Team")
+                    ConfirmButtonLabel(
+                        confirmButtonDialog: ConfirmButtonDialog(
+                            systemImage: "trash",
+                            buttonText: "Delete CourtConnect Account",
+                            question: "Want delete the CourtConnect Account",
+                            message: "Are you sure you want to delete your CourtConnect Account? This action cannot be undone.",
+                            action: "Delete",
+                            cancel: "Cancel"
+                        ),
+                        color: .red
+                    ) {
+                        viewModel.deleteUser()
+                    }
                 }
             } header: {
                 HStack {
@@ -94,10 +106,10 @@ struct SettingsView: View {
             }
             
             Section {
-                IconRow(systemName: "iphone.and.arrow.forward", text: "Signout")
-                    .onTapGesture {
-                        userViewModel.signOut()
-                    }
+                RowLabelButton(text: "Signout", systemImage: "iphone.and.arrow.forward", material: .ultraThinMaterial) {
+                    viewModel.signOut()
+                    onSignOut()
+                }
             }
         }
         .padding(.horizontal, 16)
@@ -106,33 +118,36 @@ struct SettingsView: View {
         .navigationTitle("Settings")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
-            userViewModel.getAllOnlineUser()
-            userViewModel.startListeners()
+            viewModel.getUser()
+            viewModel.getUserAccount()
+            viewModel.getUserProfile()
+            viewModel.getAllOnlineUser()
+            viewModel.startListeners()
         }
     }
 }
 
 fileprivate struct OnlineUserList: View {
-    @ObservedObject var userViewModel: SharedUserViewModel
+    var viewModel: SettingViewModel
     @Environment(\.networkMonitor) var networkMonitor
     
     var body: some View {
         List {
             Section {
-                Text("Total Online: \(userViewModel.onlineUserCount)")
+                Text("Total Online: \(viewModel.onlineUserCount)")
             }
             Section {
                 if networkMonitor.isConnected == false {
                     HStack {
                         Image(systemName: networkMonitor.isConnected ? "wifi" : "wifi.exclamationmark")
                     }
-                } else if userViewModel.onlineUser.isEmpty {
+                } else if viewModel.onlineUser.isEmpty {
                     Text("Nobody is online!")
                 } else {
-                    ForEach(userViewModel.onlineUser, id: \.id) { onlineUser in
+                    ForEach(viewModel.onlineUser, id: \.id) { onlineUser in
                         HStack {
                             
-                            if let myUser: UserProfile = userViewModel.userProfile {
+                            if let myUser: UserProfile = viewModel.userProfile {
                                 NavigationLink {
                                     ChatView(myUser: myUser, recipientUser: onlineUser.toUserProfile())
                                 } label: {
@@ -170,7 +185,7 @@ fileprivate struct IconRow: View {
     var body: some View {
         HStack {
             if let url = url {
-                Link(destination: URL(string: url)!) { // Link statt Label und onOpenURL
+                Link(destination: URL(string: url)!) { 
                     Label(text, systemImage: systemName)
                 }
             } else {
@@ -179,8 +194,7 @@ fileprivate struct IconRow: View {
              
             Spacer()
         }
-        .padding(.vertical, 10)
-        .padding(.horizontal)
+        .padding()
         .background(Material.ultraThinMaterial)
         .foregroundStyle(Theme.text)
         .clipShape(RoundedRectangle(cornerRadius: 15))
@@ -192,9 +206,8 @@ fileprivate struct IconRow: View {
 }
 
 #Preview {
-    @Previewable @State var userViewModel = SharedUserViewModel(repository: RepositoryPreview.shared) 
     NavigationStack {
-        SettingsView(userViewModel: userViewModel)
+        SettingsView(viewModel: SettingViewModel(), onSignOut: {})
     }
     .previewEnvirments()
     .navigationStackTint()

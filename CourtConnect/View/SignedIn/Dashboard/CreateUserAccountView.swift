@@ -66,8 +66,7 @@ struct CreateUserAccountView: View {
     }
 }
  
-#Preview {
-    @Previewable @State var userViewModel = SharedUserViewModel(repository: RepositoryPreview.shared)
+#Preview { 
     ZStack {
     }
     .sheet(isPresented: .constant(true)) {

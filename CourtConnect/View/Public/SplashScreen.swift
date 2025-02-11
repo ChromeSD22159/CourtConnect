@@ -11,7 +11,7 @@ struct SplashScreen: View {
     
     @Binding var isVisible: Bool 
     
-    let duration: Double // 2
+    let duration: Double
     let userId: UUID?
     let onStart: () -> Void
     let onComplete: () -> Void

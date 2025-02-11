@@ -5,149 +5,60 @@
 //  Created by Frederik Kohler on 01.02.25.
 //
 import SwiftUI
-import Charts
-
-@Observable class PlayerStatisticViewModel {
-    let repository: BaseRepository
-    let userAccountId: UUID?
-    var orginalStatistics: [Statistic] = []
-    var statistics: [Statistic] = []
-    var chartStatistics: [Statistic] = []
-    
-    var hasData: Bool = false
-    
-    @MainActor init(userAccountId: UUID?) {
-        self.repository = Repository.shared
-        self.userAccountId = userAccountId
-        getStatistic(for: .game)
-    }
-    
-    var bestTwoPointAttempts: Statistic? {
-        statistics.sorted {
-            $0.twoPointAttempts > $1.twoPointAttempts
-        }.first
-    }
-    
-    var bestThreePointAttempts: Statistic? {
-        statistics.sorted {
-            $0.threePointAttempts > $1.threePointAttempts
-        }.first
-    }
-    
-    var bestFouls: Statistic? {
-        statistics.sorted {
-            $0.fouls < $1.fouls
-        }.first
-    }
-    
-    var bestPoints: Statistic? {
-        statistics.sorted {
-            $0.points > $1.points
-        }.first
-    }
-    
-    @MainActor func getStatistic(for terminType: TerminType) {
-        statistics = []
-        chartStatistics = []
-
-        defer {
-            Task {
-                try await Task.sleep(for: .seconds(0.5))
-                if hasData {
-                    for item in chartStatistics.reversed() {
-                        withAnimation {
-                            item.fouls = orginalStatistics.first(where: { $0.id == item.id })!.fouls
-                            item.twoPointAttempts = orginalStatistics.first(where: { $0.id == item.id })!.twoPointAttempts
-                            item.threePointAttempts = orginalStatistics.first(where: { $0.id == item.id })!.threePointAttempts
-                        }
-                        
-                        try await Task.sleep(for: .seconds(0.1))
-                    }
-                } else {
-                    for item in chartStatistics.reversed() {
-                        withAnimation {
-                            item.fouls = Int.random(in: 2...20)
-                            item.twoPointAttempts = Int.random(in: 2...20)
-                            item.threePointAttempts = Int.random(in: 3...20)
-                        }
-                        
-                        try await Task.sleep(for: .seconds(0.1))
-                    }
-                }
-            }
-        }
-        do {
-            guard let userAccountId = userAccountId else { return } 
-            let result = try repository.teamRepository.getPlayerStatistics(userAccountId: userAccountId, terminType: terminType.rawValue)
-            if result.count >= 2 {
-                orginalStatistics = result
-                self.hasData = true
-                for statistic in result {
-                    let statistc = Statistic(id: statistic.id, userAccountId: statistic.userAccountId, fouls: 0, twoPointAttempts: 0, threePointAttempts: 0, terminType: TerminType.game.rawValue, terminId: statistic.terminId, createdAt: statistic.createdAt, updatedAt: statistic.updatedAt)
-                    self.chartStatistics.append(statistc)
-                    self.statistics.append(statistc)
-                }
-            } else {
-                self.hasData = false
-                for index in 0...7 {
-                    let date = Calendar.current.date(byAdding: .day, value: -(7 * index + 1), to: Date())!
-                    let statistc = Statistic(id: UUID(), userAccountId: UUID(), fouls: 0, twoPointAttempts: 0, threePointAttempts: 0, terminType: TerminType.game.rawValue, terminId: UUID(), createdAt: date, updatedAt: date)
-                    self.chartStatistics.append(statistc)
-                    self.statistics.append(statistc)
-                }
-            }
-        } catch {
-            print(error)
-        }
-    }
-}
+import Charts 
 
 struct PlayerStatistic: View {
-    @State var viewModel: PlayerStatisticViewModel
-    @State var userViewModel: SharedUserViewModel
-    
-    @State var isValid: Bool
-    
-    init(userViewModel: SharedUserViewModel) {
-        self.userViewModel = userViewModel
-         
-        if let currentAccount = userViewModel.currentAccount?.id {
-            isValid = true
-            self.viewModel = PlayerStatisticViewModel(userAccountId: currentAccount)
-        } else {
-            isValid = false
-            self.viewModel = PlayerStatisticViewModel(userAccountId: UUID())
-        }
-    }
+    @Environment(\.scenePhase) var scenePhase
+    @State var viewModel = PlayerStatisticViewModel()
     
     var body: some View {
         ScrollView(.vertical) {
             VStack(spacing: 50) {
-               
-                 HStack(spacing: 20) {
-                     Image(.basketballPlayer)
-                         .resizable()
-                         .scaledToFit()
-                         .padding(10)
-                         .frame(width: 100)
-                         .clipShape(Circle())
-                         .overlay(
-                             Circle()
-                                 .stroke(LinearGradient(colors: [
-                                     Theme.lightOrange,
-                                     Theme.darkOrange
-                                 ], startPoint: .topTrailing, endPoint: .bottomLeading), lineWidth: 5)
-                         )
+              
+                HStack(spacing: 20) {
+                     if let imageURL = viewModel.userProfile?.imageURL {
+                         AsyncCachedImage(url: URL(string: imageURL)!) { image in
+                             image
+                                 .resizable()
+                                 .scaledToFit()
+                                 .frame(width: 100)
+                                 .clipShape(Circle())
+                                 .overlay(
+                                     Circle()
+                                        .stroke(Theme.topTrailingbottomLeadingGradient, lineWidth: 5)
+                                 )
+                         } placeholder: {
+                             Image(.basketballPlayerProfile)
+                                 .resizable()
+                                 .scaledToFit()
+                                 .frame(width: 100)
+                                 .clipShape(Circle())
+                                 .overlay(
+                                     Circle()
+                                        .stroke(Theme.topTrailingbottomLeadingGradient, lineWidth: 5)
+                                 )
+                         }
+                     } else {
+                         Image(.basketballPlayerProfile)
+                             .resizable()
+                             .scaledToFit()
+                             .frame(width: 100)
+                             .clipShape(Circle())
+                             .overlay(
+                                 Circle()
+                                    .stroke(Theme.topTrailingbottomLeadingGradient, lineWidth: 5)
+                             )
+                     }
                      
                      VStack(alignment: .leading) {
-                         Text("Frederik Kohler")
+                         Text(viewModel.userProfile?.fullName ?? "")
                              .font(.headline)
                          
-                         Text("Point Gard")
+                         Text(viewModel.teamMember?.position ?? "")
                              .font(.subheadline)
                      }
                  }
-                
+           
                 ZStack {
                     SnapScrollView {
                         LazyHStack {
@@ -180,14 +91,32 @@ struct PlayerStatistic: View {
                 StatisticChart(statistics: viewModel.chartStatistics, hasData: viewModel.hasData) { type in
                     viewModel.getStatistic(for: type)
                 }
-                
+               
                 Spacer()
+               
             }
         }
-        .navigationTitle((userViewModel.userProfile?.fullName ?? "") + " Statistics")
+        .navigationTitle((viewModel.userProfile?.fullName ?? "") + " Statistics")
         .navigationBarTitleDisplayMode(.inline)
         .contentMargins(.top, 20)
         .contentMargins(.bottom, 75)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Image(systemName: "arrow.triangle.2.circlepath.circle")
+                    .rotationAnimation(isFetching: $viewModel.isfetching)
+                    .onTapGesture {
+                        viewModel.fetchDataFromRemote()
+                    }
+            }
+        }
+        .onAppear {
+            viewModel.initialze()
+        }
+        .onChange(of: scenePhase) {
+            if scenePhase == .active {
+                viewModel.fetchDataFromRemote()
+            }
+        }
     }
 }
 
@@ -344,12 +273,7 @@ private struct StatisticChart: View {
 }
  
 #Preview {
-    @Previewable @State var viewModel = SharedUserViewModel(repository: RepositoryPreview.shared)
     NavigationStack {
-        PlayerStatistic(userViewModel: viewModel)
-    }
-    .onAppear {
-        viewModel.userProfile = MockUser.myUserProfile
-        viewModel.currentAccount = MockUser.myUserAccount
+        PlayerStatistic()
     }
 }

@@ -5,23 +5,25 @@
 //  Created by Frederik Kohler on 05.02.25.
 //
 import Foundation
+import Auth
 
-@Observable @MainActor class TeamViewViewModel {
-    let repository: BaseRepository
+@Observable @MainActor class TeamViewViewModel: AuthProtocol, SyncHistoryProtocol {
+    var repository: BaseRepository = Repository.shared
+    var user: User?
+    var userAccount: UserAccount?
+    var userProfile: UserProfile?
     var currentTeam: Team?
-    var account: UserAccount?
-    
+    var isfetching: Bool = false
     var documents: [Document] = []
     var termine: [Termin] = []
     
     var teamPlayers: [MemberProfile] = []
     var teamTrainers: [MemberProfile] = []
     
-    init(repository: BaseRepository, account: UserAccount?) {
-        self.repository = repository
-        self.account = account
-         
-        self.getTeam()
+    var selectedDocument: Document?
+    
+    func inizialize() {
+        self.inizializeAuth()
         self.getAllDocuments()
         self.getTeamTermine()
         self.getTeamMembers()
@@ -31,16 +33,6 @@ import Foundation
         do {
             guard let team = currentTeam else { return }
             self.documents = try repository.documentRepository.getDocuments(for: team.id)
-        } catch {
-            print(error)
-        }
-    }
-    
-    private func getTeam() {
-        guard let account = account, let teamId = account.teamId else { return }
-        
-        do {
-            currentTeam = try self.repository.teamRepository.getTeam(for: teamId)
         } catch {
             print(error)
         }
@@ -57,10 +49,10 @@ import Foundation
     
     func getTeamMembers() {
         do {
-            guard let teamId = currentTeam?.id else { throw TeamError.teamNotFound }
+            guard let team = currentTeam else { throw TeamError.teamNotFound }
              
-            let teamMember = try repository.teamRepository.getTeamMembers(for: teamId)
-             
+            let teamMember = try repository.teamRepository.getTeamMembers(for: team.id)
+            var teamPlayersTmp: [MemberProfile] = []
             let teamPlayers = teamMember.filter { $0.role == UserRole.player.rawValue }
             for player in teamPlayers {
                 if let playerAccount = try repository.accountRepository.getAccount(id: player.userAccountId),
@@ -75,20 +67,41 @@ import Foundation
                         avgtree: userStatistic?.avgThreePointAttempts ?? 0,
                         avgPoints: userStatistic?.avgPoints ?? 0
                     )
-                    self.teamPlayers.append(profile)
+                    teamPlayersTmp.append(profile)
                 }
             }
              
+            var teamTrainersTmp: [MemberProfile] = []
             let teamTrainers = teamMember.filter { $0.role == UserRole.trainer.rawValue }
             for trainer in teamTrainers {
                 if let trainerAccount = try repository.accountRepository.getAccount(id: trainer.userAccountId),
                     let userProfile = try repository.userRepository.getUserProfileFromDatabase(userId: trainerAccount.userId) {
                     let profile = MemberProfile(firstName: userProfile.firstName, lastName: userProfile.lastName, avgFouls: 0, avgTwo: 0, avgtree: 0, avgPoints: 0)
-                    self.teamTrainers.append(profile)
+                    teamTrainersTmp.append(profile)
                 }
             }
+            
+            self.teamPlayers = teamPlayersTmp
+            self.teamTrainers = teamTrainersTmp
         } catch {
             print(error)
         }
     }
-} 
+    
+    func setDocument(document: Document) {
+        selectedDocument = document
+    }
+    
+    func fetchDataFromRemote() {
+        Task {
+            do {
+                if let userId = user?.id {
+                    try await syncAllTables(userId: userId)
+                    inizialize()
+                }
+            } catch {
+                print(error)
+            }
+        }
+    }
+}

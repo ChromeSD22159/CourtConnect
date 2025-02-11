@@ -98,5 +98,6 @@ fileprivate struct CheckRow:View {
     ScrollView {
         ConfirmationTermin(attendanceTermines: list)
     }
+    .scrollIndicators(.hidden)
     .contentMargins(.horizontal, 16)
 }

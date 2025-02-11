@@ -9,7 +9,7 @@ import SwiftUI
 struct EnterCodeView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.errorHandler) var errorHandler
-    @State private var viewModel = CodeEntryViewModel(repository: Repository.shared)
+    @State private var viewModel = CodeEntryViewModel()
     let userAccount: UserAccount
     
     var body: some View {
@@ -21,7 +21,7 @@ struct EnterCodeView: View {
                     
                     Image(systemName: "keyboard.badge.ellipsis")
                         .font(.system(size: 100))
-                        .foregroundStyle(.darkOrange, LinearGradient(colors: [Theme.darkOrange, Theme.lightOrange], startPoint: .top, endPoint: .bottom))
+                        .foregroundStyle(.darkOrange, Theme.topBottomLinearGradientReverse)
                     
                     HStack {
                         

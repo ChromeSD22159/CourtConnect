@@ -7,8 +7,7 @@
 import SwiftUI
 
 struct AbsenseCard: View {
-    @Binding var isAbsenseSheet: Bool
-    @Binding var absenseDate: Date
+    @Bindable var playerDashboardViewModel: PlayerDashboardViewModel
     let onComplete: () -> Void
     var body: some View {
         HStack(alignment: .top, spacing: 20) {
@@ -16,9 +15,9 @@ struct AbsenseCard: View {
                 .font(.largeTitle)
             
             VStack(alignment: .leading) {
-                Text("Absence report!")
+                Text("Prevents or sick?!")
                     .font(.headline)
-                Text("Find out your trainer and your team very much about your absence.")
+                Text("Register your absence to the coaching team.")
             }
             
             Spacer()
@@ -26,16 +25,17 @@ struct AbsenseCard: View {
         .padding()
         .background(Material.ultraThinMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 15)) 
-        .sheet(isPresented: $isAbsenseSheet, content: {
+        .sheet(isPresented: $playerDashboardViewModel.isAbsenseSheet, content: {
             NavigationStack {
-                VStack {
-                    DatePicker("Absense Date", selection: $absenseDate, displayedComponents: .date) 
+                VStack { 
+                    DatePicker("Absense Start Date", selection: $playerDashboardViewModel.startDate, in: playerDashboardViewModel.range, displayedComponents: .date)
+                    DatePicker("Absense End Date", selection: $playerDashboardViewModel.endDate, in: playerDashboardViewModel.range, displayedComponents: .date)
                 }
                 .padding()
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button("Cancel") {
-                            isAbsenseSheet.toggle()
+                            playerDashboardViewModel.isAbsenseSheet.toggle()
                         }
                     }
                     
@@ -54,7 +54,7 @@ struct AbsenseCard: View {
             .presentationCornerRadius(20)
         })
         .onTapGesture {
-            isAbsenseSheet.toggle()
+            playerDashboardViewModel.isAbsenseSheet.toggle()
         }
     }
 }
