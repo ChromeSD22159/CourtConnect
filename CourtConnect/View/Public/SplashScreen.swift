@@ -31,6 +31,7 @@ struct SplashScreen: View {
                 
                 LottieView(animation: .named("basketballLoading"))
                     .playbackMode(playbackMode)
+                    .opacity(animationVisibility ? 1 : 0)
                     .frame(width: 400, height: 400)
             } 
             .onAppear {
@@ -41,6 +42,10 @@ struct SplashScreen: View {
                     
                     withAnimation {
                         logoVisibility.toggle()
+                    }
+                    
+                    withAnimation(.easeOut.delay(0.5)) {
+                        animationVisibility.toggle()
                     }
                 }
                 
@@ -56,11 +61,12 @@ struct SplashScreen: View {
  
 #Preview {
     @Previewable @State var isSlashScreen = true
-    
-    SplashScreen(isVisible: $isSlashScreen, duration: 3.0, userId: nil, onStart: {
-        
-    } , onComplete: {
-        isSlashScreen.toggle()
-    })
+    AppBackground {
+        SplashScreen(isVisible: $isSlashScreen, duration: 3.0, userId: nil, onStart: {
+            
+        } , onComplete: {
+            isSlashScreen.toggle()
+        })
+    }
     .previewEnvirments()
 }

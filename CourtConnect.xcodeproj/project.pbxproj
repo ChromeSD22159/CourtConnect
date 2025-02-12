@@ -105,6 +105,7 @@
 			membershipExceptions = (
 				Assets.xcassets,
 				Theme.swift,
+				UNIVERSIDAD.ttf,
 			);
 			target = B6509FDD2D594CDA0032CB17 /* CourtConnectWidgetExtension */;
 		};
@@ -333,6 +334,20 @@
 			);
 			target = B6509FDD2D594CDA0032CB17 /* CourtConnectWidgetExtension */;
 		};
+		B6B357C32D5CD0420035E7EB /* Exceptions for "Resources" folder in "CourtConnectTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				UNIVERSIDAD.ttf,
+			);
+			target = B698AC0C2D330FC30086AF8C /* CourtConnectTests */;
+		};
+		B6B357C42D5CD0420035E7EB /* Exceptions for "Resources" folder in "CourtConnectUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				UNIVERSIDAD.ttf,
+			);
+			target = B698AC162D330FC30086AF8C /* CourtConnectUITests */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -347,6 +362,8 @@
 		B650A0032D594D080032CB17 /* Resources */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
+				B6B357C32D5CD0420035E7EB /* Exceptions for "Resources" folder in "CourtConnectTests" target */,
+				B6B357C42D5CD0420035E7EB /* Exceptions for "Resources" folder in "CourtConnectUITests" target */,
 				B650A0122D594D180032CB17 /* Exceptions for "Resources" folder in "CourtConnectWidgetExtension" target */,
 			);
 			path = Resources;

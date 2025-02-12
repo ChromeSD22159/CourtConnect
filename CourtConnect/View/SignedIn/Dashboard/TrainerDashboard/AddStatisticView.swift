@@ -14,32 +14,39 @@ struct AddStatisticView: View {
     }
     
     var body: some View {
-        List {
-            ListInfomationSection(text: "Please enter the statistics for every player here.  Use the steppers to set the number of 2-point throws, 3-point throws and fouls.  The total number of points is automatically calculated.") 
-            if viewModel.termine.isEmpty {
-                ContentUnavailableView("No Appointments", systemImage: "calendar", description: Text("There are no appointments to insert statistics for the players."))
-            } else {
-                ForEach(viewModel.termine) { termin in
-                    HStack {
-                        Text(termin.startTime.toDateString() + " " + termin.title)
-                            .lineLimit(1)
-                            .truncationMode(.tail)
-                        
-                        Spacer()
-                        
-                        Text(termin.typeString)
-                            .font(.caption2)
-                            .padding(5)
-                            .background(TerminType(rawValue: termin.typeString) == .game ? Theme.lightOrange : Theme.darkOrange)
-                            .clipShape(RoundedRectangle(cornerRadius: 5))
-                    }
-                    .font(.footnote)
-                    .onTapGesture {
-                        viewModel.setTermin(termin: termin)
+        AnimationBackgroundChange {
+            List {
+                ListInfomationSection(text: "Please enter the statistics for every player here.  Use the steppers to set the number of 2-point throws, 3-point throws and fouls.  The total number of points is automatically calculated.")
+                
+                Section {
+                    if viewModel.termine.isEmpty {
+                        ContentUnavailableView("No Appointments", systemImage: "calendar", description: Text("There are no appointments to insert statistics for the players."))
+                    } else {
+                        ForEach(viewModel.termine) { termin in
+                            HStack {
+                                Text(termin.startTime.toDateString() + " " + termin.title)
+                                    .lineLimit(1)
+                                    .truncationMode(.tail)
+                                
+                                Spacer()
+                                
+                                Text(termin.typeString)
+                                    .font(.caption2)
+                                    .padding(5)
+                                    .background(TerminType(rawValue: termin.typeString) == .game ? Theme.lightOrange : Theme.darkOrange)
+                                    .clipShape(RoundedRectangle(cornerRadius: 5))
+                            }
+                            .font(.footnote)
+                            .onTapGesture {
+                                viewModel.setTermin(termin: termin)
+                            }
+                        }
                     }
                 }
+                .blurrylistRowBackground()
+                
             }
-        }
+        } 
         .sheet(item: $viewModel.selectedTermin) { termin in
             AddStaticSheet(termin: termin, viewModel: viewModel)
                 .presentationCornerRadius(25)
@@ -49,7 +56,23 @@ struct AddStatisticView: View {
                     viewModel.saveStatistics(termin: termin)
                 }
         }
-        .listBackground()
+        .navigationTitle(title: "Add Statistics")
+        .listBackgroundAnimated()
+    }
+}
+
+extension View {
+    func navigationTitle(title: LocalizedStringKey) -> some View {
+        modifier(NavigationTitle(title: title))
+    }
+}
+
+struct NavigationTitle: ViewModifier {
+    let title: LocalizedStringKey
+    func body(content: Content) -> some View {
+        content
+            .navigationTitle(title)
+            .navigationBarTitleDisplayMode(.inline)
     }
 }
 

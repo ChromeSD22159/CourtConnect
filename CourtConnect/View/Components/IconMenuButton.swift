@@ -16,7 +16,7 @@ struct IconMenuButton<Content: View>: View {
             content()
         } label: {
             Image(systemName: icon)
-                .foregroundStyle(Theme.lightOrange)
+                .foregroundStyle(Theme.headline)
         }
     }
 }

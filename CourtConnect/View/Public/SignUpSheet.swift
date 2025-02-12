@@ -119,8 +119,7 @@ struct SignUpSheet: View {
             }
             .errorAlert()
             .padding()
-            .navigationTitle("SignUp")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle(title: "SignUp")
             .presentationDetents([.height(registerViewModel.containerSize.height + 100)])
             .presentationCornerRadius(20)
             .toolbar {

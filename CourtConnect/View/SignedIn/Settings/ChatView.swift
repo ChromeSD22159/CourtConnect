@@ -81,8 +81,7 @@ struct ChatView: View {
                 }
             }
         }
-        .navigationTitle(viewModel.recipientUser.fullName)
-        .navigationBarTitleDisplayMode(.inline)
+        .navigationTitle(title: "\(viewModel.recipientUser.fullName)")
         .toolbarVisibility(.hidden, for: .tabBar)
     }
 }

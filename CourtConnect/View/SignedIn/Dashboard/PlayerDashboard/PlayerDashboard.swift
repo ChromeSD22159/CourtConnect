@@ -29,15 +29,9 @@ struct PlayerDashboard: View {
                  playerDashboardViewModel.deleteUserAccount()
             }
         }
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Image(systemName: "arrow.triangle.2.circlepath.circle")
-                    .rotationAnimation(isFetching: $playerDashboardViewModel.isfetching)
-                    .onTapGesture {
-                        playerDashboardViewModel.fetchDataFromRemote()
-                    }
-            } 
-        }
+        .reFetchButton(isFetching: $playerDashboardViewModel.isfetching, onTap: {
+            playerDashboardViewModel.fetchDataFromRemote()
+        }) 
         .padding(.horizontal, 16)
         .padding(.top, 10)
         .onAppear {
@@ -70,7 +64,7 @@ fileprivate struct HasNoTeam: View {
             }) {
                 if let currentAccount = playerDashboardViewModel.userAccount {
                     ZStack {
-                        Theme.background.ignoresSafeArea()
+                        Theme.backgroundGradient.ignoresSafeArea()
                         
                         EnterCodeView(userAccount: currentAccount)
                     }
@@ -125,26 +119,8 @@ fileprivate struct HasTeam: View {
                 VStack {
                     DatePicker("Absense Date", selection: .constant(Date()), displayedComponents: .date) 
                 }
-                .padding()
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button("Cancel") {
-                           // dashBoardViewModel.isAbsenseSheet.toggle()
-                        }
-                    }
-                    
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button("Send") {
-                            /*
-                             if let userAccount = userViewModel.currentAccount {
-                                 dashBoardViewModel.absenceReport(for: userAccount, date: Date())
-                             }
-                             */
-                        }
-                    }
-                }
-                .navigationTitle("Absense")
-                .navigationBarTitleDisplayMode(.inline)
+                .padding() 
+                .navigationTitle(title: "Absense")
             }
             .navigationStackTint()
             .presentationDetents([.height(150)])

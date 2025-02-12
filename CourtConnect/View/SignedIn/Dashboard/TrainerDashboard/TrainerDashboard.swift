@@ -6,6 +6,8 @@
 //
 import SwiftUI
 
+
+
 struct TrainerDashboard: View {
     @Environment(\.scenePhase) var scenePhase
     @State var trainerDashboardViewModel = TrainerDashboardViewModel()
@@ -32,16 +34,10 @@ struct TrainerDashboard: View {
             .padding(.top, 40)
             .padding(.horizontal, 16)
         }
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Image(systemName: "arrow.triangle.2.circlepath.circle")
-                    .rotationAnimation(isFetching: $trainerDashboardViewModel.isfetching)
-                    .onTapGesture {
-                        trainerDashboardViewModel.fetchDataFromRemote()
-                    }
-            }
-        }
-        .onAppear { 
+        .reFetchButton(isFetching: $trainerDashboardViewModel.isfetching, onTap: {
+            trainerDashboardViewModel.fetchDataFromRemote()
+        }) 
+        .onAppear {
             trainerDashboardViewModel.inizialize() 
         }
         .onChange(of: scenePhase) {
@@ -80,7 +76,7 @@ fileprivate struct HasNoTeam: View {
                 }) {
                     if let userAccount = trainerDashboardViewModel.userAccount {
                         ZStack {
-                            Theme.background.ignoresSafeArea()
+                            Theme.backgroundGradient.ignoresSafeArea()
                             
                             EnterCodeView(userAccount: userAccount)
                         }
@@ -177,7 +173,7 @@ fileprivate struct GenerateNewJoinCodeView: View {
         }
         .sheet(isPresented: $isGenerateCode, content: {
             ZStack {
-                Theme.background.ignoresSafeArea()
+                Theme.backgroundGradient.ignoresSafeArea()
                 
                 GenerateCodeViewSheet()
             }

@@ -14,8 +14,7 @@ struct LoginEntryView: View {
     
     var body: some View {
         VStack(spacing: 50) {
-            Image(.appBadgeEntryViewLight)
-                .shadow(radius: 10)
+            AppIcon()
             
             if viewModel.isTextShowing {
                 textRow()
@@ -29,8 +28,7 @@ struct LoginEntryView: View {
             
         }
         .padding(30)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Theme.background)
+        .frame(maxWidth: .infinity, maxHeight: .infinity) 
         .onAppear {
             viewModel.toogleText()
             viewModel.inizializeAuth()
@@ -73,7 +71,7 @@ struct LoginEntryView: View {
                 .font(.title.bold())
                 .foregroundStyle(Theme.darkOrange)
                  
-            Text("Ready for the jump? Let's start! Register to get started and become part of the community.")
+            Text("Ready for the jump? Let's start! Register to get started and become part of the community.") 
                 .foregroundStyle(Theme.myGray)
                 .lineSpacing(5)
         }
@@ -82,13 +80,17 @@ struct LoginEntryView: View {
 }  
                    
 #Preview("Light") {
-    LoginEntryView(viewModel: LoginEntryViewModel(), onUserChange: {})
-        .preferredColorScheme(.light)
-        .previewEnvirments()
+    AppBackground {
+        LoginEntryView(viewModel: LoginEntryViewModel(), onUserChange: {})
+    }
+    .preferredColorScheme(.light)
+    .previewEnvirments()
 }
 
 #Preview("Dark") {
-    LoginEntryView(viewModel: LoginEntryViewModel(), onUserChange: {})
-        .preferredColorScheme(.dark)
-        .previewEnvirments()
+    AppBackground {
+        LoginEntryView(viewModel: LoginEntryViewModel(), onUserChange: {})
+    }
+    .preferredColorScheme(.dark)
+    .previewEnvirments()
 }

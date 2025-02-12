@@ -57,6 +57,10 @@ import Auth
             }
         }
     }
+    
+    func kickMember() {
+        // TODO: 
+    }
 }
 
 struct ShirtNumberOption: Identifiable {

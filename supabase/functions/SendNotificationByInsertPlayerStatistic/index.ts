@@ -35,12 +35,14 @@ Deno.serve(async (req) => {
           .from('UserAccount')
           .select('*')
           .eq('id', payload.record.userAccountId)
+          .is('deletedAt', null)
           .single(); 
 
     const { data: userProfile } = await supabase 
         .from('UserProfile')
         .select('*')
         .eq('userId', userAccount.userId)
+        .is('deletedAt', null)
         .single();
 
     if (userProfile) {

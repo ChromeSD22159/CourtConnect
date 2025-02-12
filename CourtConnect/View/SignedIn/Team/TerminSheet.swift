@@ -41,8 +41,7 @@ struct TerminSheet: View {
                 }
             }
             .mapStyle(.standard)
-            .navigationTitle("Termin")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle(title: "Termin")
             .overlay(alignment: .bottom) {
                 VStack(alignment: .leading, spacing: 15) {
                     VStack(alignment: .leading) {

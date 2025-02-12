@@ -12,6 +12,15 @@ struct CourtConnectApp: App {
     @Environment(\.scenePhase) var scenePhase
     @State var authViewModel: AuthViewModel = AuthViewModel()
        
+    init() {
+        for family in UIFont.familyNames {
+            print("Family: \(family)")
+            for name in UIFont.fontNames(forFamilyName: family) {
+                print("   - \(name)")
+            }
+        }
+    }
+    
     var body: some Scene {
         WindowGroup {
             AppBackground {

@@ -15,7 +15,7 @@ struct OnBoardingView: View {
     
     var body: some View {
         ZStack {
-            Theme.background.ignoresSafeArea()
+            Theme.backgroundGradient.ignoresSafeArea()
             
             ConfettiOverlay {
                 VStack(spacing: 100) {

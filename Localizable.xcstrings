@@ -32,6 +32,9 @@
         }
       }
     },
+    "%@ Statistics" : {
+
+    },
     "%@ wants to join your team. Would you like to accept the request?" : {
 
     },
@@ -45,6 +48,9 @@
 
     },
     "3er" : {
+
+    },
+    "74 : 86" : {
 
     },
     "Absense" : {
@@ -66,6 +72,9 @@
 
     },
     "Add Statistic" : {
+
+    },
+    "Add Statistics" : {
 
     },
     "Admindashboard" : {
@@ -105,9 +114,6 @@
 
     },
     "Choose Document" : {
-
-    },
-    "Click to share" : {
 
     },
     "continue" : {

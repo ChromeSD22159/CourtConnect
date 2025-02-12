@@ -109,7 +109,7 @@ fileprivate struct LastAppointmentEntryView : View {
                 Text(entry.date.formattedTime() + " Uhr")
             }.font(.system(size: 9))
         }
-        .containerBackground(Theme.background, for: .widget)
+        .containerBackground(Theme.backgroundGradient, for: .widget)
     }
 }
 

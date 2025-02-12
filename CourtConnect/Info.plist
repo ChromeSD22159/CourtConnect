@@ -33,5 +33,10 @@
 	<string>4C85F9C7-BA32-4D98-9E5D-A421B4CD648F</string>
 	<key>isStoredInMemoryOnly</key>
 	<true/>
+    <key>UIAppFonts</key>
+    <array>
+        <string>UNIVERSIDAD.ttf</string>
+        <string>Jackport.ttf</string>
+    </array>
 </dict>
 </plist>

@@ -36,9 +36,8 @@ struct CreateUserAccountView: View {
                     .pickerStyle(.menu)
                     .tint(.primary)
                 }
-            }
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationTitle("Create User Account")
+            }  
+            .navigationTitle(title: "Create User Account")
             .scrollContentBackground(.hidden)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {

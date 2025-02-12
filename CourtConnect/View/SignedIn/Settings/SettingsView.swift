@@ -19,7 +19,7 @@ struct SettingsView: View {
                 // MARK: - Edit Profile
                 NavigationLink {
                     UserProfileEditView(isSheet: false)
-                        .background(Theme.background)
+                        .background(Theme.backgroundGradient)
                 } label: {
                     IconRow(systemName: "person.fill", text: "Your Profile")
                 }
@@ -115,8 +115,7 @@ struct SettingsView: View {
         .padding(.horizontal, 16)
         .padding(.bottom, 120)
         .scrollContentBackground(.hidden)
-        .navigationTitle("Settings")
-        .navigationBarTitleDisplayMode(.inline)
+        .navigationTitle(title: "Settings")
         .onAppear {
             viewModel.getUser()
             viewModel.getUserAccount()

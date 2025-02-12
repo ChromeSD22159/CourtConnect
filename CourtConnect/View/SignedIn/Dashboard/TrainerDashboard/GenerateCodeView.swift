@@ -12,7 +12,7 @@ struct GenerateCodeViewSheet: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Theme.background.ignoresSafeArea()
+                Theme.backgroundGradient.ignoresSafeArea()
                 
                 VStack(spacing: 20) {
                     
@@ -61,9 +61,8 @@ struct GenerateCodeViewSheet: View {
                     }
                 }
                 
-            }
-            .navigationTitle("Generate Code")
-            .navigationBarTitleDisplayMode(.inline)
+            } 
+            .navigationTitle(title: "Generate Code")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading, content: {
                     Button("Cancel") {
@@ -88,7 +87,7 @@ struct GenerateCodeViewSheet: View {
     EmptyView()
         .sheet(isPresented: .constant(true), content: {
             ZStack {
-                Theme.background.ignoresSafeArea()
+                Theme.backgroundGradient.ignoresSafeArea()
                 
                 GenerateCodeViewSheet()
                     .previewEnvirments()

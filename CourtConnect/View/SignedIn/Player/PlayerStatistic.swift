@@ -96,19 +96,12 @@ struct PlayerStatistic: View {
                
             }
         }
-        .navigationTitle((viewModel.userProfile?.fullName ?? "") + " Statistics")
-        .navigationBarTitleDisplayMode(.inline)
+        .navigationTitle(title: "\(viewModel.userProfile?.fullName ?? "") Statistics")
         .contentMargins(.top, 20)
         .contentMargins(.bottom, 75)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Image(systemName: "arrow.triangle.2.circlepath.circle")
-                    .rotationAnimation(isFetching: $viewModel.isfetching)
-                    .onTapGesture {
-                        viewModel.fetchDataFromRemote()
-                    }
-            }
-        }
+        .reFetchButton(isFetching: $viewModel.isfetching, onTap: {
+            viewModel.fetchDataFromRemote()
+        }) 
         .onAppear {
             viewModel.initialze()
         }

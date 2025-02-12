@@ -12,7 +12,7 @@ struct FoundNewTeamView: View {
     @State var viewModel: FoundNewTeamViewModel = FoundNewTeamViewModel()
     var body: some View {
         ZStack {
-            Theme.background.ignoresSafeArea()
+            Theme.backgroundGradient.ignoresSafeArea()
             
             VStack(spacing: 20) {
                 HStack(alignment: .bottom, spacing: 20) {
@@ -105,9 +105,8 @@ struct FoundNewTeamView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Image(systemName: "figure")
             }
-        }
-        .navigationTitle("Found New Team")
-        .navigationBarTitleDisplayMode(.inline)
+        } 
+        .navigationTitle(title: "Found New Team")
         .contentMargins(.top, 20)
     }
 }

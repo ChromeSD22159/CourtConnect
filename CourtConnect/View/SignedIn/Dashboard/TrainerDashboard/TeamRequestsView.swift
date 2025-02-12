@@ -14,7 +14,7 @@ import SwiftUI
     }
     
     var body: some View {
-        ZStack {
+        AnimationBackgroundChange {
             List {
                 ListInfomationSection(text: "This list shows all open accession requests for your team.  Select an inquiry to see the details and edit them.")
                 
@@ -35,13 +35,14 @@ import SwiftUI
                         }
                     }
                 }
+                .blurrylistRowBackground()
             }
             
             LoadingCard(isLoading: $viewModel.isLoading)
         }
         .errorPopover()
-        .navigationTitle("Requests")
-        .navigationBarTitleDisplayMode(.inline)
+        .navigationTitle(title: "Requests")
+        .listBackgroundAnimated()
         .refreshable {
             viewModel.isLoading = true
             Task {
@@ -64,7 +65,7 @@ import SwiftUI
                 await viewModel.getLocalRequests()
             }
         }
-        .listBackground()
+       
     }
 }
 
@@ -91,11 +92,22 @@ fileprivate struct RequestAcceptionField: View {
         }
 
     }
-}
+} 
 
 #Preview {
-    
-}
+    AnimationBackgroundChange {
+        List {
+            ListInfomationSection(text: "This list shows all open accession requests for your team.  Select an inquiry to see the details and edit them.")
+            
+            Section {
+                ContentUnavailableView("No join requests", systemImage: "figure", description: Text("There is currently no accession request."))
+            }
+            .blurrylistRowBackground()
+            
+        }
+        .listBackgroundAnimated()
+    }
+} 
  
 #Preview {
     let userId = MockUser.myUserProfile.userId

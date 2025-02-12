@@ -10,55 +10,57 @@ struct ManageTeamView: View {
     var viewModel: ManageTeamViewModel = ManageTeamViewModel()
     
     var body: some View {
-        List {
-            ListInfomationSection(text: "In this area you can assign an individual player number to every player in your team. Choose a number from the list for every player.")
-            
-            Section {
-                if viewModel.teamPlayer.isEmpty {
-                    NoTeamMemberAvaible()
-                } else {
-                    ForEach(viewModel.teamPlayer, id: \.userProfile.id) { team in
-                        MemberRow(teamMember: team.teamMember, userProfile: team.userProfile, isPlayer: true)
+        AnimationBackgroundChange {
+            List {
+                ListInfomationSection(text: "In this area you can assign an individual player number to every player in your team. Choose a number from the list for every player.")
+                
+                Section {
+                    if viewModel.teamPlayer.isEmpty {
+                        NoTeamMemberAvaible()
+                    } else {
+                        ForEach(viewModel.teamPlayer, id: \.userProfile.id) { team in
+                            MemberRow(teamMember: team.teamMember, userProfile: team.userProfile, isPlayer: true)
+                                .swipeActions {
+                                    Button(role: .destructive) {
+                                        viewModel.kickMember()
+                                    } label: {
+                                        Label("Remove", systemImage: "trash.fill")
+                                    }
+                                }
+                        }
+                    }
+                } header: {
+                    UpperCasedheadline(text: "Player")
+                }.blurrylistRowBackground()
+                
+                Section {
+                    if viewModel.teamTrainer.isEmpty {
+                        NoTeamTrainerAvaible()
+                    } else {
+                        ForEach(viewModel.teamTrainer, id: \.userProfile.id) { team in
+                            MemberRow(teamMember: team.teamMember, userProfile: team.userProfile, isPlayer: false)
                             .swipeActions {
                                 Button(role: .destructive) {
-                                    // TODO
+                                    Task {
+                                        do {
+                                            team.teamMember.deletedAt = Date()
+                                            try await SupabaseService.upsertWithOutResult(item: team.teamMember.toDTO(), table: .teamMember, onConflict: "id")
+                                        } catch {
+                                            print(error)
+                                        }
+                                    }
                                 } label: {
                                     Label("Remove", systemImage: "trash.fill")
                                 }
                             }
-                    }
-                }
-            } header: {
-                UpperCasedheadline(text: "Player")
-            }
-            
-            Section {
-                if viewModel.teamTrainer.isEmpty {
-                    NoTeamTrainerAvaible()
-                } else {
-                    ForEach(viewModel.teamTrainer, id: \.userProfile.id) { team in
-                        MemberRow(teamMember: team.teamMember, userProfile: team.userProfile, isPlayer: false)
-                        .swipeActions {
-                            Button(role: .destructive) {
-                                Task {
-                                    do {
-                                        team.teamMember.deletedAt = Date() 
-                                        try await SupabaseService.upsertWithOutResult(item: team.teamMember.toDTO(), table: .teamMember, onConflict: "id")
-                                    } catch {
-                                        print(error)
-                                    }
-                                }
-                            } label: {
-                                Label("Remove", systemImage: "trash.fill")
-                            }
                         }
                     }
-                }
-            } header: {
-                UpperCasedheadline(text: "Trainer")
+                } header: {
+                    UpperCasedheadline(text: "Trainer")
+                }.blurrylistRowBackground()
             }
         }
-        .listBackground()
+        .listBackgroundAnimated()
         .onAppear {
             viewModel.inizialize() 
         }
@@ -120,6 +122,7 @@ fileprivate struct MemberRow: View {
                 }
             }
         }
+        .listBackgroundAnimated()
     }
 } 
 

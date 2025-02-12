@@ -45,8 +45,7 @@ struct AbsenseCard: View {
                         }
                     }
                 }
-                .navigationTitle("Absense")
-                .navigationBarTitleDisplayMode(.inline)
+                .navigationTitle(title: "Absense")
             }
             .navigationStackTint()
             .presentationDetents([.height(150)])

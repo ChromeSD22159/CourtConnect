@@ -13,11 +13,19 @@ struct RowLabelButton: View {
     let material: Material?
     let onComplete: () -> Void
     
-    init(text: LocalizedStringKey, systemImage: String, material: Material? = Material.ultraThinMaterial, onComplete: @escaping () -> Void) {
+    init(text: LocalizedStringKey, systemImage: String, material: Material = Material.ultraThinMaterial, onComplete: @escaping () -> Void) {
         self.text = text
         self.systemImage = systemImage
         self.color = nil
         self.material = material
+        self.onComplete = onComplete
+    }
+    
+    init(text: LocalizedStringKey, systemImage: String, color: Color = Theme.lightOrange, onComplete: @escaping () -> Void) {
+        self.text = text
+        self.systemImage = systemImage
+        self.color = color
+        self.material = nil
         self.onComplete = onComplete
     }
     
@@ -47,16 +55,6 @@ struct RowLabelButton: View {
             .clipShape(RoundedRectangle(cornerRadius: 15))
         }
         
-    }
-}
-
-extension RowLabelButton {
-    init(text: LocalizedStringKey, systemImage: String, color: Color? = Theme.lightOrange, onComplete: @escaping () -> Void) {
-        self.text = text
-        self.systemImage = systemImage
-        self.color = color
-        self.material = nil
-        self.onComplete = onComplete
     }
 }
 

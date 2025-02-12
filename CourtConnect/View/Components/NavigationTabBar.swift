@@ -7,6 +7,7 @@
 import SwiftUI
 
 struct NavigationTabBar<Content: View>: View {
+    @Environment(\.colorScheme) var colorScheme
     @ObservedObject var navViewModel: NavigationViewModel
     @Namespace private var animation
     @State var isScrolling = false
@@ -15,8 +16,23 @@ struct NavigationTabBar<Content: View>: View {
     
     var body: some View {
         ZStack {
-            Theme.background
+            if colorScheme == .light {
+                Theme.backgroundGradient.opacity(0.8)
+            } else {
+                Theme.backgroundGradient
+            }
             
+            Image(.basketballSketch)
+                .resizable()
+                .frame(width: 500, height: 500)
+                .blendMode(colorScheme == .light ? .multiply : .hardLight)
+                .opacity(0.3)
+                .position(
+                    x: UIScreen.main.bounds.width - 100,
+                    y: UIScreen.main.bounds.height - 100
+                )
+                .clipped()
+           
             ScrollView(.vertical) {
                 content()
             }
@@ -32,6 +48,13 @@ struct NavigationTabBar<Content: View>: View {
             navViewModel.inizializeAuth()
         }
         .ignoresSafeArea()
+        .overlay(alignment: .top) {
+            Text("74 : 86")
+                .foregroundStyle(.white.opacity(0.25))
+                .font(.jackpotFont(.black, 150))
+                .offset(y: 50)
+                .rotationEffect(Angle(degrees: -15))
+        }
         .overlay(alignment: .top) {
             ReoloadAnimation(isLoading: $reload)
         }
@@ -64,18 +87,7 @@ struct NavigationTabBar<Content: View>: View {
                             }
                         }
                     }
-                    .transition(.move(edge: .bottom))
-                    .background {
-                        LinearGradient(
-                            colors: [
-                                Theme.background.opacity(1.0),
-                                Theme.background.opacity(0.0)
-                            ],
-                            startPoint: .bottom,
-                            endPoint: .top
-                        )
-                        .ignoresSafeArea()
-                    }
+                    .transition(.move(edge: .bottom)) 
                 }
             }
         })
@@ -110,6 +122,72 @@ struct NavigationTabBar<Content: View>: View {
         }
     }
 }
+
+#Preview {
+    @Previewable @Environment(\.colorScheme) var colorScheme
+    ZStack {
+        if colorScheme == .light {
+            Theme.backgroundGradient.opacity(0.8)
+        } else {
+            Theme.backgroundGradient
+        }
+        
+        Image(.basketballSketch)
+            .resizable()
+            .frame(width: 500, height: 500)
+            .blendMode(colorScheme == .light ? .multiply : .hardLight)
+            .opacity(0.3)
+            .position(
+                x: UIScreen.main.bounds.width - 100,
+                y: UIScreen.main.bounds.height - 100
+            )
+            .clipped()
+        
+        ScrollView {
+            RoundedRectangle(cornerRadius: 25)
+                .fill(Material.ultraThinMaterial.opacity(0.5))
+                .frame(width: .infinity, height: 400)
+            
+            RoundedRectangle(cornerRadius: 25)
+                .fill(Material.ultraThinMaterial.opacity(0.5))
+                .frame(width: .infinity, height: 400)
+            
+            RoundedRectangle(cornerRadius: 25)
+                .fill(Material.ultraThinMaterial.opacity(0.5))
+                .frame(width: .infinity, height: 400)
+        }
+        .contentMargins(20)
+    }
+    .ignoresSafeArea()
+    .overlay(alignment: .top) {
+        Text("74 : 86")
+            .foregroundStyle(.white.opacity(colorScheme == .light ? 0.1 : 0.05 ))
+            .font(.jackpotFont(.black, 150))
+            .offset(y: 50)
+            .rotationEffect(Angle(degrees: -15))
+    }
+    .overlay(alignment: .bottom, content: {
+        ZStack {
+            Capsule()
+                .fill(Material.ultraThinMaterial)
+                .blur(radius: 2)
+                .padding(5)
+                .frame(maxWidth: .infinity, maxHeight: 75)
+                .clipShape(Capsule())
+                .padding(.horizontal, 20)
+                .shadow(color: .black.opacity(1.0), radius: 20, y: 10)
+               
+            HStack {
+                Text("Hallo")
+                
+                Text("Hallo")
+                
+                Text("Hallo")
+            }
+        }
+        .transition(.move(edge: .bottom))
+    })
+} 
 
 #Preview {
     @Previewable @State var navViewModel = NavigationViewModel()
@@ -150,8 +228,7 @@ struct NavigationTabBar<Content: View>: View {
                 .padding(.horizontal)
             }
         }
-        .scrollIndicators(.hidden)
-        .background(Theme.background)
+        .scrollIndicators(.hidden) 
     }
     .preferredColorScheme(.light)
 }

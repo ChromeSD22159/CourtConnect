@@ -41,6 +41,7 @@ Deno.serve(async (req) => {
       .from('TeamMember')
       .select('*')  
       .eq('teamId', payload.record.teamId)
+      .is('deletedAt', null)
 
     if (allMember && allMember.length > 0) {
         for (const member of allMember) {
@@ -48,6 +49,7 @@ Deno.serve(async (req) => {
                 .from('UserAccount')
                 .select('*')
                 .eq('id', member.userAccountId)
+                .is('deletedAt', null)
                 .single(); 
 
             if (userAccount) {
@@ -55,6 +57,7 @@ Deno.serve(async (req) => {
                     .from('UserProfile')
                     .select('*')
                     .eq('userId', userAccount.userId)
+                    .is('deletedAt', null)
                     .single();
 
                 const accessToken = await getAccessToken({

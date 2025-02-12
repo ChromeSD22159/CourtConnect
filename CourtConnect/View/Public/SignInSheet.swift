@@ -58,8 +58,7 @@ struct SignInSheet: View {
             }
             .errorAlert()
             .padding()
-            .navigationTitle("SignIn")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle(title: "SignIn")
             .presentationDetents([.height(loginViewModel.containerSize.height + 100)])
             .presentationCornerRadius(20)
             .toolbar {
@@ -88,13 +87,19 @@ struct SignInSheet: View {
 }
 
 #Preview("Light") {
-    LoginEntryView(viewModel: LoginEntryViewModel(), onUserChange: {})
-        .preferredColorScheme(.light)
-        .previewEnvirments()
+    AppBackground {
+        LoginEntryView(viewModel: LoginEntryViewModel(), onUserChange: {})
+            .preferredColorScheme(.light)
+            .previewEnvirments()
+    }
 }
 
 #Preview("Dark") {
-    LoginEntryView(viewModel: LoginEntryViewModel(), onUserChange: {})
-        .preferredColorScheme(.dark)
-        .previewEnvirments()
+    AppBackground {
+        LoginEntryView(viewModel: LoginEntryViewModel(), onUserChange: {})
+            .preferredColorScheme(.dark)
+            .previewEnvirments()
+    }
 }
+
+

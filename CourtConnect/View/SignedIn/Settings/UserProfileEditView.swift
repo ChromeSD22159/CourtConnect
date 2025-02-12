@@ -134,9 +134,8 @@ struct UserProfileEditView: View {
                     .tint(.primary)
                 }
             }
-        }
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle("Edit User")
+        } 
+        .navigationTitle(title: "Edit User")
         .padding()
         .onAppear {
             userProfileEditViewModel.getUser()

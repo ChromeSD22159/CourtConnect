@@ -8,6 +8,13 @@ import SwiftUI
 
 struct ListInfomationSection:View {
     let text: LocalizedStringKey
+    let foreground: Color
+    
+    init(text: LocalizedStringKey, foreground: Color = Color.primary) {
+        self.text = text
+        self.foreground = foreground
+    }
+    
     var body: some View {
         Section {
             VStack(alignment: .leading) {
@@ -18,7 +25,7 @@ struct ListInfomationSection:View {
                     .font(.footnote)
             }
         }
-        .foregroundStyle(Theme.myGray)
+        .foregroundStyle(foreground)
         .listRowBackground(Color.clear)
     }
 }

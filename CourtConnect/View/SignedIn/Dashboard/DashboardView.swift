@@ -27,8 +27,7 @@ struct DashboardView: View {
         .contentMargins(.bottom, 75)
         .scrollIndicators(.hidden)
         .errorPopover()
-        .navigationTitle("Dashboard")
-        .navigationBarTitleDisplayMode(.inline)
+        .navigationTitle(title: "Dashboard")
         .sheet(isPresented: $viewModel.isCreateRoleSheet, onDismiss: {
             viewModel.getAllUserAccounts()
             viewModel.getCurrentAccount()
@@ -37,35 +36,7 @@ struct DashboardView: View {
                 CreateUserAccountView(userId: user.id)
             }
         })
-        .toolbar { 
-            ToolbarItem(placement: .navigationBarTrailing) {
-                HStack {
-                    IconMenuButton(icon: "person.3.fill", description: "Create New Account or Switch to Existing Account") {
-                        ForEach(viewModel.userAccounts) { account in
-                            Button {
-                                viewModel.setCurrentAccount(newAccount: account)
-                            } label: {
-                                HStack {
-                                    if viewModel.userAccount?.id == account.id {
-                                        Image(systemName: "xmark")
-                                            .font(.callout)
-                                    }
-                                    
-                                    Text("\(account.displayName)")
-                                }
-                            }
-                        }
-                        
-                        Button {
-                            viewModel.isCreateRoleSheet.toggle()
-                        } label: {
-                            Label("Create User Account", systemImage: "plus")
-                        }
-                    }
-                }
-                .foregroundStyle(Theme.lightOrange)
-            }
-        }
+        .accountSwitch(viewModel: viewModel) 
         .onAppear {
             viewModel.inizialize()
         }

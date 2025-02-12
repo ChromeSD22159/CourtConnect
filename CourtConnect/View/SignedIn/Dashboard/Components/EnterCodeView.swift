@@ -15,7 +15,7 @@ struct EnterCodeView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Theme.background.ignoresSafeArea()
+                Theme.backgroundGradient.ignoresSafeArea()
                 
                 VStack(spacing: 20) {
                     
@@ -100,8 +100,7 @@ struct EnterCodeView: View {
                     .padding(.top, 30)
                 }
             }
-            .navigationTitle("Enter Code")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle(title: "Enter Code")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading, content: {
                     Button("Cancel") {
@@ -136,7 +135,7 @@ struct EnterCodeView: View {
     }
     .sheet(isPresented: .constant(true), content: {
         ZStack {
-            Theme.background.ignoresSafeArea()
+            Theme.backgroundGradient.ignoresSafeArea()
             
             EnterCodeView(userAccount: MockUser.myUserAccount)
         }

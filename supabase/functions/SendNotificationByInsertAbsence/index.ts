@@ -33,17 +33,20 @@ Deno.serve(async (req) => {
         .select('*') 
         .eq('role', 'Trainer')
         .eq('teamId', payload.record.teamId)
+        .is('deletedAt', null)
 
       const { data: absenceSender } = await supabase 
           .from('UserAccount')
           .select('*')
           .eq('id', payload.record.userAccountId)
+          .is('deletedAt', null)
           .single(); 
 
       const { data: absenceSenderProfile } = await supabase 
           .from('UserProfile')
           .select('*')
           .eq('userId', absenceSender.userId)
+          .is('deletedAt', null)
           .single();
 
         if (trainers && absenceSenderProfile && trainers.length > 0) {
@@ -52,6 +55,7 @@ Deno.serve(async (req) => {
                 .from('UserAccount')
                 .select('*')
                 .eq('id', trainer.userAccountId)
+                .is('deletedAt', null)
                 .single(); 
 
                 console.log("userAccount: ", userAccount)
@@ -61,6 +65,7 @@ Deno.serve(async (req) => {
                       .from('UserProfile')
                       .select('*')
                       .eq('userId', userAccount.userId)
+                      .is('deletedAt', null)
                       .single();
 
                   const accessToken = await getAccessToken({

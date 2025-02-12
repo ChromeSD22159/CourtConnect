@@ -65,37 +65,12 @@ struct TeamView: View {
             }
             
             DocumentOverlayView(document: $teamViewViewModel.selectedDocument)
-        }
-        .navigationTitle(teamViewViewModel.currentTeam?.teamName ?? "")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Image(systemName: "arrow.triangle.2.circlepath.circle")
-                    .rotationAnimation(isFetching: $teamViewViewModel.isfetching)
-                    .onTapGesture {
-                        teamViewViewModel.fetchDataFromRemote()
-                    }
-            }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                if let team = teamViewViewModel.currentTeam {
-                    IconMenuButton(icon: "info.bubble", description: team.teamName.localizedStringKey()) {
-                        Button {
-                            ClipboardHelper.copy(text: team.joinCode)
-                            
-                            messagehandler.handleMessage(message: InAppMessage(title: "TeamId Kopiert"))
-                        } label: {
-                            Label("Copy Team ID", systemImage: "arrow.right.doc.on.clipboard")
-                        }
-                        Button {
-                            
-                        } label: {
-                            Label("Show QR Code", systemImage: "qrcode")
-                        }
-                        ShareLink(item: "TeamID: \(team.joinCode)")
-                    }
-                }
-            }
-        }
+        } 
+        .navigationTitle(title: "\(teamViewViewModel.currentTeam?.teamName ?? "")")
+        .reFetchButton(isFetching: $teamViewViewModel.isfetching, onTap: {
+            teamViewViewModel.fetchDataFromRemote()
+        })
+        .teamInfoButton(team: teamViewViewModel.currentTeam) 
         .onAppear {
             teamViewViewModel.inizialize()
         }
@@ -111,65 +86,65 @@ fileprivate struct DocumentOverlayView: View {
     @Binding var document: Document?
     let viewPort = UIScreen.main.bounds.size
     @State private var shareableImage: Image?
+    @State var imageSize: CGSize = .zero
     var body: some View {
         if let document = document {
-            VStack {
-                VStack(spacing: 20) { 
-                    
-                    AsyncCachedImage(url: URL(string: document.url)!) { image in
-                        image
-                            .resizable()
-                            .scaledToFill()
-                            .clipped()
-                            .frame(width: viewPort.width * 0.6, height: viewPort.width * 0.6)
-                            .clipShape(RoundedRectangle(cornerRadius: 15))
-                            .onAppear {
-                                shareableImage = image
-                            }
-                    } placeholder: {
-                        ZStack {
-                            Image(systemName: "doc")
-                                .font(.largeTitle)
-                                .padding(20)
+            VStack(spacing: 20) {
+                
+                AsyncCachedImage(url: URL(string: document.url)!) { image in
+                    image
+                        .resizable()
+                        .scaledToFill()
+                        .clipped()
+                        .frame(width: viewPort.width * 0.6, height: viewPort.width * 0.6)
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                        .onAppear {
+                            shareableImage = image
                         }
+                        .saveSize(in: $imageSize)
+                } placeholder: {
+                    ZStack {
+                        Image(systemName: "doc")
+                            .font(.largeTitle)
+                            .padding(20)
                     }
+                }
+                
+                HStack {
+                    Text(document.name)
                     
-                    HStack {
-                        Text(document.name)
-                        
-                        Spacer()
-                        
-                        if let shareableImage = shareableImage {
-                            ShareLink(item: shareableImage, preview: SharePreview(document.name, image: shareableImage)) {
-                                Label("Click to share", systemImage: "square.and.arrow.up")
-                            }
+                    Spacer()
+                    
+                    if let shareableImage = shareableImage {
+                        ShareLink(item: shareableImage, preview: SharePreview(document.name, image: shareableImage)) {
+                            Image(systemName: "square.and.arrow.up")
                         }
                     }
                 }
-                .padding()
-                .background(Material.ultraThinMaterial)
-                .clipShape(RoundedRectangle(cornerRadius: 15))
-                .shadow(radius: 10)
-                .transition(
-                    AnyTransition.move(edge: .bottom)
-                        .combined(with: .scale(scale: 0.6, anchor: .top))
-                )
-                .overlay(alignment: .topTrailing, content: {
-                    ZStack {
-                        Circle()
-                            .fill(Material.ultraThinMaterial)
-                            .frame(width: 30)
-                            .shadow(radius: 2, x: -5, y: 5)
-                            
-                        Image(systemName: "xmark")
-                    }
-                    .offset(x: 10, y: -10)
-                    .onTapGesture {
-                        self.document = nil
-                    }
-                })
-                .frame(width: viewPort.width * 0.8, height: viewPort.width * 1.0)
             }
+            .padding(32)
+            .blurryBackground(opacity: 0.8)
+            .clipShape(RoundedRectangle(cornerRadius: 32))
+            .shadow(radius: 10)
+            .transition(
+                AnyTransition.move(edge: .bottom)
+                    .combined(with: .scale(scale: 0.6, anchor: .top))
+            )
+            .overlay(alignment: .topTrailing, content: {
+                ZStack {
+                    Circle()
+                        .fill(Material.ultraThinMaterial)
+                        .frame(width: 30)
+                        .shadow(radius: 2, x: -5, y: 5)
+                        
+                    Image(systemName: "xmark")
+                }
+                .offset(x: 10, y: -10)
+                .onTapGesture {
+                    self.document = nil
+                }
+            })
+            .frame(width: imageSize.width + 64)
         }
     }
 }
