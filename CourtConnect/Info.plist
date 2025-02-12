@@ -38,5 +38,7 @@
         <string>UNIVERSIDAD.ttf</string>
         <string>Jackport.ttf</string>
     </array>
+    <key>Encryption Exemption Export Compliance</key>
+    <false/>
 </dict>
 </plist>

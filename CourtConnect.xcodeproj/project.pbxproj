@@ -245,6 +245,7 @@
 				EncryptionHelper.swift,
 				ErrorIdentifier.swift,
 				Extentions/DateExtension.swift,
+				FontHelper.swift,
 				GeoCoderHelper.swift,
 				MockData/MockTermine.swift,
 				MockData/MockUser.swift,

@@ -90,7 +90,8 @@ fileprivate struct TerminRow: View {
     var body: some View {
         HStack(alignment: .top) {
             VStack {
-                StrokesCircleIcon(systemName: editable ? "square.and.pencil" : "alarm.fill")
+                // square.and.pencil
+                StrokesCircleIcon(systemName: editable ? "pencil" : "alarm.fill")
                     .padding(.horizontal, 20)
 
                 Line()

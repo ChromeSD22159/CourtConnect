@@ -22,17 +22,11 @@ struct NavigationTabBar<Content: View>: View {
                 Theme.backgroundGradient
             }
             
-            Image(.basketballSketch)
+            Image(.courtBG)
                 .resizable()
-                .frame(width: 500, height: 500)
-                .blendMode(colorScheme == .light ? .multiply : .hardLight)
-                .opacity(0.3)
-                .position(
-                    x: UIScreen.main.bounds.width - 100,
-                    y: UIScreen.main.bounds.height - 100
-                )
-                .clipped()
-           
+                .scaledToFit()
+                .opacity(0.25)
+            
             ScrollView(.vertical) {
                 content()
             }
@@ -48,13 +42,6 @@ struct NavigationTabBar<Content: View>: View {
             navViewModel.inizializeAuth()
         }
         .ignoresSafeArea()
-        .overlay(alignment: .top) {
-            Text("74 : 86")
-                .foregroundStyle(.white.opacity(0.25))
-                .font(.jackpotFont(.black, 150))
-                .offset(y: 50)
-                .rotationEffect(Angle(degrees: -15))
-        }
         .overlay(alignment: .top) {
             ReoloadAnimation(isLoading: $reload)
         }
@@ -132,17 +119,22 @@ struct NavigationTabBar<Content: View>: View {
             Theme.backgroundGradient
         }
         
+        Image(.courtBG)
+            .resizable()
+            .scaledToFit()
+            .opacity(0.25)
+            .clipped()
+        /*
         Image(.basketballSketch)
             .resizable()
             .frame(width: 500, height: 500)
-            .blendMode(colorScheme == .light ? .multiply : .hardLight)
-            .opacity(0.3)
+            .opacity(colorScheme == .light ? 0.15 : 0.1)
             .position(
                 x: UIScreen.main.bounds.width - 100,
                 y: UIScreen.main.bounds.height - 100
             )
             .clipped()
-        
+        */
         ScrollView {
             RoundedRectangle(cornerRadius: 25)
                 .fill(Material.ultraThinMaterial.opacity(0.5))
@@ -159,13 +151,6 @@ struct NavigationTabBar<Content: View>: View {
         .contentMargins(20)
     }
     .ignoresSafeArea()
-    .overlay(alignment: .top) {
-        Text("74 : 86")
-            .foregroundStyle(.white.opacity(colorScheme == .light ? 0.1 : 0.05 ))
-            .font(.jackpotFont(.black, 150))
-            .offset(y: 50)
-            .rotationEffect(Angle(degrees: -15))
-    }
     .overlay(alignment: .bottom, content: {
         ZStack {
             Capsule()

@@ -16,7 +16,16 @@ struct IconMenuButton<Content: View>: View {
             content()
         } label: {
             Image(systemName: icon)
-                .foregroundStyle(Theme.headline)
+                .foregroundStyle(Theme.darkOrange)
         }
     }
+}
+
+#Preview {
+    Image(systemName: "pencil.circle.fill")
+        .padding(12)
+        .background(
+            Circle()
+                .fill(.gray)
+        )
 }

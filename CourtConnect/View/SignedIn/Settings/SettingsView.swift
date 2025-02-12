@@ -39,7 +39,11 @@ struct SettingsView: View {
                         IconRow(systemName: "person.2.fill", text: "Total Online Users: \(viewModel.onlineUserCount)")
                      }
                      */
-                    IconRow(systemName: "person.2.fill", text: "Total Online Users: \(viewModel.onlineUserCount)")
+                    if networkMonitor.isConnected {
+                        IconRow(systemName: "person.2.fill", text: "Total Online Users: \(viewModel.onlineUserCount)")
+                    } else {
+                        InternetUnavailableView()
+                    } 
                      
                     if let date = viewModel.userProfile?.lastOnline {
                         IconRow(systemName: "person.badge.clock.fill", text: "Last online: " + date.formattedDate() + " " + date.formattedTime() + " Uhr")
@@ -129,11 +133,18 @@ struct SettingsView: View {
 fileprivate struct OnlineUserList: View {
     var viewModel: SettingViewModel
     @Environment(\.networkMonitor) var networkMonitor
-    
     var body: some View {
         List {
             Section {
-                Text("Total Online: \(viewModel.onlineUserCount)")
+                if networkMonitor.isConnected {
+                    Text("Total Online: \(viewModel.onlineUserCount)")
+                } else {
+                    InternetUnavailableView()
+                }
+            }
+            .onAppear {
+                print(networkMonitor.isConnected)
+                print(NetworkMonitorViewModel.shared.isConnected)
             }
             Section {
                 if networkMonitor.isConnected == false {

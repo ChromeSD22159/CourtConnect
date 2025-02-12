@@ -20,14 +20,28 @@ struct SplashScreen: View {
     @State var animationVisibility = true
     @State private var playbackMode: LottiePlaybackMode = LottiePlaybackMode.paused
      
+    @Environment(\.colorScheme) var colorScheme
+    
     var body: some View {
         if isVisible {
             VStack(spacing: 0) {
-                Image(.logo)
-                    .resizable()
-                    .frame(width: 200  ,height: 200)
-                    .offset(y: 100)
-                    .opacity(logoVisibility ? 1 : 0)
+                ZStack {
+                    RoundedRectangle(cornerRadius: 50)
+                        .fill(Material.ultraThinMaterial)
+                        .frame(width: 200, height: 200)
+                        .shadow(radius: colorScheme == .light ? 0 : 15, y: colorScheme == .light ? 0 : 15 )
+                    
+                    Image(.authLogo)
+                        .resizable()
+                        .frame(width: 320, height: 320)
+                        .offset(y: -50)
+                        .shadow(color: colorScheme == .light ? .black.opacity(0.5) : .black ,radius: 10, y: 10)
+                }
+                .compositingGroup()
+                .shadow(radius: 15, y: 15)
+                .offset(y: 100)
+                .opacity(logoVisibility ? 1 : 0)
+                    
                 
                 LottieView(animation: .named("basketballLoading"))
                     .playbackMode(playbackMode)
@@ -40,11 +54,11 @@ struct SplashScreen: View {
                 Timer.scheduledTimer(withTimeInterval: duration, repeats: false) { _ in
                     onStart()
                     
-                    withAnimation {
+                    withAnimation(.spring) {
                         logoVisibility.toggle()
                     }
                     
-                    withAnimation(.easeOut.delay(0.5)) {
+                    withAnimation(.spring.delay(0.5)) {
                         animationVisibility.toggle()
                     }
                 }
@@ -62,7 +76,7 @@ struct SplashScreen: View {
 #Preview {
     @Previewable @State var isSlashScreen = true
     AppBackground {
-        SplashScreen(isVisible: $isSlashScreen, duration: 3.0, userId: nil, onStart: {
+        SplashScreen(isVisible: $isSlashScreen, duration: 1.5, userId: nil, onStart: {
             
         } , onComplete: {
             isSlashScreen.toggle()
