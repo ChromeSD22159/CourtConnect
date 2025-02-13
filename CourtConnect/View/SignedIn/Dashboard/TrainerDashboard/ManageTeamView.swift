@@ -79,7 +79,7 @@ fileprivate struct MemberRow: View {
                 if isPlayer {
                     Picker("Position:", selection: $teamMember.position) {
                         if teamMember.position == "" {
-                            Text("Bitte Wählen").tag("")
+                            Text("Please choose").tag("")
                         }
                         
                         ForEach(BasketballPosition.allCases, id: \.id) { position in
@@ -101,7 +101,7 @@ fileprivate struct MemberRow: View {
                     let shirtNumberOptions = (0...99).map { ShirtNumberOption(number: $0) }
                     Picker("Shirt Number", selection: $teamMember.shirtNumber) {
                         if teamMember.shirtNumber == nil {
-                            Text("Bitte Wählen").tag(nil as Int?)
+                            Text("Please choose").tag(nil as Int?)
                         }
                        
                         ForEach(shirtNumberOptions) { option in

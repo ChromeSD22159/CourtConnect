@@ -5,9 +5,7 @@
 //  Created by Frederik Kohler on 27.01.25.
 //
 import SwiftUI
-
-
-
+ 
 struct TrainerDashboard: View {
     @Environment(\.scenePhase) var scenePhase
     @State var trainerDashboardViewModel = TrainerDashboardViewModel()
@@ -152,7 +150,7 @@ fileprivate struct HasTeam: View {
             ConfirmButtonLabel(confirmButtonDialog: ConfirmButtonDialog(
                 systemImage: "iphone.and.arrow.right.inward",
                 buttonText: "Leave Team",
-                question: "Want Leave the Team",
+                question: "Want leave the Team",
                 message: "Are you sure you want to leave the Team? This action cannot be undone.",
                 action: "Leave",
                 cancel: "Cancel"

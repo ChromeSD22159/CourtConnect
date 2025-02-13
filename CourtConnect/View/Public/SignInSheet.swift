@@ -100,6 +100,4 @@ struct SignInSheet: View {
             .preferredColorScheme(.dark)
             .previewEnvirments()
     }
-}
-
-
+} 

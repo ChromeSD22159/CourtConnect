@@ -21,11 +21,11 @@ struct DashboardView: View {
                     
                     if viewModel.userAccounts.isEmpty {
                         VStack(spacing: 25) {
-                            ListInfomationSection(text: "Hier kannst du dein erstes Konto anlegen. Du hast die Möglichkeit, mehrere Konten zu erstellen und jederzeit zwischen ihnen zu wechseln – ideal für verschiedene Rollen oder Profile.")
+                            ListInfomationSection(text: "Here you can create your first account. You have the option of creating several accounts and switching between them at any time - ideal for different rollers or profiles.")
                             Button {
                                 viewModel.isCreateRoleSheet.toggle()
                             } label: {
-                                Label("Erstelle dein ersten Account!", systemImage: "plus")
+                                Label("Create your first account!", systemImage: "plus")
                             }
                             .buttonStyle(.borderedProminent)
                         }
@@ -33,17 +33,17 @@ struct DashboardView: View {
                         VStack(spacing: 75) {
                             
                             VStack(spacing: 25) {
-                                ListInfomationSection(text: "Hier kannst du ein weiteres Konto anlegen, um flexibel zwischen Rollen oder Profilen zu wechseln.")
+                                ListInfomationSection(text: "Here you can create another account to switch flexibly between rollers or profiles.")
                                 Button {
                                     viewModel.isCreateRoleSheet.toggle()
                                 } label: {
-                                    Label("Neuen Account erstellen", systemImage: "plus")
+                                    Label("Create a new account", systemImage: "plus")
                                 }
                                 .buttonStyle(.borderedProminent)
                             }
                             
                             VStack {
-                                Text("Wahle einen deiner UserAccount")
+                                Text("Choose one of your user account")
                                 DashboarAccountSwitch(accounts: viewModel.userAccounts) { account in
                                     viewModel.setCurrentAccount(newAccount: account)
                                 }
@@ -53,7 +53,7 @@ struct DashboardView: View {
                         
                     }
                 } else {
-                    Text("Erstelle deinen ersten UserAccount")
+                    Text("Create your first user account")
                 }
             }
         }

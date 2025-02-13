@@ -41,8 +41,7 @@ struct SplashScreen: View {
                 .shadow(radius: 15, y: 15)
                 .offset(y: 100)
                 .opacity(logoVisibility ? 1 : 0)
-                    
-                
+                     
                 LottieView(animation: .named("basketballLoading"))
                     .playbackMode(playbackMode)
                     .opacity(animationVisibility ? 1 : 0)

@@ -1,9 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "" : {
-
-    },
     " " : {
 
     },
@@ -77,6 +74,12 @@
     "Admindashboard" : {
 
     },
+    "Appointment" : {
+
+    },
+    "Appointment Date" : {
+
+    },
     "Are you sure you want to delete the Team? This action cannot be undone." : {
 
     },
@@ -98,9 +101,6 @@
     "Birthday" : {
 
     },
-    "Bitte Wählen" : {
-
-    },
     "Cancel" : {
 
     },
@@ -111,6 +111,9 @@
 
     },
     "Choose Document" : {
+
+    },
+    "Choose one of your user account" : {
 
     },
     "continue" : {
@@ -128,16 +131,25 @@
     "Create" : {
 
     },
+    "Create a new account" : {
+
+    },
+    "Create appointment" : {
+
+    },
     "Create New Account or Switch to Existing Account" : {
 
     },
     "Create Team" : {
 
     },
-    "Create Termin" : {
+    "Create User Account" : {
 
     },
-    "Create User Account" : {
+    "Create your first account!" : {
+
+    },
+    "Create your first user account" : {
 
     },
     "Dashboard" : {
@@ -206,12 +218,6 @@
     "Error" : {
 
     },
-    "Erstelle dein ersten Account!" : {
-
-    },
-    "Erstelle deinen ersten UserAccount" : {
-
-    },
     "File %lld" : {
 
     },
@@ -242,16 +248,19 @@
     "Grant" : {
 
     },
+    "Handle Message" : {
+
+    },
     "Headcoach" : {
 
     },
+    "Here you can create another account to switch flexibly between rollers or profiles." : {
+
+    },
+    "Here you can create your first account. You have the option of creating several accounts and switching between them at any time - ideal for different rollers or profiles." : {
+
+    },
     "Here you can manage the team admins, change the team names or delete the team." : {
-
-    },
-    "Hier kannst du dein erstes Konto anlegen. Du hast die Möglichkeit, mehrere Konten zu erstellen und jederzeit zwischen ihnen zu wechseln – ideal für verschiedene Rollen oder Profile." : {
-
-    },
-    "Hier kannst du ein weiteres Konto anlegen, um flexibel zwischen Rollen oder Profilen zu wechseln." : {
 
     },
     "Home" : {
@@ -261,6 +270,9 @@
 
     },
     "Infomation" : {
+
+    },
+    "Insert code" : {
 
     },
     "Join" : {
@@ -288,9 +300,6 @@
 
     },
     "Loading..." : {
-
-    },
-    "Neuen Account erstellen" : {
 
     },
     "No appointments" : {
@@ -341,16 +350,16 @@
     "Password" : {
 
     },
-    "past code" : {
-
-    },
-    "Plan Termin" : {
+    "Plan appointment" : {
 
     },
     "Player" : {
 
     },
     "Player Dashboard" : {
+
+    },
+    "Please choose" : {
 
     },
     "Please enter the statistics for every player here.  Use the steppers to set the number of 2-point throws, 3-point throws and fouls.  The total number of points is automatically calculated." : {
@@ -398,10 +407,10 @@
     "Save" : {
 
     },
-    "Save Profile" : {
+    "Save appointment" : {
 
     },
-    "Save Termin" : {
+    "Save Profile" : {
 
     },
     "Select image" : {
@@ -455,12 +464,6 @@
     "Teams: %lld" : {
 
     },
-    "Termin" : {
-
-    },
-    "Termin Date" : {
-
-    },
     "The selected user account is not part of a team. Join a team to get started." : {
 
     },
@@ -497,16 +500,13 @@
     "Value" : {
 
     },
-    "Wahle einen deiner UserAccount" : {
-
-    },
     "Want delete the CourtConnect Account" : {
 
     },
     "Want delete the Team" : {
 
     },
-    "Want Leave the Team" : {
+    "Want leave the Team" : {
 
     },
     "x%lld" : {

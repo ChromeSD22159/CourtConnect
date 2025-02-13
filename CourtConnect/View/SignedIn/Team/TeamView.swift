@@ -235,7 +235,6 @@ fileprivate struct Row<Content: View>: View {
 
 fileprivate struct PlayerRow: View {
     @State var isExpant = false
-    @State var isPlayerSheet = false
     let member: MemberProfile
     let isTrainer: Bool
     
@@ -299,15 +298,7 @@ fileprivate struct PlayerRow: View {
             }
         }
         .background(Material.ultraThinMaterial.opacity(0.8))
-        .clipShape(RoundedRectangle(cornerRadius: 15))
-        .sheet(isPresented: $isPlayerSheet) {
-            NavigationStack {
-                ScrollView {
-                    
-                }
-                .navigationTitle("")
-            }
-        }
+        .clipShape(RoundedRectangle(cornerRadius: 15)) 
     }
     
     @ViewBuilder func valueIcon(icon: String, value: Int) -> some View {
