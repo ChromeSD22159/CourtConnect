@@ -15,7 +15,7 @@ struct EditTerminSheetButton: View {
     }
     
     var body: some View {
-        SheetStlye(title: "Edit Termin", detents: [.large], isLoading: $viewModel.isLoading) {
+        SheetStlye(title: "Edit appointment", detents: [.large], isLoading: $viewModel.isLoading) {
             LazyVStack {
                 rowSectionInputText(systemName: "at", headline: "What?", placeholder: "e.g. team training", text: $viewModel.title)
                     .zoomFadeIn(delay: 0.15, trigger: $viewModel.animateOnAppear)
@@ -50,7 +50,7 @@ struct EditTerminSheetButton: View {
                     .buttonStyle(DarkButtonStlye())
                     .zoomFadeIn(delay: 0.75, trigger: $viewModel.animateOnAppear)
                     
-                    Button("Save Termin") {
+                    Button("Save appointment") {
                         Task {
                             do {
                                 try await viewModel.saveTermin()
@@ -65,10 +65,7 @@ struct EditTerminSheetButton: View {
                     .zoomFadeIn(delay: 0.75, trigger: $viewModel.animateOnAppear)
                 }
             }
-        }
-        .onChange(of: viewModel.place, { oldValue, newValue in
-            print(GeoCoderHelper.getAddress(address: newValue))
-        })
+        } 
         .onAppear {
             viewModel.inizializeAuth()
             viewModel.startAnimation()
@@ -135,7 +132,7 @@ struct EditTerminSheetButton: View {
                 IconRoundedRectangle(systemName: systemName, background: Material.ultraThinMaterial)
                 
                 VStack {
-                    DatePicker("Termin Date", selection: date, displayedComponents: [.date, .hourAndMinute])
+                    DatePicker("Appointment Date", selection: date, displayedComponents: [.date, .hourAndMinute])
                         .datePickerStyle(.compact)
                 }
                 

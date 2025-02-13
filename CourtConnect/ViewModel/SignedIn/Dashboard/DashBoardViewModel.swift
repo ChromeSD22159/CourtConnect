@@ -20,15 +20,17 @@ import Auth
     func inizialize() {
         inizializeAuth()
         getAllUserAccounts()
+        getCurrentAccount()
     }
     
     func getCurrentAccount() {
         do {
-            guard let user = user else { throw UserError.userIdNotFound }
+            getAllUserAccounts()
+            
             if let userAccountIdString = LocalStorageService.shared.userAccountId, let userAccountId = UUID(uuidString: userAccountIdString) {
                 self.userAccount = try repository.accountRepository.getAccount(id: userAccountId)
             } else {
-                if let userAccount = try repository.accountRepository.getAllAccounts(userId: user.id).first {
+                if let userAccount = userAccounts.first {
                     self.userAccount = userAccount
                     LocalStorageService.shared.userAccountId = userAccount.id.uuidString
                 }
@@ -65,5 +67,11 @@ import Auth
                 print(error)
             }
         }
+    }
+    
+    func removeCurrentUser() {
+        LocalStorageService.shared.userAccountId = nil
+        userAccount = nil
+        getAllUserAccounts() 
     }
 }

@@ -17,10 +17,44 @@ struct DashboardView: View {
                 case .admin: EmptyView()
                 }
             } else {
-                DashboarAccountSwitch(accounts: viewModel.userAccounts) { account in
-                    viewModel.setCurrentAccount(newAccount: account)
+                if !viewModel.userAccounts.isEmpty {
+                    
+                    if viewModel.userAccounts.isEmpty {
+                        VStack(spacing: 25) {
+                            ListInfomationSection(text: "Here you can create your first account. You have the option of creating several accounts and switching between them at any time - ideal for different rollers or profiles.")
+                            Button {
+                                viewModel.isCreateRoleSheet.toggle()
+                            } label: {
+                                Label("Create your first account!", systemImage: "plus")
+                            }
+                            .buttonStyle(.borderedProminent)
+                        }
+                    } else {
+                        VStack(spacing: 75) {
+                            
+                            VStack(spacing: 25) {
+                                ListInfomationSection(text: "Here you can create another account to switch flexibly between rollers or profiles.")
+                                Button {
+                                    viewModel.isCreateRoleSheet.toggle()
+                                } label: {
+                                    Label("Create a new account", systemImage: "plus")
+                                }
+                                .buttonStyle(.borderedProminent)
+                            }
+                            
+                            VStack {
+                                Text("Choose one of your user account")
+                                DashboarAccountSwitch(accounts: viewModel.userAccounts) { account in
+                                    viewModel.setCurrentAccount(newAccount: account)
+                                }
+                            }
+                        }
+                        .padding(.horizontal, 16)
+                        
+                    }
+                } else {
+                    Text("Create your first user account")
                 }
-                .padding(.horizontal, 16)
             }
         }
         .contentMargins(.top, 20)

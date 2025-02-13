@@ -14,7 +14,7 @@ struct PlanTerminSheetButton: View {
     let onComplete: (Termin) -> Void
     
     var body: some View {
-        RowLabelButton(text: "Plan Termin", systemImage: "calendar", material: .ultraThinMaterial) {
+        RowLabelButton(text: "Plan appointment", systemImage: "calendar", material: .ultraThinMaterial) {
             viewModel.isSheet.toggle()
         }
         .sheet(isPresented: $viewModel.isSheet, onDismiss: {
@@ -40,7 +40,7 @@ struct PlanTerminSheetButton: View {
                     rowSectionDurationSelection(systemName: "clock", headline: "How long?", terminType: $viewModel.duration)
                         .zoomFadeIn(delay: 0.65, trigger: $viewModel.animateOnAppear)
                     
-                    Button("Create Termin") {
+                    Button("Create appointment") {
                         Task {
                             do {
                                 if let newTermin = try await viewModel.generateTermin(userAccount: userAccount) { 
@@ -121,7 +121,7 @@ struct PlanTerminSheetButton: View {
                 IconRoundedRectangle(systemName: systemName, background: Material.ultraThinMaterial)
                 
                 VStack {
-                    DatePicker("Termin Date", selection: date, displayedComponents: [.date, .hourAndMinute])
+                    DatePicker("Appointment Date", selection: date, displayedComponents: [.date, .hourAndMinute])
                         .datePickerStyle(.compact)
                 }
                 

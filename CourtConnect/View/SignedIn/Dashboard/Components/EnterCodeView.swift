@@ -49,7 +49,7 @@ struct EnterCodeView: View {
                     Button(action: {
                         viewModel.past()
                     }, label: {
-                        Label("past code", systemImage: "doc.on.clipboard")
+                        Label("Insert code", systemImage: "doc.on.clipboard")
                     })
                     .tint(Theme.darkOrange)
                     .buttonStyle(.borderedProminent)

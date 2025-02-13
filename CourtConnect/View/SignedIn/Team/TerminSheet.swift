@@ -41,7 +41,7 @@ struct TerminSheet: View {
                 }
             }
             .mapStyle(.standard)
-            .navigationTitle(title: "Termin")
+            .navigationTitle(title: "Appointment")
             .overlay(alignment: .bottom) {
                 VStack(alignment: .leading, spacing: 15) {
                     VStack(alignment: .leading) {
@@ -99,8 +99,7 @@ struct TerminSheet: View {
         Circle()
             .foregroundStyle(Theme.lightOrange.opacity(0.5))
             .frame(width: 60, height: 60)
-            
-        
+             
         Image(systemName: "basketball.fill")
             .symbolEffect(.breathe)
             .padding(10)
