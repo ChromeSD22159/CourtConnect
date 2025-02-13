@@ -17,10 +17,44 @@ struct DashboardView: View {
                 case .admin: EmptyView()
                 }
             } else {
-                DashboarAccountSwitch(accounts: viewModel.userAccounts) { account in
-                    viewModel.setCurrentAccount(newAccount: account)
+                if !viewModel.userAccounts.isEmpty {
+                    
+                    if viewModel.userAccounts.isEmpty {
+                        VStack(spacing: 25) {
+                            ListInfomationSection(text: "Hier kannst du dein erstes Konto anlegen. Du hast die Möglichkeit, mehrere Konten zu erstellen und jederzeit zwischen ihnen zu wechseln – ideal für verschiedene Rollen oder Profile.")
+                            Button {
+                                viewModel.isCreateRoleSheet.toggle()
+                            } label: {
+                                Label("Erstelle dein ersten Account!", systemImage: "plus")
+                            }
+                            .buttonStyle(.borderedProminent)
+                        }
+                    } else {
+                        VStack(spacing: 75) {
+                            
+                            VStack(spacing: 25) {
+                                ListInfomationSection(text: "Hier kannst du ein weiteres Konto anlegen, um flexibel zwischen Rollen oder Profilen zu wechseln.")
+                                Button {
+                                    viewModel.isCreateRoleSheet.toggle()
+                                } label: {
+                                    Label("Neuen Account erstellen", systemImage: "plus")
+                                }
+                                .buttonStyle(.borderedProminent)
+                            }
+                            
+                            VStack {
+                                Text("Wahle einen deiner UserAccount")
+                                DashboarAccountSwitch(accounts: viewModel.userAccounts) { account in
+                                    viewModel.setCurrentAccount(newAccount: account)
+                                }
+                            }
+                        }
+                        .padding(.horizontal, 16)
+                        
+                    }
+                } else {
+                    Text("Erstelle deinen ersten UserAccount")
                 }
-                .padding(.horizontal, 16)
             }
         }
         .contentMargins(.top, 20)

@@ -206,6 +206,12 @@
     "Error" : {
 
     },
+    "Erstelle dein ersten Account!" : {
+
+    },
+    "Erstelle deinen ersten UserAccount" : {
+
+    },
     "File %lld" : {
 
     },
@@ -242,6 +248,12 @@
     "Here you can manage the team admins, change the team names or delete the team." : {
 
     },
+    "Hier kannst du dein erstes Konto anlegen. Du hast die Möglichkeit, mehrere Konten zu erstellen und jederzeit zwischen ihnen zu wechseln – ideal für verschiedene Rollen oder Profile." : {
+
+    },
+    "Hier kannst du ein weiteres Konto anlegen, um flexibel zwischen Rollen oder Profilen zu wechseln." : {
+
+    },
     "Home" : {
 
     },
@@ -276,6 +288,9 @@
 
     },
     "Loading..." : {
+
+    },
+    "Neuen Account erstellen" : {
 
     },
     "No appointments" : {
@@ -480,6 +495,9 @@
 
     },
     "Value" : {
+
+    },
+    "Wahle einen deiner UserAccount" : {
 
     },
     "Want delete the CourtConnect Account" : {

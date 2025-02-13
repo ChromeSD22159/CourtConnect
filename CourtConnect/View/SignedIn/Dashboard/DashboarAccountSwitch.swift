@@ -12,41 +12,36 @@ struct DashboarAccountSwitch: View {
  
     let onComplete: (UserAccount) -> Void
     
+    let screenWidth = UIScreen.main.bounds.size.width
+    
     var body: some View {
-        GeometryReader { geometry in
-            VStack(alignment: .center) {
-                Spacer()
-                
-                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
-                    ForEach(useraccounts.chunked(into: 2), id: \.self) { row in
-                        ForEach(row, id: \.self) { item in
-                            FrameView(geometry: geometry) { size in
-                                ZStack {
-                                    RoundedRectangle(cornerRadius: 15)
-                                        .fill(Material.ultraThinMaterial)
-                                        .frame(width: size, height: size)
-                                        .scaleEffect(1)
-                                    
-                                    Text(item.role)
-                                }
-                                .onTapGesture {
-                                    onComplete(item)
-                                }
+        VStack(alignment: .center) { 
+            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
+                ForEach(useraccounts.chunked(into: 2), id: \.self) { row in
+                    ForEach(row, id: \.self) { item in
+                        VStack {
+                            if !item.displayName.isEmpty {
+                                let width: CGFloat = (screenWidth / 2) - (16 * 1.5)
+                                Text(item.displayName)
+                                    .frame(width: width, height: width)
+                                    .background(Material.ultraThinMaterial)
+                                    .clipShape(RoundedRectangle(cornerRadius: 15))
                             }
+                        }
+                        .onTapGesture {
+                            onComplete(item)
                         }
                     }
                 }
-                .padding()
-                
-                Spacer()
             }
-            .ignoresSafeArea()
-            .onTapGesture {
-                animate()
-            }
-            .onAppear {
-                animate()
-            }
+            Spacer()
+        }
+        .ignoresSafeArea()
+        .onTapGesture {
+            animate()
+        }
+        .onAppear {
+            animate()
         }
     }
     
@@ -54,18 +49,10 @@ struct DashboarAccountSwitch: View {
         Task {
             useraccounts = []
             
-            for index in 0...3 {
+            for account in accounts {
                 try await Task.sleep(for: .seconds(0.2))
                 withAnimation {
-                    let userAccount: UserAccount
-
-                    if index < accounts.count {
-                        userAccount = accounts[index]
-                    } else { 
-                        userAccount = UserAccount(id: UUID(), userId: UUID(), position: "asd", role: "asd", displayName: "asdasd", createdAt: Date(), updatedAt: Date())
-                    }
-
-                    useraccounts.append(userAccount)
+                    useraccounts.insert(account, at: useraccounts.count)
                 }
             }
         }

@@ -178,7 +178,6 @@ struct DateRange {
             
             // wenn Spieler
             if role == .player, let myMemberAccount = try repository.teamRepository.getMember(for: userAccount.id) {
-                print("myMemberAccount: \(myMemberAccount)")
                 try repository.teamRepository.softDelete(teamMember: myMemberAccount, userId: user.id)
                 
                 userAccount.teamId = nil
@@ -191,12 +190,3 @@ struct DateRange {
         }
     }
 }
-/*
- TrainerAccount:
- info@frederikkohler.de
- frederik
-
- PlayerAccount:
- test@user.de
- frederik
- */

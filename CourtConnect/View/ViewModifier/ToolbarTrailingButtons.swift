@@ -92,7 +92,11 @@ struct AccountSwitch: ViewModifier {
                                     }
                                 }
                             }
-                            
+                            /*
+                            Button("Remove CurrentUser") {
+                               viewModel.removeCurrentUser()
+                            }
+                            */
                             Button {
                                 viewModel.isCreateRoleSheet.toggle()
                             } label: {
@@ -108,8 +112,9 @@ struct AccountSwitch: ViewModifier {
 
 #Preview {
     @Previewable @State var isFetching = false
-    ZStack{}.reFetchButton(isFetching: $isFetching, onTap: {
+    ZStack {
+        EmptyView()
+    }.reFetchButton(isFetching: $isFetching, onTap: {
         isFetching.toggle()
     })
-        
 }
