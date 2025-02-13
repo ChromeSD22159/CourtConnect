@@ -184,7 +184,7 @@ private struct StatisticChart: View {
         VStack(spacing: 20) {
             HStack {
                 ForEach(TerminType.statistics, id: \.hashValue) { type in
-                    Button(type.rawValue) {
+                    Button(type.localized) {
                         withAnimation {
                             selectedType = type
                             onChange(type)
