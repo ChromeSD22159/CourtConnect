@@ -104,10 +104,18 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Assets.xcassets,
+				Localizable.xcstrings,
 				Theme.swift,
 				UNIVERSIDAD.ttf,
 			);
 			target = B6509FDD2D594CDA0032CB17 /* CourtConnectWidgetExtension */;
+		};
+		B6785B6F2D5E72F80041A3F5 /* Exceptions for "Resources" folder in "CourtConnect" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Localizable.xcstrings,
+			);
+			target = B698ABFA2D330FC10086AF8C /* CourtConnect */;
 		};
 		B6ACE3D52D595B2900D1941B /* Exceptions for "CourtConnect" folder in "CourtConnect" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
@@ -363,6 +371,7 @@
 		B650A0032D594D080032CB17 /* Resources */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
+				B6785B6F2D5E72F80041A3F5 /* Exceptions for "Resources" folder in "CourtConnect" target */,
 				B6B357C32D5CD0420035E7EB /* Exceptions for "Resources" folder in "CourtConnectTests" target */,
 				B6B357C42D5CD0420035E7EB /* Exceptions for "Resources" folder in "CourtConnectUITests" target */,
 				B650A0122D594D180032CB17 /* Exceptions for "Resources" folder in "CourtConnectWidgetExtension" target */,
@@ -482,6 +491,7 @@
 		B6509FF32D594CF80032CB17 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				B6653C582D42C00D00B87D71 /* Localizable.xcstrings */,
 				B6ACE4462D595CF500D1941B /* Models */,
 				B6ACE44C2D595CF500D1941B /* Services */,
 				B6ACE4592D595CF500D1941B /* Util */,
@@ -497,7 +507,6 @@
 				B650A0352D5954620032CB17 /* CourtConnectWidgetExtension.entitlements */,
 				B6509FF32D594CF80032CB17 /* Shared */,
 				B66532582D3EC28500B87D71 /* .gitignore */,
-				B6653C582D42C00D00B87D71 /* Localizable.xcstrings */,
 				B64487C02D4CCC5B0012FB43 /* .swiftlint.yml */,
 				B665325A2D3EC28F00B87D71 /* GoogleService-Info.plist */,
 				B665325C2D3EC35300B87D71 /* README.md */,

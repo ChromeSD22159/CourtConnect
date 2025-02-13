@@ -1,10 +1,8 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "" : {
-
-    },
     " " : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -15,6 +13,7 @@
       }
     },
     "(Optimal)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -25,6 +24,7 @@
       }
     },
     "* Required" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -35,6 +35,7 @@
       }
     },
     "**%@**" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -45,6 +46,7 @@
       }
     },
     "**Welcome** \n%@!" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -55,6 +57,7 @@
       }
     },
     "%@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -65,6 +68,7 @@
       }
     },
     "%@ (%lld)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -81,6 +85,7 @@
       }
     },
     "%@ Statistics" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -91,6 +96,7 @@
       }
     },
     "%@ wants to join your team. Would you like to accept the request?" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -101,6 +107,7 @@
       }
     },
     "%lld" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -111,6 +118,7 @@
       }
     },
     "0" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -121,6 +129,7 @@
       }
     },
     "2er" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -131,6 +140,7 @@
       }
     },
     "3er" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -141,6 +151,7 @@
       }
     },
     "Absense" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -151,6 +162,7 @@
       }
     },
     "Absense End Date" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -161,6 +173,7 @@
       }
     },
     "Absense Start Date" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -171,6 +184,7 @@
       }
     },
     "Account" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -181,6 +195,7 @@
       }
     },
     "Add Admin" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -191,6 +206,7 @@
       }
     },
     "Add Document" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -201,6 +217,7 @@
       }
     },
     "Add Report" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -211,6 +228,7 @@
       }
     },
     "Add Statistic" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -221,6 +239,7 @@
       }
     },
     "Admin Dashboard" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -231,6 +250,7 @@
       }
     },
     "App Status" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -241,6 +261,7 @@
       }
     },
     "Appointment" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -251,6 +272,7 @@
       }
     },
     "Appointment Date" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -261,6 +283,7 @@
       }
     },
     "Are you sure you want to delete the Team? This action cannot be undone." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -271,6 +294,7 @@
       }
     },
     "Are you sure you want to delete your account? This action cannot be undone." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -281,6 +305,7 @@
       }
     },
     "Are you sure you want to delete your CourtConnect Account? This action cannot be undone." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -291,6 +316,7 @@
       }
     },
     "Are you sure you want to leave the Team? This action cannot be undone." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -301,6 +327,7 @@
       }
     },
     "Association e-mail" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -311,6 +338,7 @@
       }
     },
     "Attendance" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -321,6 +349,7 @@
       }
     },
     "Attendances" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -331,6 +360,7 @@
       }
     },
     "Birthday" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -341,6 +371,7 @@
       }
     },
     "Cancel" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -351,6 +382,7 @@
       }
     },
     "Change Document" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -361,6 +393,7 @@
       }
     },
     "Change Team name" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -371,6 +404,7 @@
       }
     },
     "Choose Document" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -381,6 +415,7 @@
       }
     },
     "Choose one of your user account" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -391,6 +426,7 @@
       }
     },
     "Coach" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -401,6 +437,7 @@
       }
     },
     "Code Team: %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -411,6 +448,7 @@
       }
     },
     "continue" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -421,6 +459,7 @@
       }
     },
     "Copy" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -431,6 +470,7 @@
       }
     },
     "Copy Team ID" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -441,6 +481,7 @@
       }
     },
     "Create" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -451,6 +492,7 @@
       }
     },
     "Create a new account" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -461,6 +503,7 @@
       }
     },
     "Create appointment" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -471,6 +514,7 @@
       }
     },
     "Create New Account or Switch to Existing Account" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -481,6 +525,7 @@
       }
     },
     "Create Team" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -491,6 +536,7 @@
       }
     },
     "Create User Account" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -501,6 +547,7 @@
       }
     },
     "Create your first account!" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -511,6 +558,7 @@
       }
     },
     "Create your first user account" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -521,6 +569,7 @@
       }
     },
     "Dashboard" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -531,6 +580,7 @@
       }
     },
     "Date" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -541,6 +591,7 @@
       }
     },
     "December 2024" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -551,6 +602,7 @@
       }
     },
     "Delete" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -561,6 +613,7 @@
       }
     },
     "Delete appointment" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -571,6 +624,7 @@
       }
     },
     "Delete Coach account" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -581,6 +635,7 @@
       }
     },
     "Delete CourtConnect Account" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -591,6 +646,7 @@
       }
     },
     "Delete Local Chat" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -601,6 +657,7 @@
       }
     },
     "Delete Player Account" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -611,6 +668,7 @@
       }
     },
     "Delete Team" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -621,6 +679,7 @@
       }
     },
     "Delete your Account" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -631,6 +690,7 @@
       }
     },
     "Do you want to join the team %@?" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -641,6 +701,7 @@
       }
     },
     "Document name e.g. Instruction" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -651,6 +712,7 @@
       }
     },
     "Duration?" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -661,6 +723,7 @@
       }
     },
     "E-Mail" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -671,6 +734,7 @@
       }
     },
     "e.g. meeting point on site at 10 am." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -681,6 +745,7 @@
       }
     },
     "e.g. team training" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -691,6 +756,7 @@
       }
     },
     "Edit appointment" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -701,6 +767,7 @@
       }
     },
     "Edit User" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -711,6 +778,7 @@
       }
     },
     "Enter a Team ID to instantly join an existing team and start managing players and training sessions." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -721,6 +789,7 @@
       }
     },
     "Enter Code" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -731,6 +800,7 @@
       }
     },
     "Enter Team's Code" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -741,6 +811,7 @@
       }
     },
     "Enter your E-Mail" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -751,6 +822,7 @@
       }
     },
     "Enter your Firstname" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -761,6 +833,7 @@
       }
     },
     "Enter your Lastname" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -771,6 +844,7 @@
       }
     },
     "Enter your Password" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -781,6 +855,7 @@
       }
     },
     "Entry with QR" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -791,6 +866,7 @@
       }
     },
     "Error" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -801,6 +877,7 @@
       }
     },
     "File %lld" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -811,6 +888,7 @@
       }
     },
     "Filename" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -821,6 +899,7 @@
       }
     },
     "Firstname" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -831,6 +910,7 @@
       }
     },
     "Fouls" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -841,6 +921,7 @@
       }
     },
     "Found a new team" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -851,6 +932,7 @@
       }
     },
     "Found team now!" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -861,6 +943,7 @@
       }
     },
     "Game" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -871,6 +954,7 @@
       }
     },
     "Generate Code" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -881,6 +965,7 @@
       }
     },
     "Generate new joinCode" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -891,6 +976,7 @@
       }
     },
     "Generate new team's Code" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -901,6 +987,7 @@
       }
     },
     "Grant" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -911,6 +998,7 @@
       }
     },
     "Handle Message" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -921,6 +1009,7 @@
       }
     },
     "Headcoach" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -931,6 +1020,7 @@
       }
     },
     "Here you can create another account to switch flexibly between rollers or profiles." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -941,6 +1031,7 @@
       }
     },
     "Here you can create your first account. You have the option of creating several accounts and switching between them at any time - ideal for player and coaches." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -951,6 +1042,7 @@
       }
     },
     "Here you can manage the team admins, change the team names or delete the team." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -961,6 +1053,7 @@
       }
     },
     "Home" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -971,6 +1064,7 @@
       }
     },
     "Important?" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -981,6 +1075,7 @@
       }
     },
     "In this area you can assign an individual player number to every player in your team. Choose a number from the list for every player." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -991,6 +1086,7 @@
       }
     },
     "Infomation" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1001,6 +1097,7 @@
       }
     },
     "Insert code" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1022,6 +1119,7 @@
       }
     },
     "Join" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1032,6 +1130,7 @@
       }
     },
     "Join a Team!" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1042,6 +1141,7 @@
       }
     },
     "Join Requests" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1052,6 +1152,7 @@
       }
     },
     "Join Team?" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1062,6 +1163,7 @@
       }
     },
     "Join with Team ID!" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1072,6 +1174,7 @@
       }
     },
     "Keep me signed in" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1082,6 +1185,7 @@
       }
     },
     "Kind" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1092,6 +1196,7 @@
       }
     },
     "Kind?" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1113,6 +1218,7 @@
       }
     },
     "Last online: %@ %@ o'clock" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1129,6 +1235,7 @@
       }
     },
     "Lastname" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1139,6 +1246,7 @@
       }
     },
     "Leave" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1149,6 +1257,7 @@
       }
     },
     "Leave Team" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1159,6 +1268,7 @@
       }
     },
     "Loading..." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1169,6 +1279,7 @@
       }
     },
     "Manage Team" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1179,6 +1290,7 @@
       }
     },
     "New appointment" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1189,6 +1301,7 @@
       }
     },
     "No appointments" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1199,6 +1312,7 @@
       }
     },
     "No appointments are currently planned." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1209,6 +1323,7 @@
       }
     },
     "No Connection" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1219,6 +1334,7 @@
       }
     },
     "No Documents Available" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1229,6 +1345,7 @@
       }
     },
     "No join requests" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1239,6 +1356,7 @@
       }
     },
     "No Team" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1249,6 +1367,7 @@
       }
     },
     "No team coach" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1259,6 +1378,7 @@
       }
     },
     "No team coach currently found." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1269,6 +1389,7 @@
       }
     },
     "No team found!" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1279,6 +1400,7 @@
       }
     },
     "No Team Member" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1289,6 +1411,7 @@
       }
     },
     "No Team Member currently found." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1299,6 +1422,7 @@
       }
     },
     "Nobody is online!" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1309,6 +1433,7 @@
       }
     },
     "OK" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1319,6 +1444,7 @@
       }
     },
     "Other" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1329,6 +1455,7 @@
       }
     },
     "Password" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1339,6 +1466,7 @@
       }
     },
     "Plan appointment" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1349,6 +1477,7 @@
       }
     },
     "Planned duration: %@ mins." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1359,6 +1488,7 @@
       }
     },
     "Player" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1369,6 +1499,7 @@
       }
     },
     "Player Dashboard" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1379,6 +1510,7 @@
       }
     },
     "Please choose" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1389,6 +1521,7 @@
       }
     },
     "Please enter the statistics for every player here.  Use the steppers to set the number of 2-point throws, 3-point throws and fouls.  The total number of points is automatically calculated." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1399,6 +1532,7 @@
       }
     },
     "Points" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1409,6 +1543,7 @@
       }
     },
     "Position" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1419,6 +1554,7 @@
       }
     },
     "Position:" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1429,6 +1565,7 @@
       }
     },
     "Prevents or sick?!" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1439,6 +1576,7 @@
       }
     },
     "Profile" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1449,6 +1587,7 @@
       }
     },
     "Ready for the jump? Let's start! Register to get started and become part of the community." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1459,6 +1598,7 @@
       }
     },
     "Register your absence to the coaching team." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1469,6 +1609,7 @@
       }
     },
     "Reject" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1479,6 +1620,7 @@
       }
     },
     "Reload Chat" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1489,6 +1631,7 @@
       }
     },
     "Remove" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1499,6 +1642,7 @@
       }
     },
     "Remove Admin" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1509,6 +1653,7 @@
       }
     },
     "Repeat password" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1519,6 +1664,7 @@
       }
     },
     "Repeat your password" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1529,6 +1675,7 @@
       }
     },
     "Requests" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1539,6 +1686,7 @@
       }
     },
     "Save" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1549,6 +1697,7 @@
       }
     },
     "Save appointment" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1559,6 +1708,7 @@
       }
     },
     "Save Profile" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1569,6 +1719,7 @@
       }
     },
     "Select image" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1579,6 +1730,7 @@
       }
     },
     "Send" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1589,6 +1741,7 @@
       }
     },
     "Send a request to join a team as a trainer and start managing players and training sessions." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1599,6 +1752,7 @@
       }
     },
     "Settings" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1609,6 +1763,7 @@
       }
     },
     "Shirt Number" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1619,6 +1774,7 @@
       }
     },
     "Show Join QR Code" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1629,6 +1785,7 @@
       }
     },
     "Show less" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1639,6 +1796,7 @@
       }
     },
     "Show more" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1649,6 +1807,7 @@
       }
     },
     "Show QR Code" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1659,6 +1818,7 @@
       }
     },
     "SignIn" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1669,6 +1829,7 @@
       }
     },
     "Signout" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1679,6 +1840,7 @@
       }
     },
     "SignUp" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1689,6 +1851,7 @@
       }
     },
     "Soon you will see your data here!" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1699,6 +1862,7 @@
       }
     },
     "Soon.." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1709,6 +1873,7 @@
       }
     },
     "Start your own team and manage players and training sessions." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1719,6 +1884,7 @@
       }
     },
     "Statistics" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1729,6 +1895,7 @@
       }
     },
     "Super-Admin" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1739,6 +1906,7 @@
       }
     },
     "Team" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1749,6 +1917,7 @@
       }
     },
     "Team Admins" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1759,6 +1928,7 @@
       }
     },
     "Team Name" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1769,6 +1939,7 @@
       }
     },
     "Team request from %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1779,6 +1950,7 @@
       }
     },
     "Teams: %lld" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1789,6 +1961,7 @@
       }
     },
     "The Developer" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1810,6 +1983,7 @@
       }
     },
     "The selected user account is not part of a team. Join a team to get started." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1820,6 +1994,7 @@
       }
     },
     "There are no appointments to insert statistics for the players." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1830,6 +2005,7 @@
       }
     },
     "There is currently no accession request." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1840,6 +2016,7 @@
       }
     },
     "This list shows all open accession requests for your team.  Select an inquiry to see the details and edit them." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1861,6 +2038,7 @@
       }
     },
     "Total Online: %lld" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1871,6 +2049,7 @@
       }
     },
     "Total Points: %lld" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1881,6 +2060,7 @@
       }
     },
     "Trainer Hour Report" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1891,6 +2071,7 @@
       }
     },
     "Training" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1901,6 +2082,7 @@
       }
     },
     "Try checking the Network Connection." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1911,6 +2093,7 @@
       }
     },
     "Upload Document" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1921,6 +2104,7 @@
       }
     },
     "User role" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1931,6 +2115,7 @@
       }
     },
     "Value" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1941,6 +2126,7 @@
       }
     },
     "Venue" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1951,6 +2137,7 @@
       }
     },
     "Want delete the CourtConnect Account?" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1961,6 +2148,7 @@
       }
     },
     "Want delete the Team?" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1971,6 +2159,7 @@
       }
     },
     "Want leave the Team?" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1992,6 +2181,7 @@
       }
     },
     "What?" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2002,6 +2192,7 @@
       }
     },
     "When?" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2012,6 +2203,7 @@
       }
     },
     "Where?" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2022,6 +2214,7 @@
       }
     },
     "x%lld" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2032,6 +2225,7 @@
       }
     },
     "You have no open appointment confirmations" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2042,6 +2236,7 @@
       }
     },
     "Your Birthday" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2052,6 +2247,7 @@
       }
     },
     "Your Message" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2073,6 +2269,7 @@
       }
     },
     "Your Team. \nYour connection. \nYour success." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
