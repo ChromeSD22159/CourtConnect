@@ -52,7 +52,7 @@ struct TerminSheet: View {
                             .font(.subheadline)
                             .padding(.bottom, 15)
                         
-                        Text("Planned takes: " + viewModel.terminData.termin.durationMinutes.formatted() + " mins.")
+                        Text("Planned duration: \(viewModel.terminData.termin.durationMinutes.formatted()) mins.")
                     }
                     .padding([.horizontal, .top])
                     

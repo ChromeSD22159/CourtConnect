@@ -13,7 +13,7 @@ struct DashboardView: View {
             if let userAccount = viewModel.userAccount, let role = UserRole(rawValue: userAccount.role) { 
                 switch role {
                 case .player: PlayerDashboard()
-                case .trainer: TrainerDashboard()
+                case .coach: TrainerDashboard()
                 case .admin: EmptyView()
                 }
             } else {
@@ -21,7 +21,7 @@ struct DashboardView: View {
                     
                     if viewModel.userAccounts.isEmpty {
                         VStack(spacing: 25) {
-                            ListInfomationSection(text: "Here you can create your first account. You have the option of creating several accounts and switching between them at any time - ideal for different rollers or profiles.")
+                            ListInfomationSection(text: "Here you can create your first account. You have the option of creating several accounts and switching between them at any time - ideal for player and coaches.")
                             Button {
                                 viewModel.isCreateRoleSheet.toggle()
                             } label: {

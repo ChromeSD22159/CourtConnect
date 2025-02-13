@@ -57,8 +57,9 @@ struct ChatView: View {
                 HStack(spacing: 20) {
                     Menu {
                         let cal = Calendar.current
-                        let string = cal.isDateInToday(viewModel.recipientUser.lastOnline) ? "heute, um" : "am " + viewModel.recipientUser.lastOnline.formattedDate()
-                        Text("Last online, \(string + " " + viewModel.recipientUser.lastOnline.formattedTime()) Uhr")
+                        let string = cal.isDateInToday(viewModel.recipientUser.lastOnline) ? "heute, um" : "am \(viewModel.recipientUser.lastOnline.formattedDate())"
+                       
+                        Text("Last online, \(string) \(viewModel.recipientUser.lastOnline.formattedTime()) Uhr")
                             .font(.caption)
                         
                         Button("Reload Chat") {

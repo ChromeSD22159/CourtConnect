@@ -8,18 +8,18 @@ import SwiftUI
 
 struct IconCard: View {
     let systemName: String
-    let title: String
+    let title: LocalizedStringKey
     let backgroundColor: Color?
     let backgroundMaterial: Material?
     
-    init(systemName: String, title: String, background: Color) {
+    init(systemName: String, title: LocalizedStringKey, background: Color) {
         self.systemName = systemName
         self.title = title
         self.backgroundColor = background
         self.backgroundMaterial = nil
     }
     
-    init(systemName: String, title: String, background: Material) {
+    init(systemName: String, title: LocalizedStringKey, background: Material) {
         self.systemName = systemName
         self.title = title
         self.backgroundColor = nil

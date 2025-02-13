@@ -20,7 +20,7 @@ struct PlanTerminSheetButton: View {
         .sheet(isPresented: $viewModel.isSheet, onDismiss: {
             viewModel.resetAnimationState()
         }) {
-            SheetStlye(title: "New Termin", detents: [.large], isLoading: $viewModel.isLoading) {
+            SheetStlye(title: "New appointment", detents: [.large], isLoading: $viewModel.isLoading) {
                 LazyVStack {
                     rowSectionInputText(systemName: "at", headline: "What?", placeholder: "e.g. team training", text: $viewModel.title)
                         .zoomFadeIn(delay: 0.15, trigger: $viewModel.animateOnAppear)
@@ -34,10 +34,10 @@ struct PlanTerminSheetButton: View {
                     rowSectionKindSelection(systemName: "figure.basketball", headline: "Kind?", terminType: $viewModel.kind)
                         .zoomFadeIn(delay: 0.45, trigger: $viewModel.animateOnAppear)
                     
-                    rowSectionDateSelection(systemName: "calendar.badge.clock", headline: "Date?", date: $viewModel.date)
+                    rowSectionDateSelection(systemName: "calendar.badge.clock", headline: "When?", date: $viewModel.date)
                         .zoomFadeIn(delay: 0.55, trigger: $viewModel.animateOnAppear)
                     
-                    rowSectionDurationSelection(systemName: "clock", headline: "How long?", terminType: $viewModel.duration)
+                    rowSectionDurationSelection(systemName: "clock", headline: "Duration?", terminType: $viewModel.duration)
                         .zoomFadeIn(delay: 0.65, trigger: $viewModel.animateOnAppear)
                     
                     Button("Create appointment") {
@@ -61,7 +61,7 @@ struct PlanTerminSheetButton: View {
         }
     }
     
-    @ViewBuilder func rowSectionInputText(systemName: String, headline: String, placeholder: String, text: Binding<String>) -> some View {
+    @ViewBuilder func rowSectionInputText(systemName: String, headline: LocalizedStringKey, placeholder: LocalizedStringKey, text: Binding<String>) -> some View {
         Section {
             HStack(spacing: 15) {
                 IconRoundedRectangle(systemName: systemName, background: Material.ultraThinMaterial)
@@ -88,7 +88,7 @@ struct PlanTerminSheetButton: View {
         }
     }
     
-    @ViewBuilder func rowSectionKindSelection(systemName: String, headline: String, terminType: Binding<TerminType>) -> some View {
+    @ViewBuilder func rowSectionKindSelection(systemName: String, headline: LocalizedStringKey, terminType: Binding<TerminType>) -> some View {
         Section {
             HStack(spacing: 15) {
                 IconRoundedRectangle(systemName: systemName, background: Material.ultraThinMaterial)
@@ -115,7 +115,7 @@ struct PlanTerminSheetButton: View {
         }
     }
     
-    @ViewBuilder func rowSectionDateSelection(systemName: String, headline: String, date: Binding<Date>) -> some View {
+    @ViewBuilder func rowSectionDateSelection(systemName: String, headline: LocalizedStringKey, date: Binding<Date>) -> some View {
         Section {
             HStack(spacing: 15) {
                 IconRoundedRectangle(systemName: systemName, background: Material.ultraThinMaterial)
@@ -138,7 +138,7 @@ struct PlanTerminSheetButton: View {
         }
     }
     
-    @ViewBuilder func rowSectionDurationSelection(systemName: String, headline: String, terminType: Binding<TerminDuration>) -> some View {
+    @ViewBuilder func rowSectionDurationSelection(systemName: String, headline: LocalizedStringKey, terminType: Binding<TerminDuration>) -> some View {
         Section {
             HStack(spacing: 15) {
                 IconRoundedRectangle(systemName: systemName, background: Material.ultraThinMaterial)

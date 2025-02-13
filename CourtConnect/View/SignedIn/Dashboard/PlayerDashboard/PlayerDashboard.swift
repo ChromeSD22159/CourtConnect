@@ -91,7 +91,7 @@ fileprivate struct HasTeam: View {
         ConfirmButtonLabel(confirmButtonDialog: ConfirmButtonDialog(
                 systemImage: "iphone.and.arrow.right.inward",
                 buttonText: "Leave Team",
-                question: "Want leave the Team",
+                question: "Want leave the Team?",
                 message: "Are you sure you want to leave the Team? This action cannot be undone.",
                 action: "Leave",
                 cancel: "Cancel"

@@ -52,7 +52,7 @@ struct CalendarCard: View {
             }
         } header: {
             HStack {
-                UpperCasedheadline(text: title)
+                UpperCasedheadline(text: .init(title.uppercased()))
                 Spacer()
             }
         }

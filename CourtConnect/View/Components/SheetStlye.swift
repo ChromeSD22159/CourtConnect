@@ -8,7 +8,7 @@ import SwiftUI
 
 struct SheetStlye<Content: View>: View {
     @Environment(\.dismiss) var dismiss
-    let title: String
+    let title: LocalizedStringKey
     let detents: Set<PresentationDetent> 
     @Binding var isLoading: Bool
     @ViewBuilder let content: () -> Content
@@ -28,7 +28,7 @@ struct SheetStlye<Content: View>: View {
             .listStyle(.insetGrouped)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Text(title)
+                    Text(title.stringValue()?.uppercased() ?? "")
                         .font(.headline)
                         .fontWeight(.bold)
                         .foregroundStyle(

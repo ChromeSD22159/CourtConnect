@@ -56,7 +56,7 @@ struct ManageTeamView: View {
                         }
                     }
                 } header: {
-                    UpperCasedheadline(text: "Trainer")
+                    UpperCasedheadline(text: "Coach")
                 }.blurrylistRowBackground()
             }
         }

@@ -40,22 +40,23 @@ struct SettingsView: View {
                      }
                      */
                     if networkMonitor.isConnected {
-                        IconRow(systemName: "person.2.fill", text: "Total Online Users: \(viewModel.onlineUserCount)")
+                        IconRow(systemName: "person.2.fill", text: .init("Total Online Users: \(viewModel.onlineUserCount)"))
                     } else {
                         InternetUnavailableView()
                     } 
                      
-                    if let date = viewModel.userProfile?.lastOnline {
-                        IconRow(systemName: "person.badge.clock.fill", text: "Last online: " + date.formattedDate() + " " + date.formattedTime() + " Uhr")
+                    if let date = viewModel.userProfile?.lastOnline, let formattedDate = date.formattedDate().stringKey, let formattedTime = date.formattedTime().stringKey {
+                        let localizedKey: LocalizedStringKey = "Last online: \(formattedDate) \(formattedTime) o'clock"
+                        IconRow(systemName: "person.badge.clock.fill", text: localizedKey)
                     } else {
-                        IconRow(systemName: "person.badge.clock.fill", text: "Last online: -")
+                        IconRow(systemName: "person.badge.clock.fill", text: .init("Last online: -"))
                     }
                     
                     // MARK: - Version
                     if let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
-                        IconRow(systemName: "info.circle.fill", text: "Version: \(appVersion)")
+                        IconRow(systemName: "info.circle.fill", text: .init("Version: \(appVersion)"))
                     } else {
-                        IconRow(systemName: "info.circle.fill", text: "Version: -")
+                        IconRow(systemName: "info.circle.fill", text: .init("Version: -"))
                     }
                 }
             } header: {
@@ -70,14 +71,14 @@ struct SettingsView: View {
                     NavigationLink {
                         WishKit.FeedbackListView().withNavigation()
                     } label: {
-                        IconRow(systemName: "list.bullet.clipboard.fill", text: "Features")
+                        IconRow(systemName: "list.bullet.clipboard.fill", text: .init("Features"))
                     }
 
-                    IconRow(systemName: "globe", text: "Instagram of the developer", url: "https://www.instagram.com/frederik.code/")
+                    IconRow(systemName: "globe", text: .init("Instagram of the developer"), url: "https://www.instagram.com/frederik.code/")
                     
-                    IconRow(systemName: "globe", text: "Webseite des Entwicklers", url: "https://www.frederikkohler.de")
+                    IconRow(systemName: "globe", text: .init("Website of the developer"), url: "https://www.frederikkohler.de")
                     
-                    IconRow(systemName: "square.grid.2x2.fill", text: "Apps des Entwicklers", url: "https://apps.apple.com/at/developer/frederik-kohler/id1692240999")
+                    IconRow(systemName: "square.grid.2x2.fill", text: .init("The developer apps"), url: "https://apps.apple.com/at/developer/frederik-kohler/id1692240999")
                 }
             } header: {
                 HStack {
@@ -92,7 +93,7 @@ struct SettingsView: View {
                         confirmButtonDialog: ConfirmButtonDialog(
                             systemImage: "trash",
                             buttonText: "Delete CourtConnect Account",
-                            question: "Want delete the CourtConnect Account",
+                            question: "Want delete the CourtConnect Account?",
                             message: "Are you sure you want to delete your CourtConnect Account? This action cannot be undone.",
                             action: "Delete",
                             cancel: "Cancel"
@@ -177,16 +178,16 @@ fileprivate struct OnlineUserList: View {
 
 fileprivate struct IconRow: View {
     let systemName: String
-    let text: String
+    let text: LocalizedStringKey
     let url: String?
     
-    init(systemName: String, text: String) {
+    init(systemName: String, text: LocalizedStringKey) {
         self.systemName = systemName
         self.text = text
         self.url = nil
     }
     
-    init(systemName: String, text: String, url: String) {
+    init(systemName: String, text: LocalizedStringKey, url: String) {
         self.systemName = systemName
         self.text = text
         self.url = url

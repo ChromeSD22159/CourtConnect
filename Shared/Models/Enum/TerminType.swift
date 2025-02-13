@@ -23,5 +23,13 @@ enum TerminType: String, CaseIterable, Identifiable {
         [.game, .training]
     }
     
+    var localized: LocalizedStringKey {
+        switch self {
+        case .game: "Game"
+        case .training: "Training"
+        case .other: "Other"
+        }
+    }
+    
     var id: String { rawValue }
 }
