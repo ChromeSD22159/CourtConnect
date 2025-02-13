@@ -6,12 +6,19 @@ CourtConnect ist eine innovative App, die Trainer, Spieler und Eltern innerhalb 
 Die App bietet Funktionen wie Terminverwaltung, Anwesenheitsmanagement und Benachrichtigungen, damit alle Mitglieder stets informiert bleiben. Mit einem Fokus auf Benutzerfreundlichkeit ermöglicht CourtConnect ein effizientes Teammanagement – egal ob auf oder abseits des Spielfelds.
 
 
-## Design
-Coming soon ...
-
+## Design  
 <p>
-  <img src="./images/ActivityDiagrammEdgeFunction.jpg" width="200">
-  <img src="./images/ActivityDiagrammSyncronization.jpg" width="200"> 
+  <img src="./images/screenshot/screenshot_light_1.png" width="200">
+  <img src="./images/screenshot/screenshot_light_2.png" width="200"> 
+  <img src="./images/screenshot/screenshot_light_3.png" width="200">
+  <img src="./images/screenshot/screenshot_light_4.png" width="200"> 
+</p>
+
+
+## ActivityDiagrams  
+<p>
+  <img src="./images/diagrams/ActivityDiagrammEdgeFunction.jpg" width="200">
+  <img src="./images/diagrams/ActivityDiagrammSyncronization.jpg" width="200"> 
 </p>
 
 
@@ -137,6 +144,16 @@ Usert für mehrere Unique identifier:
 ```sql
 ALTER TABLE public."<UserOnline>" ADD CONSTRAINT "<UserOnline>_<UserOnline>_<deviceToken>_unique" UNIQUE ("<userId>", "<deviceToken>");
 ```
+
+#### Deployment für den Appstore:
+ TrainerAccount:
+ email: trainer@user.de
+ pw: CourtConnect
+
+ PlayerAccount:
+ email: player@user.de
+ pw: CourtConnect
+ 
 
 ## Kontakt Informationen  
 **Frederik Kohler**  

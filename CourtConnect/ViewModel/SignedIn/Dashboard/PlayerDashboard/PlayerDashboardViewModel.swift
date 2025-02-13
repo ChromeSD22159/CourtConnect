@@ -127,8 +127,8 @@ struct DateRange {
     }
     
     func updateTerminAttendance(attendance: Attendance) {
-        defer { attendancesTermines.removeAll(where: { $0.attendance.terminId == attendance.terminId }) }
         Task {
+            defer { getTerminAttendances() }
             do {
                 guard let user = user else { throw UserError.userIdNotFound }
                 try await repository.teamRepository.upsertTerminAttendance(attendance: attendance, userId: user.id)
@@ -140,12 +140,14 @@ struct DateRange {
     
     func fetchDataFromRemote() {
         Task {
+            defer {
+                getTeam()
+                getTeamTermine()
+                getTerminAttendances()
+            }
             do {
                 if let userId = user?.id {
                     try await syncAllTables(userId: userId)
-                    getTeam()
-                    getTeamTermine()
-                    getTerminAttendances()
                 }
             } catch {
                 print(error)
@@ -189,3 +191,12 @@ struct DateRange {
         }
     }
 }
+/*
+ TrainerAccount:
+ info@frederikkohler.de
+ frederik
+
+ PlayerAccount:
+ test@user.de
+ frederik
+ */
