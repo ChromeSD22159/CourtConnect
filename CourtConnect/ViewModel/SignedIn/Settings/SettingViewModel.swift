@@ -25,7 +25,7 @@ import FirebaseMessaging
         guard let user = user else { return }
         Task {
             do {
-                
+                _ = try await repository.userRepository.setUserOffline(userId: user.id)
                 try await repository.userRepository.deleteUser(user: user)
                 try await repository.userRepository.signOut()
                 

@@ -39,9 +39,18 @@ extension AuthProtocol {
     func signOut() {
         Task {
             do {
-                try await self.repository.userRepository.signOut() 
+                guard let user = user else { return }
+                guard let userProfile = self.userProfile else { return }
+                
+                userProfile.updatedAt = Date()
+                userProfile.fcmToken = nil
+                
+                try await repository.userRepository.removeFcmToken(userProfile: userProfile)
+                
+                _ = try await repository.userRepository.setUserOffline(userId: user.id)
+                try await self.repository.userRepository.signOut()
                 userAccount = nil
-                userProfile = nil
+                self.userProfile = nil
             } catch {
                 print(error.localizedDescription)
             }

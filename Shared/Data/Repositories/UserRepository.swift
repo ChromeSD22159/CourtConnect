@@ -108,6 +108,15 @@ class UserRepository {
             .execute()
     }
     
+    func removeFcmToken(userProfile: UserProfile) async throws {
+        let updates: [String: String?] = ["fcmToken": nil]
+        try await backendClient.supabase // Separate Abfrage für fcmToken
+            .from(DatabaseTable.userProfile.rawValue)
+            .update(updates) // Setze fcmToken auf null
+            .eq("id", value: userProfile.id) // oder userId, falls das dein Primärschlüssel ist
+            .execute()
+    }
+    
     func removeUserProfile(user: User) throws {
         let predicate = #Predicate<UserProfile> {
             $0.userId == user.id
