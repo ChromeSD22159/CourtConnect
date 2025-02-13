@@ -78,7 +78,7 @@ fileprivate struct RequestAcceptionField: View {
         HStack {
             Text(requestUser.userProfile.fullName)
             
-            Text(requestUser.request.createdAt.formattedDate() + " - " + requestUser.request.createdAt.formattedTime())
+            Text("\(requestUser.request.createdAt.formattedDate()) - \(requestUser.request.createdAt.formattedTime())")
         }
         .onTapGesture {
             isPresenting.toggle()

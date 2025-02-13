@@ -44,11 +44,11 @@ struct SignUpSheet: View {
                         .datePickerStyle(.compact)
                     
                     HStack {
-                        Text("UserRole")
+                        Text("User role")
                         Spacer()
-                        Picker("UserRole", selection: $registerViewModel.userRole) {
+                        Picker("User role", selection: $registerViewModel.userRole) {
                             ForEach(UserRole.registerRoles) { role in
-                                Text(role.rawValue).tag(role)
+                                Text(role.localized).tag(role)
                             }
                         }
                         .pickerStyle(.menu)

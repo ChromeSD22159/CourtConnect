@@ -3,7 +3,8 @@
 //  CourtConnect
 //
 //  Created by Frederik Kohler on 23.01.25.
-// 
+//  
+import SwiftUICore
 
 enum BasketballPosition: String, CaseIterable, Identifiable {
     case pointGuard = "Point Guard"

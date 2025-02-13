@@ -37,7 +37,7 @@ import Auth
                     if userAccount.roleEnum == .player {
                         self.teamPlayer.append(TeamMemberProfile(userProfile: userProfil, teamMember: member))
                     }
-                    if userAccount.roleEnum == .trainer {
+                    if userAccount.roleEnum == .coach {
                         self.teamTrainer.append(TeamMemberProfile(userProfile: userProfil, teamMember: member))
                         print(teamTrainer.count)
                     }

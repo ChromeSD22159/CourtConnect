@@ -91,7 +91,7 @@ import UIKit
             guard let userAccount = userAccount else { throw UserError.userAccountNotFound }
             
             // wenn trainer
-            if role == .trainer, let teamId = userAccount.teamId {
+            if role == .coach, let teamId = userAccount.teamId {
                 guard try repository.teamRepository.getTeamAdmins(for: teamId).count > 1 else { throw TeamError.lastAdminCantLeave }
                 
                 if let myAdmin = try? repository.teamRepository.getAdmin(for: userAccount.id), let myMemberAccount = try repository.teamRepository.getMember(for: userAccount.id) {

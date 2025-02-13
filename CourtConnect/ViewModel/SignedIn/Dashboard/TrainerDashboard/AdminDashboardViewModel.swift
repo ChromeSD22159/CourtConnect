@@ -72,7 +72,7 @@ import Auth
         do {
             
             guard let currentTeam = currentTeam else { return }
-            let localMember = try repository.teamRepository.getTeamMembers(for: currentTeam.id, role: .trainer)
+            let localMember = try repository.teamRepository.getTeamMembers(for: currentTeam.id, role: .coach)
             
             var teamMemberProfiles: [TeamMemberProfile] = []
             

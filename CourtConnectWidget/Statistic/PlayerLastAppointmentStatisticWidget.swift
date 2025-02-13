@@ -106,7 +106,7 @@ fileprivate struct LastAppointmentEntryView : View {
             HStack {
                 Text("Last Update:")
                 Spacer()
-                Text(entry.date.formattedTime() + " Uhr")
+                Text("\(entry.date.formattedTime()) Uhr")
             }.font(.system(size: 9))
         }
         .containerBackground(Theme.backgroundGradient, for: .widget)

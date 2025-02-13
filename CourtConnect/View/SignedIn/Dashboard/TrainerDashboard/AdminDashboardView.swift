@@ -19,7 +19,7 @@ struct AdminDashboardView: View {
                     // TODO: Stunden PDF Erstellen
                     VStack(alignment: .leading) {
                         HStack {
-                            Text("Dezember 2024")
+                            Text("December 2024")
                             Spacer()
                             Image(systemName: "square.and.arrow.up")
                         }
@@ -72,7 +72,7 @@ struct AdminDashboardView: View {
                         .onTapGesture {
                             adminDashboardViewModel.isDeleteTeamDialog.toggle()
                         }
-                        .confirmationDialog("Want delete the Team", isPresented: $adminDashboardViewModel.isDeleteTeamDialog) {
+                        .confirmationDialog("Want delete the Team?", isPresented: $adminDashboardViewModel.isDeleteTeamDialog) {
                             Button("Delete", role: .destructive) { adminDashboardViewModel.deleteTeam()}
                             Button("Cancel", role: .cancel) { adminDashboardViewModel.isDeleteTeamDialog.toggle() }
                         } message: {
@@ -82,7 +82,7 @@ struct AdminDashboardView: View {
                 .blurrylistRowBackground()
             }
         }
-        .navigationTitle(title: "Admindashboard")
+        .navigationTitle(title: "Admin Dashboard")
         .listBackgroundAnimated()
         .onAppear {
             adminDashboardViewModel.inizialze()

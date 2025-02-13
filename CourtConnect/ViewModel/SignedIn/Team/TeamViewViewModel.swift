@@ -72,7 +72,7 @@ import Auth
             }
              
             var teamTrainersTmp: [MemberProfile] = []
-            let teamTrainers = teamMember.filter { $0.role == UserRole.trainer.rawValue }
+            let teamTrainers = teamMember.filter { $0.role == UserRole.coach.rawValue }
             for trainer in teamTrainers {
                 if let trainerAccount = try repository.accountRepository.getAccount(id: trainer.userAccountId),
                     let userProfile = try repository.userRepository.getUserProfileFromDatabase(userId: trainerAccount.userId) {

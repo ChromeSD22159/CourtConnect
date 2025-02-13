@@ -21,7 +21,7 @@ struct TrainerDashboard: View {
             
             ConfirmButtonLabel(confirmButtonDialog: ConfirmButtonDialog(
                 systemImage: "trash",
-                buttonText: "Delete Trainer Account",
+                buttonText: "Delete Coach account",
                 question: "Delete your Account",
                 message: "Are you sure you want to delete your account? This action cannot be undone.",
                 action: "Delete",
@@ -43,7 +43,7 @@ struct TrainerDashboard: View {
                 trainerDashboardViewModel.fetchDataFromRemote()
             }
         }
-        .navigationTitle("Trainer")
+        .navigationTitle("Coach")
     }
 }
 
@@ -106,7 +106,7 @@ fileprivate struct HasTeam: View {
                             AddStatisticView(teamId: teamId, userId: userId)
                         } 
                     } label: {
-                        IconCard(systemName: "chart.xyaxis.line", title: "Add Statistics", background: Material.ultraThinMaterial)
+                        IconCard(systemName: "chart.xyaxis.line", title: "Statistics", background: Material.ultraThinMaterial)
                     }
                     
                     NavigationLink {
@@ -150,12 +150,12 @@ fileprivate struct HasTeam: View {
             ConfirmButtonLabel(confirmButtonDialog: ConfirmButtonDialog(
                 systemImage: "iphone.and.arrow.right.inward",
                 buttonText: "Leave Team",
-                question: "Want leave the Team",
+                question: "Want leave the Team?",
                 message: "Are you sure you want to leave the Team? This action cannot be undone.",
                 action: "Leave",
                 cancel: "Cancel"
             ), material: .ultraThinMaterial) {
-                trainerDashboardViewModel.leaveTeam(role: .trainer)
+                trainerDashboardViewModel.leaveTeam(role: .coach)
             }
             .padding(.horizontal, 16)
         }
@@ -189,7 +189,7 @@ fileprivate struct ShowTeamJoinQrCode: View {
             showQrSheet.toggle()
         }
         .sheet(isPresented: $showQrSheet, onDismiss: {}) {
-            SheetStlye(title: "Join QR Code", detents: [.medium], isLoading: .constant(false)) {
+            SheetStlye(title: "Entry with QR", detents: [.medium], isLoading: .constant(false)) {
                 VStack(alignment: .center, spacing: 30) {
                     Image(uiImage: QRCode)
                         .resizable()
@@ -203,7 +203,7 @@ fileprivate struct ShowTeamJoinQrCode: View {
                             
                             messagehandler.handleMessage(message: InAppMessage(title: "Join code copied"))
                         } label: {
-                            Label("Copy Team: \(joinCode)", systemImage: "arrow.right.doc.on.clipboard")
+                            Label("Code Team: \(joinCode)", systemImage: "arrow.right.doc.on.clipboard")
                         }
                     }
                 }

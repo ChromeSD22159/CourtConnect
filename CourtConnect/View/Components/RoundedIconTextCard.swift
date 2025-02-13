@@ -8,8 +8,8 @@ import SwiftUI
 
 struct RoundedIconTextCard: View {
     let icon: String
-    let title: String
-    let description: String
+    let title: LocalizedStringKey
+    let description: LocalizedStringKey
     var body: some View {
         HStack {
             RoundedIcon(systemName: icon)

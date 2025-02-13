@@ -47,7 +47,7 @@ import Foundation
                         
                         self.teamPlayer.append(teamMemberProfileStatistic)
                     }
-                    if userAccount.roleEnum == .trainer {
+                    if userAccount.roleEnum == .coach {
                         let teamMemberProfileStatistic = TeamMemberProfile(
                             userProfile: userProfil,
                             teamMember: member

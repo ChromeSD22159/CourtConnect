@@ -9,9 +9,9 @@ import SwiftUI
 struct NoTeamTrainerAvaible: View {
     var body: some View {
         ContentUnavailableView {
-            Label("No Team Trainer", systemImage: "calendar")
+            Label("No team coach", systemImage: "calendar")
         } description: {
-            Text("No Team Trainer currently found.")
+            Text("No team coach currently found.")
         }
     }
 }

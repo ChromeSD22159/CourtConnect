@@ -7,16 +7,16 @@
 import SwiftUI
 
 struct UpperCasedheadline: View {
-    let text: String
+    let text: LocalizedStringKey
     let foregroundColor: Color
     
-    init(text: String, foregroundColor: Color = Theme.myGray) {
+    init(text: LocalizedStringKey, foregroundColor: Color = Theme.myGray) {
         self.text = text
         self.foregroundColor = foregroundColor
     }
     
     var body: some View {
-        Text(text.uppercased())
+        Text(text.stringValue()?.uppercased() ?? "")
             .font(.footnote)
             .foregroundStyle(foregroundColor)
     }

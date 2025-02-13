@@ -20,7 +20,7 @@ struct AddStatisticView: View {
                 
                 Section {
                     if viewModel.termine.isEmpty {
-                        ContentUnavailableView("No Appointments", systemImage: "calendar", description: Text("There are no appointments to insert statistics for the players."))
+                        ContentUnavailableView("No appointments", systemImage: "calendar", description: Text("There are no appointments to insert statistics for the players."))
                     } else {
                         ForEach(viewModel.termine) { termin in
                             HStack {
@@ -30,7 +30,7 @@ struct AddStatisticView: View {
                                 
                                 Spacer()
                                 
-                                Text(termin.typeString)
+                                Text(TerminType(rawValue: termin.typeString)?.localized ?? "")
                                     .font(.caption2)
                                     .padding(5)
                                     .background(TerminType(rawValue: termin.typeString) == .game ? Theme.lightOrange : Theme.darkOrange)
@@ -56,7 +56,7 @@ struct AddStatisticView: View {
                     viewModel.saveStatistics(termin: termin)
                 }
         }
-        .navigationTitle(title: "Add Statistics")
+        .navigationTitle(title: "Statistics")
         .listBackgroundAnimated()
     }
 }
@@ -118,7 +118,7 @@ fileprivate struct AddStaticSheet: View {
                         MemberRowTrainer(trainer: trainer)
                     }
                 } header: {
-                    UpperCasedheadline(text: "Trainer")
+                    UpperCasedheadline(text: "Coach")
                 }
             }
             .scrollIndicators(.hidden)
@@ -190,7 +190,7 @@ fileprivate struct MemberRowPlayer: View {
 fileprivate struct ToggleAttendance: View {
     @Bindable var toggle: ToggleValue
     var body: some View {
-        Toggle("Attandance", isOn: $toggle.value)
+        Toggle("Attendance", isOn: $toggle.value)
     }
 }
 
@@ -242,7 +242,7 @@ fileprivate struct MemberRowTrainer: View {
              
             if isExpant {
                 VStack {
-                    Toggle("Attandance", isOn: .constant(true))
+                    Toggle("Attendance", isOn: .constant(true))
                 } .padding([.horizontal, .bottom])
             }
             
