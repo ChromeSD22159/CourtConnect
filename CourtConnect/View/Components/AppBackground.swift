@@ -13,18 +13,21 @@ struct AppBackground<Content: View>: View {
         ZStack {
             if colorScheme == .light {
                 Theme.backgroundGradient.opacity(0.5)
+                    .ignoresSafeArea()
             } else {
                 Theme.backgroundGradient.opacity(0.5)
+                    .ignoresSafeArea()
             }
             
             Image(.courtBG)
                 .resizable()
                 .scaledToFill()
-                .opacity(0.25) 
+                .opacity(0.25)
+                .ignoresSafeArea()
             
             content()
         }
-        .ignoresSafeArea()
+        .errorPopover()
     }
 }
 

@@ -39,8 +39,7 @@ import SwiftUI
             }
             
             LoadingCard(isLoading: $viewModel.isLoading)
-        }
-        .errorPopover()
+        } 
         .navigationTitle(title: "Requests")
         .listBackgroundAnimated()
         .refreshable {

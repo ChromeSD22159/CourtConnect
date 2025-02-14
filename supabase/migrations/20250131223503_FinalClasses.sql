@@ -313,9 +313,10 @@ create table
     id uuid not null default gen_random_uuid (),
     "teamName" text not null,
     "createdByUserAccountId" uuid not null default gen_random_uuid (),
-    headcoach text not null,
+    "headcoach" text not null,
+    "teamImageURL" text null,
     "joinCode" text not null,
-    email text not null,
+    "email" text not null,
     "createdAt" timestamp with time zone not null default now(),
     "updatedAt" timestamp with time zone not null default now(),
     "deletedAt" timestamp with time zone null,
@@ -754,13 +755,11 @@ ON CONFLICT (id) DO NOTHING;
 
 ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
  
--- Richtlinie für ALL (CRUD)
-CREATE POLICY "Authenticated users can CRUD files from TeamFiles" ON storage.objects FOR ALL TO authenticated USING (bucket_id = 'TeamFiles');
-CREATE POLICY "Authenticated users can CRUD files from TeamImages" ON storage.objects FOR ALL TO authenticated USING (bucket_id = 'TeamImages');
-CREATE POLICY "Authenticated users can CRUD files from UserImages" ON storage.objects FOR ALL TO authenticated USING (bucket_id = 'UserImages');
-
-
-
+-- Richtlinie für ALL (CRUD) 
+CREATE POLICY "Allow authenticated users to update" ON storage.objects FOR UPDATE TO authenticated USING (bucket_id = 'TeamFiles'); 
+CREATE POLICY "Allow authenticated users to update" ON storage.objects FOR UPDATE TO authenticated USING (bucket_id = 'TeamImages'); 
+CREATE POLICY "Allow authenticated users to update" ON storage.objects FOR UPDATE TO authenticated USING (bucket_id = 'UserImages'); 
+ 
 --- INSTALL 
 1. DROP ALL TABLES
 2. CREATE ALL TABLES, TRIGGER AND FUNCTION

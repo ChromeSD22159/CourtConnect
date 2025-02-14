@@ -28,8 +28,8 @@ import Auth
     func getTeamMember() {
         do {
             guard let currentTeam = currentTeam else { throw TeamError.teamNotFound }
-            let teamMember = try repository.teamRepository.getTeamMembers(for: currentTeam.id) 
-           
+            let teamMember = try repository.teamRepository.getTeamMembers(for: currentTeam.id)
+            
             for member in teamMember {
                 if let userAccount = try repository.accountRepository.getAccount(id: member.userAccountId),
                    let userProfil = try repository.userRepository.getUserProfileFromDatabase(userId: userAccount.userId) {
@@ -58,8 +58,31 @@ import Auth
         }
     }
     
-    func kickMember() {
-        // TODO: 
+    func kickMember(teamMember: TeamMember) {
+        Task {
+            defer {
+                inizialize()
+            }
+            do {
+                guard let userAccount = try repository.accountRepository.getAccount(id: teamMember.userAccountId) else {
+                    return
+                }
+                
+                userAccount.teamId = nil
+                userAccount.updatedAt = Date()
+                 
+                teamMember.deletedAt = Date()
+                teamMember.updatedAt = Date()
+                
+                // SAVE LOCAL
+                repository.teamRepository.upsertlocal(item: teamMember, table: .teamMember, userId: userAccount.userId)
+                repository.teamRepository.upsertlocal(item: userAccount, table: .userAccount, userId: userAccount.userId)
+                
+                // SAVE REMOTE
+                try await repository.teamRepository.upsertTeamMemberRemote(teamMember: teamMember)
+                try await repository.accountRepository.sendToBackend(item: userAccount)
+            }
+        }
     }
 }
 

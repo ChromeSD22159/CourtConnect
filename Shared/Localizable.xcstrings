@@ -4,16 +4,6 @@
     "" : {
 
     },
-    " " : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : " "
-          }
-        }
-      }
-    },
     "(Optimal)" : {
       "localizations" : {
         "de" : {
@@ -260,6 +250,16 @@
         }
       }
     },
+    "Appointments" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Termine"
+          }
+        }
+      }
+    },
     "Are you sure you want to delete the Team? This action cannot be undone." : {
       "localizations" : {
         "de" : {
@@ -421,6 +421,7 @@
       }
     },
     "Copy" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -650,6 +651,16 @@
         }
       }
     },
+    "Documents" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dokumente"
+          }
+        }
+      }
+    },
     "Duration?" : {
       "localizations" : {
         "de" : {
@@ -870,6 +881,16 @@
         }
       }
     },
+    "Generate a new Code for your team." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Generiert einen neuen Teamcode"
+          }
+        }
+      }
+    },
     "Generate Code" : {
       "localizations" : {
         "de" : {
@@ -890,12 +911,12 @@
         }
       }
     },
-    "Generate new team's Code" : {
+    "Generates a\nnew team code" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Generiere den Code des neuen Teams"
+            "value" : "Generiert einen\nneuen Teamcode"
           }
         }
       }
@@ -906,17 +927,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Genehmigen"
-          }
-        }
-      }
-    },
-    "Handle Message" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Handle Message"
           }
         }
       }
@@ -1042,6 +1052,9 @@
         }
       }
     },
+    "Join code copied" : {
+
+    },
     "Join Requests" : {
       "localizations" : {
         "de" : {
@@ -1159,12 +1172,25 @@
         }
       }
     },
+    "Lets get started" : {
+
+    },
     "Loading..." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Laden…"
+          }
+        }
+      }
+    },
+    "Manage Documents" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dokumente verwalten"
           }
         }
       }
@@ -1318,6 +1344,15 @@
           }
         }
       }
+    },
+    "onboarding_description_1" : {
+
+    },
+    "onboarding_description_2" : {
+
+    },
+    "onboarding_title_2" : {
+
     },
     "Other" : {
       "localizations" : {
@@ -1529,6 +1564,9 @@
         }
       }
     },
+    "Request send!" : {
+
+    },
     "Requests" : {
       "localizations" : {
         "de" : {
@@ -1565,6 +1603,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Profil speichern"
+          }
+        }
+      }
+    },
+    "Saved!" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gespeichert!"
           }
         }
       }
@@ -1615,6 +1663,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Spieler Nummer"
+          }
+        }
+      }
+    },
+    "Show Absenses" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abwesenheiten zeigen"
           }
         }
       }
@@ -1779,6 +1837,12 @@
         }
       }
     },
+    "Team successfully created!" : {
+
+    },
+    "Teamid copied" : {
+
+    },
     "Teams: %lld" : {
       "localizations" : {
         "de" : {
@@ -1910,6 +1974,9 @@
           }
         }
       }
+    },
+    "Update Code" : {
+
     },
     "Upload Document" : {
       "localizations" : {

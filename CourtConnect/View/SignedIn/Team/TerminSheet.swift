@@ -45,8 +45,18 @@ struct TerminSheet: View {
             .overlay(alignment: .bottom) {
                 VStack(alignment: .leading, spacing: 15) {
                     VStack(alignment: .leading) {
-                        Text(viewModel.terminData.termin.title)
-                            .font(.title)
+                        HStack {
+                            Text(viewModel.terminData.termin.title)
+                                .font(.title)
+                            
+                            Spacer()
+                            
+                            Image(systemName: "mappin.and.ellipse")
+                                .font(.largeTitle)
+                                .onTapGesture {
+                                    viewModel.openAppleMap()
+                                }
+                        }
                         
                         Text(viewModel.terminData.termin.place)
                             .font(.subheadline)

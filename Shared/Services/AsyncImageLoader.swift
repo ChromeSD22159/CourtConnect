@@ -8,16 +8,10 @@ import Foundation
 import UIKit
 import Combine
 import SwiftUI
-
-class ImageCache {
-    static let shared = NSCache<NSString, UIImage>()
-    
-    private init() {}
-}
-
+ 
 class ImageCacheHelper {
     static let shared = ImageCacheHelper()
-    
+    static let imageCache = NSCache<NSString, UIImage>()
     private let urlSession = URLSession.shared
     private var cancellables: AnyCancellable?
     
@@ -28,7 +22,7 @@ class ImageCacheHelper {
             .receive(on: DispatchQueue.main)
             .sink { image in
                 guard let image = image else { return }
-                ImageCache.shared.setObject(image, forKey: url.absoluteString as NSString)
+                ImageCacheHelper.imageCache.setObject(image, forKey: url.absoluteString as NSString)
             }
     }
 }

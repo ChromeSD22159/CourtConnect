@@ -127,7 +127,8 @@ struct SupabaseService {
             contentType: "image/png",
             upsert: false
           )
-        let response = try await BackendClient.shared.supabase.storage.from(bucket.rawValue).update(path, data: imageData, options: options)
+        let response = try await BackendClient.shared.supabase.storage.from(bucket.rawValue) 
+            .update(path, data: imageData, options: options)
         
         let image = try await downloadDocumentAndCache(imageURL: response.path, bucket: bucket)
         

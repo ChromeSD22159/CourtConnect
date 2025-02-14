@@ -17,19 +17,21 @@ struct MainNavigationView: View {
     let onSignOut: () -> Void
     
     var body: some View {
-        MessagePopover {
-            NavigationStack {
-                NavigationTabBar(navViewModel: navViewModel) {
-                    switch navViewModel.current {
-                    case .home: DashboardView()
-                    case .team: TeamView()
-                    case .player: PlayerStatistic()
-                    case .settings: SettingsView(onSignOut: onSignOut)
-                    }
+        NavigationStack {
+            NavigationTabBar(navViewModel: navViewModel) {
+                switch navViewModel.current {
+                case .home: DashboardView()
+                case .team: TeamView()
+                case .player: PlayerStatistic()
+                case .settings: SettingsView(onSignOut: {
+                                    navViewModel.current = .home
+                                    onSignOut()
+                                    
+                                })
                 }
-            }.navigationStackTint()
-        }
-        .onAppear { 
+            }
+        }.navigationStackTint()
+        .onAppear {
             authViewModel.importAccountsAfterLastSyncFromBackend()
         }
         .task {

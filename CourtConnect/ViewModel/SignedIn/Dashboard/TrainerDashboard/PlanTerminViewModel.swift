@@ -5,8 +5,16 @@
 //  Created by Frederik Kohler on 02.02.25.
 //
 import SwiftUI
+import Auth
 
-@Observable class PlanTerminViewModel: Sheet {
+@Observable class PlanTerminViewModel: Sheet, AuthProtocol {
+    var repository: BaseRepository = Repository.shared
+     
+    var user: Auth.User?
+    var userAccount: UserAccount?
+    var userProfile: UserProfile?
+    var currentTeam: Team?
+    
     var isSheet = false
     var isLoading = false
     var animateOnAppear = false
@@ -17,6 +25,10 @@ import SwiftUI
     var kind: TerminType = .training
     var date: Date = Date.now.addingTimeInterval(86400)
     var duration: TerminDuration = .oneTwenty
+    
+    init() {
+        inizializeAuth()
+    }
     
     func generateTermin(userAccount: UserAccount) async throws -> Termin? {
         var newTermin: Termin?
@@ -45,6 +57,19 @@ import SwiftUI
         }
         
         return newTermin
+    }
+    
+    func saveTermin() async throws {
+        guard let userId = user?.id else { return }
+        guard let userAccount = userAccount else { return }
+        guard let termin = try await generateTermin(userAccount: userAccount) else { return }
+        
+        defer { try? repository.accountRepository.insert(termin: termin, table: .termin, userId: userId) }
+        do {
+            try await SupabaseService.upsertWithOutResult(item: termin.toDTO(), table: .termin, onConflict: "id")
+        } catch {
+            throw error
+        }
     }
     
     func resetStates() {

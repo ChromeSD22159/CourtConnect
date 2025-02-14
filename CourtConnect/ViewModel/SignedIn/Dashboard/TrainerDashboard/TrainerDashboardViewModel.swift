@@ -18,8 +18,13 @@ import UIKit
     var currentTeam: Team?
     var termine: [Termin] = []
     var isfetching: Bool = false
+    var isGenerateNewCodeSheet = false
+    var isPlanAppointmentSheet = false
+    var isDocumentSheet = false
+    var showQrSheet = false
     
     var qrCode: UIImage?
+    var joinCode: String = ""
     var isEnterCode = false
     
     func inizialize() {
@@ -129,6 +134,7 @@ import UIKit
     
     private func readQRCode() {
         if let currentTeam = currentTeam {
+            joinCode = currentTeam.joinCode
             qrCode = QRCodeHelper().generateQRCode(from: currentTeam.joinCode)
         }
     }

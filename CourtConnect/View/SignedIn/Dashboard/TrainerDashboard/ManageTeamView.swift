@@ -22,7 +22,7 @@ struct ManageTeamView: View {
                             MemberRow(teamMember: team.teamMember, userProfile: team.userProfile, isPlayer: true)
                                 .swipeActions {
                                     Button(role: .destructive) {
-                                        viewModel.kickMember()
+                                        viewModel.kickMember(teamMember: team.teamMember)
                                     } label: {
                                         Label("Remove", systemImage: "trash.fill")
                                     }

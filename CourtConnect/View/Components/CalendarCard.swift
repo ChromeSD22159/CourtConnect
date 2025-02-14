@@ -10,11 +10,11 @@ import Foundation
 struct CalendarCard: View {
     let termine: [Termin]
     let editable: Bool
-    let title: String
+    let title: LocalizedStringKey
     
     let onChanged: () -> Void
     
-    init(title: String = "Termine", termine: [Termin], editable: Bool, onChanged: @escaping () -> Void = {}) {
+    init(title: LocalizedStringKey = "Appointments", termine: [Termin], editable: Bool, onChanged: @escaping () -> Void = {}) {
         self.title = title
         self.termine = termine
         self.editable = editable
@@ -52,7 +52,7 @@ struct CalendarCard: View {
             }
         } header: {
             HStack {
-                UpperCasedheadline(text: .init(title.uppercased()))
+                UpperCasedheadline(text: title)
                 Spacer()
             }
         }

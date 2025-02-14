@@ -11,6 +11,7 @@ import SwiftUI
 @Observable class ErrorHandlerViewModel: Observable {
     static let shared = ErrorHandlerViewModel()
     var error: Error?
+    var errorString: String?
     
     func handleError(error: Error) {
         guard !ErrorIdentifier.isInternetLost(error: error) else {
@@ -23,9 +24,11 @@ import SwiftUI
         }
         guard self.error == nil else { return }
         self.error = error
+        self.errorString = error.localizedDescription
         
         Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: { _ in
             self.error = nil
+            self.errorString = nil
         })
     }
 } 

@@ -29,7 +29,7 @@ struct TrainerDashboard: View {
             ), material: .ultraThinMaterial) {
                 trainerDashboardViewModel.deleteUserAccount()
             }
-            .padding(.top, 40)
+            .padding(.bottom, 50)
             .padding(.horizontal, 16)
         }
         .reFetchButton(isFetching: $trainerDashboardViewModel.isfetching, onTap: {
@@ -86,7 +86,7 @@ fileprivate struct HasNoTeam: View {
 }
 
 fileprivate struct HasTeam: View {
-    var trainerDashboardViewModel: TrainerDashboardViewModel
+    @ObservedObject var trainerDashboardViewModel: TrainerDashboardViewModel
     
     var body: some View {
         VStack {
@@ -126,27 +126,42 @@ fileprivate struct HasTeam: View {
                 .frame(height: 150)
             }
             
-            CalendarCard(title: "Edit dates",termine: trainerDashboardViewModel.termine, editable: true, onChanged: {
+            Grid(horizontalSpacing: 16, verticalSpacing: 16) {
+                GridRow {
+                    CardIcon(text: "Add Document", systemName: "doc.badge.plus")
+                        .onTapGesture { trainerDashboardViewModel.isDocumentSheet.toggle() }
+                    
+                    CardIcon(text: "Plan appointment", systemName: "calendar.badge.plus")
+                        .onTapGesture { trainerDashboardViewModel.isPlanAppointmentSheet.toggle() }
+                }
+                GridRow {
+                    NavigationLink {
+                        // TODO:
+                    } label: {
+                        CardIcon(text: "Manage Documents", systemName: "doc.badge.ellipsis")
+                    }
+
+                    NavigationLink {
+                       // TODO:
+                    } label: {
+                        CardIcon(text: "Show Absenses", systemName: "person.crop.circle.badge.clock")
+                    }
+                }
+                GridRow {
+                    CardIcon(text: "Show Join QR Code", systemName: "qrcode.viewfinder")
+                        .onTapGesture { trainerDashboardViewModel.showQrSheet.toggle() }
+                    
+                    CardIcon(text: "Generates a\nnew team code", systemName: "qrcode")
+                        .onTapGesture { trainerDashboardViewModel.isGenerateNewCodeSheet.toggle() }
+                }
+            }
+            
+            CalendarCard(title: "Edit appointment", termine: trainerDashboardViewModel.termine, editable: true, onChanged: {
                 trainerDashboardViewModel.getTeamTermine()
             })
             .padding(.vertical, 16)
             .padding(.horizontal, 16)
-            
-            if let userAccount = trainerDashboardViewModel.userAccount {
-                DocumentSheetButton(userAccount: userAccount)
-                    .padding(.horizontal, 16)
-                
-                PlanTerminSheetButton(userAccount: userAccount) { termin in
-                    trainerDashboardViewModel.saveTermin(termin: termin) 
-                }
-                .padding(.horizontal, 16)
-            }
-              
-            if let QRCode = trainerDashboardViewModel.qrCode, let joinCode = trainerDashboardViewModel.currentTeam?.joinCode {
-                ShowTeamJoinQrCode(QRCode: QRCode, joinCode: joinCode)
-                    .padding(.horizontal, 16)
-            }
-            
+             
             ConfirmButtonLabel(confirmButtonDialog: ConfirmButtonDialog(
                 systemImage: "iphone.and.arrow.right.inward",
                 buttonText: "Leave Team",
@@ -159,7 +174,18 @@ fileprivate struct HasTeam: View {
             }
             .padding(.horizontal, 16)
         }
-        
+        .sheet(isPresented: $trainerDashboardViewModel.isDocumentSheet, content: {
+            DocumentSheet()
+        })
+        .sheet(isPresented: $trainerDashboardViewModel.isPlanAppointmentSheet, content: {
+            PlanTerminSheet()
+        })
+        .sheet(isPresented: $trainerDashboardViewModel.isGenerateNewCodeSheet) {
+            GenerateCodeViewSheet()
+        }
+        .sheet(isPresented: $trainerDashboardViewModel.showQrSheet) {
+            EntryWithQRSheet(trainerDashboardViewModel: trainerDashboardViewModel)
+        }
     }
 } 
 
@@ -201,7 +227,7 @@ fileprivate struct ShowTeamJoinQrCode: View {
                         Button {
                             ClipboardHelper.copy(text: joinCode)
                             
-                            messagehandler.handleMessage(message: InAppMessage(title: "Join code copied"))
+                            messagehandler.handleMessage(message: InAppMessage(icon: .warn, title: "Join code copied"))
                         } label: {
                             Label("Code Team: \(joinCode)", systemImage: "arrow.right.doc.on.clipboard")
                         }
@@ -211,8 +237,36 @@ fileprivate struct ShowTeamJoinQrCode: View {
             }
         }
     }
-} 
- 
+}
+
+fileprivate struct EntryWithQRSheet: View {
+    let trainerDashboardViewModel: TrainerDashboardViewModel
+    var body: some View {
+        SheetStlye(title: "Entry with QR", detents: [.medium], isLoading: .constant(false)) {
+            VStack(alignment: .center, spacing: 30) {
+                if let qrCode = trainerDashboardViewModel.qrCode {
+                    Image(uiImage: qrCode)
+                        .resizable()
+                        .interpolation(.none)
+                        .scaledToFit()
+                        .frame(width: 300, height: 300)
+                }
+                
+                HStack {
+                    Button {
+                        ClipboardHelper.copy(text: trainerDashboardViewModel.joinCode)
+                        
+                        InAppMessagehandlerViewModel.shared.handleMessage(message: InAppMessage(icon: .warn, title: "Join code copied"))
+                    } label: {
+                        Label("Code Team: \(trainerDashboardViewModel.joinCode)", systemImage: "arrow.right.doc.on.clipboard")
+                    }
+                }
+            }
+            .padding()
+        }
+    }
+}
+
 #Preview {
     NavigationStack {
         VStack(spacing: 15) {  

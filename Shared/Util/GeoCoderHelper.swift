@@ -8,6 +8,28 @@ import CoreLocation
 import MapKit
 
 struct GeoCoderHelper {
+    static func getAddress(address: String, completion: @escaping (MKCoordinateRegion?) -> Void) {
+        let geocoder = CLGeocoder()
+
+        geocoder.geocodeAddressString(address) { (placemarks, error) in
+            if let error = error {
+                print("Geocoding Fehler: \(error.localizedDescription)")
+                completion(nil) // Rufe Completion-Handler mit nil auf
+                return
+            }
+
+            guard let placemark = placemarks?.first, let location = placemark.location else {
+                print("Adresse nicht gefunden")
+                completion(nil) // Rufe Completion-Handler mit nil auf
+                return
+            }
+
+            let coordinate = location.coordinate
+            let region = MKCoordinateRegion(center: coordinate, span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02))
+            completion(region) // Rufe Completion-Handler mit der Region auf
+        }
+    }
+    
     static func getAddress(address: String) -> MKCoordinateRegion? {
         var currentRegion: MKCoordinateRegion?
         var geocodingCompleted = false
@@ -59,5 +81,5 @@ struct GeoCoderHelper {
                 continuation.resume(returning: location.coordinate)
             }
         }
-    }
+    } 
 }

@@ -53,7 +53,7 @@ struct TeamInfoButton: ViewModifier {
                             Button {
                                 ClipboardHelper.copy(text: team.joinCode)
                                 
-                                InAppMessagehandlerViewModel.shared.handleMessage(message: InAppMessage(title: "TeamId Kopiert"))
+                                InAppMessagehandlerViewModel.shared.handleMessage(message: InAppMessage(icon: .warn, title: "Teamid copied"))
                             } label: {
                                 Label("Copy Team ID", systemImage: "arrow.right.doc.on.clipboard")
                             }

@@ -55,7 +55,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
         }
         
         if let title = alert["title"] as? String, let body = alert["body"] as? String {
-            InAppMessagehandlerViewModel.shared.handleMessage(message: InAppMessage(title: title, body: body))
+            InAppMessagehandlerViewModel.shared.handleMessage(message: InAppMessage(title: title.localizedStringKey(), body: body))
         } else {
             print("Error: Could not extract title or body from alert dictionary")
         }

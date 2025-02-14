@@ -4,7 +4,7 @@
 //
 //  Created by Frederik Kohler on 21.01.25.
 //
-import SwiftUI
+import SwiftUI 
 
 struct MessagePopover<Content: View>: View {
     @Environment(\.messagehandler) var messagehandler
@@ -18,7 +18,13 @@ struct MessagePopover<Content: View>: View {
             if let message = messagehandler.message {
                VStack {
                    HStack {
-                       Text(message.title)
+                       if let icon = message.icon {
+                           Text(icon.rawValue)
+                           Text(message.title)
+                       } else {
+                           Text(message.title)
+                       }
+                       
                    }
                    .frame(maxWidth: .infinity)
                    .padding()
@@ -28,12 +34,13 @@ struct MessagePopover<Content: View>: View {
                    
                    Spacer()
                }
+               .padding(.top, 25)
                .padding()
                .transition(.move(edge: .top))
-            } else if let message = errorHanler.error {
+            } else if let errorString = errorHanler.errorString {
                VStack {
                    HStack {
-                       Text(message.localizedDescription)
+                       Text("\(MessageIcon.warn.rawValue) \(errorString)")
                    }
                    .frame(maxWidth: .infinity)
                    .padding()
@@ -43,6 +50,7 @@ struct MessagePopover<Content: View>: View {
                    
                    Spacer()
                }
+               .padding(.top, 25)
                .padding()
                .transition(.move(edge: .top))
            }
@@ -56,6 +64,19 @@ struct MessagePopover<Content: View>: View {
     ZStack {
         Button("Handle Message") {
             viewModel.handleMessage(message: InAppMessage(title: "Neue Nachricht von Frederik", body: "Neue Nachricht von Frederik"))
+        }
+    }.previewEnvirments()
+}
+
+#Preview {
+    @Previewable @State var viewModel = ErrorHandlerViewModel.shared
+    ZStack {
+        Button("Handle Error") {
+            do {
+                throw UserError.signInFailed
+            } catch {
+                viewModel.handleError(error: error)
+            }
         }
     }.previewEnvirments()
 }

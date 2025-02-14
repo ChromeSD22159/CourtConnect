@@ -7,14 +7,31 @@
 import SwiftUI
 
 struct Row<Content: View>: View {
-    let title: String
+    let title: LocalizedStringKey
     @ViewBuilder var content: () -> Content
     var body: some View {
         VStack(alignment: .leading) {
-            UpperCasedheadline(text: .init(title))
+            UpperCasedheadline(text: title)
                 .padding(.horizontal)
             
             content()
         }
     }
 }
+
+#Preview {
+    AppBackground {
+        ScrollView {
+            Grid(horizontalSpacing: 16, verticalSpacing: 16) {
+                GridRow {
+                    CardIcon(text: "Add Document", systemName: "doc.badge.plus")
+                    CardIcon(text: "Plan appointment", systemName: "calendar.badge.plus")
+                }
+                GridRow {
+                    CardIcon(text: "Show Join QR Code", systemName: "qrcode.viewfinder")
+                    CardIcon(text: "Show Absenses", systemName: "person.crop.circle.badge.clock")
+                }
+            }.padding(50)
+        }
+    }
+} 

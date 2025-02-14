@@ -10,7 +10,7 @@ struct ErrorAlert: ViewModifier {
     @Environment(\.errorHandler) var errorHandler
     func body(content: Content) -> some View {
         content.alert(isPresented: .constant(errorHandler.error != nil)) {
-            Alert(title: Text("Error"), message: Text(errorHandler.error?.localizedDescription ?? ""), dismissButton: .default(Text("OK")))
+            Alert(title: Text("Error"), message: Text(errorHandler.errorString ?? ""), dismissButton: .default(Text("OK")))
         }
     }
 }

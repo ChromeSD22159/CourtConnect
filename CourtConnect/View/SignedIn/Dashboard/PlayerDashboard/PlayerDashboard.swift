@@ -28,6 +28,7 @@ struct PlayerDashboard: View {
             ), material: .ultraThinMaterial) {
                  playerDashboardViewModel.deleteUserAccount()
             }
+            .padding(.bottom, 50)
         }
         .reFetchButton(isFetching: $playerDashboardViewModel.isfetching, onTap: {
             playerDashboardViewModel.fetchDataFromRemote()

@@ -59,8 +59,7 @@ struct DashboardView: View {
         }
         .contentMargins(.top, 20)
         .contentMargins(.bottom, 75)
-        .scrollIndicators(.hidden)
-        .errorPopover()
+        .scrollIndicators(.hidden) 
         .navigationTitle(title: "Dashboard")
         .sheet(isPresented: $viewModel.isCreateRoleSheet, onDismiss: {
             viewModel.getAllUserAccounts()

@@ -81,9 +81,7 @@ struct TeamView: View {
         }
     }
 } 
-
-
-
+ 
 extension String {
     func localizedStringKey() -> LocalizedStringKey {
         return LocalizedStringKey(self)
