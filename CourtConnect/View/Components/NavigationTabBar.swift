@@ -22,10 +22,12 @@ struct NavigationTabBar<Content: View>: View {
                 Theme.backgroundGradient
             }
             
-            Image(.courtBG)
-                .resizable()
-                .scaledToFit()
-                .opacity(0.25)
+            if let image: ImageResource = .courtBG {
+                Image(image)
+                    .resizable()
+                    .scaledToFit()
+                    .opacity(0.25)
+            }
             
             ScrollView(.vertical) {
                 content()
@@ -118,12 +120,13 @@ struct NavigationTabBar<Content: View>: View {
         } else {
             Theme.backgroundGradient
         }
-        
-        Image(.courtBG)
-            .resizable()
-            .scaledToFit()
-            .opacity(0.25)
-            .clipped()
+        if let image: ImageResource = .courtBG {
+            Image(image)
+                .resizable()
+                .scaledToFit()
+                .opacity(0.25)
+                .clipped()
+        }
         /*
         Image(.basketballSketch)
             .resizable()

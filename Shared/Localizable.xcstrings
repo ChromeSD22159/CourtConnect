@@ -70,6 +70,16 @@
         }
       }
     },
+    "%@ %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ %2$@"
+          }
+        }
+      }
+    },
     "%@ Statistics" : {
       "localizations" : {
         "de" : {
@@ -931,6 +941,12 @@
         }
       }
     },
+    "Handle Error" : {
+
+    },
+    "Handle Message" : {
+
+    },
     "Headcoach" : {
       "localizations" : {
         "de" : {
@@ -1204,6 +1220,9 @@
           }
         }
       }
+    },
+    "Neue Nachricht von Frederik" : {
+
     },
     "New appointment" : {
       "localizations" : {

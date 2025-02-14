@@ -60,7 +60,9 @@ struct OnBoardingSlider: View {
                 ForEach(list.indices, id: \.self) { index in
                     TabViewItem(content: list[index]).tag(index)
                         .onAppear {
-                            self.bgImage = list[index].image
+                            if let image = list[index].image {
+                                self.bgImage = image
+                            }
                         }
                 }
             }
@@ -74,7 +76,7 @@ struct TabViewItemValue: Identifiable {
     var id: UUID = UUID()
     let title: LocalizedStringKey
     let description: LocalizedStringKey
-    let image: ImageResource
+    let image: ImageResource?
 }
 
 struct TabViewItem: View {

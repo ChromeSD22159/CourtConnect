@@ -15,11 +15,14 @@ struct AppIcon: View {
                 .frame(width: 200, height: 200)
                 .shadow(radius: colorScheme == .light ? 0 : 15, y: colorScheme == .light ? 0 : 15 )
             
-            Image(.authLogo)
-                .resizable()
-                .frame(width: 320, height: 320)
-                .offset(y: -50)
-                .shadow(color: colorScheme == .light ? .black.opacity(0.5) : .black ,radius: 10, y: 10)
+            if let image: ImageResource = .authLogo {
+                Image(image)
+                    .resizable()
+                    .frame(width: 320, height: 320)
+                    .offset(y: -50)
+                    .shadow(color: colorScheme == .light ? .black.opacity(0.5) : .black ,radius: 10, y: 10)
+            }
+            
         }
         .compositingGroup()
         .shadow(radius: 15, y: 15)
