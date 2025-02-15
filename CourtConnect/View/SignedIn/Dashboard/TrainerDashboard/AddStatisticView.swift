@@ -7,11 +7,7 @@
 import SwiftUI
  
 struct AddStatisticView: View {
-    @State var viewModel: AddStatisticViewModel
-    
-    init(teamId: UUID, userId: UUID) {
-        self.viewModel = AddStatisticViewModel(teamId: teamId, userId: userId)
-    }
+    @State var viewModel = AddStatisticViewModel()
     
     var body: some View {
         AnimationBackgroundChange {
@@ -56,6 +52,7 @@ struct AddStatisticView: View {
                     viewModel.saveStatistics(termin: termin)
                 }
         }
+        .refreshable { viewModel.fetchDataFromRemote() }
         .navigationTitle(title: "Statistics")
         .listBackgroundAnimated()
     }
@@ -302,5 +299,5 @@ fileprivate struct MemberRowTrainer: View {
 } 
 
 #Preview {
-    AddStatisticView(teamId: MockUser.teamId, userId: MockUser.myUserAccount.userId)
+    AddStatisticView()
 }

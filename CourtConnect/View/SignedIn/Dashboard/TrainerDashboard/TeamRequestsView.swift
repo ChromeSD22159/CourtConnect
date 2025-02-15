@@ -7,11 +7,7 @@
 import SwiftUI 
 
 @MainActor struct TeamRequestsView: View {
-    @State var viewModel: TeamRequestsViewModel
-    
-    init(teamId: UUID, userId: UUID) {
-        self.viewModel = TeamRequestsViewModel(repository: Repository.shared, teamId: teamId, userId: userId)
-    }
+    @State var viewModel = TeamRequestsViewModel()
     
     var body: some View {
         AnimationBackgroundChange {
@@ -127,5 +123,5 @@ fileprivate struct RequestAcceptionField: View {
 }
  
 #Preview {
-    TeamRequestsView(teamId: MockUser.teamId, userId: MockUser.myUserAccount.userId)
+    TeamRequestsView()
 }

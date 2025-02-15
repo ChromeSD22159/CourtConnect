@@ -18,20 +18,16 @@ import Auth
     var isLoading = false
     var requests: [RequestUser] = []
     var userProfiles: [UserProfile] = []
-     
-    let teamId: UUID
-    let userId: UUID
     
-    init(repository: BaseRepository, teamId: UUID, userId: UUID) {
-        self.repository = repository
-        self.teamId = teamId
-        self.userId = userId
+    init() {
+        inizializeAuth()
     }
     
     func getLocalRequests() async {
         requests = []
         do {
-            let requests = try repository.teamRepository.getTeamRequests(teamId: teamId)
+            guard let team = currentTeam else { throw  TeamError.teamNotFound }
+            let requests = try repository.teamRepository.getTeamRequests(teamId: team.id)
             
             requests.forEach {
                 getRequestedUser(accountId: $0.accountId, request: $0)
@@ -42,13 +38,15 @@ import Auth
     }
   
     func syncRemoteRequests() async throws {
-        let requestsDTO: [RequestsDTO] = try await SupabaseService.getAllFromTable(table: .request, match: ["teamId": teamId.uuidString])
+        guard let team = currentTeam else { throw  TeamError.teamNotFound }
+        guard let user = user else { throw  UserError.userIdNotFound }
+        let requestsDTO: [RequestsDTO] = try await SupabaseService.getAllFromTable(table: .request, match: ["teamId": team.id.uuidString])
         
         let requests = requestsDTO.map { $0.toModel() }
         
         try requests.forEach { request in
             
-            try repository.teamRepository.upsertLocal(item: request, table: .request, userId: userId)
+            try repository.teamRepository.upsertLocal(item: request, table: .request, userId: user.id)
             
             Task {
                 await syncRemoteUseraccounts(accountId: request.accountId)
@@ -95,6 +93,7 @@ import Auth
     func grandRequest(request: Requests, userAccount: UserAccount) {
         Task {
             do {
+                guard let team = currentTeam else { throw  TeamError.teamNotFound }
                 let newMember = TeamMember(userAccountId: request.accountId, teamId: request.teamId, shirtNumber: nil, position: "", role: userAccount.role, createdAt: Date(), updatedAt: Date())
                 
                 try repository.teamRepository.softDelete(request: request)
@@ -103,7 +102,7 @@ import Auth
                 try await repository.teamRepository.insertTeamMember(newMember: newMember, userId: request.accountId)
                 
                 let account = try repository.accountRepository.getAccount(id: request.accountId)
-                account?.teamId = teamId
+                account?.teamId = team.id
                 
                 try await SupabaseService.upsertWithOutResult(item: newMember.toDTO(), table: .teamMember, onConflict: "id")
                 try await SupabaseService.upsertWithOutResult(item: request.toDTO(), table: .request, onConflict: "id")

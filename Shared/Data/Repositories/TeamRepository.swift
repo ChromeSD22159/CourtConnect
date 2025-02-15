@@ -170,7 +170,7 @@ import Supabase
     
     func playerHasStatistic(userAccountId: UUID, terminId: UUID) throws -> Bool {
         let predicate = #Predicate<Statistic> { $0.userAccountId == userAccountId && $0.terminId == terminId && $0.deletedAt == nil }
-        var fetchDescriptor = FetchDescriptor(predicate: predicate, sortBy: [SortDescriptor(\.createdAt, order: .reverse)])
+        let fetchDescriptor = FetchDescriptor(predicate: predicate, sortBy: [SortDescriptor(\.createdAt, order: .reverse)])
         return try container.mainContext.fetch(fetchDescriptor).first != nil
     }
     

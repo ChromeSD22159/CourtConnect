@@ -5,11 +5,16 @@
 //  Created by Frederik Kohler on 07.02.25.
 //
 import Foundation
+import Auth
 
-@Observable @MainActor class AddStatisticViewModel {
-    let repository: BaseRepository = Repository.shared
-    let teamId: UUID
-    let userId: UUID
+@Observable @MainActor class AddStatisticViewModel: AuthProtocol, SyncHistoryProtocol {
+    
+    var repository: BaseRepository = Repository.shared
+    var user: Auth.User?
+    var userAccount: UserAccount?
+    var userProfile: UserProfile?
+    var currentTeam: Team?
+    var isfetching: Bool = false
     
     var teamPlayer: [TeamMemberProfileStatistic] = []
     var teamTrainer: [TeamMemberProfile] = []
@@ -17,10 +22,8 @@ import Foundation
     var termine: [Termin] = []
     var selectedTermin: Termin?
     
-    init(teamId: UUID, userId: UUID) {
-        self.teamId = teamId
-        self.userId = userId
-        
+    init() {
+        self.inizializeAuth()
         self.getTermine()
     }
     
@@ -32,7 +35,8 @@ import Foundation
      
     func getTeamMember(termin: Termin) {
         do {
-            let teamMember = try repository.teamRepository.getTeamMembers(for: teamId)
+            guard let team = currentTeam else { throw TeamError.teamNotFound }
+            let teamMember = try repository.teamRepository.getTeamMembers(for: team.id)
             
             for member in teamMember {
                 if let userAccount = try repository.accountRepository.getAccount(id: member.userAccountId),
@@ -64,7 +68,6 @@ import Foundation
     func saveStatistics(termin: Termin) {
         let totalPoints = teamPlayer.map { $0.statistic.points }.reduce(0, +)
         guard totalPoints != 0 else {
-            print("Keine Punkte zum Speichern.")
             reset()
             return
         }
@@ -86,8 +89,9 @@ import Foundation
         Task {
             defer { reset() }
             do {
+                guard let user = user else { throw UserError.userIdNotFound }
                 for statsistic in statistics {
-                   try await repository.teamRepository.upsertPlayerStatistic(statistic: statsistic, userId: userId)
+                    try await repository.teamRepository.upsertPlayerStatistic(statistic: statsistic, userId: user.id)
                 }
             } catch {
                 print(error)
@@ -97,7 +101,8 @@ import Foundation
     
     private func getTermine() {
         do {
-            termine = try repository.teamRepository.getPastTeamTermine(for: teamId)
+            guard let team = currentTeam else { throw TeamError.teamNotFound }
+            termine = try repository.teamRepository.getPastTeamTermine(for: team.id)
         } catch {
             print(error)
         }
@@ -134,6 +139,23 @@ import Foundation
     func filterTeamTrainer(terminId: UUID) -> [TeamMemberProfile] {
         return teamTrainer.filter { trainer in
             !isTrainerAttendanceConfirmed(userAccountId: trainer.teamMember.userAccountId, terminId: terminId)
+        }
+    }
+    
+    func fetchDataFromRemote() {
+        Task {
+            isfetching = true
+            defer {
+                isfetching = false
+                getTermine()
+            }
+            do {
+                guard let user = user else { throw UserError.userIdNotFound }
+                
+                try await syncAllTables(userId: user.id)
+            } catch {
+                ErrorHandlerViewModel.shared.handleError(error: error)
+            }
         }
     }
 }

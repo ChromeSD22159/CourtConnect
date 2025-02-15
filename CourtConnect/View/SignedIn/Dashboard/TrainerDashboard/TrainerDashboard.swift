@@ -93,18 +93,13 @@ fileprivate struct HasTeam: View {
             SnapScrollView(horizontalSpacing: 16) {
                 LazyHStack(spacing: 16) {
                     NavigationLink {
-                        if let userId = trainerDashboardViewModel.user?.id, let teamId = trainerDashboardViewModel.currentTeam?.id {
-                            TeamRequestsView(teamId: teamId, userId: userId)
-                        }
+                        TeamRequestsView()
                     } label: {
                         IconCard(systemName: "person.fill.questionmark", title: "Join Requests", background: Material.ultraThinMaterial)
                     }
                     
                     NavigationLink {
-                        if let teamId = trainerDashboardViewModel.currentTeam?.id,
-                           let userId = trainerDashboardViewModel.user?.id {
-                            AddStatisticView(teamId: teamId, userId: userId)
-                        } 
+                        AddStatisticView()
                     } label: {
                         IconCard(systemName: "chart.xyaxis.line", title: "Statistics", background: Material.ultraThinMaterial)
                     }
@@ -199,7 +194,7 @@ fileprivate struct GenerateNewJoinCodeView: View {
             SnapScrollView(horizontalSpacing: 16) {
                 LazyHStack(spacing: 16) {
                     NavigationLink {
-                        TeamRequestsView(teamId: UUID(uuidString: "99580a57-81dc-4f4d-adde-0e871505c679")!, userId: UUID(uuidString: "99580a57-81dc-4f4d-adde-0e871505c679")!)
+                        TeamRequestsView()
                     } label: {
                         IconCard(systemName: "person.fill.questionmark", title: "Join Requests", background: Material.ultraThinMaterial)
                     }
