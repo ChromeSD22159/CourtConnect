@@ -31,14 +31,7 @@ struct SettingsView: View {
             }
             
             Section {
-                VStack(spacing: 6) {
-                    /*
-                     NavigationLink {
-                        OnlineUserList(viewModel: viewModel)
-                     } label: {
-                        IconRow(systemName: "person.2.fill", text: "Total Online Users: \(viewModel.onlineUserCount)")
-                     }
-                     */
+                VStack(spacing: 6) { 
                     if networkMonitor.isConnected {
                         IconRow(systemName: "person.2.fill", text: .init("Total Online Users: \(viewModel.onlineUserCount)"))
                     } else {
