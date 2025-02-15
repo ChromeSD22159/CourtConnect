@@ -63,12 +63,15 @@ import Auth
         guard let userId = user?.id else { return }
         guard let userAccount = userAccount else { return }
         guard let termin = try await generateTermin(userAccount: userAccount) else { return }
+         
+        defer {
+            try? repository.accountRepository.insert(termin: termin, table: .termin, userId: userId)
+        }
         
-        defer { try? repository.accountRepository.insert(termin: termin, table: .termin, userId: userId) }
-        do {
+        do { 
             try await SupabaseService.upsertWithOutResult(item: termin.toDTO(), table: .termin, onConflict: "id")
         } catch {
-            throw error
+            ErrorHandlerViewModel.shared.handleError(error: error)
         }
     }
     

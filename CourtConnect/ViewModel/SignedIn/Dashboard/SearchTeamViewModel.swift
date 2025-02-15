@@ -5,10 +5,13 @@
 //  Created by Frederik Kohler on 29.01.25.
 //
 import Foundation
-import Auth
+import Auth 
+import UIKit
 
 @MainActor
-@Observable class SearchTeamViewModel: AuthProtocol, ObservableObject {
+@Observable class SearchTeamViewModel: AuthProtocol, @preconcurrency AlertManageProtocol, ObservableObject {
+    var viewController: UIViewController?
+    
     var messagehandler = InAppMessagehandlerViewModel.shared
     var errorHandler = ErrorHandlerViewModel.shared
     var repository: BaseRepository = Repository.shared
@@ -46,6 +49,12 @@ import Auth
     func requestTeam() async throws {
         guard let userAccount = userAccount else { throw UserError.userAccountNotFound }
         guard let selectedTeam = selectedTeam else { throw TeamError.noTeamFoundwithThisJoinCode }
+        
+        guard try !repository.teamRepository.findRequest(teamId: selectedTeam.id, userAccountId: userAccount.id).isEmpty else {
+            showInfomationAlert(title: "Request Already Sent", message: "You have already sent a request to join this team.")
+            return
+        }
+        
         let newRequest = Requests(accountId: userAccount.id, teamId: selectedTeam.id, createdAt: Date(), updatedAt: Date())
         try await repository.teamRepository.requestTeam(request: newRequest)
     }

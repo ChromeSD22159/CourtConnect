@@ -74,22 +74,24 @@ fileprivate struct RequestAcceptionField: View {
     let grandRequest: () -> Void
     let rejectRequest: () -> Void
     var body: some View {
-        HStack {
-            Text(requestUser.userProfile.fullName)
-            
-            Text("\(requestUser.request.createdAt.formattedDate()) - \(requestUser.request.createdAt.formattedTime())")
-        }
-        .onTapGesture {
-            isPresenting.toggle()
-        }
-        .alert("Team request from \(requestUser.userProfile.fullName)", isPresented: $isPresenting) {
-            Button("Grant") { grandRequest() }
-            
-            Button("Reject") { rejectRequest() }
-        } message: {
-            Text("\(requestUser.userProfile.fullName) wants to join your team. Would you like to accept the request?")
-        }
-
+        if let createdAtDateString = requestUser.request.createdAt.formattedDate().stringValue(),
+           let createdAtTimeString = requestUser.request.createdAt.formattedTime().stringValue() {
+            HStack {
+                Text(requestUser.userProfile.fullName)
+                
+                Text("\(createdAtDateString) - \(createdAtTimeString)")
+            }
+            .onTapGesture {
+                isPresenting.toggle()
+            }
+            .alert("Team request from \(requestUser.userProfile.fullName)", isPresented: $isPresenting) {
+                Button("Grant") { grandRequest() }
+                
+                Button("Reject") { rejectRequest() }
+            } message: {
+                Text("\(requestUser.userProfile.fullName) wants to join your team. Would you like to accept the request?")
+            }
+        } 
     }
 } 
 

@@ -4,8 +4,7 @@
 //
 //  Created by Frederik Kohler on 29.01.25.
 //
-import SwiftUI 
-import CachedAsyncImage
+import SwiftUI
 
 struct TeamView: View {
     @Environment(\.messagehandler) var messagehandler

@@ -6,7 +6,7 @@
 // 
 import Foundation
   
-protocol Sheet: ObservableObject, OnAppiearAnimation {
+@MainActor protocol Sheet: ObservableObject, OnAppiearAnimation {
     var isSheet: Bool { get set }
     var isLoading: Bool { get set } 
 }

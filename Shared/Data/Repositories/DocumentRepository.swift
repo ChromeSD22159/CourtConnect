@@ -26,7 +26,7 @@ import UIKit
         } catch {
             print(error)
         }
-    }
+    } 
     
     func getDocuments(for teamId: UUID) throws -> [Document] {
         let predicate = #Predicate<Document> { $0.teamId == teamId && $0.deletedAt == nil }
@@ -36,8 +36,8 @@ import UIKit
         return try container.mainContext.fetch(fetchDescriptor)
     }
     
-    func uploadCachedDocument(image: UIImage, fileName: String, bucket: SupabaseBucket, teamId: UUID) async throws -> DocumentDTO {
-        try await SupabaseService.uploadImageToSupabaseAndCache(image: image, fileName: fileName, bucket: bucket, teamId: teamId)
+    func uploadCachedDocument(image: UIImage, fileName: String, info: String, bucket: SupabaseBucket, teamId: UUID) async throws -> DocumentDTO {
+        try await SupabaseService.uploadImageToSupabaseAndCache(image: image, fileName: fileName, info: info, bucket: bucket, teamId: teamId)
     }
     
     func downloadDocument(imageURL: String, bucket: SupabaseBucket) async throws -> URL {
@@ -51,6 +51,15 @@ import UIKit
         
         let newSyncHistoryTimeStamp = SyncHistory(table: .document, userId: userId)
         container.mainContext.insert(newSyncHistoryTimeStamp)
+        try container.mainContext.save()
+        
+        try await SupabaseService.upsertWithOutResult(item: document.toDTO(), table: .document, onConflict: "id")
+    }
+    
+    func updateDocument(document: Document) async throws {
+        document.updatedAt = Date()
+        
+        container.mainContext.insert(document)
         try container.mainContext.save()
         
         try await SupabaseService.upsertWithOutResult(item: document.toDTO(), table: .document, onConflict: "id")

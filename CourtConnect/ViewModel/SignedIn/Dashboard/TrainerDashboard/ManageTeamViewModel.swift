@@ -6,6 +6,7 @@
 //
 import Foundation
 import Auth
+import UIKit
 
 @Observable @MainActor class ManageTeamViewModel: AuthProtocol {
     var repository: BaseRepository = Repository.shared
@@ -17,12 +18,18 @@ import Auth
     var teamPlayer: [TeamMemberProfile] = []
     var teamTrainer: [TeamMemberProfile] = []
     
+    var isShowQrSheet = false
+    var joinCode: String = ""
+    var qrCode: UIImage?
+    
+    var isGenerateNewCodeSheet = false
+    
     func inizialize() {
         self.getUser()
         self.getUserAccount()
         self.getUserProfile()
         self.getTeam()
-        self.getTeamMember()
+        self.getTeamMember() 
     }
     
     func getTeamMember() {
@@ -39,7 +46,6 @@ import Auth
                     }
                     if userAccount.roleEnum == .coach {
                         self.teamTrainer.append(TeamMemberProfile(userProfile: userProfil, teamMember: member))
-                        print(teamTrainer.count)
                     }
                 }
             }
@@ -82,6 +88,13 @@ import Auth
                 try await repository.teamRepository.upsertTeamMemberRemote(teamMember: teamMember)
                 try await repository.accountRepository.sendToBackend(item: userAccount)
             }
+        }
+    }
+    
+    func readQRCode() {
+        if let currentTeam = currentTeam {
+            joinCode = currentTeam.joinCode
+            qrCode = QRCodeHelper().generateQRCode(from: currentTeam.joinCode)
         }
     }
 }

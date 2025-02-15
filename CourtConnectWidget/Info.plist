@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSExtension</key>
+	<dict>
+		<key>NSExtensionPointIdentifier</key>
+		<string>com.apple.widgetkit-extension</string>
+	</dict>
+    <key>DefaultEnvironment</key>
+    <string>Remote</string>
+    <key>FirebaseAppDelegateProxyEnabled</key>
+    <false/>
+    <key>ITSAppUsesNonExemptEncryption</key>
+    <false/>
+    <key>SupabaseEnvironments</key>
+    <array>
+        <dict>
+            <key>Name</key>
+            <string>Local</string>
+            <key>SupabaseKey</key>
+            <string>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0</string>
+            <key>SupabaseUrl</key>
+            <string>http://192.168.0.178:54321</string>
+        </dict>
+        <dict>
+            <key>Name</key>
+            <string>Remote</string>
+            <key>SupabaseKey</key>
+            <string>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFud3FpdXlmdWhhZWJ5Y2JibHJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzY2MzY0MTcsImV4cCI6MjA1MjIxMjQxN30.JBCicVin0f56ZLj8BL7YEIMIETVxOF0I_dfbyMtx-R4</string>
+            <key>SupabaseUrl</key>
+            <string>https://anwqiuyfuhaebycbblrc.supabase.co</string>
+        </dict>
+    </array>
+    <key>UIAppFonts</key>
+    <array>
+        <string>UNIVERSIDAD.ttf</string>
+        <string>Jackport.ttf</string>
+    </array>
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>remote-notification</string>
+    </array>
+    <key>WishKit</key>
+    <string>4C85F9C7-BA32-4D98-9E5D-A421B4CD648F</string>
+    <key>isStoredInMemoryOnly</key>
+    <false/>
+</dict>
+</plist>

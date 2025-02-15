@@ -7,7 +7,7 @@
 import SwiftUI
  
 struct ManageTeamView: View {
-    var viewModel: ManageTeamViewModel = ManageTeamViewModel()
+    @ObservedObject var viewModel: ManageTeamViewModel = ManageTeamViewModel()
     
     var body: some View {
         AnimationBackgroundChange {
@@ -58,11 +58,60 @@ struct ManageTeamView: View {
                 } header: {
                     UpperCasedheadline(text: "Coach")
                 }.blurrylistRowBackground()
+                
+                Section {
+                    Grid {
+                        GridRow {
+                            CardIcon(text: "Show Join QR Code", systemName: "qrcode.viewfinder")
+                                .onTapGesture { viewModel.isShowQrSheet.toggle() }
+                            
+                            CardIcon(text: "Generates a\nnew team code", systemName: "qrcode")
+                                .onTapGesture { viewModel.isGenerateNewCodeSheet.toggle() }
+                        }
+                    }
+                }
+                .listRowBackground(Color.clear)
+                .listRowSeparator(.hidden)
             }
         }
         .listBackgroundAnimated()
         .onAppear {
-            viewModel.inizialize() 
+            viewModel.inizialize()
+            viewModel.readQRCode()
+        }
+        .sheet(isPresented: $viewModel.isGenerateNewCodeSheet) {
+            GenerateCodeViewSheet()
+        }
+        .sheet(isPresented: $viewModel.isShowQrSheet) { 
+            EntryWithQRSheet(manageTeamViewModel: viewModel)
+        }
+    }
+}
+
+fileprivate struct EntryWithQRSheet: View {
+    let manageTeamViewModel: ManageTeamViewModel
+    var body: some View {
+        SheetStlye(title: "Entry with QR", detents: [.medium], isLoading: .constant(false)) {
+            VStack(alignment: .center, spacing: 30) {
+                if let qrCode = manageTeamViewModel.qrCode {
+                    Image(uiImage: qrCode)
+                        .resizable()
+                        .interpolation(.none)
+                        .scaledToFit()
+                        .frame(width: 300, height: 300)
+                }
+                
+                HStack {
+                    Button {
+                        ClipboardHelper.copy(text: manageTeamViewModel.joinCode)
+                        
+                        InAppMessagehandlerViewModel.shared.handleMessage(message: InAppMessage(icon: .warn, title: "Join code copied"))
+                    } label: {
+                        Label("Code Team: \(manageTeamViewModel.joinCode)", systemImage: "arrow.right.doc.on.clipboard")
+                    }
+                }
+            }
+            .padding()
         }
     }
 }

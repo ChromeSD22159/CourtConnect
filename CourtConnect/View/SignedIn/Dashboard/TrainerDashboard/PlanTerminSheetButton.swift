@@ -8,7 +8,7 @@ import SwiftUI
   
 struct PlanTerminSheet: View {
     @State var viewModel = PlanTerminViewModel()
-    
+    @Environment(\.dismiss) var dismiss
     var body: some View {
         SheetStlye(title: "New appointment", detents: [.large], isLoading: $viewModel.isLoading) {
             LazyVStack {
@@ -34,8 +34,9 @@ struct PlanTerminSheet: View {
                     Task {
                         do {
                             try await viewModel.saveTermin()
+                            dismiss()
                         } catch {
-                            ErrorHandlerViewModel.shared.handleError(error: error)
+                            
                         }
                     }
                 }

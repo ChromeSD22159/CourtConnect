@@ -59,22 +59,7 @@ struct AddStatisticView: View {
         .navigationTitle(title: "Statistics")
         .listBackgroundAnimated()
     }
-}
-
-extension View {
-    func navigationTitle(title: LocalizedStringKey) -> some View {
-        modifier(NavigationTitle(title: title))
-    }
-}
-
-struct NavigationTitle: ViewModifier {
-    let title: LocalizedStringKey
-    func body(content: Content) -> some View {
-        content
-            .navigationTitle(title)
-            .navigationBarTitleDisplayMode(.inline)
-    }
-}
+} 
 
 fileprivate struct AddStaticSheet: View {
     let termin: Termin
@@ -106,19 +91,54 @@ fileprivate struct AddStaticSheet: View {
                 }
                 
                 Section {
-                    ForEach(viewModel.teamPlayer, id: \.teamMember.id) { player in
-                        MemberRowPlayer(player: player)
+                    let list = viewModel.filterTeamPlayer(terminId: termin.id)
+                    
+                    if list.isEmpty {
+                        HStack {
+                            ContentUnavailableView(
+                                "All statistics entered",
+                                systemImage: "checkmark.circle.fill", // Oder ein anderes passendes Symbol
+                                description: Text("All players have already entered their statistics for this appointment.")
+                            )
+                        }
+                        .padding()
+                        .background(Material.ultraThinMaterial)
+                        .clipShape(RoundedRectangle(cornerRadius: 15))
+                    } else {
+                        ForEach(list, id: \.teamMember.id) { player in
+                            MemberRowPlayer(player: player)
+                        }
                     }
                 } header: {
-                    UpperCasedheadline(text: "Player")
+                    HStack {
+                        UpperCasedheadline(text: "Player")
+                        Spacer()
+                    }
                 }
                 
                 Section {
-                    ForEach(viewModel.teamTrainer, id: \.teamMember.id) { trainer in
-                        MemberRowTrainer(trainer: trainer)
+                    let list = viewModel.filterTeamTrainer(terminId: termin.id)
+                    if list.isEmpty {
+                        HStack {
+                            ContentUnavailableView(
+                                "All coaches confirmed",
+                                systemImage: "checkmark.circle.fill",
+                                description: Text("All coaches have already confirmed for this appointment.")
+                            )
+                        }
+                        .padding()
+                        .background(Material.ultraThinMaterial)
+                        .clipShape(RoundedRectangle(cornerRadius: 15))
+                    } else {
+                        ForEach(viewModel.teamTrainer, id: \.teamMember.id) { trainer in
+                            MemberRowTrainer(trainer: trainer)
+                        }
                     }
                 } header: {
-                    UpperCasedheadline(text: "Coach")
+                    HStack {
+                        UpperCasedheadline(text: "Coach")
+                        Spacer()
+                    }
                 }
             }
             .scrollIndicators(.hidden)

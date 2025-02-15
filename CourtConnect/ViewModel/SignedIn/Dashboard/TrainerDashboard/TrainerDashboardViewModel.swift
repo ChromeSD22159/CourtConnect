@@ -17,14 +17,9 @@ import UIKit
     var userProfile: UserProfile?
     var currentTeam: Team?
     var termine: [Termin] = []
-    var isfetching: Bool = false
-    var isGenerateNewCodeSheet = false
+    var isfetching: Bool = false 
     var isPlanAppointmentSheet = false
-    var isDocumentSheet = false
-    var showQrSheet = false
-    
-    var qrCode: UIImage?
-    var joinCode: String = ""
+    var isDocumentSheet = false  
     var isEnterCode = false
     
     func inizialize() {
@@ -39,11 +34,8 @@ import UIKit
             guard let userAccount = userAccount else { throw UserError.userAccountNotFound }
             guard let teamId = userAccount.teamId else { throw TeamError.teamNotFound }
             currentTeam = try repository.teamRepository.getTeam(for: teamId)
-            
-            readQRCode()
         } catch {
             currentTeam = nil
-            qrCode = nil
         }
     }
     
@@ -107,7 +99,6 @@ import UIKit
                 userAccount.teamId = nil
                 userAccount.updatedAt = Date()
                 currentTeam = nil
-                qrCode = nil
             }
             
             // wenn Spieler
@@ -117,7 +108,6 @@ import UIKit
                 userAccount.teamId = nil
                 userAccount.updatedAt = Date()
                 currentTeam = nil
-                qrCode = nil
             }
         } catch {
             ErrorHandlerViewModel.shared.handleError(error: error)
@@ -130,13 +120,6 @@ import UIKit
         userAccounts = newAccountList
         userAccount = newAccountList.first
         LocalStorageService.shared.userAccountId = userAccount?.id.uuidString
-    }
-    
-    private func readQRCode() {
-        if let currentTeam = currentTeam {
-            joinCode = currentTeam.joinCode
-            qrCode = QRCodeHelper().generateQRCode(from: currentTeam.joinCode)
-        }
     }
     
     func fetchDataFromRemote() {

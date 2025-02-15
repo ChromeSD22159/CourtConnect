@@ -81,6 +81,17 @@ import Supabase
         return try container.mainContext.fetch(fetchDescriptor)
     }
     
+    func getTeamFutureAbsense(for teamId: UUID) throws -> [Absence] {
+        let startOfDay = Calendar.current.startOfDay(for: Date())
+        let redicate = #Predicate<Absence> { absence in
+            absence.teamId == teamId && absence.deletedAt == nil && absence.startDate >= startOfDay
+        }
+        let sort = [SortDescriptor(\Absence.startDate, order: .forward)]
+        let fetchDescriptor = FetchDescriptor(predicate: redicate, sortBy: sort)
+        
+        return try container.mainContext.fetch(fetchDescriptor)
+    }
+    
     func getTeamMembers(for teamId: UUID) throws -> [TeamMember] {
         let redicate = #Predicate<TeamMember> { teamMember in
             teamMember.teamId == teamId && teamMember.deletedAt == nil
@@ -157,8 +168,20 @@ import Supabase
         return try container.mainContext.fetch(fetchDescriptor)
     }
     
+    func playerHasStatistic(userAccountId: UUID, terminId: UUID) throws -> Bool {
+        let predicate = #Predicate<Statistic> { $0.userAccountId == userAccountId && $0.terminId == terminId && $0.deletedAt == nil }
+        var fetchDescriptor = FetchDescriptor(predicate: predicate, sortBy: [SortDescriptor(\.createdAt, order: .reverse)])
+        return try container.mainContext.fetch(fetchDescriptor).first != nil
+    }
+    
     func getTeamRequests(teamId: UUID) throws -> [Requests] {
         let predicate = #Predicate<Requests> { $0.teamId == teamId && $0.deletedAt == nil }
+        let fetchDescriptor = FetchDescriptor<Requests>(predicate: predicate)
+        return try container.mainContext.fetch(fetchDescriptor)
+    }
+    
+    func findRequest(teamId: UUID, userAccountId: UUID) throws -> [Requests] {
+        let predicate = #Predicate<Requests> { $0.teamId == teamId && $0.accountId == userAccountId && $0.deletedAt == nil }
         let fetchDescriptor = FetchDescriptor<Requests>(predicate: predicate)
         return try container.mainContext.fetch(fetchDescriptor)
     }
@@ -201,6 +224,12 @@ import Supabase
             }
         }
         return userList
+    }
+    
+    func isTrainerAttendanceConfirmed(userAccountId: UUID, terminId: UUID) throws -> Bool {
+        let predicate = #Predicate<Attendance> { $0.terminId == terminId && $0.userAccountId == userAccountId && $0.deletedAt == nil }
+        let fetchDescriptor = FetchDescriptor(predicate: predicate)
+        return try container.mainContext.fetch(fetchDescriptor).first != nil
     }
     
     func getTermineBy(id: UUID) throws -> Termin? {

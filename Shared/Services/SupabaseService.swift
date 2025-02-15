@@ -116,7 +116,7 @@ struct SupabaseService {
         return (200...299).contains(statusCode)
     }
     
-    static func uploadImageToSupabaseAndCache(image: UIImage, fileName: String, bucket: SupabaseBucket, teamId: UUID) async throws -> DocumentDTO {
+    static func uploadImageToSupabaseAndCache(image: UIImage, fileName: String, info: String, bucket: SupabaseBucket, teamId: UUID) async throws -> DocumentDTO {
         guard let imageData = image.jpegData(compressionQuality: 0.8) else {
             throw ImageUploadError.conversionFailed
         }
@@ -132,7 +132,7 @@ struct SupabaseService {
         
         let image = try await downloadDocumentAndCache(imageURL: response.path, bucket: bucket)
         
-        let generatedDocumentDTO = DocumentDTO(teamId: teamId, name: fileName, info: fileName, url: image.absoluteString, roleString: UserRole.player.rawValue, createdAt: Date(), updatedAt: Date())
+        let generatedDocumentDTO = DocumentDTO(teamId: teamId, name: fileName, info: info, url: image.absoluteString, roleString: UserRole.player.rawValue, createdAt: Date(), updatedAt: Date())
  
         return try await SupabaseService.insert(item: generatedDocumentDTO, table: .document)
     }

@@ -108,6 +108,34 @@ import Foundation
         teamPlayer = []
         teamTrainer = []
     }
+    
+    private func hasStatistic(userAccountId: UUID, terminId: UUID) -> Bool {
+        do {
+            return try repository.teamRepository.playerHasStatistic(userAccountId: userAccountId, terminId: terminId)
+        } catch {
+            return false
+        }
+    }
+    
+    func filterTeamPlayer(terminId: UUID) -> [TeamMemberProfileStatistic] {
+        return teamPlayer.filter { player in
+            !hasStatistic(userAccountId: player.teamMember.userAccountId, terminId: terminId)
+        }
+    }
+    
+    private func isTrainerAttendanceConfirmed(userAccountId: UUID, terminId: UUID) -> Bool {
+        do {
+            return try repository.teamRepository.isTrainerAttendanceConfirmed(userAccountId: userAccountId, terminId: terminId)
+        } catch {
+            return false
+        }
+    }
+    
+    func filterTeamTrainer(terminId: UUID) -> [TeamMemberProfile] {
+        return teamTrainer.filter { trainer in
+            !isTrainerAttendanceConfirmed(userAccountId: trainer.teamMember.userAccountId, terminId: terminId)
+        }
+    }
 }
 
 @Observable class TeamMemberProfileStatistic: Identifiable {

@@ -54,6 +54,22 @@
         }
       }
     },
+    "%@ - %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ - %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ - %2$@"
+          }
+        }
+      }
+    },
     "%@ (%lld)" : {
       "localizations" : {
         "de" : {
@@ -71,7 +87,14 @@
       }
     },
     "%@ %@" : {
+      "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ %2$@"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "new",
@@ -99,6 +122,9 @@
           }
         }
       }
+    },
+    "%@:" : {
+
     },
     "%lld" : {
       "localizations" : {
@@ -136,6 +162,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "3er"
+          }
+        }
+      }
+    },
+    "Absence Overview" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abwesenheitsübersicht"
           }
         }
       }
@@ -229,6 +265,18 @@
           }
         }
       }
+    },
+    "All coaches confirmed" : {
+
+    },
+    "All coaches have already confirmed for this appointment." : {
+
+    },
+    "All players have already entered their statistics for this appointment." : {
+
+    },
+    "All statistics entered" : {
+
     },
     "App Status" : {
       "localizations" : {
@@ -410,6 +458,16 @@
         }
       }
     },
+    "Coach Dashboard" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trainer Dashboard"
+          }
+        }
+      }
+    },
     "Code Team: %@" : {
       "localizations" : {
         "de" : {
@@ -426,17 +484,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "weiter"
-          }
-        }
-      }
-    },
-    "Copy" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kopieren"
           }
         }
       }
@@ -527,6 +574,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Erstelle dein erstes Benutzerkonto"
+          }
+        }
+      }
+    },
+    "created: %@ - %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erstellt: %1$@ - %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "created: %1$@ - %2$@"
           }
         }
       }
@@ -711,12 +774,32 @@
         }
       }
     },
+    "Edit" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bearbeiten"
+          }
+        }
+      }
+    },
     "Edit appointment" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Termin bearbeiten"
+          }
+        }
+      }
+    },
+    "Edit Document" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dokument bearbeiten"
           }
         }
       }
@@ -881,6 +964,22 @@
         }
       }
     },
+    "from %@ until %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ab %1$@ bis %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "from %1$@ until %2$@"
+          }
+        }
+      }
+    },
     "Game" : {
       "localizations" : {
         "de" : {
@@ -940,12 +1039,6 @@
           }
         }
       }
-    },
-    "Handle Error" : {
-
-    },
-    "Handle Message" : {
-
     },
     "Headcoach" : {
       "localizations" : {
@@ -1069,7 +1162,14 @@
       }
     },
     "Join code copied" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Betrittscode kopiert"
+          }
+        }
+      }
     },
     "Join Requests" : {
       "localizations" : {
@@ -1201,6 +1301,16 @@
         }
       }
     },
+    "Lowest Fouls" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wenigsten Fouls"
+          }
+        }
+      }
+    },
     "Manage Documents" : {
       "localizations" : {
         "de" : {
@@ -1221,8 +1331,35 @@
         }
       }
     },
-    "Neue Nachricht von Frederik" : {
-
+    "Most 2er" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meisten 2er"
+          }
+        }
+      }
+    },
+    "Most 3er" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meisten 3er"
+          }
+        }
+      }
+    },
+    "Most Points" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meisten Punkte"
+          }
+        }
+      }
     },
     "New appointment" : {
       "localizations" : {
@@ -1230,6 +1367,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Neuer Termin"
+          }
+        }
+      }
+    },
+    "No absence found" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Abwesenheit gefunden"
           }
         }
       }
@@ -1270,6 +1417,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Keine Dokumente verfügbar"
+          }
+        }
+      }
+    },
+    "No documents found" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Dokumente gefunden"
           }
         }
       }
@@ -1584,7 +1741,14 @@
       }
     },
     "Request send!" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anfrage senden!"
+          }
+        }
+      }
     },
     "Requests" : {
       "localizations" : {
@@ -1857,10 +2021,24 @@
       }
     },
     "Team successfully created!" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Team erfolgreich erstellt!"
+          }
+        }
+      }
     },
     "Teamid copied" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teamid kopiert"
+          }
+        }
+      }
     },
     "Teams: %lld" : {
       "localizations" : {
@@ -1995,7 +2173,30 @@
       }
     },
     "Update Code" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Update Code"
+          }
+        }
+      }
+    },
+    "updated: %@ - %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bearbeitet: %1$@ - %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "updated: %1$@ - %2$@"
+          }
+        }
+      }
     },
     "Upload Document" : {
       "localizations" : {
@@ -2155,6 +2356,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dein Profil"
+          }
+        }
+      }
+    },
+    "Your team has no documents." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dein Team hat keine Dokumente."
+          }
+        }
+      }
+    },
+    "Your team has no registered future absences." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dein Team hat keine eingetragenen Abwesenheiten."
           }
         }
       }

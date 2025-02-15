@@ -114,7 +114,7 @@ struct PlayerStatistic: View {
 }
 
 private struct StatisticCard: View {
-    let title: String
+    let title: LocalizedStringKey
     let description: String
     let statistic: Statistic
     var body: some View {
@@ -129,10 +129,10 @@ private struct StatisticCard: View {
                 .lineLimit(2)
                 .truncationMode(.tail)
             
-            row(key: "Fouls", value: statistic.fouls.formatted())
-            row(key: "2er", value: (statistic.twoPointAttempts * 2).formatted())
-            row(key: "3er", value: (statistic.threePointAttempts * 3).formatted())
-            row(key: "Punkte", value: "\( statistic.points.formatted() )")
+            StatisticCardRow(key: .init("Fouls"), value: statistic.fouls.formatted())
+            StatisticCardRow(key: "2er", value: (statistic.twoPointAttempts * 2).formatted())
+            StatisticCardRow(key: "3er", value: (statistic.threePointAttempts * 3).formatted())
+            StatisticCardRow(key: "Points", value: "\( statistic.points.formatted() )")
         }
         .foregroundStyle(Theme.text)
         .padding()
@@ -140,10 +140,14 @@ private struct StatisticCard: View {
         .background(Material.ultraThinMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 15))
     }
-    
-    @ViewBuilder func row(key: String, value: String) -> some View {
+}
+
+private struct StatisticCardRow: View {
+    let key: LocalizedStringKey
+    let value: String
+    var body: some View {
         HStack {
-            Text(key + ":")
+            Text("\(key.stringValue() ?? ""):")
             Spacer()
             Text("**\(value)**")
         }

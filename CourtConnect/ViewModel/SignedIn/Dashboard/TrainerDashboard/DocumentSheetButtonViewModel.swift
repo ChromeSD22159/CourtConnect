@@ -51,7 +51,8 @@ import Auth
             guard let image = uiImage else { throw UserError.userAccountNotFound }
             guard fileName.count >= 5 else { throw DocumentError.fileNameToShot }
             
-            let document: DocumentDTO = try await repository.documentRepository.uploadCachedDocument(image: image, fileName: fileName, bucket: .teamFiles, teamId: teamId)
+            // TODO: 
+            let document: DocumentDTO = try await repository.documentRepository.uploadCachedDocument(image: image, fileName: fileName, info: "", bucket: .teamFiles, teamId: teamId)
 
             repository.documentRepository.insert(document: document, userId: userAccount.userId)
             

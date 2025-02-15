@@ -48,7 +48,7 @@ import Auth
                 let newAdmin = TeamAdmin(teamId: newTeam.id, userAccountId: userAccount.id, role: userAccount.role, createdAt: now, updatedAt: now)
                 
                 if let uiImage = uiImage {
-                    let document: DocumentDTO = try await repository.documentRepository.uploadCachedDocument(image: uiImage, fileName: "\(teamName)_image", bucket: .teamFiles, teamId: newTeam.id)
+                    let document: DocumentDTO = try await repository.documentRepository.uploadCachedDocument(image: uiImage, fileName: "\(teamName)_image", info: "", bucket: .teamFiles, teamId: newTeam.id)
                     newTeam.teamImageURL = document.url
                 }
                 
