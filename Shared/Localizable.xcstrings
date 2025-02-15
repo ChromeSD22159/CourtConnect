@@ -266,16 +266,34 @@
       }
     },
     "All coaches confirmed" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Trainer haben bestätigt"
+          }
+        }
+      }
     },
     "All coaches have already confirmed for this appointment." : {
-
-    },
-    "All players have already entered their statistics for this appointment." : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Trainer haben bereits für diesen Termin bestätigt."
+          }
+        }
+      }
     },
     "All statistics entered" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Statistiken eingegebenen"
+          }
+        }
+      }
     },
     "App Status" : {
       "localizations" : {
@@ -393,6 +411,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Geburtstag"
+          }
+        }
+      }
+    },
+    "Briefly describe the document's content" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beschreiben Sie kurz den Inhalt des Dokuments"
           }
         }
       }
@@ -613,6 +641,16 @@
         }
       }
     },
+    "Date is invalid." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Datum ist ungültig."
+          }
+        }
+      }
+    },
     "December 2024" : {
       "localizations" : {
         "de" : {
@@ -648,7 +686,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Trainer -Konto löschen"
+            "value" : "Trainer-Konto löschen"
           }
         }
       }
@@ -678,7 +716,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Spieler -Konto löschen"
+            "value" : "Spieler-Konto löschen"
           }
         }
       }
@@ -699,6 +737,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Konto löschen"
+          }
+        }
+      }
+    },
+    "Description" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beschreibung"
           }
         }
       }
@@ -729,6 +777,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dokumente"
+          }
+        }
+      }
+    },
+    "Duration is invalid." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dauer ist ungültig."
           }
         }
       }
@@ -1125,6 +1183,16 @@
         }
       }
     },
+    "Information is required." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Informationen sind erforderlich."
+          }
+        }
+      }
+    },
     "Insert code" : {
       "localizations" : {
         "de" : {
@@ -1232,6 +1300,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Art?"
+          }
+        }
+      }
+    },
+    "Last Admin cant Leave the Team" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der letzte Administrator kann das Team nicht verlassen"
           }
         }
       }
@@ -1367,7 +1445,7 @@
       }
     },
     "Neue Nachricht von Frederik" : {
-
+      "comment" : "previewOnly"
     },
     "New appointment" : {
       "localizations" : {
@@ -1474,7 +1552,17 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kein Team -Trainer, der derzeit gefunden wurde."
+            "value" : "Kein Trainer, der derzeit gefunden wurde."
+          }
+        }
+      }
+    },
+    "No Team Found with the provided Join Code." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein Team mit dem bereitgestellten Join Code gefunden."
           }
         }
       }
@@ -1554,6 +1642,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Passwort"
+          }
+        }
+      }
+    },
+    "Place is required." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Ort ist erforderlich."
           }
         }
       }
@@ -1678,12 +1776,32 @@
         }
       }
     },
+    "Recovery suggestion: Enter a team name" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wiederherstellungsvorschlag: Geben Sie einen Teamnamen ein"
+          }
+        }
+      }
+    },
+    "Recovery suggestion: Enter a team name with at least 5 characters" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geben Sie einen Teamnamen mit mindestens 5 Zeichen ein"
+          }
+        }
+      }
+    },
     "Register your absence to the coaching team." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Reiche deine Abwesenheit beim Trainer -Team ein."
+            "value" : "Reiche deine Abwesenheit beim Trainer-Team ein."
           }
         }
       }
@@ -2018,6 +2136,16 @@
         }
       }
     },
+    "Team not found." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Team nicht gefunden."
+          }
+        }
+      }
+    },
     "Team request from %@" : {
       "localizations" : {
         "de" : {
@@ -2048,12 +2176,32 @@
         }
       }
     },
+    "TeamId is invalid" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teamid ist ungültig"
+          }
+        }
+      }
+    },
     "Teams: %lld" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Teams: %lld"
+          }
+        }
+      }
+    },
+    "The Description is less them 5 characters" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Beschreibung ist weniger sie 5 Zeichen"
           }
         }
       }
@@ -2079,12 +2227,112 @@
         }
       }
     },
+    "The email address must be at least 6 characters long." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die E-Mail Adresse muss mindestens 6 Zeichen lang sein."
+          }
+        }
+      }
+    },
+    "The email field cannot be empty." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das E-Mailfeld kann nicht leer sein."
+          }
+        }
+      }
+    },
+    "The Filename is less them 5 characters" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Dateiname ist weniger mit 5 Zeichen"
+          }
+        }
+      }
+    },
+    "The head coach's name must be at least 5 characters long." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Name des Cheftrainers muss mindestens 5 Zeichen lang sein."
+          }
+        }
+      }
+    },
+    "The input must not be empty!" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Eingabe darf nicht leer sein!"
+          }
+        }
+      }
+    },
+    "The password field cannot be empty." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Feld Passwort kann nicht leer sein."
+          }
+        }
+      }
+    },
+    "The passwords do not match. Please make sure both passwords are the same." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Passwörter stimmen nicht überein. Bitte stellen Sie sicher, dass beide Passwörter gleich sind."
+          }
+        }
+      }
+    },
+    "The repeat password field cannot be empty." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Wiederholungspasswort kann nicht leer sein."
+          }
+        }
+      }
+    },
     "The selected user account is not part of a team. Join a team to get started." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Das ausgewählte Benutzerkonto ist nicht Teil eines Teams. Schließe dich einem Team an, um loszulegen."
+          }
+        }
+      }
+    },
+    "The statistics have already been entered for all players." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Für alle Spieler wurde bereits die Statistiken eingetragen."
+          }
+        }
+      }
+    },
+    "The team name must be at least 6 characters long." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Teamname muss mindestens 6 Zeichen lang sein."
           }
         }
       }
@@ -2115,6 +2363,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Diese Liste zeigt alle offenen Zugangsanfragen für das Team.  Wähle eine Anfrage aus, um die Details anzuzeigen und zu bearbeiten."
+          }
+        }
+      }
+    },
+    "Title is required." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Titel ist erforderlich."
           }
         }
       }
@@ -2212,6 +2470,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dokument hochladen"
+          }
+        }
+      }
+    },
+    "User has no Team." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Benutzer hat kein Team."
           }
         }
       }

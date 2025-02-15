@@ -1,5 +1,5 @@
 //
-//  DocumentSheetButton.swift
+//  DocumentSheet.swift
 //  CourtConnect
 //
 //  Created by Frederik Kohler on 02.02.25.
@@ -40,6 +40,13 @@ struct DocumentSheet: View {
                 }
                 
                 TextField("Filename", text: $viewModel.fileName, prompt: Text("Document name e.g. Instruction"))
+                    .textFieldStyle(.roundedBorder)
+                    .padding(.horizontal)
+                    .opacity(viewModel.uiImage != nil ? 1.0 : 0.0)
+                    .animation(.easeInOut, value: viewModel.uiImage)
+                    .padding(.bottom, 30)
+                
+                TextField("Description", text: $viewModel.description, prompt: Text("Briefly describe the document's content"))
                     .textFieldStyle(.roundedBorder)
                     .padding(.horizontal)
                     .opacity(viewModel.uiImage != nil ? 1.0 : 0.0)

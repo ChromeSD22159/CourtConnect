@@ -5,7 +5,7 @@
 //  Created by Frederik Kohler on 15.02.25.
 //
 import SwiftUI
-import Auth
+import Auth 
 
 struct ManageDocumentsView: View {
     @State var viewModel = ManageDocumentsViewModel()
@@ -14,7 +14,7 @@ struct ManageDocumentsView: View {
             List {
                 if viewModel.documents.isEmpty {
                     Section {
-                        ContentUnavailableView("No documents found", systemImage: "text.document", description: Text("Your team has no documents."))
+                        NoDocumentAvailableView()
                     }.blurrylistRowBackground()
                 } else {
                     Section {
@@ -27,19 +27,13 @@ struct ManageDocumentsView: View {
                             VStack(alignment: .leading) {
                                 HStack {
                                     AsyncCachedImage(url: URL(string: document.url)!) { image in
-                                        image
-                                            .resizable()
-                                            .frame(width: 50, height: 50)
-                                            .clipShape(RoundedRectangle(cornerRadius: 15))
+                                        ClippedImage(image, width: 50, height: 50)
+                                          .clipShape(RoundedRectangle(cornerRadius: 15))
                                     } placeholder: {
-                                        ZStack {
-                                            Image(systemName: "doc")
-                                                .font(.largeTitle)
-                                                .padding(20)
-                                        }
+                                        DocSystemIcon()
                                     }
                                     
-                                    VStack {
+                                    VStack(alignment: .leading) {
                                         Text(document.name)
                                             .font(.headline)
                                         
@@ -91,49 +85,57 @@ struct ManageDocumentsView: View {
     }
 } 
 
-struct EditDocumentSheet: View {
+private struct EditDocumentSheet: View {
     @Environment(\.dismiss) var dismiss
     @State var name = ""
+    @State var description = ""
     
     var document: Document
     let complete: (Document) -> Void
      
     var body: some View {
-        SheetStlye(title: "Edit Document", detents: [.medium, .large], isLoading: .constant(false)) {
+        SheetStlye(title: "Edit Document", detents: [.large], isLoading: .constant(false)) {
             VStack {
                 AsyncCachedImage(url: URL(string: document.url)!) { image in
-                    image
-                        .resizable()
-                        .frame(width: 300, height: 300)
-                        .clipShape(RoundedRectangle(cornerRadius: 15))
+                    /*
+                   image
+                       .resizable()
+                       .aspectRatio(contentMode: .fit)
+                       .frame(width: 300, height: 300)
+                       .clipped()
+                   */
+                    ClippedImage(image, width: 300, height: 300)
                 } placeholder: {
-                    ZStack {
-                        Image(systemName: "doc")
-                            .font(.largeTitle)
-                            .padding(20)
-                    }
+                    DocSystemIcon()
                 }
                 
                 TextField("Filename", text: $name, prompt: Text("Document name e.g. Instruction"))
                     .textFieldStyle(.roundedBorder)
                     .padding(.horizontal)
                     .padding(.bottom, 30)
+                
+                TextField("Description", text: $description, prompt: Text("Briefly describe the document's content"))
+                    .textFieldStyle(.roundedBorder)
+                    .padding(.horizontal)
+                    .padding(.bottom, 30)
                  
-                Button("Edit Document") {
+                Button("Save") {
                     Task {
                         document.name = name
+                        document.info = description
                         complete(document)
                         dismiss()
                     }
                 }
                 .errorAlert()
-                .disabled(document.name == name)
-                .opacity(document.name == name ? 0.5 : 1.0)
+                .disabled(document.name == name && document.info == description)
+                .opacity(document.name == name && document.info == description ? 0.5 : 1.0)
                 .buttonStyle(DarkButtonStlye())
             }
             .padding(.bottom)
         }
         .onAppear {
+            description = document.info
             name = document.name
         }
     }

@@ -5,13 +5,14 @@
 //  Created by Frederik Kohler on 25.01.25.
 //
 import Foundation
+import SwiftUICore
 
 enum RegisterError: Error, LocalizedError {
     case emailIsEmpty
     case passwordIsEmpty
     case repeatPasswordIsEmpty
     case passwordsNotTheSame
-    var errorDescription: String? {
+    var errorDescription: LocalizedStringKey? {
         switch self {
         case .emailIsEmpty: return "The email field cannot be empty."
         case .passwordIsEmpty: return "The password field cannot be empty."

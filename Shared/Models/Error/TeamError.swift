@@ -5,6 +5,7 @@
 //  Created by Frederik Kohler on 31.01.25.
 //
 import Foundation
+import SwiftUICore
 
 enum TeamError: Error, LocalizedError {
     case userHasNoTeam
@@ -15,7 +16,7 @@ enum TeamError: Error, LocalizedError {
     case teamNameLessCharacter
     case searchInputIsNull
     
-    var errorDescription: String? {
+    var errorDescription: LocalizedStringKey? {
         switch self {
         case .userHasNoTeam: return "User has no Team."
         case .teamNotFound: return "Team not found."

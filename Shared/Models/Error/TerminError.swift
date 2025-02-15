@@ -5,6 +5,7 @@
 //  Created by Frederik Kohler on 02.02.25.
 //
 import Foundation
+import SwiftUICore
 
 enum TerminError: Error, LocalizedError {
     case missingTitle
@@ -16,24 +17,16 @@ enum TerminError: Error, LocalizedError {
     case teamNotFound
     case other(Error) // For wrapping other errors
 
-    var errorDescription: String? {
+    var errorDescription: LocalizedStringKey? {
         switch self {
-        case .missingTitle:
-            return "Title is required."
-        case .missingPlace:
-            return "Place is required."
-        case .missingInformation:
-            return "Information is required."
-        case .missingTeamId:
-            return "TeamId is invalid"
-        case .invalidDuration:
-            return "Duration is invalid."
-        case .invalidDate:
-            return "Date is invalid."
-        case .teamNotFound:
-            return "Team not found."
-        case .other(let error):
-            return error.localizedDescription
+        case .missingTitle: return "Title is required."
+        case .missingPlace: return "Place is required."
+        case .missingInformation: return "Information is required."
+        case .missingTeamId: return "TeamId is invalid"
+        case .invalidDuration: return "Duration is invalid."
+        case .invalidDate: return "Date is invalid."
+        case .teamNotFound: return "Team not found."
+        case .other(let error): return LocalizedStringKey(error.localizedDescription)
         }
     }
 }

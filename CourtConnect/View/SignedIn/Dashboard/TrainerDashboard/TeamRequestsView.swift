@@ -4,7 +4,7 @@
 //
 //  Created by Frederik Kohler on 30.01.25.
 //
-import SwiftUI 
+import SwiftUI
 
 @MainActor struct TeamRequestsView: View {
     @State var viewModel = TeamRequestsViewModel()
@@ -16,7 +16,7 @@ import SwiftUI
                 
                 Section {
                     if viewModel.requests.isEmpty {
-                        ContentUnavailableView("No join requests", systemImage: "figure", description: Text("There is currently no accession request."))
+                        NoRequestAvailableView()
                     } else {
                         ForEach(viewModel.requests) { requestUser in
                             HStack {
@@ -97,7 +97,7 @@ fileprivate struct RequestAcceptionField: View {
             ListInfomationSection(text: "This list shows all open accession requests for your team.  Select an inquiry to see the details and edit them.")
             
             Section {
-                ContentUnavailableView("No join requests", systemImage: "figure", description: Text("There is currently no accession request."))
+                NoRequestAvailableView()
             }
             .blurrylistRowBackground()
             

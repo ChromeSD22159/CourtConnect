@@ -5,11 +5,12 @@
 //  Created by Frederik Kohler on 30.01.25.
 //
 import Foundation
+import SwiftUICore
 
 enum InputValidationError: Error, LocalizedError {
     case emailTooSmall, teamNameTooSmall, headcoachTooSmall
     
-    var errorDescription: String? {
+    var errorDescription: LocalizedStringKey? {
         switch self {
         case .emailTooSmall: return "The email address must be at least 6 characters long."
         case .teamNameTooSmall: return "The team name must be at least 6 characters long."
