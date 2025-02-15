@@ -5,7 +5,7 @@
 //  Created by Frederik Kohler on 15.02.25.
 //
 import SwiftUI
-import Auth
+import Auth 
 
 struct AbsenceOverview: View {
     @State var viewModel = ShowAbsenseViewModel()
@@ -14,7 +14,7 @@ struct AbsenceOverview: View {
             List {
                 if viewModel.absenses.isEmpty {
                     Section {
-                        ContentUnavailableView("No absence found", systemImage: "figure", description: Text("Your team has no registered future absences."))
+                        NoAbsenceAvailableView()
                     }.blurrylistRowBackground()
                 } else {
                     ForEach(viewModel.absenses.sorted(by: { $0.key < $1.key }), id: \.key) { date, users in

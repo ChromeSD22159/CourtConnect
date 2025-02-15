@@ -11,6 +11,12 @@
         }
       }
     },
+    "Date is invalid." : {
+
+    },
+    "Duration is invalid." : {
+
+    },
     "Game" : {
       "localizations" : {
         "de" : {
@@ -31,6 +37,12 @@
         }
       }
     },
+    "Information is required." : {
+
+    },
+    "Last Admin cant Leave the Team" : {
+
+    },
     "Last Update:" : {
       "localizations" : {
         "de" : {
@@ -41,6 +53,9 @@
         }
       }
     },
+    "No Team Found with the provided Join Code." : {
+
+    },
     "Other" : {
       "localizations" : {
         "de" : {
@@ -50,6 +65,9 @@
           }
         }
       }
+    },
+    "Place is required." : {
+
     },
     "Player" : {
       "localizations" : {
@@ -70,6 +88,12 @@
           }
         }
       }
+    },
+    "Recovery suggestion: Enter a team name" : {
+
+    },
+    "Recovery suggestion: Enter a team name with at least 5 characters" : {
+
     },
     "Settings" : {
       "localizations" : {
@@ -101,6 +125,45 @@
         }
       }
     },
+    "Team not found." : {
+
+    },
+    "TeamId is invalid" : {
+
+    },
+    "The Description is less them 5 characters" : {
+
+    },
+    "The email address must be at least 6 characters long." : {
+
+    },
+    "The email field cannot be empty." : {
+
+    },
+    "The Filename is less them 5 characters" : {
+
+    },
+    "The head coach's name must be at least 5 characters long." : {
+
+    },
+    "The input must not be empty!" : {
+
+    },
+    "The password field cannot be empty." : {
+
+    },
+    "The passwords do not match. Please make sure both passwords are the same." : {
+
+    },
+    "The repeat password field cannot be empty." : {
+
+    },
+    "The team name must be at least 6 characters long." : {
+
+    },
+    "Title is required." : {
+
+    },
     "Training" : {
       "localizations" : {
         "de" : {
@@ -110,6 +173,9 @@
           }
         }
       }
+    },
+    "User has no Team." : {
+
     },
     "With this widget you can see all the time your own AVG Statistics." : {
       "localizations" : {

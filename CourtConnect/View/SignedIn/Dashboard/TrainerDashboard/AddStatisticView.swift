@@ -16,7 +16,7 @@ struct AddStatisticView: View {
                 
                 Section {
                     if viewModel.termine.isEmpty {
-                        ContentUnavailableView("No appointments", systemImage: "calendar", description: Text("There are no appointments to insert statistics for the players."))
+                        NoAppointmentAvailableView()
                     } else {
                         ForEach(viewModel.termine) { termin in
                             HStack {
@@ -92,11 +92,7 @@ fileprivate struct AddStaticSheet: View {
                     
                     if list.isEmpty {
                         HStack {
-                            ContentUnavailableView(
-                                "All statistics entered",
-                                systemImage: "checkmark.circle.fill", // Oder ein anderes passendes Symbol
-                                description: Text("All players have already entered their statistics for this appointment.")
-                            )
+                            AllStatisticEneredAvailableView()
                         }
                         .padding()
                         .background(Material.ultraThinMaterial)
@@ -117,11 +113,7 @@ fileprivate struct AddStaticSheet: View {
                     let list = viewModel.filterTeamTrainer(terminId: termin.id)
                     if list.isEmpty {
                         HStack {
-                            ContentUnavailableView(
-                                "All coaches confirmed",
-                                systemImage: "checkmark.circle.fill",
-                                description: Text("All coaches have already confirmed for this appointment.")
-                            )
+                            AllCoachesConfirmedAvailableView()
                         }
                         .padding()
                         .background(Material.ultraThinMaterial)
@@ -151,7 +143,7 @@ fileprivate struct AddStaticSheet: View {
             }
         }
     }
-}
+} 
 
 fileprivate struct MemberRowPlayer: View {
     var player: TeamMemberProfileStatistic

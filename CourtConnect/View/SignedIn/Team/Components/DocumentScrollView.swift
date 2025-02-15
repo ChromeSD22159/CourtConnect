@@ -22,17 +22,11 @@ struct DocumentScrollView: View {
                                 VStack {
                                     
                                     AsyncCachedImage(url: URL(string: document.url)!) { image in
-                                        image
-                                            .resizable()
-                                            .frame(width: 100, height: 100)
-                                            .clipShape(RoundedRectangle(cornerRadius: 15))
+                                        ClippedImage(image, width: 100, height: 100)
+                                          .clipShape(RoundedRectangle(cornerRadius: 15))
                                     } placeholder: {
-                                        ZStack {
-                                            Image(systemName: "doc")
-                                                .font(.largeTitle)
-                                                .padding(20)
-                                        }
-                                    } 
+                                        DocSystemIcon()
+                                    }
                                     
                                     Text(document.name)
                                 }
@@ -55,9 +49,7 @@ struct DocumentScrollView: View {
                                         .fill(Material.ultraThinMaterial)
                                     
                                     VStack {
-                                        Image(systemName: "doc")
-                                            .font(.largeTitle)
-                                            .padding(20)
+                                        DocSystemIcon()
                                        
                                         Text("File \(document)")
                                     }
@@ -75,4 +67,4 @@ struct DocumentScrollView: View {
             }
         }
     }
-} 
+}  

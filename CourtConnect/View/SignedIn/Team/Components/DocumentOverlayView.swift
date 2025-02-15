@@ -27,11 +27,7 @@ struct DocumentOverlayView: View {
                         }
                         .saveSize(in: $imageSize)
                 } placeholder: {
-                    ZStack {
-                        Image(systemName: "doc")
-                            .font(.largeTitle)
-                            .padding(20)
-                    }
+                    DocSystemIcon()
                 }
                 
                 HStack {

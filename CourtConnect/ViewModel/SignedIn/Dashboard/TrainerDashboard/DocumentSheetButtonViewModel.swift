@@ -23,6 +23,7 @@ import Auth
     var image: Image?
     var uiImage: UIImage?
     var fileName: String = ""
+    var description: String = ""
     
     init() {
         inizializeAuth()
@@ -50,9 +51,9 @@ import Auth
             guard let teamId = userAccount.teamId else { throw UserError.userAccountNotFound }
             guard let image = uiImage else { throw UserError.userAccountNotFound }
             guard fileName.count >= 5 else { throw DocumentError.fileNameToShot }
-            
-            // TODO: 
-            let document: DocumentDTO = try await repository.documentRepository.uploadCachedDocument(image: image, fileName: fileName, info: "", bucket: .teamFiles, teamId: teamId)
+            guard description.count >= 5 else { throw DocumentError.descriptionToShot }
+        
+            let document: DocumentDTO = try await repository.documentRepository.uploadCachedDocument(image: image, fileName: fileName, info: description, bucket: .teamFiles, teamId: teamId)
 
             repository.documentRepository.insert(document: document, userId: userAccount.userId)
             
@@ -69,5 +70,6 @@ import Auth
     func disappear() {
         self.resetImage()
         self.fileName = ""
+        self.description = ""
     }
 }
