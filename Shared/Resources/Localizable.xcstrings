@@ -95,7 +95,11 @@
     "Recovery suggestion: Enter a team name with at least 5 characters" : {
 
     },
+    "Setting" : {
+
+    },
     "Settings" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {

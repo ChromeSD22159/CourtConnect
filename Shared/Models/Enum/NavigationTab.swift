@@ -19,7 +19,7 @@ enum NavigationTab: Identifiable, CaseIterable {
         case .home: return "Home"
         case .team: return "Team"
         case .player: return "Player"
-        case .settings: return "Settings"
+        case .settings: return "Setting"
         }
     }
     

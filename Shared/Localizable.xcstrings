@@ -123,7 +123,14 @@
       }
     },
     "%@:" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@:"
+          }
+        }
+      }
     },
     "%lld" : {
       "localizations" : {
@@ -1098,10 +1105,26 @@
       }
     },
     "Handle Error" : {
-
+      "comment" : "previewOnly",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Handle Error"
+          }
+        }
+      }
     },
     "Handle Message" : {
-
+      "comment" : "previewOnly",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Handle Message"
+          }
+        }
+      }
     },
     "Headcoach" : {
       "localizations" : {
@@ -1952,6 +1975,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sende eine Anfrage, um sich einem Team als Trainer anzuschließen und Spieler und Trainingseinheiten zu leiten."
+          }
+        }
+      }
+    },
+    "Setting" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einstellung"
           }
         }
       }

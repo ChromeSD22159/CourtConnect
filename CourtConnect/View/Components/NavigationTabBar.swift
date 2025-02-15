@@ -51,15 +51,6 @@ struct NavigationTabBar<Content: View>: View {
             ZStack {
                 if !isScrolling {
                     ZStack {
-                        Capsule()
-                            .fill(Material.ultraThinMaterial)
-                            .blur(radius: 2)
-                            .padding(5)
-                            .frame(maxWidth: .infinity, maxHeight: 75)
-                            .clipShape(Capsule())
-                            .padding(.horizontal, 20)
-                            .shadow(color: .black.opacity(0.2), radius: 5, y: 5)
-                           
                         HStack {
                             ForEach(NavigationTab.allCases) { item in
                                 if navViewModel.userAccount?.roleEnum == .player {
@@ -74,6 +65,18 @@ struct NavigationTabBar<Content: View>: View {
                                     }
                                 }
                             }
+                        }
+                        .padding(.vertical, 10)
+                        .padding(.horizontal, 40)
+                        .background {
+                            Capsule()
+                                .fill(Material.ultraThinMaterial)
+                                .blur(radius: 2)
+                                .padding(5)
+                                .frame(maxHeight: 75)
+                                .clipShape(Capsule())
+                                .padding(.horizontal, 20)
+                                .shadow(color: .black.opacity(0.2), radius: 5, y: 5)
                         }
                     }
                     .transition(.move(edge: .bottom)) 
@@ -102,7 +105,7 @@ struct NavigationTabBar<Content: View>: View {
                 Color.clear.frame(height: 5)
             }
         }
-        .frame(width: 60, height: 60)
+        .frame(width: 75, height: 60)
         .contentShape(Rectangle())
         .onTapGesture {
             withAnimation(.easeInOut) {
