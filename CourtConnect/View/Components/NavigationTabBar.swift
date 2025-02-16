@@ -10,8 +10,10 @@ struct NavigationTabBar<Content: View>: View {
     @Environment(\.colorScheme) var colorScheme
     @ObservedObject var navViewModel: NavigationViewModel
     @Namespace private var animation
+    
     @State var isScrolling = false
     @State var reload = false
+    
     @ViewBuilder var content: () -> Content
     
     var body: some View {
@@ -27,11 +29,17 @@ struct NavigationTabBar<Content: View>: View {
                 .scaledToFit()
                 .opacity(0.25)
             
-            ScrollView(.vertical) {
-                content()
-            }
-            .scrollIndicators(.hidden)
-            .contentMargins(.top, 95)
+            ScrollRefreshable(
+                options: ScrollOptions(
+                    contentMarginsLength: 95,
+                    contentMarginsEdges: .top,
+                    verticalSpacing: 20
+                ),
+                refresh: {
+                    ReoloadAnimation(withBackground: false)
+                },
+                content: content
+            )
             .onScrollPhaseChange({ _, newPhase in
                 withAnimation(.spring) {
                     isScrolling = newPhase.isScrolling
@@ -42,9 +50,6 @@ struct NavigationTabBar<Content: View>: View {
             navViewModel.inizializeAuth()
         }
         .ignoresSafeArea()
-        .overlay(alignment: .top) {
-            ReoloadAnimation(isLoading: $reload)
-        }
         .overlay(alignment: .bottom, content: {
             ZStack {
                 if !isScrolling {
@@ -124,17 +129,7 @@ struct NavigationTabBar<Content: View>: View {
             .scaledToFit()
             .opacity(0.25)
             .clipped()
-        /*
-        Image(.basketballSketch)
-            .resizable()
-            .frame(width: 500, height: 500)
-            .opacity(colorScheme == .light ? 0.15 : 0.1)
-            .position(
-                x: UIScreen.main.bounds.width - 100,
-                y: UIScreen.main.bounds.height - 100
-            )
-            .clipped()
-        */
+
         ScrollView {
             RoundedRectangle(cornerRadius: 25)
                 .fill(Material.ultraThinMaterial.opacity(0.5))
