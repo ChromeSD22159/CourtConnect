@@ -9,6 +9,8 @@ import PhotosUI
  
 struct DocumentSheet: View {
     @State var viewModel: DocumentSheetButtonViewModel = DocumentSheetButtonViewModel()
+    @State var photosPickerItem: PhotosPickerItem?
+    
     @Environment(\.dismiss) var dismiss
     var body: some View {
         SheetStlye(title: "Add Document", detents: [.large], isLoading: $viewModel.isLoading) {
@@ -28,15 +30,17 @@ struct DocumentSheet: View {
                         .clipped()
                 }
                 
-                PhotosPicker(selection: $viewModel.item) {
-                    Label(viewModel.item == nil ? "Choose Document" : "Change Document", systemImage: "text.page.badge.magnifyingglass")
+                PhotosPicker(selection: $photosPickerItem) {
+                    Label(photosPickerItem == nil ? "Choose Document" : "Change Document", systemImage: "text.page.badge.magnifyingglass")
                         .padding()
                         .foregroundStyle(.white)
                         .background(Theme.darkOrange)
                         .clipShape(RoundedRectangle(cornerRadius: 15))
                 }
-                .onChange(of: viewModel.item) {
-                    viewModel.setImage()
+                .onChange(of: photosPickerItem) {
+                    if let image = photosPickerItem {
+                        viewModel.setImage(item: image)
+                    }
                 }
                 
                 TextField("Filename", text: $viewModel.fileName, prompt: Text("Document name e.g. Instruction"))

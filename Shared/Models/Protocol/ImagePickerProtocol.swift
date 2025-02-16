@@ -10,16 +10,15 @@ import PhotosUI
 
 @MainActor
 protocol ImagePickerProtocol: ObservableObject {
-    var item: PhotosPickerItem? { get set }
     var image: Image? { get set }
     var uiImage: UIImage? { get set }
     var fileName: String { get set }
 }
 
 extension ImagePickerProtocol {
-    func setImage() {
+    func setImage(item: PhotosPickerItem) {
         Task {
-            if let imageData = try? await item?.loadTransferable(type: Data.self), let uiImage = UIImage(data: imageData) {
+            if let imageData = try? await item.loadTransferable(type: Data.self), let uiImage = UIImage(data: imageData) {
                 if uiImage.size.height > uiImage.size.width {
                     let scaledImage = uiImage.scaleToHeight(400)
                     self.uiImage = scaledImage

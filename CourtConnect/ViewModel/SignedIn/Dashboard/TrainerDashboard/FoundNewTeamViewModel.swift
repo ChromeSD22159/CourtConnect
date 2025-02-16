@@ -63,9 +63,7 @@ import Auth
                 try repository.accountRepository.usert(item: userAccount, table: .userAccount, userId: userAccount.userId)
                 try await SupabaseService.upsertWithOutResult(item: userAccount.toDTO(), table: .userAccount, onConflict: "id")
          
-                try await Task.sleep(for: .seconds(1))
-                
-                InAppMessage(title: "Team successfully created!")
+                try await Task.sleep(for: .seconds(1)) 
             } catch {
                 ErrorHandlerViewModel.shared.handleError(error: error)
             }

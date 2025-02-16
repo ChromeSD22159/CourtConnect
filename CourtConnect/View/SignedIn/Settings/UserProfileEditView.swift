@@ -12,7 +12,8 @@ struct UserProfileEditView: View {
     
     @Environment(\.dismiss) var dismiss
     @FocusState var focus: Field?
-    let isSheet: Bool 
+    @State var photosPickerItem: PhotosPickerItem?
+    let isSheet: Bool
     
     var body: some View {
         VStack(spacing: 25) {
@@ -64,15 +65,17 @@ struct UserProfileEditView: View {
                     }
                 }
                 
-                PhotosPicker(selection: $userProfileEditViewModel.item) {
-                    Label(userProfileEditViewModel.item == nil ? "Choose Document" : "Change Document", systemImage: "text.page.badge.magnifyingglass")
+                PhotosPicker(selection: $photosPickerItem) {
+                    Label(photosPickerItem == nil ? "Choose Document" : "Change Document", systemImage: "text.page.badge.magnifyingglass")
                         .padding()
                         .foregroundStyle(.white)
                         .background(Theme.darkOrange)
                         .clipShape(RoundedRectangle(cornerRadius: 15))
                 }
-                .onChange(of: userProfileEditViewModel.item) {
-                    userProfileEditViewModel.setImage()
+                .onChange(of: photosPickerItem) {
+                    if let photosPickerItem = photosPickerItem {
+                        userProfileEditViewModel.setImage(item: photosPickerItem)
+                    } 
                 }
             }
               

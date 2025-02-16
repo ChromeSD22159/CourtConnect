@@ -21,14 +21,20 @@ import UIKit
     var isPlanAppointmentSheet = false
     var isDocumentSheet = false  
     var isEnterCode = false
+    var requests = 0
     
     func inizialize() {
         inizializeAuth()
-        getTeam()
-        getTeamTermine()
+        loadData()
     }
     
-    func getTeam() {
+    func loadData() {
+        getTeam()
+        getTeamTermine()
+        countRequests()
+    }
+    
+    private func getTeam() {
         currentTeam = nil
         do {
             guard let userAccount = userAccount else { throw UserError.userAccountNotFound }
@@ -62,7 +68,7 @@ import UIKit
         Task {
             defer {
                 try? repository.accountRepository.insert(termin: termin, table: .termin, userId: userId)
-                getTeamTermine()
+                loadData()
             }
             do {
                 try await SupabaseService.upsertWithOutResult(item: termin.toDTO(), table: .termin, onConflict: "id")
@@ -72,12 +78,18 @@ import UIKit
         }
     }
     
-    func getTeamTermine() {
-        do {
-            guard let currentTeam = currentTeam else { throw TeamError.userHasNoTeam }
-            termine = try repository.teamRepository.getTeamTermine(for: currentTeam.id)
-        } catch {
-            print(error)
+    func fetchDataFromRemote() {
+        Task {
+            defer {
+                loadData()
+            }
+            do {
+                if let userId = user?.id {
+                    try await syncAllTables(userId: userId)
+                }
+            } catch {
+                print(error)
+            }
         }
     }
     
@@ -122,17 +134,21 @@ import UIKit
         LocalStorageService.shared.userAccountId = userAccount?.id.uuidString
     }
     
-    func fetchDataFromRemote() {
-        Task {
-            do {
-                if let userId = user?.id {
-                    try await syncAllTables(userId: userId)
-                    getTeam()
-                    getTeamTermine()
-                }
-            } catch {
-                print(error)
-            }
+    private func getTeamTermine() {
+        do {
+            guard let currentTeam = currentTeam else { throw TeamError.userHasNoTeam }
+            termine = try repository.teamRepository.getTeamTermine(for: currentTeam.id)
+        } catch {
+            print(error)
+        }
+    }
+    
+    private func countRequests() {
+        do {
+            guard let currentTeam = currentTeam else { throw TeamError.teamNotFound }
+            requests = try repository.teamRepository.getTeamRequests(teamId: currentTeam.id).count
+        } catch {
+            print(error)
         }
     }
 }

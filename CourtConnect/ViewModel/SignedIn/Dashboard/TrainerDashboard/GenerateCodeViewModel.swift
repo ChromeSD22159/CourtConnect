@@ -35,8 +35,10 @@ import Auth
         guard !code.isEmpty else {
             message = "No Code generated"
             
-            Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false , block: { [self]_ in
-                self.message = " "
+            Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false , block: { [self]_ in 
+                DispatchQueue.main.async { // Update message on the main thread
+                    self.message = ""
+                }
             })
             return
         }

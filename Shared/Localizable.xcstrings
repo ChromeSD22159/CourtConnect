@@ -86,22 +86,6 @@
         }
       }
     },
-    "%@ %@" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@ %2$@"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ %2$@"
-          }
-        }
-      }
-    },
     "%@ Statistics" : {
       "localizations" : {
         "de" : {
@@ -1104,28 +1088,6 @@
         }
       }
     },
-    "Handle Error" : {
-      "comment" : "previewOnly",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Handle Error"
-          }
-        }
-      }
-    },
-    "Handle Message" : {
-      "comment" : "previewOnly",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Handle Message"
-          }
-        }
-      }
-    },
     "Headcoach" : {
       "localizations" : {
         "de" : {
@@ -1466,9 +1428,6 @@
           }
         }
       }
-    },
-    "Neue Nachricht von Frederik" : {
-      "comment" : "previewOnly"
     },
     "New appointment" : {
       "localizations" : {
@@ -2185,16 +2144,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Teamanfrage von %@"
-          }
-        }
-      }
-    },
-    "Team successfully created!" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Team erfolgreich erstellt!"
           }
         }
       }

@@ -10,6 +10,7 @@ import PhotosUI
 struct FoundNewTeamView: View {
     @Environment(\.dismiss) var dismiss
     @State var viewModel: FoundNewTeamViewModel = FoundNewTeamViewModel()
+    @State var photosPickerItem: PhotosPickerItem?
     var body: some View {
         ZStack {
             Theme.backgroundGradient.ignoresSafeArea()
@@ -49,7 +50,7 @@ struct FoundNewTeamView: View {
                     
                     VStack(alignment: .leading) {
                         Text("Select image")
-                        PhotosPicker("Select image", selection: $viewModel.item, matching: .images)
+                        PhotosPicker("Select image", selection: $photosPickerItem, matching: .images)
                             .foregroundStyle(.white)
                             .padding(.horizontal, 12)
                             .padding(.vertical, 6)
@@ -93,8 +94,10 @@ struct FoundNewTeamView: View {
             .padding(.horizontal, 20)
             .blur(radius: viewModel.isLoading ? 2 : 0)
             .animation(.easeInOut, value: viewModel.isLoading)
-            .onChange(of: viewModel.item) {
-                viewModel.setImage()
+            .onChange(of: photosPickerItem) {
+                if let image = photosPickerItem {
+                    viewModel.setImage(item: image)
+                }
             }
             
             LoadingCard(isLoading: $viewModel.isLoading)

@@ -8,7 +8,7 @@ import SwiftUI
 import PhotosUI 
 import Auth
 
-@Observable class DocumentSheetButtonViewModel: Sheet, ImagePickerProtocol, AuthProtocol {
+@MainActor @Observable class DocumentSheetButtonViewModel: Sheet, ImagePickerProtocol, AuthProtocol {
     var repository: BaseRepository = Repository.shared
     
     var user: User?
@@ -18,8 +18,7 @@ import Auth
     
     var isSheet = false
     var isLoading = false
-    var animateOnAppear = false
-    var item: PhotosPickerItem?
+    var animateOnAppear = false 
     var image: Image?
     var uiImage: UIImage?
     var fileName: String = ""

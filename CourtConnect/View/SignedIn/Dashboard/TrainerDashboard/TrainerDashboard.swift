@@ -95,7 +95,7 @@ fileprivate struct HasTeam: View {
                     NavigationLink {
                         TeamRequestsView()
                     } label: {
-                        IconCard(systemName: "person.fill.questionmark", title: "Join Requests", background: Material.ultraThinMaterial)
+                        IconCard(systemName: "person.fill.questionmark", title: "Join Requests", background: Material.ultraThinMaterial, badge: trainerDashboardViewModel.requests)
                     }
                     
                     NavigationLink {
@@ -145,7 +145,7 @@ fileprivate struct HasTeam: View {
             }
             
             CalendarCard(title: "Edit appointment", termine: trainerDashboardViewModel.termine, editable: true, onChanged: {
-                trainerDashboardViewModel.getTeamTermine()
+                trainerDashboardViewModel.loadData()
             })
             .padding(.vertical, 16)
             .padding(.horizontal, 16)

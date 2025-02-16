@@ -6,7 +6,7 @@
 //
 import Foundation
  
-protocol OnAppiearAnimation: ObservableObject {
+@MainActor protocol OnAppiearAnimation: ObservableObject {
     var animateOnAppear: Bool { get set }
 }
 

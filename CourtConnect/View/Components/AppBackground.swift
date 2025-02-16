@@ -19,13 +19,11 @@ struct AppBackground<Content: View>: View {
                     .ignoresSafeArea()
             }
             
-            if let image: ImageResource = .courtBG {
-                Image(image)
-                    .resizable()
-                    .scaledToFill()
-                    .opacity(0.25)
-                    .ignoresSafeArea()
-            }
+            Image(.courtBG)
+                .resizable()
+                .scaledToFill()
+                .opacity(0.25)
+                .ignoresSafeArea()
             
             content()
         }

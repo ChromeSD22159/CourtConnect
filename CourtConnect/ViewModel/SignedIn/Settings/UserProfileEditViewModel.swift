@@ -15,8 +15,7 @@ class UserProfileEditViewModel: ImagePickerProtocol, AuthProtocol {
     var userAccount: UserAccount?
     var userProfile: UserProfile?
     var currentTeam: Team?
-     
-    var item: PhotosPickerItem?
+      
     var image: Image?
     var uiImage: UIImage?
     var fileName: String = ""

@@ -22,12 +22,10 @@ struct NavigationTabBar<Content: View>: View {
                 Theme.backgroundGradient
             }
             
-            if let image: ImageResource = .courtBG {
-                Image(image)
-                    .resizable()
-                    .scaledToFit()
-                    .opacity(0.25)
-            }
+            Image(.courtBG)
+                .resizable()
+                .scaledToFit()
+                .opacity(0.25)
             
             ScrollView(.vertical) {
                 content()
@@ -35,7 +33,7 @@ struct NavigationTabBar<Content: View>: View {
             .scrollIndicators(.hidden)
             .contentMargins(.top, 95)
             .onScrollPhaseChange({ _, newPhase in
-                withAnimation(.easeInOut) {
+                withAnimation(.spring) {
                     isScrolling = newPhase.isScrolling
                 }
             })
@@ -70,7 +68,7 @@ struct NavigationTabBar<Content: View>: View {
                         .padding(.horizontal, 40)
                         .background {
                             Capsule()
-                                .fill(Material.ultraThinMaterial)
+                                .fill(Material.ultraThinMaterial.opacity(0.97))
                                 .blur(radius: 2)
                                 .padding(5)
                                 .frame(maxHeight: 75)
@@ -79,7 +77,7 @@ struct NavigationTabBar<Content: View>: View {
                                 .shadow(color: .black.opacity(0.2), radius: 5, y: 5)
                         }
                     }
-                    .transition(.move(edge: .bottom)) 
+                    .transition(.move(edge: .bottom))
                 }
             }
         })
@@ -108,9 +106,7 @@ struct NavigationTabBar<Content: View>: View {
         .frame(width: 75, height: 60)
         .contentShape(Rectangle())
         .onTapGesture {
-            withAnimation(.easeInOut) {
-                navViewModel.navigateTo(item)
-            }
+            navViewModel.navigateTo(item)
         }
     }
 }
@@ -123,13 +119,11 @@ struct NavigationTabBar<Content: View>: View {
         } else {
             Theme.backgroundGradient
         }
-        if let image: ImageResource = .courtBG {
-            Image(image)
-                .resizable()
-                .scaledToFit()
-                .opacity(0.25)
-                .clipped()
-        }
+        Image(.courtBG)
+            .resizable()
+            .scaledToFit()
+            .opacity(0.25)
+            .clipped()
         /*
         Image(.basketballSketch)
             .resizable()
