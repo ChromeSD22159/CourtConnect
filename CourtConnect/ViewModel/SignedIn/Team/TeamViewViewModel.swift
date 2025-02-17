@@ -33,6 +33,17 @@ import Auth
         self.getTeamMembers()
     }
     
+    func setDocument(document: Document) {
+        selectedDocument = document
+    }
+    
+    func fetchDataFromRemote() {
+        Task {
+            await self.fetchData()
+            loadLocalData()
+        }
+    }
+    
     private func getAllDocuments() {
         do {
             guard let team = currentTeam else { return }
@@ -42,7 +53,7 @@ import Auth
         }
     }
      
-    func getTeamTermine() {
+    private func getTeamTermine() {
         do {
             guard let team = currentTeam else { throw TeamError.userHasNoTeam }
             termine = try repository.teamRepository.getTeamTermine(for: team.id)
@@ -51,7 +62,7 @@ import Auth
         }
     }
     
-    func getTeamMembers() {
+    private func getTeamMembers() {
         do {
             guard let team = currentTeam else { throw TeamError.teamNotFound }
              
@@ -91,21 +102,4 @@ import Auth
             print(error)
         }
     }
-    
-    func setDocument(document: Document) {
-        selectedDocument = document
-    }
-    
-    func fetchDataFromRemote() {
-        Task {
-            do {
-                if let userId = user?.id {
-                    try await syncAllTables(userId: userId)
-                    loadLocalData()
-                }
-            } catch {
-                print(error)
-            }
-        }
-    }
-} 
+}

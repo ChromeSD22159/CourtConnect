@@ -122,14 +122,9 @@ import Auth
     
     func fetchDataFromRemote() {
         Task {
-            do {
-                if let userId = user?.id {
-                    try await syncAllTables(userId: userId)
-                    loadLocalData()
-                }
-            } catch {
-                print(error)
-            }
+            await fetchData()
+            
+            loadLocalData()
         }
     }
 }

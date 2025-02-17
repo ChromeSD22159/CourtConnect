@@ -60,17 +60,13 @@ struct DashboardView: View {
         .scrollIndicators(.hidden)
         .navigationTitle(title: "Dashboard")
         .sheet(isPresented: $viewModel.isCreateRoleSheet, onDismiss: {
-            viewModel.getAllUserAccounts()
-            viewModel.getCurrentAccount()
+            viewModel.getLocalData() 
         }, content: {
             if let user = viewModel.user {
                 CreateUserAccountView(userId: user.id)
             }
         })
-        .accountSwitch(viewModel: viewModel) 
-        .onAppear {
-            viewModel.inizialize()
-        }
+        .accountSwitch(viewModel: viewModel)
     }
 } 
  

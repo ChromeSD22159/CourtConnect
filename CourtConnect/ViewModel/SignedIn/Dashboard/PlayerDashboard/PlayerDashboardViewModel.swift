@@ -46,47 +46,6 @@ struct DateRange {
         getTerminAttendances()
     }
     
-    func getTeam() {
-        currentTeam = nil
-        do {
-            guard let userAccount = userAccount else { throw UserError.userAccountNotFound }
-            guard let teamId = userAccount.teamId else { throw TeamError.teamNotFound }
-            currentTeam = try repository.teamRepository.getTeam(for: teamId)
-            
-            readQRCode()
-        } catch {
-            currentTeam = nil
-            qrCode = nil
-        }
-    }
-    
-    func getTeamTermine() {
-        do {
-            guard let currentTeam = currentTeam else { throw TeamError.userHasNoTeam }
-            termine = try repository.teamRepository.getTeamTermine(for: currentTeam.id)
-        } catch {
-            print(error)
-        }
-    }
-    
-    func getTerminAttendances() {
-        do {
-            guard let userAccount = userAccount else { throw UserError.userAccountNotFound }
-            var attendancesTerminesTmp: [AttendanceTermin] = []
-            
-            let attandances = try repository.accountRepository.getAccountPendingAttendances(for: userAccount.id)
-            for attandance in attandances {
-                if let termine = try repository.teamRepository.getTermineBy(id: attandance.terminId) {
-                    let attendanceTermin = AttendanceTermin(attendance: attandance, termin: termine)
-                    attendancesTerminesTmp.append(attendanceTermin)
-                }
-            }
-            attendancesTermines = attendancesTerminesTmp
-        } catch {
-            print(error)
-        }
-    }
-    
     func deleteUserAccount() {
         Task {
             defer { try? setRandomAccount() }
@@ -94,10 +53,51 @@ struct DateRange {
                 guard let currentAccount = userAccount else { throw UserError.userAccountNotFound }
                 try repository.accountRepository.softDelete(item: currentAccount)
                 try await repository.accountRepository.sendToBackend(item: currentAccount)
+                loadLocalData()
             } catch {
                 if ErrorIdentifier.isConnectionTimedOut(error: error) {
                     print(error)
                 }
+            }
+        }
+    }
+    
+    func absenceRegister() {
+        Task {
+            defer { loadLocalData() }
+            do {
+                guard let userAccount = userAccount else { throw UserError.userAccountNotFound }
+                guard let teamId = currentTeam?.id else { throw TeamError.teamNotFound }
+                let newAbsense = Absence(userAccountId: userAccount.id, teamId: teamId, startDate: startDate, endDate: endDate, createdAt: Date(), updatedAt: Date())
+                try await repository.teamRepository.insertAbsense(absence: newAbsense, userId: userAccount.userId)
+                self.isAbsenseSheet.toggle()
+            } catch {
+                print(error)
+            }
+        }
+    }
+    
+    func updateTerminAttendance(attendance: Attendance) {
+        Task {
+            defer { loadLocalData() }
+            do {
+                guard let user = user else { throw UserError.userIdNotFound }
+                try await repository.teamRepository.upsertTerminAttendance(attendance: attendance, userId: user.id)
+                
+            } catch {
+                print(error)
+            }
+        }
+    }
+    
+    func fetchData() {
+        Task {
+            defer { loadLocalData() }
+            do {
+                guard let user = user else { throw UserError.userIdNotFound }
+                try await syncViewModel.fetchDataFromRemote(user: user)
+            } catch {
+                print(error)
             }
         }
     }
@@ -116,45 +116,44 @@ struct DateRange {
         }
     }
     
-    func absenceRegister() {
-        Task {
-            do {
-                guard let userAccount = userAccount else { throw UserError.userAccountNotFound }
-                guard let teamId = currentTeam?.id else { throw TeamError.teamNotFound }
-                let newAbsense = Absence(userAccountId: userAccount.id, teamId: teamId, startDate: startDate, endDate: endDate, createdAt: Date(), updatedAt: Date())
-                try await repository.teamRepository.insertAbsense(absence: newAbsense, userId: userAccount.userId)
-                self.isAbsenseSheet.toggle()
-            } catch {
-                print(error)
-            }
+    private func getTeam() {
+        currentTeam = nil
+        do {
+            guard let userAccount = userAccount else { throw UserError.userAccountNotFound }
+            guard let teamId = userAccount.teamId else { throw TeamError.teamNotFound }
+            currentTeam = try repository.teamRepository.getTeam(for: teamId)
+            
+            readQRCode()
+        } catch {
+            currentTeam = nil
+            qrCode = nil
         }
     }
     
-    func updateTerminAttendance(attendance: Attendance) {
-        Task {
-            defer { getTerminAttendances() }
-            do {
-                guard let user = user else { throw UserError.userIdNotFound }
-                try await repository.teamRepository.upsertTerminAttendance(attendance: attendance, userId: user.id)
-            } catch {
-                print(error)
-            }
+    private func getTeamTermine() {
+        do {
+            guard let currentTeam = currentTeam else { throw TeamError.userHasNoTeam }
+            termine = try repository.teamRepository.getTeamTermine(for: currentTeam.id)
+        } catch {
+            print(error)
         }
     }
     
-    func fetchData() {
-        Task {
-            defer {
-                getTeam()
-                getTeamTermine()
-                getTerminAttendances()
+    private func getTerminAttendances() {
+        do {
+            guard let userAccount = userAccount else { throw UserError.userAccountNotFound }
+            var attendancesTerminesTmp: [AttendanceTermin] = []
+            
+            let attandances = try repository.accountRepository.getAccountPendingAttendances(for: userAccount.id)
+            for attandance in attandances {
+                if let termine = try repository.teamRepository.getTermineBy(id: attandance.terminId) {
+                    let attendanceTermin = AttendanceTermin(attendance: attandance, termin: termine)
+                    attendancesTerminesTmp.append(attendanceTermin)
+                }
             }
-            do {
-                guard let user = user else { throw UserError.userIdNotFound }
-                try await syncViewModel.fetchDataFromRemote(user: user)
-            } catch {
-                print(error)
-            }
+            attendancesTermines = attendancesTerminesTmp
+        } catch {
+            print(error)
         }
     }
     

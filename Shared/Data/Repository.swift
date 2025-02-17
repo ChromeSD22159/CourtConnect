@@ -39,6 +39,8 @@ import Auth
     var container: ModelContainer
     
     init() {
+        let _ = CacheConfig.shared
+        
         let schema = Schema([
             Absence.self,
             Attendance.self,

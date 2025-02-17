@@ -34,17 +34,6 @@ import UIKit
         countRequests()
     }
     
-    private func getTeam() {
-        currentTeam = nil
-        do {
-            guard let userAccount = userAccount else { throw UserError.userAccountNotFound }
-            guard let teamId = userAccount.teamId else { throw TeamError.teamNotFound }
-            currentTeam = try repository.teamRepository.getTeam(for: teamId)
-        } catch {
-            currentTeam = nil
-        }
-    }
-    
     func deleteUserAccount() {
         Task {
             defer { try? setRandomAccount() }
@@ -122,6 +111,17 @@ import UIKit
             }
         } catch {
             ErrorHandlerViewModel.shared.handleError(error: error)
+        }
+    }
+     
+    private func getTeam() {
+        currentTeam = nil
+        do {
+            guard let userAccount = userAccount else { throw UserError.userAccountNotFound }
+            guard let teamId = userAccount.teamId else { throw TeamError.teamNotFound }
+            currentTeam = try repository.teamRepository.getTeam(for: teamId)
+        } catch {
+            currentTeam = nil
         }
     }
     
