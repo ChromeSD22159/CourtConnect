@@ -247,6 +247,7 @@
 		B6ACE4BB2D595CFE00D1941B /* Exceptions for "Util" folder in "CourtConnectWidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				CacheConfig.swift,
 				ClipboardHelper.swift,
 				CodeGeneratorHelper.swift,
 				DateUtil.swift,

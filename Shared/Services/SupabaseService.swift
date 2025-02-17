@@ -161,9 +161,7 @@ struct SupabaseService {
     }
     
     static func downloadDocumentAndCache(imageURL: String, bucket: SupabaseBucket) async throws -> URL {
-        let image = try BackendClient.shared.supabase.storage.from(bucket.rawValue).getPublicURL(path: imageURL)
-        
-        ImageCacheHelper.shared.cacheImage(url: image)
+        let image = try BackendClient.shared.supabase.storage.from(bucket.rawValue).getPublicURL(path: imageURL) 
         
         return image
     }

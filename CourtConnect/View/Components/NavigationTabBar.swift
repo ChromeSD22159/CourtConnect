@@ -10,40 +10,30 @@ struct NavigationTabBar<Content: View>: View {
     @Environment(\.colorScheme) var colorScheme
     @ObservedObject var navViewModel: NavigationViewModel
     @Namespace private var animation
+    
     @State var isScrolling = false
     @State var reload = false
+    
     @ViewBuilder var content: () -> Content
     
     var body: some View {
-        ZStack {
-            if colorScheme == .light {
-                Theme.backgroundGradient.opacity(0.8)
-            } else {
-                Theme.backgroundGradient
+        ScrollRefreshable(
+            options: ScrollOptions(
+                verticalSpacing: 20
+            ),
+            refresh: {
+                ReoloadAnimation(withBackground: false)
+            },
+            content: content
+        )
+        .appBackground()
+        .onScrollPhaseChange({ _, newPhase in
+            withAnimation(.spring) {
+                isScrolling = newPhase.isScrolling
             }
-            
-            Image(.courtBG)
-                .resizable()
-                .scaledToFit()
-                .opacity(0.25)
-            
-            ScrollView(.vertical) {
-                content()
-            }
-            .scrollIndicators(.hidden)
-            .contentMargins(.top, 95)
-            .onScrollPhaseChange({ _, newPhase in
-                withAnimation(.spring) {
-                    isScrolling = newPhase.isScrolling
-                }
-            })
-        }
+        })
         .onAppear {
             navViewModel.inizializeAuth()
-        }
-        .ignoresSafeArea()
-        .overlay(alignment: .top) {
-            ReoloadAnimation(isLoading: $reload)
         }
         .overlay(alignment: .bottom, content: {
             ZStack {
@@ -113,66 +103,10 @@ struct NavigationTabBar<Content: View>: View {
 
 #Preview {
     @Previewable @Environment(\.colorScheme) var colorScheme
-    ZStack {
-        if colorScheme == .light {
-            Theme.backgroundGradient.opacity(0.8)
-        } else {
-            Theme.backgroundGradient
-        }
-        Image(.courtBG)
-            .resizable()
-            .scaledToFit()
-            .opacity(0.25)
-            .clipped()
-        /*
-        Image(.basketballSketch)
-            .resizable()
-            .frame(width: 500, height: 500)
-            .opacity(colorScheme == .light ? 0.15 : 0.1)
-            .position(
-                x: UIScreen.main.bounds.width - 100,
-                y: UIScreen.main.bounds.height - 100
-            )
-            .clipped()
-        */
-        ScrollView {
-            RoundedRectangle(cornerRadius: 25)
-                .fill(Material.ultraThinMaterial.opacity(0.5))
-                .frame(width: .infinity, height: 400)
-            
-            RoundedRectangle(cornerRadius: 25)
-                .fill(Material.ultraThinMaterial.opacity(0.5))
-                .frame(width: .infinity, height: 400)
-            
-            RoundedRectangle(cornerRadius: 25)
-                .fill(Material.ultraThinMaterial.opacity(0.5))
-                .frame(width: .infinity, height: 400)
-        }
-        .contentMargins(20)
+    NavigationTabBar(navViewModel: NavigationViewModel()) {
+        
     }
-    .ignoresSafeArea()
-    .overlay(alignment: .bottom, content: {
-        ZStack {
-            Capsule()
-                .fill(Material.ultraThinMaterial)
-                .blur(radius: 2)
-                .padding(5)
-                .frame(maxWidth: .infinity, maxHeight: 75)
-                .clipShape(Capsule())
-                .padding(.horizontal, 20)
-                .shadow(color: .black.opacity(1.0), radius: 20, y: 10)
-               
-            HStack {
-                Text("Hallo")
-                
-                Text("Hallo")
-                
-                Text("Hallo")
-            }
-        }
-        .transition(.move(edge: .bottom))
-    })
-} 
+}
 
 #Preview {
     @Previewable @State var navViewModel = NavigationViewModel()

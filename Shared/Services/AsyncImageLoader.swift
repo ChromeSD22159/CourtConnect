@@ -7,26 +7,8 @@
 import Foundation
 import UIKit
 import Combine
-import SwiftUI
- 
-class ImageCacheHelper {
-    static let shared = ImageCacheHelper()
-    static let imageCache = NSCache<NSString, UIImage>()
-    private let urlSession = URLSession.shared
-    private var cancellables: AnyCancellable?
-    
-    func cacheImage(url: URL) {
-        cancellables = URLSession.shared.dataTaskPublisher(for: url)
-            .map { UIImage(data: $0.data) }
-            .replaceError(with: nil)
-            .receive(on: DispatchQueue.main)
-            .sink { image in
-                guard let image = image else { return }
-                ImageCacheHelper.imageCache.setObject(image, forKey: url.absoluteString as NSString)
-            }
-    }
-}
-  
+import SwiftUI 
+
 @MainActor
 struct AsyncCachedImage<ImageView: View, PlaceholderView: View>: View {
     // Input dependencies
@@ -68,6 +50,11 @@ struct AsyncCachedImage<ImageView: View, PlaceholderView: View>: View {
         do {
             guard let url else { return nil }
              
+            let memoryCapacity = 500 * 1024 * 1024 // 100 MB
+            let diskCapacity = 500 * 1024 * 1024 // 500 MB
+            let urlCache = URLCache(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity, directory: nil)
+            URLCache.shared = urlCache
+            
             if let cachedResponse = URLCache.shared.cachedResponse(for: .init(url: url)) {
                 return UIImage(data: cachedResponse.data)
             } else {

@@ -52,9 +52,7 @@ struct TeamView: View {
                             .padding(.horizontal)
                             .padding(.vertical)
                     }
-                }
-                .contentMargins(.bottom, 75)
-                .contentMargins(.top, 20)
+                } 
                 .scrollIndicators(.hidden)
                 .opacity(teamViewViewModel.selectedDocument != nil ? 0.5 : 1.0)
                 .blur(radius: teamViewViewModel.selectedDocument != nil ? 2 : 0)
@@ -65,13 +63,10 @@ struct TeamView: View {
             
             DocumentOverlayView(document: $teamViewViewModel.selectedDocument)
         } 
-        .navigationTitle(title: "\(teamViewViewModel.currentTeam?.teamName ?? "")")
-        .reFetchButton(isFetching: $teamViewViewModel.isfetching, onTap: {
-            teamViewViewModel.fetchDataFromRemote()
-        })
-        .teamInfoButton(team: teamViewViewModel.currentTeam) 
+        .navigationTitle(title: "\(teamViewViewModel.currentTeam?.teamName ?? "")") 
+        .teamInfoButton(team: teamViewViewModel.currentTeam)
         .onAppear {
-            teamViewViewModel.inizialize()
+            teamViewViewModel.loadLocalData()
         }
         .onChange(of: scenePhase) {
             if scenePhase == .active {

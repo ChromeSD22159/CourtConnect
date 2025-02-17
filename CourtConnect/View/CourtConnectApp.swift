@@ -14,28 +14,26 @@ struct CourtConnectApp: App {
     
     var body: some Scene {
         WindowGroup {
-            AppBackground {
+            ZStack {
                 ZStack {
-                    Group {
-                        if authViewModel.user != nil && authViewModel.isSlashScreen == false {
-                            MainNavigationView(authViewModel: authViewModel) {
-                                authViewModel.user = nil
-                            }
-                        } else {
-                            LoginEntryView {
-                                authViewModel.inizializeAuth()
-                                authViewModel.getAccounts()
-                            }
+                    if authViewModel.user != nil && authViewModel.isSlashScreen == false {
+                        MainNavigationView(authViewModel: authViewModel) {
+                            authViewModel.user = nil
+                        }
+                    } else {
+                        LoginEntryView {
+                            authViewModel.inizializeAuth()
+                            authViewModel.getAccounts()
                         }
                     }
-                    .opacity(authViewModel.isSlashScreen ? 0 : 1)
-                    
-                    SplashScreen(isVisible: $authViewModel.isSlashScreen, duration: 1.5, userId: authViewModel.user?.id, onStart: {
-                        authViewModel.getAccounts()
-                    }, onComplete: {
-                        authViewModel.isSlashScreen.toggle()
-                    })
                 }
+                .opacity(authViewModel.isSlashScreen ? 0 : 1)
+                
+                SplashScreen(isVisible: $authViewModel.isSlashScreen, duration: 1.5, userId: authViewModel.user?.id, onStart: {
+                    authViewModel.getAccounts()
+                }, onComplete: {
+                    authViewModel.isSlashScreen.toggle()
+                }) 
             }
             .onAppear {
                 authViewModel.loadRocketSimConnect()
@@ -43,7 +41,7 @@ struct CourtConnectApp: App {
             }
             .onChange(of: scenePhase, {
                 authViewModel.onScenePhaseChange(newValue: scenePhase)
-            })
+            }) 
         }
     } 
 }

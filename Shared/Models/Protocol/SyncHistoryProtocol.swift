@@ -6,15 +6,16 @@
 //
 import Supabase
 import Foundation
+import Auth
 
 @MainActor protocol SyncHistoryProtocol: ObservableObject {
     var repository: BaseRepository { get set }
     var isfetching: Bool { get set }
+    var user: User? { get set }
     func fetchDataFromRemote()
 }
 
 extension SyncHistoryProtocol {
-    
     func syncAllTablesAfterLastSync(userId: UUID) async throws {
         isfetching.toggle()
         defer { isfetching.toggle() }
@@ -90,6 +91,16 @@ extension SyncHistoryProtocol {
             }
         } catch {
             throw error
+        }
+    }
+    
+    func fetchData() async {
+        do {
+            if let userId = user?.id {
+                try await syncAllTables(userId: userId)
+            }
+        } catch {
+            print(error)
         }
     }
 }
