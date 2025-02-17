@@ -6,103 +6,150 @@
 //
 import SwiftUI
  
-// TODO: 
-extension OnBoardingSlider {
-    struct Localizations {
-        static let title1: LocalizedStringKey = "Lets get started"
-        static let title2: LocalizedStringKey = "onboarding_title_2"
-        static let title3: LocalizedStringKey = "Lets get started"
-        static let description1: LocalizedStringKey = "onboarding_description_1"
-        static let description2: LocalizedStringKey = "onboarding_description_2"
-        static let description3: LocalizedStringKey = "onboarding_description_2"
+@Observable class OnboardingViewModel {
+    var confetti = ConfettiViewModel.shared
+    var selection = 0
+    var bgImage: ImageResource = .bgDark
+   
+    var list: [TabViewItemValue]
+    
+    init(userProfile: UserProfile) {
+        self.list = [
+            TabViewItemValue(icon: "hand.raised.fill", title: "Hey, \(userProfile.firstName)", description: "Start exploring our app", image: .courtBG),
+            TabViewItemValue(icon: "basketball.fill", title: "Welcome", description: "Start exploring our app", image: .courtBG),
+            TabViewItemValue(icon: "bolt.fill", title: "Fast & Easy", description: "Quickly access what you need.", image: .courtBG),
+            TabViewItemValue(icon: "sparkles", title: "Let`s Get Started!", description: "Continue to explore our app.", image: .courtBG)
+        ]
+    }
+    
+    func nextSlide() {
+        if selection != (list.count - 1) {
+            withAnimation(.easeInOut(duration: 1)) {
+                selection += 1
+            }
+        }
     }
 }
 
 struct OnBoardingSlider: View {
-    @State var selection = 0
-    @State var bgImage: ImageResource = .bgDark
-    var list = [
-        TabViewItemValue(title: Localizations.title1, description: Localizations.description1, image: .bgDark),
-        TabViewItemValue(title: Localizations.title2, description: Localizations.description2, image: .courtBG),
-        TabViewItemValue(title: Localizations.title3, description: Localizations.description3, image: .bgDark)
-    ]
-    
+    @State var viewModel: OnboardingViewModel
+    @State var confetti = ConfettiViewModel.shared
     @Namespace var backgroundTransition
+    
+    init(userProfile: UserProfile) {
+        viewModel = OnboardingViewModel(userProfile: userProfile)
+    }
+
     var body: some View {
         ZStack {
-           
             Group {
-                if selection == 0 {
+                if (viewModel.selection % 2) == 0 {
                     ZStack {
-                        Image(bgImage)
+                        Image(viewModel.bgImage)
                             .resizable()
                             .scaledToFill()
+                            .opacity(0.3)
                             .clipped()
+                        
                         Theme.backgroundGradient
                     }
-                } else if selection == 1 {
-                    Theme.backgroundGradientReverse
                 } else {
                     ZStack {
-                        Image(bgImage)
+                        Image(viewModel.bgImage)
                             .resizable()
                             .scaledToFill()
+                            .opacity(0.3)
                             .clipped()
-                        Theme.backgroundGradient
+                        Theme.backgroundGradientReverse
                     }
                 }
             }
             .ignoresSafeArea()
-            .transition(.asymmetric(insertion: .opacity.animation(.easeInOut(duration: 1.0)), removal: .opacity.animation(.easeInOut(duration: 1.0))))
+            .transition(.asymmetric(insertion: .opacity.animation(.easeInOut(duration: 1.5)), removal: .opacity.animation(.easeInOut(duration: 1.5))))
             .matchedGeometryEffect(id: "background", in: backgroundTransition)
             
-            TabView(selection: $selection) {
-                ForEach(list.indices, id: \.self) { index in
-                    TabViewItem(content: list[index]).tag(index)
+            ConfettiOverlay {
+                TabView(selection: $viewModel.selection) {
+                    ForEach(viewModel.list.indices, id: \.self) { index in
+                        TabViewItem(content: viewModel.list[index], isLast: index == (viewModel.list.count - 1)) {
+                            viewModel.nextSlide()
+                        }
+                        .tag(index)
                         .onAppear {
-                            if let image = list[index].image {
-                                self.bgImage = image
+                            if let image = viewModel.list[index].image {
+                                viewModel.bgImage = image
                             }
                         }
+                    }
+                }
+                .tabViewStyle(PageTabViewStyle())
+            }
+            .onAppear {
+                Task {
+                    try await Task.sleep(for: .seconds(1))
+                    confetti.trigger()
                 }
             }
-            .frame(width: .infinity, height: .infinity)
-            .tabViewStyle(PageTabViewStyle())
         }
+    }
+}
+
+struct TabViewItem: View {
+    @Environment(\.dismiss) var dismiss
+    @State var isLastAnimataion = false
+    
+    let content: TabViewItemValue
+    let isLast: Bool
+    let next: () -> Void
+    
+    var body: some View {
+        VStack(alignment: .center, spacing: 25) {
+            Image(systemName: content.icon)
+                .font(.system(size: 75))
+            
+            Text(content.title).multilineTextAlignment(.leading)
+                .font(.largeTitle)
+            
+            Text(content.description)
+             
+            Button(isLastAnimataion ? "Close" : "Next") {
+                if isLastAnimataion {
+                    dismiss()
+                } else {
+                    next()
+                }
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(Theme.backgroundGradientReverse)
+        }
+        .task {
+            if isLast {
+                Task {
+                    try await Task.sleep(for: .seconds(1))
+                    withAnimation(.easeIn) {
+                        isLastAnimataion = true
+                    }
+                }
+            }
+        }
+        .onDisappear {
+            isLastAnimataion = false
+        }
+        .padding(25)
+        .frame(maxWidth: .infinity, maxHeight: 300)
+        .padding(25)
     }
 }
 
 struct TabViewItemValue: Identifiable {
     var id: UUID = UUID()
+    let icon: String
     let title: LocalizedStringKey
     let description: LocalizedStringKey
     let image: ImageResource?
 }
 
-struct TabViewItem: View {
-    let content: TabViewItemValue
-    var body: some View {
-        VStack(alignment: .leading, spacing: 25) {
-            Text(content.title).multilineTextAlignment(.leading)
-                .font(.largeTitle)
-            
-            HStack {
-                Text(content.description)
-                Spacer()
-            }
-        }
-        .padding(25)
-        .frame(maxWidth: .infinity, maxHeight: 300)
-        .background {
-            RoundedRectangle(cornerRadius: 40)
-                .fill(.white)
-               .opacity(0.75)
-               .shadow(radius: 10.0)
-        }
-        .padding(25)
-    }
-}
-
 #Preview {
-    OnBoardingSlider()
+    OnBoardingSlider(userProfile: MockUser.myUserProfile)
+        .previewEnvirments()
 }

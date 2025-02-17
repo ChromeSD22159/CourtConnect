@@ -6,10 +6,14 @@
 //
 import SwiftUI
 import WishKit
- 
+import StoreKit
+
 struct SettingsView: View {
     @Environment(\.networkMonitor) var networkMonitor
+    @Environment(\.requestReview) var requestReview
     @State var viewModel = SettingViewModel()
+    
+    @Namespace var namespace
     
     let onSignOut: () -> Void
     
@@ -51,6 +55,31 @@ struct SettingsView: View {
                     } else {
                         IconRow(systemName: "info.circle.fill", text: .init("Version: -"))
                     }
+                }
+            } header: {
+                HStack {
+                    UpperCasedheadline(text: "App Status")
+                    Spacer()
+                }
+            }
+            
+            Section {
+                VStack(spacing: 6) {
+                    if let userProfile = viewModel.userProfile {
+                        NavigationLink { 
+                                OnBoardingSlider(userProfile: userProfile)
+                                    .navigationTransition(.zoom(sourceID: "OnBoardingSlider", in: namespace))
+                                    .navigationBarBackButtonHidden(true)
+                            
+                        } label: {
+                            IconRow(systemName: "list.bullet.clipboard.fill", text: .init("Show Onboarding"))
+                        }
+                    }
+                    
+                    IconRow(systemName: "list.bullet.clipboard.fill", text: .init("Rate the App"))
+                        .onTapGesture {
+                            requestReview()
+                        }
                 }
             } header: {
                 HStack {
