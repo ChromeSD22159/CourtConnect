@@ -17,7 +17,11 @@ import Auth
     var isfetching: Bool = false
     var isCreateRoleSheet = false
     
-    func inizialize() {
+    init() {
+        getLocalData()
+    }
+    
+    func getLocalData() {
         inizializeAuth()
         getAllUserAccounts()
         getCurrentAccount()
@@ -57,21 +61,8 @@ import Auth
     
     func fetchDataFromRemote() {
         Task {
-            do {
-                if let userId = user?.id {
-                    try await syncAllTables(userId: userId)
-                    getAllUserAccounts()
-                    getCurrentAccount()
-                }
-            } catch {
-                print(error)
-            }
+            await fetchData()
+            getLocalData()
         }
-    }
-    
-    func removeCurrentUser() {
-        LocalStorageService.shared.userAccountId = nil
-        userAccount = nil
-        getAllUserAccounts() 
     }
 }

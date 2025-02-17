@@ -27,7 +27,6 @@ struct AppIcon: View {
 }
 
 #Preview {
-    AppBackground {
-        AppIcon()
-    }
+    AppIcon()
+        .appBackground()
 }

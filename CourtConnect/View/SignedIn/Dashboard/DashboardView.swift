@@ -56,23 +56,17 @@ struct DashboardView: View {
                     Text("Create your first user account")
                 }
             }
-        }
-        .contentMargins(.top, 20)
-        .contentMargins(.bottom, 75)
-        .scrollIndicators(.hidden) 
+        }  
+        .scrollIndicators(.hidden)
         .navigationTitle(title: "Dashboard")
         .sheet(isPresented: $viewModel.isCreateRoleSheet, onDismiss: {
-            viewModel.getAllUserAccounts()
-            viewModel.getCurrentAccount()
+            viewModel.getLocalData() 
         }, content: {
             if let user = viewModel.user {
                 CreateUserAccountView(userId: user.id)
             }
         })
-        .accountSwitch(viewModel: viewModel) 
-        .onAppear {
-            viewModel.inizialize()
-        }
+        .accountSwitch(viewModel: viewModel)
     }
 } 
  

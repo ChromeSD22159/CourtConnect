@@ -33,8 +33,7 @@ struct SearchTeam: View {
                 }
             }
             
-        }
-        .contentMargins(.top, 20)
+        } 
         .listBackground()
         .searchable(text: $teamListViewModel.searchTeamName, isPresented: $teamListViewModel.isSearchBar)
         .onSubmit(of: .search) {

@@ -9,7 +9,7 @@ import SwiftUI
 extension View {
     func reFetchButton(isFetching: Binding<Bool>, onTap: @escaping () -> Void) -> some View {
         modifier(ReFetchButton(isFetching: isFetching, onTap: onTap))
-    }
+    } 
     
     func teamInfoButton(team: Team?) -> some View {
         modifier(TeamInfoButton(team: team))

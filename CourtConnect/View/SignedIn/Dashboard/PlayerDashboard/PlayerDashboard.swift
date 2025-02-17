@@ -9,6 +9,7 @@ import SwiftUI
 struct PlayerDashboard: View {
     @Environment(\.scenePhase) var scenePhase
     @State var playerDashboardViewModel = PlayerDashboardViewModel()
+    @ObservedObject var syncVM = SyncViewModel.shared
     var body: some View {
         VStack {
             if playerDashboardViewModel.currentTeam != nil {
@@ -30,17 +31,16 @@ struct PlayerDashboard: View {
             }
             .padding(.bottom, 50)
         }
-        .reFetchButton(isFetching: $playerDashboardViewModel.isfetching, onTap: {
-            playerDashboardViewModel.fetchDataFromRemote()
-        }) 
         .padding(.horizontal, 16)
-        .padding(.top, 10)
-        .onAppear {
-            playerDashboardViewModel.inizialize()
+        .padding(.top, 10) 
+        .onReceive(syncVM.$isfetching) { value in
+            if value == false {
+                playerDashboardViewModel.loadLocalData()
+            }
         }
-        .onChange(of: scenePhase) {  
+        .onChange(of: scenePhase) {
             if scenePhase == .active {
-                playerDashboardViewModel.fetchDataFromRemote()
+                playerDashboardViewModel.fetchData()
             }
         }
         .navigationTitle("Player Dashboard")

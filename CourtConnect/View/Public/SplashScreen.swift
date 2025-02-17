@@ -25,6 +25,7 @@ struct SplashScreen: View {
     var body: some View {
         if isVisible {
             VStack(spacing: 0) {
+                Spacer()
                 ZStack {
                     RoundedRectangle(cornerRadius: 50)
                         .fill(Material.ultraThinMaterial)
@@ -42,11 +43,18 @@ struct SplashScreen: View {
                 .offset(y: 100)
                 .opacity(logoVisibility ? 1 : 0)
                      
-                LottieView(animation: .named("basketballLoading"))
-                    .playbackMode(playbackMode)
-                    .opacity(animationVisibility ? 1 : 0)
-                    .frame(width: 400, height: 400)
-            } 
+                HStack {
+                    Spacer()
+                    LottieView(animation: .named("basketballLoading"))
+                        .playbackMode(playbackMode)
+                        .opacity(animationVisibility ? 1 : 0)
+                        .frame(width: 400, height: 400)
+                    Spacer()
+                }
+                
+                Spacer()
+            }
+            .appBackground()
             .onAppear {
                 playbackMode = .playing(.fromFrame(1, toFrame: 48, loopMode: .loop))
                  
@@ -73,13 +81,9 @@ struct SplashScreen: View {
 }
  
 #Preview {
-    @Previewable @State var isSlashScreen = true
-    AppBackground {
-        SplashScreen(isVisible: $isSlashScreen, duration: 1.5, userId: nil, onStart: {
-            
-        } , onComplete: {
-            isSlashScreen.toggle()
-        })
-    }
-    .previewEnvirments()
+    SplashScreen(isVisible: .constant(true), duration: 1.5, userId: nil, onStart: {
+        
+    }, onComplete: {
+       // isSlashScreen.toggle()
+    })
 }

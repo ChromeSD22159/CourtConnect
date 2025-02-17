@@ -30,7 +30,8 @@ struct MainNavigationView: View {
                                 })
                 }
             }
-        }.navigationStackTint()
+        }
+        .navigationStackTint()
         .onAppear {
             authViewModel.importAccountsAfterLastSyncFromBackend()
         }

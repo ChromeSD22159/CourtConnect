@@ -13,22 +13,26 @@ struct LoginEntryView: View {
     let onUserChange: () -> Void
     
     var body: some View {
-        VStack(spacing: 50) {
-            AppIcon()
-            
-            if viewModel.isTextShowing {
-                textRow()
-                    .opacity(viewModel.isTextShowing ? 1 : 0)
-                    .animation(.easeInOut.delay(0.5), value: viewModel.isTextShowing)
+        ScrollView {
+            VStack(spacing: 40) {
+                AppIcon()
                 
-                buttonRow()
-                    .opacity(viewModel.isTextShowing ? 1 : 0)
-                    .animation(.easeInOut.delay(1.5), value: viewModel.isTextShowing)
+                if viewModel.isTextShowing {
+                    textRow()
+                        .opacity(viewModel.isTextShowing ? 1 : 0)
+                        .animation(.easeInOut.delay(0.5), value: viewModel.isTextShowing)
+                    
+                    buttonRow()
+                        .opacity(viewModel.isTextShowing ? 1 : 0)
+                        .animation(.easeInOut.delay(1.5), value: viewModel.isTextShowing)
+                }
             }
-            
         }
-        .padding(30)
-        .frame(maxWidth: .infinity, maxHeight: .infinity) 
+        .contentMargins(.horizontal, 30)
+        .contentMargins(.vertical, 100)
+        .scrollIndicators(.hidden)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .appBackground()
         .onAppear {
             viewModel.toogleText()
             viewModel.inizializeAuth()
@@ -80,17 +84,13 @@ struct LoginEntryView: View {
 }  
                    
 #Preview("Light") {
-    AppBackground {
-        LoginEntryView(viewModel: LoginEntryViewModel(), onUserChange: {})
-    }
+    LoginEntryView(viewModel: LoginEntryViewModel(), onUserChange: {})
     .preferredColorScheme(.light)
     .previewEnvirments()
 }
 
 #Preview("Dark") {
-    AppBackground {
-        LoginEntryView(viewModel: LoginEntryViewModel(), onUserChange: {})
-    }
+    LoginEntryView(viewModel: LoginEntryViewModel(), onUserChange: {})
     .preferredColorScheme(.dark)
     .previewEnvirments()
 }

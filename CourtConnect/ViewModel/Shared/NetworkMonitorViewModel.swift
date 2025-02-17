@@ -40,7 +40,7 @@ class NetworkMonitorViewModel: ObservableObject {
             complete(error == nil)
         }.resume()
     } 
-}
+} 
 
 struct NetworkMonitorKey: EnvironmentKey {
     static let defaultValue: NetworkMonitorViewModel = NetworkMonitorViewModel.shared
