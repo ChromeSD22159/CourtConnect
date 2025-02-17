@@ -88,6 +88,12 @@
     },
     "%@ %@" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ %2$@"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "new",
@@ -476,6 +482,16 @@
         }
       }
     },
+    "Close" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schließen"
+          }
+        }
+      }
+    },
     "Coach" : {
       "localizations" : {
         "de" : {
@@ -512,6 +528,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "weiter"
+          }
+        }
+      }
+    },
+    "Continue to explore our app." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erkunden Sie weiterhin unsere App."
           }
         }
       }
@@ -962,6 +988,16 @@
         }
       }
     },
+    "Fast & Easy" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schnell und einfach"
+          }
+        }
+      }
+    },
     "File %lld" : {
       "localizations" : {
         "de" : {
@@ -1099,10 +1135,24 @@
       }
     },
     "Handle Error" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Handle Error"
+          }
+        }
+      }
     },
     "Handle Message" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Handle Message"
+          }
+        }
+      }
     },
     "Headcoach" : {
       "localizations" : {
@@ -1140,6 +1190,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hier kannst du die Teamadministratoren verwalten, die Teamnamen ändern oder das Team löschen."
+          }
+        }
+      }
+    },
+    "Hey, %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hey, %@"
           }
         }
       }
@@ -1372,8 +1432,15 @@
         }
       }
     },
-    "Lets get started" : {
-
+    "Let`s Get Started!" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lass uns anfangen!"
+          }
+        }
+      }
     },
     "Loading..." : {
       "localizations" : {
@@ -1446,7 +1513,14 @@
       }
     },
     "Neue Nachricht von Frederik" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neue Nachricht von Frederik"
+          }
+        }
+      }
     },
     "New appointment" : {
       "localizations" : {
@@ -1454,6 +1528,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Neuer Termin"
+          }
+        }
+      }
+    },
+    "Next" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weiter"
           }
         }
       }
@@ -1618,15 +1702,6 @@
         }
       }
     },
-    "onboarding_description_1" : {
-
-    },
-    "onboarding_description_2" : {
-
-    },
-    "onboarding_title_2" : {
-
-    },
     "Other" : {
       "localizations" : {
         "de" : {
@@ -1763,6 +1838,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Profil"
+          }
+        }
+      }
+    },
+    "Quickly access what you need." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Greife schnell auf das zu, was du brauchen."
+          }
+        }
+      }
+    },
+    "Rate App in App Store" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bewerten die App im App Store"
           }
         }
       }
@@ -2027,6 +2122,16 @@
         }
       }
     },
+    "Show Onboarding" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeigen Onboarding"
+          }
+        }
+      }
+    },
     "Show QR Code" : {
       "localizations" : {
         "de" : {
@@ -2083,6 +2188,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bald.."
+          }
+        }
+      }
+    },
+    "Start exploring our app" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beginne mit der Erkundung der App"
           }
         }
       }
@@ -2552,6 +2667,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Website des Entwicklers"
+          }
+        }
+      }
+    },
+    "Welcome" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Willkommen"
           }
         }
       }

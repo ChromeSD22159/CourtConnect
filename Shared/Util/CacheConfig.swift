@@ -15,6 +15,6 @@ struct CacheConfig {
         let urlCache = URLCache(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity, directory: nil)
         URLCache.shared = urlCache
 
-        print("URLCache konfiguriert (einmalig)")
+        print("URLCache konfiguriert (memoryCapacity: \(memoryCapacity.formatted(.byteCount(style: .file))), diskCapacity: \(diskCapacity.formatted(.byteCount(style: .file))))")
     }
 }

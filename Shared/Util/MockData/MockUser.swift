@@ -7,7 +7,7 @@
 import Foundation
 
 struct MockUser { 
-    static let myUserProfile = UserProfile(userId: UUID(uuidString: "00000000-0000-0000-0000-000000000000")!, firstName: "Test", lastName: "User", birthday: "22.11.1986")
+    static let myUserProfile = UserProfile(userId: UUID(uuidString: "00000000-0000-0000-0000-000000000000")!, firstName: "Max", lastName: "Musterman", birthday: "22.11.1986")
     static let myUserAccount = UserAccount(userId: myUserProfile.id, teamId: teamId, position: "Position", role: "Spieler", displayName: "Spieler", createdAt: Date(), updatedAt: Date())
     
     static let userList = [

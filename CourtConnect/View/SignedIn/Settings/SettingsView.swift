@@ -8,8 +8,10 @@ import SwiftUI
 import WishKit
  
 struct SettingsView: View {
-    @Environment(\.networkMonitor) var networkMonitor
+    @Environment(\.networkMonitor) var networkMonitor 
     @State var viewModel = SettingViewModel()
+    
+    @Namespace var namespace
     
     let onSignOut: () -> Void
     
@@ -61,10 +63,38 @@ struct SettingsView: View {
             
             Section {
                 VStack(spacing: 6) {
+                    if let userProfile = viewModel.userProfile {
+                        NavigationLink { 
+                                OnBoardingSlider(userProfile: userProfile)
+                                    .navigationTransition(.zoom(sourceID: "OnBoardingSlider", in: namespace))
+                                    .navigationBarBackButtonHidden(true)
+                            
+                        } label: {
+                            IconRow(systemName: "list.bullet.clipboard.fill", text: LocalizedStringKey("Show Onboarding"))
+                        }
+                    }
+                    
+                    IconRow(systemName: "list.bullet.clipboard.fill", text: LocalizedStringKey("Rate App in App Store"))
+                        .onTapGesture {
+                            ReviewHandler.requestReviewManually()
+                        }
+                        .onAppear(perform: {
+                            ReviewHandler.requestReview()
+                        })
+                }
+            } header: {
+                HStack {
+                    UpperCasedheadline(text: "App Status")
+                    Spacer()
+                }
+            }
+            
+            Section {
+                VStack(spacing: 6) {
                     NavigationLink {
                         WishKit.FeedbackListView().withNavigation()
                     } label: {
-                        IconRow(systemName: "list.bullet.clipboard.fill", text: .init("Features"))
+                        IconRow(systemName: "list.bullet.clipboard.fill", text: .init("Features request"))
                     }
 
                     IconRow(systemName: "globe", text: .init("Instagram of the developer"), url: "https://www.instagram.com/frederik.code/")
