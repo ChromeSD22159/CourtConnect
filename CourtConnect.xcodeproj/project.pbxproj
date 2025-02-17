@@ -221,6 +221,7 @@
 				TeamAdminProfile.swift,
 				TeamMemberProfile.swift,
 				UserAccountProfile.swift,
+				WidgetStatistic.swift,
 			);
 			target = B698ABFA2D330FC10086AF8C /* CourtConnect */;
 		};
@@ -343,6 +344,7 @@
 				TeamAdminProfile.swift,
 				TeamMemberProfile.swift,
 				UserAccountProfile.swift,
+				WidgetStatistic.swift,
 			);
 			target = B6509FDD2D594CDA0032CB17 /* CourtConnectWidgetExtension */;
 		};

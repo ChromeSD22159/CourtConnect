@@ -6,11 +6,9 @@
 //
 import SwiftUI
 import WishKit
-import StoreKit
-
+ 
 struct SettingsView: View {
-    @Environment(\.networkMonitor) var networkMonitor
-    @Environment(\.requestReview) var requestReview
+    @Environment(\.networkMonitor) var networkMonitor 
     @State var viewModel = SettingViewModel()
     
     @Namespace var namespace
@@ -72,14 +70,17 @@ struct SettingsView: View {
                                     .navigationBarBackButtonHidden(true)
                             
                         } label: {
-                            IconRow(systemName: "list.bullet.clipboard.fill", text: .init("Show Onboarding"))
+                            IconRow(systemName: "list.bullet.clipboard.fill", text: LocalizedStringKey("Show Onboarding"))
                         }
                     }
                     
-                    IconRow(systemName: "list.bullet.clipboard.fill", text: .init("Rate the App"))
+                    IconRow(systemName: "list.bullet.clipboard.fill", text: LocalizedStringKey("Rate App in App Store"))
                         .onTapGesture {
-                            requestReview()
+                            ReviewHandler.requestReviewManually()
                         }
+                        .onAppear(perform: {
+                            ReviewHandler.requestReview()
+                        })
                 }
             } header: {
                 HStack {
@@ -93,7 +94,7 @@ struct SettingsView: View {
                     NavigationLink {
                         WishKit.FeedbackListView().withNavigation()
                     } label: {
-                        IconRow(systemName: "list.bullet.clipboard.fill", text: .init("Features"))
+                        IconRow(systemName: "list.bullet.clipboard.fill", text: .init("Features request"))
                     }
 
                     IconRow(systemName: "globe", text: .init("Instagram of the developer"), url: "https://www.instagram.com/frederik.code/")

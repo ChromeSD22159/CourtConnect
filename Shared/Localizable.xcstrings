@@ -1852,6 +1852,16 @@
         }
       }
     },
+    "Rate App in App Store" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bewerten die App im App Store"
+          }
+        }
+      }
+    },
     "Ready for the jump? Let's start! Register to get started and become part of the community." : {
       "localizations" : {
         "de" : {
@@ -2108,6 +2118,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mehr zeigen"
+          }
+        }
+      }
+    },
+    "Show Onboarding" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeigen Onboarding"
           }
         }
       }
