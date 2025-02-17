@@ -9,26 +9,26 @@ import Foundation
 import UIKit
 
 @MainActor
-@Observable class TrainerDashboardViewModel: AuthProtocol, SyncHistoryProtocol {
+@Observable class TrainerDashboardViewModel: AuthProtocol {
+    var syncViewModel = SyncViewModel.shared
     var repository: BaseRepository = Repository.shared
     var user: User?
     var userAccounts: [UserAccount] = []
     var userAccount: UserAccount?
     var userProfile: UserProfile?
     var currentTeam: Team?
-    var termine: [Termin] = []
-    var isfetching: Bool = false 
+    var termine: [Termin] = [] 
     var isPlanAppointmentSheet = false
     var isDocumentSheet = false  
     var isEnterCode = false
     var requests = 0
     
-    func inizialize() {
+    init() {
         inizializeAuth()
-        loadData()
+        loadLocalData()
     }
     
-    func loadData() {
+    func loadLocalData() {
         getTeam()
         getTeamTermine()
         countRequests()
@@ -68,7 +68,7 @@ import UIKit
         Task {
             defer {
                 try? repository.accountRepository.insert(termin: termin, table: .termin, userId: userId)
-                loadData()
+                loadLocalData()
             }
             do {
                 try await SupabaseService.upsertWithOutResult(item: termin.toDTO(), table: .termin, onConflict: "id")
@@ -78,15 +78,14 @@ import UIKit
         }
     }
     
-    func fetchDataFromRemote() {
+    func fetchData() {
         Task {
             defer {
-                loadData()
+                loadLocalData()
             }
             do {
-                if let userId = user?.id {
-                    try await syncAllTables(userId: userId)
-                }
+                guard let user = user else { throw UserError.userIdNotFound }
+                try await syncViewModel.fetchDataFromRemote(user: user)
             } catch {
                 print(error)
             }

@@ -109,8 +109,7 @@ struct FoundNewTeamView: View {
                 Image(systemName: "figure")
             }
         } 
-        .navigationTitle(title: "Found a new team")
-        .contentMargins(.top, 20)
+        .navigationTitle(title: "Found a new team") 
     }
 }
 

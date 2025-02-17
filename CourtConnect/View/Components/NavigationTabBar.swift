@@ -17,39 +17,24 @@ struct NavigationTabBar<Content: View>: View {
     @ViewBuilder var content: () -> Content
     
     var body: some View {
-        ZStack {
-            if colorScheme == .light {
-                Theme.backgroundGradient.opacity(0.8)
-            } else {
-                Theme.backgroundGradient
+        ScrollRefreshable(
+            options: ScrollOptions(
+                verticalSpacing: 20
+            ),
+            refresh: {
+                ReoloadAnimation(withBackground: false)
+            },
+            content: content
+        )
+        .appBackgroundModifier()
+        .onScrollPhaseChange({ _, newPhase in
+            withAnimation(.spring) {
+                isScrolling = newPhase.isScrolling
             }
-            
-            Image(.courtBG)
-                .resizable()
-                .scaledToFit()
-                .opacity(0.25)
-            
-            ScrollRefreshable(
-                options: ScrollOptions(
-                    contentMarginsLength: 95,
-                    contentMarginsEdges: .top,
-                    verticalSpacing: 20
-                ),
-                refresh: {
-                    ReoloadAnimation(withBackground: false)
-                },
-                content: content
-            )
-            .onScrollPhaseChange({ _, newPhase in
-                withAnimation(.spring) {
-                    isScrolling = newPhase.isScrolling
-                }
-            })
-        }
+        })
         .onAppear {
             navViewModel.inizializeAuth()
         }
-        .ignoresSafeArea()
         .overlay(alignment: .bottom, content: {
             ZStack {
                 if !isScrolling {
@@ -118,56 +103,10 @@ struct NavigationTabBar<Content: View>: View {
 
 #Preview {
     @Previewable @Environment(\.colorScheme) var colorScheme
-    ZStack {
-        if colorScheme == .light {
-            Theme.backgroundGradient.opacity(0.8)
-        } else {
-            Theme.backgroundGradient
-        }
-        Image(.courtBG)
-            .resizable()
-            .scaledToFit()
-            .opacity(0.25)
-            .clipped()
-
-        ScrollView {
-            RoundedRectangle(cornerRadius: 25)
-                .fill(Material.ultraThinMaterial.opacity(0.5))
-                .frame(width: .infinity, height: 400)
-            
-            RoundedRectangle(cornerRadius: 25)
-                .fill(Material.ultraThinMaterial.opacity(0.5))
-                .frame(width: .infinity, height: 400)
-            
-            RoundedRectangle(cornerRadius: 25)
-                .fill(Material.ultraThinMaterial.opacity(0.5))
-                .frame(width: .infinity, height: 400)
-        }
-        .contentMargins(20)
+    NavigationTabBar(navViewModel: NavigationViewModel()) {
+        
     }
-    .ignoresSafeArea()
-    .overlay(alignment: .bottom, content: {
-        ZStack {
-            Capsule()
-                .fill(Material.ultraThinMaterial)
-                .blur(radius: 2)
-                .padding(5)
-                .frame(maxWidth: .infinity, maxHeight: 75)
-                .clipShape(Capsule())
-                .padding(.horizontal, 20)
-                .shadow(color: .black.opacity(1.0), radius: 20, y: 10)
-               
-            HStack {
-                Text("Hallo")
-                
-                Text("Hallo")
-                
-                Text("Hallo")
-            }
-        }
-        .transition(.move(edge: .bottom))
-    })
-} 
+}
 
 #Preview {
     @Previewable @State var navViewModel = NavigationViewModel()

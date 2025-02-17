@@ -96,9 +96,7 @@ struct PlayerStatistic: View {
                
             }
         }
-        .navigationTitle(title: "\(viewModel.userProfile?.fullName ?? "") Statistics")
-        .contentMargins(.top, 20)
-        .contentMargins(.bottom, 75)
+        .navigationTitle(title: "\(viewModel.userProfile?.fullName ?? "") Statistics")  
         .reFetchButton(isFetching: $viewModel.isfetching, onTap: {
             viewModel.fetchDataFromRemote()
         }) 

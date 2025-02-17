@@ -7,6 +7,7 @@
 import Auth
 import Foundation
 import UIKit
+import Combine
 
 struct DateRange {
     var start: Date = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
@@ -14,15 +15,14 @@ struct DateRange {
 }
 
 @MainActor
-@Observable class PlayerDashboardViewModel: AuthProtocol, SyncHistoryProtocol, ObservableObject {
+@Observable class PlayerDashboardViewModel: AuthProtocol, ObservableObject {
+    var syncViewModel = SyncViewModel.shared
     var repository: BaseRepository = Repository.shared
     var user: User?
     var userAccounts: [UserAccount] = []
     var userAccount: UserAccount?
     var userProfile: UserProfile?
-    var currentTeam: Team?
-    
-    var isfetching: Bool = false
+    var currentTeam: Team? 
     
     var termine: [Termin] = []
     var attendancesTermines: [AttendanceTermin] = []
@@ -35,8 +35,12 @@ struct DateRange {
     var endDate = Date.now.addingTimeInterval(86400)
     let range = Date.now...Date.now.addingTimeInterval(86400 * 14)
     
-    func inizialize() {
+    init() {
         inizializeAuth()
+        loadLocalData()
+    }
+    
+    func loadLocalData() {
         getTeam()
         getTeamTermine()
         getTerminAttendances()
@@ -138,7 +142,7 @@ struct DateRange {
         }
     }
     
-    func fetchDataFromRemote() {
+    func fetchData() {
         Task {
             defer {
                 getTeam()
@@ -146,9 +150,8 @@ struct DateRange {
                 getTerminAttendances()
             }
             do {
-                if let userId = user?.id {
-                    try await syncAllTables(userId: userId)
-                }
+                guard let user = user else { throw UserError.userIdNotFound }
+                try await syncViewModel.fetchDataFromRemote(user: user)
             } catch {
                 print(error)
             }

@@ -24,6 +24,7 @@ struct AppBackground<Content: View>: View {
                 .scaledToFill()
                 .opacity(0.25)
                 .ignoresSafeArea()
+                .clipped()
             
             content()
         }
@@ -31,8 +32,55 @@ struct AppBackground<Content: View>: View {
     }
 }
 
+extension View {
+    func appBackgroundModifier() -> some View {
+        modifier(AppBackgroundModifier())
+    }
+}
+
+struct AppBackgroundModifier: ViewModifier {
+    @Environment(\.colorScheme) var colorScheme
+    func body(content: Content) -> some View {
+        content
+            .background {
+                ZStack {
+                    if colorScheme == .light {
+                        Theme.backgroundGradient.opacity(0.5)
+                            .ignoresSafeArea()
+                    } else {
+                        Theme.backgroundGradient.opacity(0.5)
+                            .ignoresSafeArea()
+                    }
+                    
+                    Image(.courtBG)
+                        .resizable()
+                        .scaledToFill()
+                        .opacity(0.25)
+                        .ignoresSafeArea()
+                        .clipped()
+                }
+            }
+    }
+}
+
 #Preview {
-    AppBackground {
-        
-    }    
+    
+    ZStack {
+        NavigationStack {
+            AppBackground {
+                NavigationLink(destination: {
+                    Text("Detail")
+                        .navigationTitle("Detail")
+                }, label: {
+                    Text("label")
+                })
+                
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Text("Hallo")
+                    }
+                }
+            }
+        }
+    }
 }

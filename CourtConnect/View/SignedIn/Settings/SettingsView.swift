@@ -110,8 +110,7 @@ struct SettingsView: View {
                 }
             }
         }
-        .padding(.horizontal, 16)
-        .padding(.bottom, 120)
+        .padding(.horizontal, 16) 
         .scrollContentBackground(.hidden)
         .navigationTitle(title: "Settings")
         .onAppear {

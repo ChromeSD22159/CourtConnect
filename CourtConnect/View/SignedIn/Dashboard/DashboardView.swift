@@ -56,10 +56,8 @@ struct DashboardView: View {
                     Text("Create your first user account")
                 }
             }
-        }
-        .contentMargins(.top, 20)
-        .contentMargins(.bottom, 75)
-        .scrollIndicators(.hidden) 
+        }  
+        .scrollIndicators(.hidden)
         .navigationTitle(title: "Dashboard")
         .sheet(isPresented: $viewModel.isCreateRoleSheet, onDismiss: {
             viewModel.getAllUserAccounts()

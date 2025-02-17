@@ -52,9 +52,7 @@ struct TeamView: View {
                             .padding(.horizontal)
                             .padding(.vertical)
                     }
-                }
-                .contentMargins(.bottom, 75)
-                .contentMargins(.top, 20)
+                } 
                 .scrollIndicators(.hidden)
                 .opacity(teamViewViewModel.selectedDocument != nil ? 0.5 : 1.0)
                 .blur(radius: teamViewViewModel.selectedDocument != nil ? 2 : 0)

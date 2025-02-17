@@ -35,14 +35,15 @@ struct ScrollRefreshable<RefreshView: View, Content: View>: View, ScrollRefresha
                 content()
             }
         }
-        .contentMargins(options.contentMarginsEdges, options.contentMarginsLength)
+        .contentMargins(.top, 0)
+        .contentMargins(.bottom, 75)
         .refrashTrigger(
             offset: $yOffset,
             scale: $scale,
             isRefreshing: $isRefreshing,
             option: RefrashTriggerOption(
                 triggerPoint: 150,
-                debug: true
+                debug: false
             )
         )
     }
@@ -159,13 +160,9 @@ struct RefrashTriggerOption {
 }
 
 struct ScrollOptions {
-    let contentMarginsLength: CGFloat
-    let contentMarginsEdges: Edge.Set
     let verticalSpacing: CGFloat
     
-    init(contentMarginsLength: CGFloat = 20, contentMarginsEdges: Edge.Set = [.all], verticalSpacing: CGFloat = 20) {
-        self.contentMarginsLength = contentMarginsLength
-        self.contentMarginsEdges = contentMarginsEdges
+    init(verticalSpacing: CGFloat = 20) {
         self.verticalSpacing = verticalSpacing
     }
 }
@@ -187,7 +184,6 @@ struct ViewSize: ViewModifier {
         
         ScrollRefreshable(
             options: ScrollOptions(
-                contentMarginsLength: 5,
                 verticalSpacing: 100
             ),
             refresh: {

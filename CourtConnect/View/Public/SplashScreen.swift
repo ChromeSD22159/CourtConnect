@@ -46,7 +46,8 @@ struct SplashScreen: View {
                     .playbackMode(playbackMode)
                     .opacity(animationVisibility ? 1 : 0)
                     .frame(width: 400, height: 400)
-            } 
+            }
+            .appBackgroundModifier()
             .onAppear {
                 playbackMode = .playing(.fromFrame(1, toFrame: 48, loopMode: .loop))
                  

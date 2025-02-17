@@ -9,7 +9,7 @@ import SwiftUI
 struct TrainerDashboard: View {
     @Environment(\.scenePhase) var scenePhase
     @State var trainerDashboardViewModel = TrainerDashboardViewModel()
-    
+    @ObservedObject var syncVM = SyncViewModel.shared
     var body: some View {
         VStack(spacing: 15) {
             if trainerDashboardViewModel.currentTeam != nil {
@@ -32,15 +32,14 @@ struct TrainerDashboard: View {
             .padding(.bottom, 50)
             .padding(.horizontal, 16)
         }
-        .reFetchButton(isFetching: $trainerDashboardViewModel.isfetching, onTap: {
-            trainerDashboardViewModel.fetchDataFromRemote()
-        }) 
-        .onAppear {
-            trainerDashboardViewModel.inizialize() 
+        .onReceive(syncVM.$isfetching) { value in
+            if value == false {
+                trainerDashboardViewModel.loadLocalData()
+            }
         }
         .onChange(of: scenePhase) {
             if scenePhase == .active {
-                trainerDashboardViewModel.fetchDataFromRemote()
+                trainerDashboardViewModel.fetchData()
             }
         }
         .navigationTitle("Coach Dashboard")
@@ -145,7 +144,7 @@ fileprivate struct HasTeam: View {
             }
             
             CalendarCard(title: "Edit appointment", termine: trainerDashboardViewModel.termine, editable: true, onChanged: {
-                trainerDashboardViewModel.loadData()
+                trainerDashboardViewModel.loadLocalData()
             })
             .padding(.vertical, 16)
             .padding(.horizontal, 16)

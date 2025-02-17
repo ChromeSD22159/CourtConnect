@@ -39,6 +39,6 @@
 	<key>WishKit</key>
 	<string>4C85F9C7-BA32-4D98-9E5D-A421B4CD648F</string>
 	<key>isStoredInMemoryOnly</key>
-	<false/>
+	<true/>
 </dict>
 </plist>
