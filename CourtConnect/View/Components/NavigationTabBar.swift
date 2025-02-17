@@ -26,7 +26,7 @@ struct NavigationTabBar<Content: View>: View {
             },
             content: content
         )
-        .appBackgroundModifier()
+        .appBackground()
         .onScrollPhaseChange({ _, newPhase in
             withAnimation(.spring) {
                 isScrolling = newPhase.isScrolling

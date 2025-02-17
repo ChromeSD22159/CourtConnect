@@ -6,34 +6,8 @@
 //
 import SwiftUI
 
-struct AppBackground<Content: View>: View {
-    @Environment(\.colorScheme) var colorScheme
-    @ViewBuilder var content: () -> Content
-    var body: some View {
-        ZStack {
-            if colorScheme == .light {
-                Theme.backgroundGradient.opacity(0.5)
-                    .ignoresSafeArea()
-            } else {
-                Theme.backgroundGradient.opacity(0.5)
-                    .ignoresSafeArea()
-            }
-            
-            Image(.courtBG)
-                .resizable()
-                .scaledToFill()
-                .opacity(0.25)
-                .ignoresSafeArea()
-                .clipped()
-            
-            content()
-        }
-        .errorPopover()
-    }
-}
-
 extension View {
-    func appBackgroundModifier() -> some View {
+    func appBackground() -> some View {
         modifier(AppBackgroundModifier())
     }
 }
@@ -55,32 +29,37 @@ struct AppBackgroundModifier: ViewModifier {
                     Image(.courtBG)
                         .resizable()
                         .scaledToFill()
+                        .offset(y: -50)
                         .opacity(0.25)
-                        .ignoresSafeArea()
-                        .clipped()
                 }
             }
     }
 }
 
 #Preview {
-    
-    ZStack {
-        NavigationStack {
-            AppBackground {
+    NavigationStack {
+        ZStack {
+            VStack {
+                Spacer()
                 NavigationLink(destination: {
                     Text("Detail")
                         .navigationTitle("Detail")
                 }, label: {
-                    Text("label")
+                    HStack {
+                        Spacer()
+                        Text("label")
+                        Spacer()
+                    }
                 })
-                
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Text("Hallo")
                     }
                 }
+                
+                Spacer()
             }
         }
+        .appBackground()
     }
 }

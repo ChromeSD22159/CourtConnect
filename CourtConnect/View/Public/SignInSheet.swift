@@ -87,17 +87,13 @@ struct SignInSheet: View {
 }
 
 #Preview("Light") {
-    AppBackground {
-        LoginEntryView(viewModel: LoginEntryViewModel(), onUserChange: {})
-            .preferredColorScheme(.light)
-            .previewEnvirments()
-    }
+    LoginEntryView(viewModel: LoginEntryViewModel(), onUserChange: {})
+        .preferredColorScheme(.light)
+        .previewEnvirments()
 }
 
 #Preview("Dark") {
-    AppBackground {
-        LoginEntryView(viewModel: LoginEntryViewModel(), onUserChange: {})
-            .preferredColorScheme(.dark)
-            .previewEnvirments()
-    }
-} 
+    LoginEntryView(viewModel: LoginEntryViewModel(), onUserChange: {})
+        .preferredColorScheme(.dark)
+        .previewEnvirments()
+}

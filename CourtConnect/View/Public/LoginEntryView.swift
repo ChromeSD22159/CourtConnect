@@ -14,7 +14,7 @@ struct LoginEntryView: View {
     
     var body: some View {
         ScrollView {
-            VStack(spacing: 50) {
+            VStack(spacing: 40) {
                 AppIcon()
                 
                 if viewModel.isTextShowing {
@@ -29,9 +29,10 @@ struct LoginEntryView: View {
             }
         }
         .contentMargins(.horizontal, 30)
-        .contentMargins(.vertical, 60)
+        .contentMargins(.vertical, 100)
         .scrollIndicators(.hidden)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .appBackground()
         .onAppear {
             viewModel.toogleText()
             viewModel.inizializeAuth()
@@ -83,17 +84,13 @@ struct LoginEntryView: View {
 }  
                    
 #Preview("Light") {
-    AppBackground {
-        LoginEntryView(viewModel: LoginEntryViewModel(), onUserChange: {})
-    }
+    LoginEntryView(viewModel: LoginEntryViewModel(), onUserChange: {})
     .preferredColorScheme(.light)
     .previewEnvirments()
 }
 
 #Preview("Dark") {
-    AppBackground {
-        LoginEntryView(viewModel: LoginEntryViewModel(), onUserChange: {})
-    }
+    LoginEntryView(viewModel: LoginEntryViewModel(), onUserChange: {})
     .preferredColorScheme(.dark)
     .previewEnvirments()
 }

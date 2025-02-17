@@ -25,8 +25,6 @@ struct CourtConnectApp: App {
                             authViewModel.inizializeAuth()
                             authViewModel.getAccounts()
                         }
-                        .appBackgroundModifier()
-
                     }
                 }
                 .opacity(authViewModel.isSlashScreen ? 0 : 1)
