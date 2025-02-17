@@ -10,7 +10,7 @@ import Charts
 struct PlayerStatistic: View {
     @Environment(\.scenePhase) var scenePhase
     @State var viewModel = PlayerStatisticViewModel()
-    
+    @ObservedObject var syncVM = SyncViewModel.shared
     var body: some View {
         ScrollView(.vertical) {
             VStack(spacing: 50) {
@@ -96,12 +96,11 @@ struct PlayerStatistic: View {
                
             }
         }
-        .navigationTitle(title: "\(viewModel.userProfile?.fullName ?? "") Statistics")  
-        .reFetchButton(isFetching: $viewModel.isfetching, onTap: {
-            viewModel.fetchDataFromRemote()
-        }) 
-        .onAppear {
-            viewModel.initialze()
+        .navigationTitle(title: "\(viewModel.userProfile?.fullName ?? "") Statistics")
+        .onReceive(syncVM.$isfetching) { value in
+            if value == false {
+                viewModel.loadLocalData()
+            }
         }
         .onChange(of: scenePhase) {
             if scenePhase == .active {

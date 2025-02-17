@@ -22,7 +22,11 @@ import Auth
     
     var selectedDocument: Document?
     
-    func inizialize() {
+    init() {
+        loadLocalData()
+    }
+    
+    func loadLocalData() {
         self.inizializeAuth()
         self.getAllDocuments()
         self.getTeamTermine()
@@ -97,7 +101,7 @@ import Auth
             do {
                 if let userId = user?.id {
                     try await syncAllTables(userId: userId)
-                    inizialize()
+                    loadLocalData()
                 }
             } catch {
                 print(error)

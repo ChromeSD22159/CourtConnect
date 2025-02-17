@@ -63,13 +63,10 @@ struct TeamView: View {
             
             DocumentOverlayView(document: $teamViewViewModel.selectedDocument)
         } 
-        .navigationTitle(title: "\(teamViewViewModel.currentTeam?.teamName ?? "")")
-        .reFetchButton(isFetching: $teamViewViewModel.isfetching, onTap: {
-            teamViewViewModel.fetchDataFromRemote()
-        })
-        .teamInfoButton(team: teamViewViewModel.currentTeam) 
+        .navigationTitle(title: "\(teamViewViewModel.currentTeam?.teamName ?? "")") 
+        .teamInfoButton(team: teamViewViewModel.currentTeam)
         .onAppear {
-            teamViewViewModel.inizialize()
+            teamViewViewModel.loadLocalData()
         }
         .onChange(of: scenePhase) {
             if scenePhase == .active {

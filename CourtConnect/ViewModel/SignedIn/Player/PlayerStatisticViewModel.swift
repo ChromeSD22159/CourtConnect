@@ -45,7 +45,11 @@ import Auth
         }.first
     }
     
-    func initialze() {
+    init() {
+        loadLocalData()
+    }
+    
+    func loadLocalData() {
         self.inizializeAuth()
         
         getStatistic(for: .game)
@@ -121,7 +125,7 @@ import Auth
             do {
                 if let userId = user?.id {
                     try await syncAllTables(userId: userId)
-                    initialze()
+                    loadLocalData()
                 }
             } catch {
                 print(error)
