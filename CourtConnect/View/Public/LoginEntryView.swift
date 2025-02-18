@@ -26,9 +26,11 @@ struct LoginEntryView: View {
                         .opacity(viewModel.isTextShowing ? 1 : 0)
                         .animation(.easeInOut.delay(1.5), value: viewModel.isTextShowing)
                     
+                    /*
                     resetPasswordRow()
                         .opacity(viewModel.isTextShowing ? 1 : 0)
                         .animation(.easeInOut.delay(1.8), value: viewModel.isTextShowing)
+                     */
                 }
             }
         }
