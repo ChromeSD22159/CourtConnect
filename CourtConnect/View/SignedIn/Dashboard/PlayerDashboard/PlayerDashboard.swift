@@ -12,6 +12,7 @@ struct PlayerDashboard: View {
     @ObservedObject var syncVM = SyncViewModel.shared
     var body: some View {
         VStack {
+            
             if playerDashboardViewModel.currentTeam != nil {
                 HasTeam(playerDashboardViewModel: playerDashboardViewModel)
             } else {
@@ -54,6 +55,12 @@ fileprivate struct HasNoTeam: View {
             SearchTeam()
         } label: {
             RoundedIconTextCard(icon: "person.badge.plus", title: "Join a Team!", description: "Send a request to join a team as a trainer and start managing players and training sessions.")
+        }
+        
+        NavigationLink {
+            QRScannerView()
+        } label: {
+            RoundedIconTextCard(icon: "camera.viewfinder", title: "Scan a QR Code!", description: "Scanne a QR code to join a team.")
         }
         
         RoundedIconTextCard(icon: "qrcode.viewfinder", title: "Join with Team ID!", description: "Enter a Team ID to instantly join an existing team and start managing players and training sessions.")

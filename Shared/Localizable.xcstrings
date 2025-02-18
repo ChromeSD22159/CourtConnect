@@ -1278,6 +1278,26 @@
         }
       }
     },
+    "It appears your camera may not be available" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Es scheint, dass deine Kamera möglicherweise nicht verfügbar ist"
+          }
+        }
+      }
+    },
+    "It looks like this device doesn't support the DataScannerViewController" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Es sieht so aus, als ob dieses Gerät den DataScan nicht unterstützt"
+          }
+        }
+      }
+    },
     "Join" : {
       "localizations" : {
         "de" : {
@@ -1314,6 +1334,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Beitrittsanfragen"
+          }
+        }
+      }
+    },
+    "Join Team" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Team beitreten"
           }
         }
       }
@@ -2031,6 +2061,26 @@
         }
       }
     },
+    "Scan a QR Code!" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scanne einen QR -Code!"
+          }
+        }
+      }
+    },
+    "Scanne a QR code to join a team." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scanne einen QR -Code, um sich einem Team anzuschließen."
+          }
+        }
+      }
+    },
     "Select image" : {
       "localizations" : {
         "de" : {
@@ -2237,6 +2287,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Super-Admin"
+          }
+        }
+      }
+    },
+    "Tap a QR code when it has been recognized you can join the team!" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tippe auf einen QR Code, wenn er erkannt wurde kannst du dem Team beitreten!"
           }
         }
       }
