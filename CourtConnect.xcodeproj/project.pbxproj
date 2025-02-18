@@ -1024,6 +1024,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CourtConnect/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CourtConnect;
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app uses the camera of your device to scan QR codes and thus enable you to easily and quickly access certain functions, such as joining a team.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1062,6 +1063,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CourtConnect/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CourtConnect;
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app uses the camera of your device to scan QR codes and thus enable you to easily and quickly access certain functions, such as joining a team.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
