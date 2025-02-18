@@ -10,8 +10,7 @@ import Auth
 struct NavigationTabBar<Content: View>: View {
     @Environment(\.colorScheme) var colorScheme
     @ObservedObject var navViewModel: NavigationViewModel
-    @Namespace private var animation
-    
+    @Namespace var animation
     @State var isScrolling = false
     @State var reload = false
     
@@ -46,17 +45,24 @@ struct NavigationTabBar<Content: View>: View {
                             ForEach(NavigationTab.allCases) { item in
                                 if navViewModel.userAccount?.roleEnum == .player {
                                     if item == .player {
-                                        tabItem(item: item)
+                                        TabItem(item: item, animation: animation, isActive: navViewModel.current == item) { item in
+                                            navViewModel.navigateTo(item)
+                                        }
                                     } else {
-                                        tabItem(item: item)
+                                        TabItem(item: item, animation: animation, isActive: navViewModel.current == item) { item in
+                                            navViewModel.navigateTo(item)
+                                        }
                                     }
                                 } else { 
                                     if item != .player {
-                                        tabItem(item: item)
+                                        TabItem(item: item, animation: animation, isActive: navViewModel.current == item) { item in
+                                            navViewModel.navigateTo(item)
+                                        }
                                     }
                                 }
                             }
                         }
+                        .animation(.easeInOut, value: navViewModel.current)
                         .padding(.vertical, 10)
                         .padding(.horizontal, 40)
                         .background {
@@ -79,10 +85,14 @@ struct NavigationTabBar<Content: View>: View {
             }
         })
     }
-    
-    @ViewBuilder func tabItem(item: NavigationTab) -> some View {
-        let isActive = navViewModel.current == item
-        
+}
+
+private struct TabItem: View {
+    let item: NavigationTab
+    let animation: Namespace.ID
+    let isActive: Bool
+    let navigateTo: (NavigationTab) -> Void
+    var body: some View {
         VStack(spacing: 4) {
             Image(systemName: item.images)
             
@@ -103,7 +113,7 @@ struct NavigationTabBar<Content: View>: View {
         .frame(width: 75, height: 60)
         .contentShape(Rectangle())
         .onTapGesture {
-            navViewModel.navigateTo(item)
+            navigateTo(item)
         }
     }
 }
