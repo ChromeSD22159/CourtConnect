@@ -13,9 +13,8 @@ struct DateRange {
     var start: Date = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
     var end: Date = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
 }
-
-@MainActor
-@Observable class PlayerDashboardViewModel: AuthProtocol, ObservableObject {
+ 
+@Observable class PlayerDashboardViewModel: AuthProtocol, QRCodeProtocol, ObservableObject {
     var syncViewModel = SyncViewModel.shared
     var repository: BaseRepository = Repository.shared
     var user: User?
@@ -28,6 +27,7 @@ struct DateRange {
     var attendancesTermines: [AttendanceTermin] = []
     
     var qrCode: UIImage?
+    var joinCode: String = ""
     var isEnterCode = false
     
     var isAbsenseSheet = false
@@ -38,6 +38,7 @@ struct DateRange {
     init() {
         inizializeAuth()
         loadLocalData()
+        generateQrCode()
     }
     
     func loadLocalData() {
@@ -110,12 +111,6 @@ struct DateRange {
         LocalStorageService.shared.userAccountId = userAccount?.id.uuidString
     }
     
-    private func readQRCode() {
-        if let currentTeam = currentTeam {
-            qrCode = QRCodeHelper().generateQRCode(from: currentTeam.joinCode)
-        }
-    }
-    
     private func getTeam() {
         currentTeam = nil
         do {
@@ -123,7 +118,7 @@ struct DateRange {
             guard let teamId = userAccount.teamId else { throw TeamError.teamNotFound }
             currentTeam = try repository.teamRepository.getTeam(for: teamId)
             
-            readQRCode()
+            generateQrCode()
         } catch {
             currentTeam = nil
             qrCode = nil

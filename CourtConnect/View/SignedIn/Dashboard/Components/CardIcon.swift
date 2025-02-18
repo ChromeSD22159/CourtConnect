@@ -61,6 +61,6 @@ struct CardIcon: View {
             .foregroundStyle(.white)
         }
         .frame(width: width, height: width)
-        .clipShape(RoundedRectangle(cornerRadius: 35))
+        .borderRadius(35)
     }
 }

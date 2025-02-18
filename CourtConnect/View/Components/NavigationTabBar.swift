@@ -5,6 +5,7 @@
 //  Created by Frederik Kohler on 28.01.25.
 //
 import SwiftUI
+import Auth
 
 struct NavigationTabBar<Content: View>: View {
     @Environment(\.colorScheme) var colorScheme
@@ -38,7 +39,9 @@ struct NavigationTabBar<Content: View>: View {
         .overlay(alignment: .bottom, content: {
             ZStack {
                 if !isScrolling {
-                    ZStack {
+                    HStack(spacing: 0) {
+                        Spacer()
+                        Spacer()
                         HStack {
                             ForEach(NavigationTab.allCases) { item in
                                 if navViewModel.userAccount?.roleEnum == .player {
@@ -66,6 +69,10 @@ struct NavigationTabBar<Content: View>: View {
                                 .padding(.horizontal, 20)
                                 .shadow(color: .black.opacity(0.2), radius: 5, y: 5)
                         }
+                        if navViewModel.userAccount?.roleEnum == .coach {
+                            NavigationTabBarQrButton()
+                        }
+                        Spacer()
                     }
                     .transition(.move(edge: .bottom))
                 }
@@ -100,7 +107,7 @@ struct NavigationTabBar<Content: View>: View {
         }
     }
 }
-
+ 
 #Preview {
     @Previewable @Environment(\.colorScheme) var colorScheme
     NavigationTabBar(navViewModel: NavigationViewModel()) {

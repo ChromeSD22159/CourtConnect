@@ -63,7 +63,7 @@ struct FoundNewTeamView: View {
                 }
                 .padding()
                 .background(Material.ultraThinMaterial)
-                .clipShape(RoundedRectangle(cornerRadius: 15))
+                .borderRadius(15)
                 
                 VStack(alignment: .leading) {
                     Text("* Required").font(.caption2)

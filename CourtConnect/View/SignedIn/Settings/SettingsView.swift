@@ -229,8 +229,8 @@ fileprivate struct IconRow: View {
         }
         .padding()
         .background(Material.ultraThinMaterial)
-        .foregroundStyle(Theme.text)
-        .clipShape(RoundedRectangle(cornerRadius: 15))
+        .foregroundStyle(Theme.text) 
+        .borderRadius(15)
     }
 }
 

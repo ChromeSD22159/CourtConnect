@@ -14,7 +14,7 @@ struct RoundedIcon: View {
             .padding(10)
             .background(Theme.headline)
             .foregroundStyle(.white)
-            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .borderRadius(10)
     }
 }
 

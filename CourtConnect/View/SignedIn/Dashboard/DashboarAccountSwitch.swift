@@ -25,7 +25,7 @@ struct DashboarAccountSwitch: View {
                                 Text(item.displayName)
                                     .frame(width: width, height: width)
                                     .background(Material.ultraThinMaterial)
-                                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                                    .borderRadius(15)
                             }
                         }
                         .onTapGesture {

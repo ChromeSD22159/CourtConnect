@@ -21,7 +21,7 @@ struct DocumentOverlayView: View {
                         .scaledToFill()
                         .clipped()
                         .frame(width: viewPort.width * 0.6, height: viewPort.width * 0.6)
-                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                        .borderRadius(15)
                         .onAppear {
                             shareableImage = image
                         }
@@ -44,7 +44,7 @@ struct DocumentOverlayView: View {
             }
             .padding(32)
             .blurryBackground(opacity: 0.8)
-            .clipShape(RoundedRectangle(cornerRadius: 32))
+            .borderRadius(32)
             .shadow(radius: 10)
             .transition(
                 AnyTransition.move(edge: .bottom)

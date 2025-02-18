@@ -135,7 +135,7 @@ private struct StatisticCard: View {
         .padding()
         .frame(width: 150, height: 150)
         .background(Material.ultraThinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 15))
+        .borderRadius(15)
     }
 }
 

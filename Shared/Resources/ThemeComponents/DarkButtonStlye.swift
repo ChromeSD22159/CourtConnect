@@ -13,7 +13,7 @@ struct DarkButtonStlye: ButtonStyle {
             .font(.body.bold())
             .foregroundStyle(.white)
             .background(Theme.darkOrange)
-            .clipShape(RoundedRectangle(cornerRadius: 15))
+            .borderRadius(15)
     }
 } 
 

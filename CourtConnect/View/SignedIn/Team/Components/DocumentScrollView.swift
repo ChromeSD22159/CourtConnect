@@ -23,7 +23,7 @@ struct DocumentScrollView: View {
                                     
                                     AsyncCachedImage(url: URL(string: document.url)!) { image in
                                         ClippedImage(image, width: 100, height: 100)
-                                          .clipShape(RoundedRectangle(cornerRadius: 15))
+                                          .borderRadius(15)
                                     } placeholder: {
                                         DocSystemIcon()
                                     }

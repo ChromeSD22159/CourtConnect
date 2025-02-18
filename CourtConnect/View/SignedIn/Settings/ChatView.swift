@@ -117,7 +117,7 @@ fileprivate struct MessageRow: View {
                         .padding(.vertical, 5)
                         .padding(.horizontal, 10)
                         .background(.orange.opacity(0.5))
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .borderRadius(10)
                     Spacer()
                 } else if message.recipientId == myUserId {
                     Spacer()
@@ -126,7 +126,7 @@ fileprivate struct MessageRow: View {
                         .padding(.vertical, 5)
                         .padding(.horizontal, 10)
                         .background(Material.thick)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .borderRadius(10)
                 }
             }
             

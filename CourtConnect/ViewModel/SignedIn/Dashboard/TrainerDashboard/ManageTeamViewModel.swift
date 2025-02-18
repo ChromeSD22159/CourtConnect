@@ -8,7 +8,7 @@ import Foundation
 import Auth
 import UIKit
 
-@Observable @MainActor class ManageTeamViewModel: AuthProtocol {
+@Observable class ManageTeamViewModel: AuthProtocol, QRCodeProtocol {
     var repository: BaseRepository = Repository.shared
     var user: User?
     var userAccount: UserAccount?

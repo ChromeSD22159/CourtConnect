@@ -73,10 +73,10 @@ struct TerminSheet: View {
                     }
                     .padding()
                     .background(Material.ultraThinMaterial)
-                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                    .borderRadius(15)
                 }
                 .background(Material.ultraThinMaterial)
-                .clipShape(RoundedRectangle(cornerRadius: 15))
+                .borderRadius(15)
                 .padding()
             }
             .toolbar {

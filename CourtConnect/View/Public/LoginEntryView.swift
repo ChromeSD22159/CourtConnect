@@ -25,6 +25,10 @@ struct LoginEntryView: View {
                     buttonRow()
                         .opacity(viewModel.isTextShowing ? 1 : 0)
                         .animation(.easeInOut.delay(1.5), value: viewModel.isTextShowing)
+                    
+                    resetPasswordRow()
+                        .opacity(viewModel.isTextShowing ? 1 : 0)
+                        .animation(.easeInOut.delay(1.8), value: viewModel.isTextShowing)
                 }
             }
         }
@@ -51,6 +55,9 @@ struct LoginEntryView: View {
         }) {
             SignUpSheet()
         }
+        .sheet(isPresented: $viewModel.isResetPassword) {
+            ResetPasswordSheet()
+        }
     }
     
     @ViewBuilder func buttonRow() -> some View {
@@ -69,6 +76,20 @@ struct LoginEntryView: View {
         }
     }
     
+    @ViewBuilder func resetPasswordRow() -> some View {
+        HStack {
+            Spacer()
+            
+            Button("Reset Password") {
+                viewModel.isResetPassword.toggle()
+            }
+            .font(.caption2)
+            .buttonStyle(TransparentButtonStyle())
+            
+            Spacer()
+        }
+    }
+    
     @ViewBuilder func textRow() -> some View {
         VStack(alignment: .leading, spacing: 20) {
             Text("Your Team. \nYour connection. \nYour success.")
@@ -81,7 +102,74 @@ struct LoginEntryView: View {
         }
         .lineSpacing(5)
     }
-}  
+}
+
+struct ResetPasswordSheet: View {
+    @Environment(\.dismiss) var dismiss
+    @State var viewModel = ResetPasswordSheetViewModel()
+    var body: some View {
+        NavigationStack {
+            ZStack {
+                VStack {
+                    TextField("E-Mail:", text: $viewModel.email, prompt: Text("Enter your E-Mail"))
+                        .keyboardType(.emailAddress)
+                        .padding()
+                }
+                .saveSize(in: $viewModel.containerSize)
+                
+                LoadingCard(isLoading: $viewModel.isLoadingAnimation)
+            }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading, content: {
+                    Button("Cancel") {
+                        dismiss()
+                    }
+                    .foregroundStyle(.primary)
+                })
+                ToolbarItem(placement: .navigationBarTrailing, content: {
+                    Button("Request New Passwort") {
+                        do {
+                            try viewModel.sendRequest()
+                            dismiss()
+                        } catch {
+                            
+                        }
+                    }
+                    .foregroundStyle(.primary)
+                })
+            }
+            .errorAlert()
+            .saveSize(in: $viewModel.containerSize)
+            .presentationDetents([.height(viewModel.containerSize.height + 100)])
+            .presentationDragIndicator(.visible)
+            .presentationBackground(Material.ultraThinMaterial)
+            .shadow(radius: 20)
+        }
+    }
+}
+
+@Observable @MainActor class ResetPasswordSheetViewModel {
+    let repository = Repository.shared
+    var containerSize: CGSize = .zero
+    var email = ""
+    var isLoadingAnimation = false
+    
+    func sendRequest() throws {
+        Task {
+            isLoadingAnimation = true
+            defer {
+                isLoadingAnimation = false
+            }
+            do {
+                guard !email.isEmpty else { throw UserError.emailIsEmptry }
+                try await repository.authRepository.resetPasswordForEmail(email: email)
+            } catch {
+                ErrorHandlerViewModel.shared.handleError(error: error)
+                throw error
+            }
+        }
+    }
+}
                    
 #Preview("Light") {
     LoginEntryView(viewModel: LoginEntryViewModel(), onUserChange: {})

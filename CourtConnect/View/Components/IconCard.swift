@@ -52,7 +52,7 @@ struct IconCard: View {
                     .fill(Color.white)
             }
         }
-        .clipShape(RoundedRectangle(cornerRadius: 15))
+        .borderRadius(15)
     }
 } 
 

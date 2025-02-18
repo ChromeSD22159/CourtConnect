@@ -28,7 +28,7 @@ struct ManageDocumentsView: View {
                                 HStack {
                                     AsyncCachedImage(url: URL(string: document.url)!) { image in
                                         ClippedImage(image, width: 50, height: 50)
-                                          .clipShape(RoundedRectangle(cornerRadius: 15))
+                                            .borderRadius(15)
                                     } placeholder: {
                                         DocSystemIcon()
                                     }

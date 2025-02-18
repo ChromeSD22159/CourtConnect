@@ -70,7 +70,7 @@ struct UserProfileEditView: View {
                         .padding()
                         .foregroundStyle(.white)
                         .background(Theme.darkOrange)
-                        .clipShape(RoundedRectangle(cornerRadius: 15))
+                        .borderRadius(15)
                 }
                 .onChange(of: photosPickerItem) {
                     if let photosPickerItem = photosPickerItem {

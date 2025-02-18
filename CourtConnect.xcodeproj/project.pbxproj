@@ -92,6 +92,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		B64D32282D63E8B2009F4463 /* Exceptions for "CourtConnect" folder in "CourtConnectWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				View/Components/AsyncImageLoader.swift,
+			);
+			target = B6509FDD2D594CDA0032CB17 /* CourtConnectWidgetExtension */;
+		};
 		B6509FF22D594CDB0032CB17 /* Exceptions for "CourtConnectWidget" folder in "CourtConnectWidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -196,6 +203,7 @@
 				Protocol/ImagePickerProtocol.swift,
 				Protocol/ModelProtocol.swift,
 				Protocol/OnAppiearAnimation.swift,
+				Protocol/QRCodeProtocol.swift,
 				Protocol/Sheet.swift,
 				Protocol/SupabaseEntitiy.swift,
 				Protocol/SyncHistoryProtocol.swift,
@@ -228,7 +236,6 @@
 		B6ACE4B22D595CF500D1941B /* Exceptions for "Services" folder in "CourtConnect" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				AsyncImageLoader.swift,
 				LocalStorageService.swift,
 				NotificationService.swift,
 				SupabaseService.swift,
@@ -238,7 +245,6 @@
 		B6ACE4B32D595CF500D1941B /* Exceptions for "Services" folder in "CourtConnectWidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				AsyncImageLoader.swift,
 				LocalStorageService.swift,
 				NotificationService.swift,
 				SupabaseService.swift,
@@ -319,6 +325,7 @@
 				Protocol/ImagePickerProtocol.swift,
 				Protocol/ModelProtocol.swift,
 				Protocol/OnAppiearAnimation.swift,
+				Protocol/QRCodeProtocol.swift,
 				Protocol/Sheet.swift,
 				Protocol/SupabaseEntitiy.swift,
 				Protocol/SyncHistoryProtocol.swift,
@@ -388,6 +395,7 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				B6ACE3D52D595B2900D1941B /* Exceptions for "CourtConnect" folder in "CourtConnect" target */,
+				B64D32282D63E8B2009F4463 /* Exceptions for "CourtConnect" folder in "CourtConnectWidgetExtension" target */,
 			);
 			path = CourtConnect;
 			sourceTree = "<group>";

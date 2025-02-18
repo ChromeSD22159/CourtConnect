@@ -54,7 +54,7 @@ struct PlayerRow: View {
             }
             .padding()
             .background(Material.ultraThinMaterial.opacity(0.8))
-            .clipShape(RoundedRectangle(cornerRadius: 15))
+            .borderRadius(15)
             
             if isExpant {
                 HStack(spacing: 25) {
@@ -71,7 +71,7 @@ struct PlayerRow: View {
             }
         }
         .background(Material.ultraThinMaterial.opacity(0.8))
-        .clipShape(RoundedRectangle(cornerRadius: 15)) 
+        .borderRadius(15)
     }
     
     @ViewBuilder func valueIcon(icon: String, value: Int) -> some View {

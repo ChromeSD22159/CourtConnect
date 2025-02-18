@@ -24,7 +24,7 @@ struct AbsenseCard: View {
         }
         .padding()
         .background(Material.ultraThinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 15)) 
+        .borderRadius(15)
         .sheet(isPresented: $playerDashboardViewModel.isAbsenseSheet, content: {
             NavigationStack {
                 VStack { 

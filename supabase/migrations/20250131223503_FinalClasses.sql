@@ -760,10 +760,19 @@ CREATE POLICY "Allow authenticated users to update" ON storage.objects FOR UPDAT
 CREATE POLICY "Allow authenticated users to update" ON storage.objects FOR UPDATE TO authenticated USING (bucket_id = 'TeamImages'); 
 CREATE POLICY "Allow authenticated users to update" ON storage.objects FOR UPDATE TO authenticated USING (bucket_id = 'UserImages'); 
  
+
+-- CRONS
+/*
+NAME: DeleteOldUserOnline
+DELETE FROM "UserOnline"
+  WHERE timestamp < NOW() - INTERVAL '5 minutes';
+*/
+
+
 --- INSTALL 
-1. DROP ALL TABLES
-2. CREATE ALL TABLES, TRIGGER AND FUNCTION
-3. CREATE BUCKETS
-4. DROP ALL POLICY
-5. CREATE ALL POLICY
- 
+-- 1. DROP ALL TABLES
+-- 2. CREATE ALL TABLES, TRIGGER AND FUNCTION
+-- 3. CREATE BUCKETS
+-- 4. DROP ALL POLICY
+-- 5. CREATE ALL POLICY
+-- 6. Create Crons

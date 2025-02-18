@@ -24,7 +24,7 @@ struct ReoloadAnimation: View {
                     Spacer()
                 }
                 .background(withBackground ? Material.ultraThinMaterial.opacity(0.9) as! Color : Color.clear)
-                .clipShape(RoundedRectangle(cornerRadius: 25))
+                .borderRadius(25)
                 .opacity(isLoading ? 1 : 0)
                 .animation(.easeInOut.delay(0.5), value: isLoading)
                 .transition(.move(edge: .top))

@@ -5,9 +5,7 @@
 //  Created by Frederik Kohler on 24.01.25.
 //
 import Foundation
-import UIKit
-import Combine
-import SwiftUI 
+import SwiftUI
 
 @MainActor
 struct AsyncCachedImage<ImageView: View, PlaceholderView: View>: View {
@@ -48,12 +46,7 @@ struct AsyncCachedImage<ImageView: View, PlaceholderView: View>: View {
     // Otherwise returns from the cache
     private func downloadPhoto() async -> UIImage? {
         do {
-            guard let url else { return nil }
-             
-            let memoryCapacity = 500 * 1024 * 1024 // 100 MB
-            let diskCapacity = 500 * 1024 * 1024 // 500 MB
-            let urlCache = URLCache(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity, directory: nil)
-            URLCache.shared = urlCache
+            guard let url else { return nil } 
             
             if let cachedResponse = URLCache.shared.cachedResponse(for: .init(url: url)) {
                 return UIImage(data: cachedResponse.data)

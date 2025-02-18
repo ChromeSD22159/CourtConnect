@@ -33,6 +33,7 @@ struct ComeSoonBadge: ViewModifier {
                     .foregroundStyle(Theme.white)
                     .background(Theme.headline)
                     .clipShape(RoundedRectangle(cornerRadius: 7))
+                    .borderRadius(7)
                     .rotationEffect(Angle(degrees: -15))
             }
     }

@@ -9,9 +9,7 @@ import SwiftUI
 struct EnterCodeView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.errorHandler) var errorHandler
-    @State private var viewModel = CodeEntryViewModel()
-    let userAccount: UserAccount
-    
+    @State private var viewModel = CodeEntryViewModel() 
     var body: some View {
         NavigationStack {
             ZStack {
@@ -112,6 +110,9 @@ struct EnterCodeView: View {
                     Button("Join") {
                         Task {
                             do {
+                                guard let userAccount = viewModel.userAccount else {
+                                    throw UserError.userAccountNotFound
+                                }
                                 try await viewModel.joinTeamWithCode(userAccount: userAccount)
                                 dismiss()
                             } catch {
@@ -137,7 +138,7 @@ struct EnterCodeView: View {
         ZStack {
             Theme.backgroundGradient.ignoresSafeArea()
             
-            EnterCodeView(userAccount: MockUser.myUserAccount)
+            EnterCodeView()
         }
     })
     .previewEnvirments()

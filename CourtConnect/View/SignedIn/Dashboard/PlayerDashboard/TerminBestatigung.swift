@@ -29,7 +29,7 @@ struct ConfirmationTermin: View {
                     }
                     .padding()
                     .background(Material.ultraThinMaterial)
-                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                    .borderRadius(15)
                 }
                 if shortAttendances {
                     ForEach(Array(attendanceTermines.prefix(2))) { attendanceTermin in
@@ -88,7 +88,7 @@ fileprivate struct CheckRow:View {
         }
         .padding()
         .background(Material.ultraThinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 15))
+        .borderRadius(15)
     }
 } 
 

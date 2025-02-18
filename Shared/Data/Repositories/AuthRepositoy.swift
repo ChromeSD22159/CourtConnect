@@ -18,6 +18,14 @@ class AuthRepositoy {
         self.backendClient = BackendClient.shared
     }
     
+    func resetPasswordForEmail(email:String) async throws {
+        try await backendClient.supabase.auth.resetPasswordForEmail(email, redirectTo: URL(string: "CourtConnect://NewPassword"))
+    }
+    
+    func updateUser(newPassword: String) async throws {
+        try await backendClient.supabase.auth.update(user: UserAttributes(password: newPassword))
+    }
+    
     func getUser() -> User? {
         return LocalStorageService.shared.user
     }

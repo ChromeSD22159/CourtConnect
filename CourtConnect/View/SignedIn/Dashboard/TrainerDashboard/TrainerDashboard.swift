@@ -71,12 +71,10 @@ fileprivate struct HasNoTeam: View {
                 .sheet(isPresented: $trainerDashboardViewModel.isEnterCode, onDismiss: {
                     trainerDashboardViewModel.getTeam()
                 }) {
-                    if let userAccount = trainerDashboardViewModel.userAccount {
-                        ZStack {
-                            Theme.backgroundGradient.ignoresSafeArea()
-                            
-                            EnterCodeView(userAccount: userAccount)
-                        }
+                    ZStack {
+                        Theme.backgroundGradient.ignoresSafeArea()
+                        
+                        EnterCodeView()
                     }
                 }
         }

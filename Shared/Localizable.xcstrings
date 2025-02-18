@@ -838,6 +838,9 @@
         }
       }
     },
+    "E-Mail:" : {
+
+    },
     "e.g. meeting point on site at 10 am." : {
       "localizations" : {
         "de" : {
@@ -1962,6 +1965,9 @@
         }
       }
     },
+    "Request New Passwort" : {
+
+    },
     "Request send!" : {
       "localizations" : {
         "de" : {
@@ -1981,6 +1987,9 @@
           }
         }
       }
+    },
+    "Reset Password" : {
+
     },
     "Save" : {
       "localizations" : {

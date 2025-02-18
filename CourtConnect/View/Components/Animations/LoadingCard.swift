@@ -20,7 +20,7 @@ struct LoadingCard: View {
                     .offset(y: -40)
             }
             .background(Material.ultraThinMaterial.opacity(0.9))
-            .clipShape(RoundedRectangle(cornerRadius: 25))
+            .borderRadius(25)
             .opacity(isLoading ? 1 : 0)
             .animation(.easeInOut.delay(0.5), value: isLoading)
         }

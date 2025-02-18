@@ -37,7 +37,7 @@ struct OnBoardingView: View {
                     .font(.body.bold())
                     .foregroundStyle(.white)
                     .background(Theme.darkOrange)
-                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                    .borderRadius(15)
                     .opacity(showName ? 1 : 0)
                     .animation(.easeInOut.delay(1.5), value: showName)
                 }

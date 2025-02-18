@@ -18,6 +18,7 @@ import Auth
     var isTextShowing = false
     var isSignInSheet = false
     var isSignUpSheet = false
+    var isResetPassword = false
     
     func toogleText() {
         withAnimation(.easeInOut.delay(2.0)) {
@@ -27,5 +28,9 @@ import Auth
     
     func getAuth() {
         self.inizializeAuth()
+    }
+    
+    func resetPassword() {
+        
     }
 }

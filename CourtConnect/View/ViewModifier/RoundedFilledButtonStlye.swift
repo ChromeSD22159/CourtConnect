@@ -16,6 +16,6 @@ struct RoundedFilledButtonStlye: ButtonStyle {
             .padding(7)
             .foregroundStyle(.white)
             .background(color)
-            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .borderRadius(10)
     }
 }

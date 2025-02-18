@@ -30,7 +30,7 @@ struct AddStatisticView: View {
                                     .font(.caption2)
                                     .padding(5)
                                     .background(TerminType(rawValue: termin.typeString) == .game ? Theme.lightOrange : Theme.darkOrange)
-                                    .clipShape(RoundedRectangle(cornerRadius: 5))
+                                    .borderRadius(5)
                             }
                             .font(.footnote)
                             .onTapGesture {
@@ -96,7 +96,7 @@ fileprivate struct AddStaticSheet: View {
                         }
                         .padding()
                         .background(Material.ultraThinMaterial)
-                        .clipShape(RoundedRectangle(cornerRadius: 15))
+                        .borderRadius(15)
                     } else {
                         ForEach(list, id: \.teamMember.id) { player in
                             MemberRowPlayer(player: player)
@@ -117,7 +117,7 @@ fileprivate struct AddStaticSheet: View {
                         }
                         .padding()
                         .background(Material.ultraThinMaterial)
-                        .clipShape(RoundedRectangle(cornerRadius: 15))
+                        .borderRadius(15)
                     } else {
                         ForEach(viewModel.teamTrainer, id: \.teamMember.id) { trainer in
                             MemberRowTrainer(trainer: trainer)
@@ -171,7 +171,7 @@ fileprivate struct MemberRowPlayer: View {
             }
             .padding()
             .background(Material.ultraThinMaterial)
-            .clipShape(RoundedRectangle(cornerRadius: 15))
+            .borderRadius(15)
              
             if isExpant {
                 VStack {
@@ -192,7 +192,7 @@ fileprivate struct MemberRowPlayer: View {
             
         }
         .background(Material.ultraThinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 15))
+        .borderRadius(15)
     }
 }
 
@@ -247,7 +247,7 @@ fileprivate struct MemberRowTrainer: View {
             }
             .padding()
             .background(Material.ultraThinMaterial)
-            .clipShape(RoundedRectangle(cornerRadius: 15))
+            .borderRadius(15)
              
             if isExpant {
                 VStack {
@@ -257,7 +257,7 @@ fileprivate struct MemberRowTrainer: View {
             
         }
         .background(Material.ultraThinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 15))
+        .borderRadius(15)
     }
 }
 
@@ -285,7 +285,7 @@ fileprivate struct MemberRowTrainer: View {
                 .font(.caption2)
                 .padding(5)
                 .background(Theme.darkOrange)
-                .clipShape(RoundedRectangle(cornerRadius: 5))
+                .borderRadius(5)
         }
     }
 } 

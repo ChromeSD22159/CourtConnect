@@ -40,7 +40,7 @@ struct RowLabelButton: View {
             }
             .padding()
             .background(color)
-            .clipShape(RoundedRectangle(cornerRadius: 15))
+            .borderRadius(15)
         }
         if let material = material {
             HStack {
@@ -52,7 +52,7 @@ struct RowLabelButton: View {
             }
             .padding()
             .background(material)
-            .clipShape(RoundedRectangle(cornerRadius: 15))
+            .borderRadius(15)
         }
         
     }
