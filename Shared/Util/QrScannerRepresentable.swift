@@ -104,9 +104,10 @@ struct QRScannerView : View {
                                 
                                 Circle()
                                     .stroke(Theme.headlineReversed.opacity(0.3), lineWidth: 0)
-                                    .stroke(Theme.headlineReversed.opacity(0.3), lineWidth: 10)
-                                    .stroke(Theme.headlineReversed.opacity(0.3), lineWidth: 20)
+                                    .stroke(Theme.headlineReversed.opacity(0.3), lineWidth: 15)
+                                    .stroke(Theme.headlineReversed.opacity(0.3), lineWidth: 30)
                             }
+                            .frame(width: 70, height: 70)
                         )
                       
                 }
@@ -125,13 +126,13 @@ struct QRScannerView : View {
     ZStack(alignment: .bottom) {
         if !text.isEmpty {
             Text("Join Team")
-                .font(.subheadline)
+                .font(.caption2)
                 .onTapGesture {
                     
                 }
                 .padding(20)
                 .foregroundColor(Theme.white)
-                .shadow(radius: 2)
+                .shadow(color: .black, radius: 7)
                 .background(
                     ZStack {
                         Circle()
@@ -139,9 +140,10 @@ struct QRScannerView : View {
                         
                         Circle()
                             .stroke(Theme.headlineReversed.opacity(0.3), lineWidth: 0)
-                            .stroke(Theme.headlineReversed.opacity(0.3), lineWidth: 10)
-                            .stroke(Theme.headlineReversed.opacity(0.3), lineWidth: 20)
+                            .stroke(Theme.headlineReversed.opacity(0.3), lineWidth: 15)
+                            .stroke(Theme.headlineReversed.opacity(0.3), lineWidth: 30)
                     }
+                    .frame(width: 70, height: 70)
                 )
               
         }

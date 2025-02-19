@@ -21,6 +21,7 @@ import UIKit
     var isShowQrSheet = false
     var joinCode: String = ""
     var qrCode: UIImage?
+    private var currentBrightness: CGFloat?
     
     var isGenerateNewCodeSheet = false
     
@@ -97,9 +98,16 @@ import UIKit
             qrCode = QRCodeHelper().generateQRCode(from: currentTeam.joinCode)
         }
     }
-}
-
-struct ShirtNumberOption: Identifiable {
-    let id = UUID()
-    let number: Int
+    
+    func showQrSheet() {
+        isShowQrSheet = true
+        currentBrightness = UIScreen.main.brightness
+        UIScreen.main.brightness = 1.0
+    }
+    
+    func closeQrSheet() {
+        isShowQrSheet = false
+        guard let currentBrightness = currentBrightness else { return }
+        UIScreen.main.brightness = currentBrightness
+    }
 }

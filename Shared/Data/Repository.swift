@@ -34,7 +34,8 @@ import Auth
     var chatRepository: ChatRepository
     var accountRepository: AccountRepository
     var teamRepository: TeamRepository
-    var documentRepository: DocumentRepository 
+    var documentRepository: DocumentRepository
+    var noteRepository: NoteRepository
     var syncHistoryRepository: SyncServiceRepository
     var container: ModelContainer
     
@@ -55,7 +56,8 @@ import Auth
             TeamMember.self,
             Termin.self,
             UserAccount.self,
-            UserProfile.self
+            UserProfile.self,
+            Note.self
         ])
         
         let isStoredInMemoryOnly: Bool
@@ -89,8 +91,9 @@ import Auth
             self.teamRepository = TeamRepository(container: container)
             self.syncHistoryRepository = SyncServiceRepository(container: container)
             self.documentRepository = DocumentRepository(container: container)
+            self.noteRepository = NoteRepository(container: container)
         } catch {
             fatalError("Cannot create Database \(error)")
         }
     }
-} 
+}  
