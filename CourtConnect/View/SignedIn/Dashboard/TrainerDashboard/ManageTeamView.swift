@@ -63,7 +63,7 @@ struct ManageTeamView: View {
                     Grid {
                         GridRow {
                             CardIcon(text: "Show Join QR Code", systemName: "qrcode.viewfinder")
-                                .onTapGesture { viewModel.isShowQrSheet.toggle() }
+                                .onTapGesture { viewModel.showQrSheet() }
                             
                             CardIcon(text: "Generates a\nnew team code", systemName: "qrcode")
                                 .onTapGesture { viewModel.isGenerateNewCodeSheet.toggle() }
@@ -82,7 +82,9 @@ struct ManageTeamView: View {
         .sheet(isPresented: $viewModel.isGenerateNewCodeSheet) {
             GenerateCodeViewSheet()
         }
-        .sheet(isPresented: $viewModel.isShowQrSheet) { 
+        .sheet(isPresented: $viewModel.isShowQrSheet, onDismiss: {
+            viewModel.closeQrSheet()
+        }) {
             EntryWithQRSheet(manageTeamViewModel: viewModel)
         }
     }

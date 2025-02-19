@@ -20,33 +20,29 @@ struct NavigationTabBarQrButton: View {
             .sheet(isPresented: $viewModel.isSheet, onDismiss: {
                 viewModel.closeSheet()
             }) {
-                SheetStlye(title: "", detents: [.medium], isLoading: .constant(false)) {
+                SheetStlye(title: "Entry with QR", detents: [.medium], isLoading: .constant(false)) {
                     VStack(alignment: .center, spacing: 30) {
                         if let qrCode = viewModel.qrCode {
                             Image(uiImage: qrCode)
                                 .resizable()
                                 .interpolation(.none)
                                 .scaledToFit()
-                                .frame(width: 300, height: 300)
+                                .frame(width: 300, height: 300) 
                                 .borderRadius(20)
+                        }
+                        
+                        HStack {
+                            Button {
+                                ClipboardHelper.copy(text: viewModel.joinCode)
+                                
+                                InAppMessagehandlerViewModel.shared.handleMessage(message: InAppMessage(icon: .warn, title: "Join code copied"))
+                            } label: {
+                                Label("Code Team: \(viewModel.joinCode)", systemImage: "arrow.right.doc.on.clipboard")
+                            }
                         }
                     }
                     .padding()
                 }
             }
-    }
-}
-
-// TODO: REFACTOR
-extension View {
-    func borderRadius(_ radius: CGFloat) -> some View {
-        modifier(BorderRadius(radius: radius))
-    }
-}
-struct BorderRadius: ViewModifier {
-    let radius: CGFloat
-    func body(content: Content) -> some View {
-        content
-            .clipShape(RoundedRectangle(cornerRadius: radius))
     }
 }

@@ -44,6 +44,13 @@ struct Theme {
     ],
     startPoint: UnitPoint(x: 0, y: 1),
     endPoint: UnitPoint(x: 1, y: 0))
+    
+    static let textBorderRadient = LinearGradient(stops: [
+        Gradient.Stop(color: Theme.lightOrange, location: 0.00),
+        Gradient.Stop(color: Theme.darkOrange, location: 0.60)
+    ],
+    startPoint: UnitPoint(x: 0, y: 1),
+    endPoint: UnitPoint(x: 1, y: 0))
 }
 
 extension Text {

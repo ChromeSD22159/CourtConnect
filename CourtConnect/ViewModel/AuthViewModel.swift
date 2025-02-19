@@ -87,7 +87,7 @@ import WidgetKit
             return
         }
         print("RocketSim Connect successfully linked")
-        #endif
+        #endif 
     }
     
     func fetchDataFromRemote() {
