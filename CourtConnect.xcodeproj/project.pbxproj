@@ -140,6 +140,7 @@
 				Repositories/ChatRepository.swift,
 				Repositories/DatabaseProtocol.swift,
 				Repositories/DocumentRepository.swift,
+				Repositories/NoteRepository.swift,
 				Repositories/SyncHistoryRepository.swift,
 				Repositories/TeamRepository.swift,
 				Repositories/UserRepository.swift,
@@ -188,6 +189,7 @@
 				Error/ImageUploadError.swift,
 				Error/InputValidationError.swift,
 				Error/LoginError.swift,
+				Error/NotificationError.swift,
 				Error/RegisterError.swift,
 				Error/SupabaseError.swift,
 				Error/TeamError.swift,
@@ -196,6 +198,7 @@
 				InAppMessage.swift,
 				MemberProfile.swift,
 				MemberStatistic.swift,
+				Note.swift,
 				Protocol/AlertManageProtocol.swift,
 				Protocol/AuthProtocol.swift,
 				Protocol/DatabaseHistoryProtocol.swift,
@@ -209,6 +212,7 @@
 				Protocol/SyncHistoryProtocol.swift,
 				Protocol/SyncronizationProtocol.swift,
 				RequestUser.swift,
+				ShirtNumberOption.swift,
 				SwiftDataEntity/Absence.swift,
 				SwiftDataEntity/Attendance.swift,
 				SwiftDataEntity/Chat.swift,
@@ -310,6 +314,7 @@
 				Error/ImageUploadError.swift,
 				Error/InputValidationError.swift,
 				Error/LoginError.swift,
+				Error/NotificationError.swift,
 				Error/RegisterError.swift,
 				Error/SupabaseError.swift,
 				Error/TeamError.swift,
@@ -318,6 +323,7 @@
 				InAppMessage.swift,
 				MemberProfile.swift,
 				MemberStatistic.swift,
+				Note.swift,
 				Protocol/AlertManageProtocol.swift,
 				Protocol/AuthProtocol.swift,
 				Protocol/DatabaseHistoryProtocol.swift,
@@ -331,6 +337,7 @@
 				Protocol/SyncHistoryProtocol.swift,
 				Protocol/SyncronizationProtocol.swift,
 				RequestUser.swift,
+				ShirtNumberOption.swift,
 				SwiftDataEntity/Absence.swift,
 				SwiftDataEntity/Attendance.swift,
 				SwiftDataEntity/Chat.swift,
@@ -840,7 +847,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = de.frederikkohler.CourtConnect.CourtConnectWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -873,7 +880,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = de.frederikkohler.CourtConnect.CourtConnectWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1035,7 +1042,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = de.frederikkohler.CourtConnect;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = NO;
@@ -1074,7 +1081,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = de.frederikkohler.CourtConnect;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = NO;

@@ -139,6 +139,7 @@ struct NavigationTabBar<Content: View>: View {
 
 #Preview {
     @Previewable @State var navViewModel = NavigationViewModel()
+    
     NavigationTabBar(navViewModel: navViewModel) {
         ScrollView {
             let colors = [Color.red, Color.black, Color.indigo, Color.orange, Color.red, Color.black, Color.indigo, Color.orange]
@@ -157,4 +158,8 @@ struct NavigationTabBar<Content: View>: View {
         .scrollIndicators(.hidden) 
     }
     .preferredColorScheme(.light)
+    .onAppear {
+        navViewModel.userAccount = MockUser.myUserAccountWithOutTeam
+        //navViewModel.currentTeam = nil
+    }
 }

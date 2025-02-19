@@ -146,7 +146,13 @@ fileprivate struct HasTeam: View {
             })
             .padding(.vertical, 16)
             .padding(.horizontal, 16)
-             
+              
+            NavigationLink {
+                NoteView()
+            } label: {
+                ShowNotesCard()
+            } 
+            
             ConfirmButtonLabel(confirmButtonDialog: ConfirmButtonDialog(
                 systemImage: "iphone.and.arrow.right.inward",
                 buttonText: "Leave Team",
@@ -183,6 +189,89 @@ fileprivate struct GenerateNewJoinCodeView: View {
         })
     }
 } 
+
+fileprivate struct ShowNotesCard: View {
+    var body: some View {
+        VStack(spacing: 15) {
+            ZStack {
+                LinearGradient(
+                    stops: [
+                        Gradient.Stop(color: Theme.headline, location: 0.00),
+                        Gradient.Stop(color: Theme.headlineReversed, location: 1.00)
+                    ],
+                    startPoint: UnitPoint(x: 1, y: 0),
+                    endPoint: UnitPoint(x: 0, y: 1)
+                )
+                .opacity(0.9)
+                .blur(radius: 10)
+                
+                RoundedRectangle(cornerRadius: 35)
+                    .stroke(
+                        LinearGradient(
+                            stops: [
+                                Gradient.Stop(color: .white.opacity(0.4), location: 0.00),
+                                Gradient.Stop(color: .white.opacity(0.6), location: 1.00)
+                            ],
+                            startPoint: UnitPoint(x: 1, y: 0),
+                            endPoint: UnitPoint(x: 0, y: 1)
+                        ).opacity(0.8),
+                        lineWidth: 2
+                    )
+                    .stroke(
+                        LinearGradient(
+                            stops: [
+                                Gradient.Stop(color: .white.opacity(0.4), location: 0.00),
+                                Gradient.Stop(color: .white.opacity(0.2), location: 1.00)
+                            ],
+                            startPoint: UnitPoint(x: 0, y: 1),
+                            endPoint: UnitPoint(x: 1, y: 0)
+                        ),
+                        lineWidth: 2
+                    )
+                    .overlay {
+                        HStack {
+                            Text("😜")
+                                .offset(x: -30)
+                                .rotationEffect(Angle(degrees: 15))
+                                .clipped()
+                            
+                            Spacer()
+                            VStack {
+                                Button("Show Notes") {
+                                    
+                                }
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                                .buttonStyle(DarkButtonStlye())
+                                
+                            }
+                            Spacer()
+                            
+                            Text("🤗")
+                                .offset(x: 30)
+                                .rotationEffect(Angle(degrees: -15))
+                                .clipped()
+                        }
+                        .font(.system(size: 100))
+                        .clipShape(Rectangle())
+                    }
+            }
+            .frame(width: .infinity, height: 200)
+            .borderRadius(35)
+        }
+        .padding()
+    }
+}
+
+#Preview {
+    NavigationStack {
+        NavigationLink {
+            NoteView()
+        } label: {
+            ShowNotesCard()
+        }
+    }
+}
 
 #Preview {
     NavigationStack {

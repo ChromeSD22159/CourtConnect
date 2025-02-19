@@ -88,12 +88,6 @@
     },
     "%@ %@" : {
       "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@ %2$@"
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "new",
@@ -141,6 +135,12 @@
           }
         }
       }
+    },
+    "🤗" : {
+
+    },
+    "😜" : {
+
     },
     "0" : {
       "localizations" : {
@@ -238,6 +238,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dokument hinzufügen"
+          }
+        }
+      }
+    },
+    "Add Notes" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notiz hinzufügen"
           }
         }
       }
@@ -891,6 +901,16 @@
         }
       }
     },
+    "Edit Notes" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notizen bearbeiten"
+          }
+        }
+      }
+    },
     "Edit User" : {
       "localizations" : {
         "de" : {
@@ -1138,24 +1158,10 @@
       }
     },
     "Handle Error" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Handle Error"
-          }
-        }
-      }
+
     },
     "Handle Message" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Handle Message"
-          }
-        }
-      }
+
     },
     "Headcoach" : {
       "localizations" : {
@@ -1485,6 +1491,26 @@
         }
       }
     },
+    "Looks like you haven't written any notes" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sieht so aus, als hättest du keine Notizen geschrieben"
+          }
+        }
+      }
+    },
+    "Looks like you haven't written any notes. Let's get started!" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sieht so aus, als hättest keine Notizen geschrieben. Fangen wir an!"
+          }
+        }
+      }
+    },
     "Lowest Fouls" : {
       "localizations" : {
         "de" : {
@@ -1546,14 +1572,7 @@
       }
     },
     "Neue Nachricht von Frederik" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Neue Nachricht von Frederik"
-          }
-        }
-      }
+
     },
     "New appointment" : {
       "localizations" : {
@@ -1641,6 +1660,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Keine Anfragen"
+          }
+        }
+      }
+    },
+    "No Notes Yet" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Noch keine Notizen"
           }
         }
       }
@@ -1771,6 +1800,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Termin planen"
+          }
+        }
+      }
+    },
+    "Plan notification" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Benachrichtigung Planen"
           }
         }
       }
@@ -1951,6 +1990,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Chat neu laden"
+          }
+        }
+      }
+    },
+    "Reminder Date" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erinnerungsdatum"
           }
         }
       }
@@ -2177,6 +2226,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mehr zeigen"
+          }
+        }
+      }
+    },
+    "Show Notes" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notizen anzeigen"
           }
         }
       }
@@ -2552,12 +2611,32 @@
         }
       }
     },
+    "Title e.g." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Titel z.B."
+          }
+        }
+      }
+    },
     "Title is required." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Der Titel ist erforderlich."
+          }
+        }
+      }
+    },
+    "Total Notes: %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gesamtnotizen: %LLD"
           }
         }
       }
@@ -2760,6 +2839,16 @@
         }
       }
     },
+    "When do you want to be remembered?" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wann möchtest du erinnert werden?"
+          }
+        }
+      }
+    },
     "When?" : {
       "localizations" : {
         "de" : {
@@ -2816,6 +2905,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Deine Nachricht"
+          }
+        }
+      }
+    },
+    "Your Notes" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deine Notizen"
           }
         }
       }
