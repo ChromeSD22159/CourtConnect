@@ -52,10 +52,11 @@ import Auth
                 updatedAt: Date()
             )
         }
-        
-        // SEND INSERT/UPSERT TO SERVER
+         
         Task {
-            defer { reset() }
+            defer {
+                getTermine()
+            }
             do {
                 guard let user = user else { throw UserError.userIdNotFound }
                 for statsistic in statistics {
@@ -159,6 +160,9 @@ import Auth
         selectedTermin = nil
         teamPlayer = []
         teamTrainer = []
+        termine = []
+        
+        getTermine()
     }
     
     func hasStatistic(userAccountId: UUID, terminId: UUID) -> Bool {
