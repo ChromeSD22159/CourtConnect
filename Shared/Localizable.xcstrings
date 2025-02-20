@@ -1157,12 +1157,6 @@
         }
       }
     },
-    "Handle Error" : {
-
-    },
-    "Handle Message" : {
-
-    },
     "Headcoach" : {
       "localizations" : {
         "de" : {
@@ -1570,9 +1564,6 @@
           }
         }
       }
-    },
-    "Neue Nachricht von Frederik" : {
-
     },
     "New appointment" : {
       "localizations" : {

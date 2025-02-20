@@ -52,11 +52,7 @@ struct AddStatisticView: View {
         } 
         .sheet(item: $viewModel.selectedTermin) { termin in
             let filteredTeamPlayerList = viewModel.filterTeamPlayer(terminId: termin.id)
-            let filteredTeamTrainerList = viewModel.filterTeamTrainer(terminId: termin.id)
-            
-            let _ = print(termin.startTime.toDateString() + " " + termin.title)
-            let _ = print("filteredTeamPlayerList: \(filteredTeamPlayerList.count)")
-            let _ = print("filteredTeamTrainerList: \(filteredTeamTrainerList.count)")
+            let filteredTeamTrainerList = viewModel.filterTeamTrainer(terminId: termin.id) 
             
             AddStaticSheet(termin: termin, filteredTeamPlayerList: filteredTeamPlayerList, filteredTeamTrainerList: filteredTeamTrainerList) { termin in
                 viewModel.saveStatistics(termin: termin)
