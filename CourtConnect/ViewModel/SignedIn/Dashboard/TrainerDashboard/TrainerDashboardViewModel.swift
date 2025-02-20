@@ -136,7 +136,7 @@ import UIKit
     private func getTeamTermine() {
         do {
             guard let currentTeam = currentTeam else { throw TeamError.userHasNoTeam }
-            termine = try repository.teamRepository.getTeamTermine(for: currentTeam.id)
+            termine = try repository.terminRepository.getTeamTermine(for: currentTeam.id)
         } catch {
             print(error)
         }

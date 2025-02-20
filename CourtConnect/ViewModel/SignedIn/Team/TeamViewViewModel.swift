@@ -56,7 +56,7 @@ import Auth
     private func getTeamTermine() {
         do {
             guard let team = currentTeam else { throw TeamError.userHasNoTeam }
-            termine = try repository.teamRepository.getTeamTermine(for: team.id)
+            termine = try repository.terminRepository.getTeamTermine(for: team.id)
         } catch {
             print(error)
         }

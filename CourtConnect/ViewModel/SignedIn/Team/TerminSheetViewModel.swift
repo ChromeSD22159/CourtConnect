@@ -34,7 +34,7 @@ import MapKit
     
     func getTermin() {
         do {
-            if let termin = try repository.teamRepository.getTermineBy(id: terminId) {
+            if let termin = try repository.terminRepository.getTermineBy(id: terminId) {
                 self.terminData.termin = termin
                 
                 self.position  = MapCameraPosition.region(

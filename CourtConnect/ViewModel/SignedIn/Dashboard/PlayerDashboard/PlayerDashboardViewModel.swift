@@ -128,7 +128,7 @@ struct DateRange {
     private func getTeamTermine() {
         do {
             guard let currentTeam = currentTeam else { throw TeamError.userHasNoTeam }
-            termine = try repository.teamRepository.getTeamTermine(for: currentTeam.id)
+            termine = try repository.terminRepository.getTeamTermine(for: currentTeam.id)
         } catch {
             print(error)
         }
@@ -141,7 +141,7 @@ struct DateRange {
             
             let attandances = try repository.accountRepository.getAccountPendingAttendances(for: userAccount.id)
             for attandance in attandances {
-                if let termine = try repository.teamRepository.getTermineBy(id: attandance.terminId) {
+                if let termine = try repository.terminRepository.getTermineBy(id: attandance.terminId) {
                     let attendanceTermin = AttendanceTermin(attendance: attandance, termin: termine)
                     attendancesTerminesTmp.append(attendanceTermin)
                 }
