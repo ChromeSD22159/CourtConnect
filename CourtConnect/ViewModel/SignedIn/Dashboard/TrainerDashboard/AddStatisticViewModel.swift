@@ -98,6 +98,53 @@ import Auth
             print(error)
         }
     }
+    
+    func terminHasOpenMembersOrTrainer(termin: Termin) -> Bool {
+        do {
+            guard let team = currentTeam else { throw TeamError.teamNotFound }
+            let teamMember = try repository.teamRepository.getTeamMembers(for: team.id)
+            
+            var teamPlayer: [TeamMemberProfileStatistic] = []
+            var teamTrainer: [TeamMemberProfile] = []
+            
+            for member in teamMember {
+                if let userAccount = try repository.accountRepository.getAccount(id: member.userAccountId),
+                   let userProfil = try repository.userRepository.getUserProfileFromDatabase(userId: userAccount.userId) {
+                    
+                    if userAccount.roleEnum == .player {
+                        let teamMemberProfileStatistic = TeamMemberProfileStatistic(
+                            userProfile: userProfil,
+                            teamMember: member,
+                            statistic: TempStatistic()
+                        )
+                        
+                        let has = try repository.teamRepository.playerHasStatistic(userAccountId: teamMemberProfileStatistic.teamMember.userAccountId, terminId: termin.id)
+                        
+                        if !has {
+                            teamPlayer.append(teamMemberProfileStatistic)
+                        }
+                        
+                    }
+                    if userAccount.roleEnum == .coach {
+                        let teamMemberProfileStatistic = TeamMemberProfile(
+                            userProfile: userProfil,
+                            teamMember: member
+                        )
+                        
+                        let has = try repository.teamRepository.playerHasStatistic(userAccountId: teamMemberProfileStatistic.teamMember.userAccountId, terminId: termin.id)
+                        
+                        if !has {
+                            teamTrainer.append(teamMemberProfileStatistic)
+                        }
+                    }
+                }
+            }
+            
+            return !teamPlayer.isEmpty && !teamTrainer.isEmpty
+        } catch {
+            return false
+        }
+    }
      
     private func getTermine() {
         do {
@@ -114,7 +161,7 @@ import Auth
         teamTrainer = []
     }
     
-    private func hasStatistic(userAccountId: UUID, terminId: UUID) -> Bool {
+    func hasStatistic(userAccountId: UUID, terminId: UUID) -> Bool {
         do {
             return try repository.teamRepository.playerHasStatistic(userAccountId: userAccountId, terminId: terminId)
         } catch {

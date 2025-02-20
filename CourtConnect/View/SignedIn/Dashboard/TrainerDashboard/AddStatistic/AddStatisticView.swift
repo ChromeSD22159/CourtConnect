@@ -18,7 +18,8 @@ struct AddStatisticView: View {
                     if viewModel.termine.isEmpty {
                         NoAppointmentAvailableView()
                     } else {
-                        ForEach(viewModel.termine) { termin in
+                        ForEach(viewModel.termine) { termin in 
+                            
                             HStack {
                                 Text(termin.startTime.toDateString() + " " + termin.title)
                                     .lineLimit(1)
@@ -29,7 +30,13 @@ struct AddStatisticView: View {
                                 Text(TerminType(rawValue: termin.typeString)?.localized ?? "")
                                     .font(.caption2)
                                     .padding(5)
-                                    .background(TerminType(rawValue: termin.typeString) == .game ? Theme.lightOrange : Theme.darkOrange)
+                                    .background {
+                                        if viewModel.terminHasOpenMembersOrTrainer(termin: termin) {
+                                            TerminType(rawValue: termin.typeString) == .game ? Theme.lightOrange : Theme.darkOrange
+                                        } else {
+                                            Color.gray.opacity(0.8)
+                                        }
+                                    }
                                     .borderRadius(5)
                             }
                             .font(.footnote)
@@ -44,13 +51,22 @@ struct AddStatisticView: View {
             }
         } 
         .sheet(item: $viewModel.selectedTermin) { termin in
-            AddStaticSheet(termin: termin, viewModel: viewModel)
-                .presentationCornerRadius(25)
-                .presentationBackground(Material.ultraThinMaterial)
-                .presentationDragIndicator(.visible)
-                .onDisappear {
-                    viewModel.saveStatistics(termin: termin)
-                }
+            let filteredTeamPlayerList = viewModel.filterTeamPlayer(terminId: termin.id)
+            let filteredTeamTrainerList = viewModel.filterTeamTrainer(terminId: termin.id)
+            
+            let _ = print(termin.startTime.toDateString() + " " + termin.title)
+            let _ = print("filteredTeamPlayerList: \(filteredTeamPlayerList.count)")
+            let _ = print("filteredTeamTrainerList: \(filteredTeamTrainerList.count)")
+            
+            AddStaticSheet(termin: termin, filteredTeamPlayerList: filteredTeamPlayerList, filteredTeamTrainerList: filteredTeamTrainerList) { termin in
+                viewModel.saveStatistics(termin: termin)
+            }
+            .presentationCornerRadius(25)
+            .presentationBackground(Material.ultraThinMaterial)
+            .presentationDragIndicator(.visible)
+            .onDisappear {
+                viewModel.saveStatistics(termin: termin)
+            }
         }
         .refreshable { viewModel.fetchDataFromRemote() }
         .navigationTitle(title: "Statistics")
@@ -59,12 +75,16 @@ struct AddStatisticView: View {
 } 
 
 fileprivate struct AddStaticSheet: View {
-    let termin: Termin
-    var viewModel: AddStatisticViewModel
+    let filteredTeamPlayerList: [TeamMemberProfileStatistic]
+    let filteredTeamTrainerList: [TeamMemberProfile]
+    var termin: Termin
+    let onSave: (Termin) -> Void
     
-    init(termin: Termin, viewModel: AddStatisticViewModel) {
+    init(termin: Termin, filteredTeamPlayerList: [TeamMemberProfileStatistic], filteredTeamTrainerList: [TeamMemberProfile], onSave: @escaping (Termin) -> Void) {
         self.termin = termin
-        self.viewModel = viewModel
+        self.filteredTeamPlayerList = filteredTeamPlayerList
+        self.filteredTeamTrainerList = filteredTeamTrainerList
+        self.onSave = onSave
     }
     
     var body: some View {
@@ -88,9 +108,7 @@ fileprivate struct AddStaticSheet: View {
                 }
                 
                 Section {
-                    let list = viewModel.filterTeamPlayer(terminId: termin.id)
-                    
-                    if list.isEmpty {
+                    if filteredTeamPlayerList.isEmpty {
                         HStack {
                             AllStatisticEneredAvailableView()
                         }
@@ -98,7 +116,7 @@ fileprivate struct AddStaticSheet: View {
                         .background(Material.ultraThinMaterial)
                         .borderRadius(15)
                     } else {
-                        ForEach(list, id: \.teamMember.id) { player in
+                        ForEach(filteredTeamPlayerList, id: \.teamMember.id) { player in
                             MemberRowPlayer(player: player)
                         }
                     }
@@ -110,8 +128,7 @@ fileprivate struct AddStaticSheet: View {
                 }
                 
                 Section {
-                    let list = viewModel.filterTeamTrainer(terminId: termin.id)
-                    if list.isEmpty {
+                    if filteredTeamTrainerList.isEmpty {
                         HStack {
                             AllCoachesConfirmedAvailableView()
                         }
@@ -119,7 +136,7 @@ fileprivate struct AddStaticSheet: View {
                         .background(Material.ultraThinMaterial)
                         .borderRadius(15)
                     } else {
-                        ForEach(viewModel.teamTrainer, id: \.teamMember.id) { trainer in
+                        ForEach(filteredTeamTrainerList, id: \.teamMember.id) { trainer in
                             MemberRowTrainer(trainer: trainer)
                         }
                     }
@@ -137,7 +154,7 @@ fileprivate struct AddStaticSheet: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Save") {
-                        viewModel.saveStatistics(termin: termin)
+                        onSave(termin)
                     }
                 }
             }

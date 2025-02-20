@@ -6,9 +6,7 @@
 //
 import SwiftData
 import Foundation
-
-
-
+ 
 class NoteRepository: RepositoryProtocol {
     var container: ModelContainer
     
