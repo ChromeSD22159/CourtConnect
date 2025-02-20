@@ -34,6 +34,7 @@ import Auth
     var chatRepository: ChatRepository
     var accountRepository: AccountRepository
     var teamRepository: TeamRepository
+    var terminRepository: TerminRepository
     var documentRepository: DocumentRepository
     var noteRepository: NoteRepository
     var syncHistoryRepository: SyncServiceRepository
@@ -89,6 +90,7 @@ import Auth
             self.chatRepository = ChatRepository(container: container)
             self.accountRepository = AccountRepository(container: container)
             self.teamRepository = TeamRepository(container: container)
+            self.terminRepository = TerminRepository(container: container)
             self.syncHistoryRepository = SyncServiceRepository(container: container)
             self.documentRepository = DocumentRepository(container: container)
             self.noteRepository = NoteRepository(container: container)
@@ -96,4 +98,4 @@ import Auth
             fatalError("Cannot create Database \(error)")
         }
     }
-}  
+}

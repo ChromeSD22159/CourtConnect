@@ -143,6 +143,7 @@
 				Repositories/NoteRepository.swift,
 				Repositories/SyncHistoryRepository.swift,
 				Repositories/TeamRepository.swift,
+				Repositories/TerminRepository.swift,
 				Repositories/UserRepository.swift,
 				Repository.swift,
 			);
@@ -207,6 +208,7 @@
 				Protocol/ModelProtocol.swift,
 				Protocol/OnAppiearAnimation.swift,
 				Protocol/QRCodeProtocol.swift,
+				Protocol/RepositoryProtocol.swift,
 				Protocol/Sheet.swift,
 				Protocol/SupabaseEntitiy.swift,
 				Protocol/SyncHistoryProtocol.swift,
@@ -332,6 +334,7 @@
 				Protocol/ModelProtocol.swift,
 				Protocol/OnAppiearAnimation.swift,
 				Protocol/QRCodeProtocol.swift,
+				Protocol/RepositoryProtocol.swift,
 				Protocol/Sheet.swift,
 				Protocol/SupabaseEntitiy.swift,
 				Protocol/SyncHistoryProtocol.swift,

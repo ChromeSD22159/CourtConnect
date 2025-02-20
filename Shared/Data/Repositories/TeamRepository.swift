@@ -184,24 +184,8 @@ import Supabase
         let predicate = #Predicate<Requests> { $0.teamId == teamId && $0.accountId == userAccountId && $0.deletedAt == nil }
         let fetchDescriptor = FetchDescriptor<Requests>(predicate: predicate)
         return try container.mainContext.fetch(fetchDescriptor)
-    }
-    
-    func getTeamTermine(for teamId: UUID) throws -> [Termin] {
-        let date = Calendar.current.startOfDay(for: Date())
-        let predicate = #Predicate<Termin> { $0.startTime > date && $0.teamId == teamId && $0.deletedAt == nil }
-        let fetchDescriptor = FetchDescriptor(predicate: predicate)
-        let result = try container.mainContext.fetch(fetchDescriptor) 
-        return result
-    }
-    
-    func getPastTeamTermine(for teamId: UUID) throws -> [Termin] {
-        let date = Date()
-        let predicate = #Predicate<Termin> { $0.startTime < date && $0.teamId == teamId && $0.deletedAt == nil }
-        let fetchDescriptor = FetchDescriptor(predicate: predicate)
-        let result = try container.mainContext.fetch(fetchDescriptor)
-        return result
-    }
-    
+    } 
+     
     func getTeamConfirmedAttendances(for terminId: UUID) throws -> [String] {
         let status = AttendanceStatus.confirmed.rawValue
         let predicate = #Predicate<Attendance> { $0.terminId == terminId && $0.attendanceStatus == status && $0.deletedAt == nil }
@@ -230,14 +214,7 @@ import Supabase
         let predicate = #Predicate<Attendance> { $0.terminId == terminId && $0.userAccountId == userAccountId && $0.deletedAt == nil }
         let fetchDescriptor = FetchDescriptor(predicate: predicate)
         return try container.mainContext.fetch(fetchDescriptor).first != nil
-    }
-    
-    func getTermineBy(id: UUID) throws -> Termin? {
-        let predicate = #Predicate<Termin> { $0.id == id && $0.deletedAt == nil }
-        let fetchDescriptor = FetchDescriptor(predicate: predicate)
-        let result = try container.mainContext.fetch(fetchDescriptor)
-        return result.first
-    }
+    } 
     
     func deleteLocalTeam(for team: Team) {
         container.mainContext.delete(team)

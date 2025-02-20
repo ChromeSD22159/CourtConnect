@@ -32,38 +32,6 @@ import Auth
         
         self.getTeamMember(termin: termin)
     }
-     
-    func getTeamMember(termin: Termin) {
-        do {
-            guard let team = currentTeam else { throw TeamError.teamNotFound }
-            let teamMember = try repository.teamRepository.getTeamMembers(for: team.id)
-            
-            for member in teamMember {
-                if let userAccount = try repository.accountRepository.getAccount(id: member.userAccountId),
-                   let userProfil = try repository.userRepository.getUserProfileFromDatabase(userId: userAccount.userId) {
-                    
-                    if userAccount.roleEnum == .player {
-                        let teamMemberProfileStatistic = TeamMemberProfileStatistic(
-                            userProfile: userProfil,
-                            teamMember: member,
-                            statistic: TempStatistic()
-                        )
-                        
-                        self.teamPlayer.append(teamMemberProfileStatistic)
-                    }
-                    if userAccount.roleEnum == .coach {
-                        let teamMemberProfileStatistic = TeamMemberProfile(
-                            userProfile: userProfil,
-                            teamMember: member
-                        )
-                        self.teamTrainer.append(teamMemberProfileStatistic)
-                    }
-                }
-            }
-        } catch {
-            print(error)
-        }
-    }
     
     func saveStatistics(termin: Termin) {
         let totalPoints = teamPlayer.map { $0.statistic.points }.reduce(0, +)
@@ -98,11 +66,43 @@ import Auth
             }
         }
     }
-    
+     
+    private func getTeamMember(termin: Termin) {
+        do {
+            guard let team = currentTeam else { throw TeamError.teamNotFound }
+            let teamMember = try repository.teamRepository.getTeamMembers(for: team.id)
+            
+            for member in teamMember {
+                if let userAccount = try repository.accountRepository.getAccount(id: member.userAccountId),
+                   let userProfil = try repository.userRepository.getUserProfileFromDatabase(userId: userAccount.userId) {
+                    
+                    if userAccount.roleEnum == .player {
+                        let teamMemberProfileStatistic = TeamMemberProfileStatistic(
+                            userProfile: userProfil,
+                            teamMember: member,
+                            statistic: TempStatistic()
+                        )
+                        
+                        self.teamPlayer.append(teamMemberProfileStatistic)
+                    }
+                    if userAccount.roleEnum == .coach {
+                        let teamMemberProfileStatistic = TeamMemberProfile(
+                            userProfile: userProfil,
+                            teamMember: member
+                        )
+                        self.teamTrainer.append(teamMemberProfileStatistic)
+                    }
+                }
+            }
+        } catch {
+            print(error)
+        }
+    }
+     
     private func getTermine() {
         do {
             guard let team = currentTeam else { throw TeamError.teamNotFound }
-            termine = try repository.teamRepository.getPastTeamTermine(for: team.id)
+            termine = try repository.terminRepository.getPastTeamTermine(for: team.id)
         } catch {
             print(error)
         }
