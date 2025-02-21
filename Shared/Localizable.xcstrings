@@ -88,6 +88,12 @@
     },
     "%@ %@" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ %2$@"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "new",
@@ -97,7 +103,14 @@
       }
     },
     "%@ h" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ h"
+          }
+        }
+      }
     },
     "%@ Statistics" : {
       "localizations" : {
@@ -141,6 +154,12 @@
     },
     "%lld. %@" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld. %2$@"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "new",
@@ -436,7 +455,14 @@
       }
     },
     "Beta" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beta"
+          }
+        }
+      }
     },
     "Birthday" : {
       "localizations" : {
@@ -609,7 +635,14 @@
       }
     },
     "Create hourly report" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erstellen Stundenbericht"
+          }
+        }
+      }
     },
     "Create New Account or Switch to Existing Account" : {
       "localizations" : {
@@ -723,17 +756,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Das Datum ist ungültig."
-          }
-        }
-      }
-    },
-    "December 2024" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dezember 2024"
           }
         }
       }
@@ -889,7 +911,14 @@
       }
     },
     "E-Mail:" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-Mail:"
+          }
+        }
+      }
     },
     "e.g. meeting point on site at 10 am." : {
       "localizations" : {
@@ -961,8 +990,15 @@
         }
       }
     },
-    "Enddatum" : {
-
+    "End date" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enddatum"
+          }
+        }
+      }
     },
     "Enter a Team ID to instantly join an existing team and start managing players and training sessions." : {
       "localizations" : {
@@ -1150,9 +1186,6 @@
         }
       }
     },
-    "Generate" : {
-
-    },
     "Generate a new Code for your team." : {
       "localizations" : {
         "de" : {
@@ -1179,6 +1212,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Neue Code generieren"
+          }
+        }
+      }
+    },
+    "Generate pdf" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PDF generieren "
           }
         }
       }
@@ -1691,7 +1734,14 @@
       }
     },
     "No Confirmed Coaches found" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine bestätigten Trainer gefunden"
+          }
+        }
+      }
     },
     "No Connection" : {
       "localizations" : {
@@ -2259,6 +2309,16 @@
         }
       }
     },
+    "Share" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teilen"
+          }
+        }
+      }
+    },
     "Shirt Number" : {
       "localizations" : {
         "de" : {
@@ -2399,6 +2459,16 @@
         }
       }
     },
+    "Start date" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Startdatum"
+          }
+        }
+      }
+    },
     "Start exploring our app" : {
       "localizations" : {
         "de" : {
@@ -2418,9 +2488,6 @@
           }
         }
       }
-    },
-    "Startdatum" : {
-
     },
     "Statistics" : {
       "localizations" : {
@@ -2604,7 +2671,14 @@
       }
     },
     "The hourly report cannot be created" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Stundenbericht kann nicht erstellt werden"
+          }
+        }
+      }
     },
     "The input must not be empty!" : {
       "localizations" : {
@@ -2702,17 +2776,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Diese Liste zeigt alle offenen Zugangsanfragen für das Team.  Wähle eine Anfrage aus, um die Details anzuzeigen und zu bearbeiten."
-          }
-        }
-      }
-    },
-    "Time recording" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zeiterfassung"
           }
         }
       }

@@ -120,7 +120,10 @@ struct ShareLinkPDFView: View {
     var body: some View {
         VStack {
             if let pdf = pdfCreator.createPDFData(displayScale: displayScale) {
-                ShareLink(item: pdf)
+                ShareLink(item: pdf) {
+                    Label("Share", systemImage:  "square.and.arrow.up")
+                }
+                .buttonStyle(DarkButtonStlye())
             }
         }
         .padding()
@@ -132,8 +135,8 @@ struct TimeRecordingImage: View {
     let pdfCreator: PDFCreator
     @State var dataUrl: URL?
     
-    init(page:PDFInfo, list: [TrainerSaleryData]) {
-        let page = PDFInfo(image: Image(.appIcon), list: list, createdAt: Date())
+    init(page:PDFInfo) {
+        let page = page
         self.pdfCreator = PDFCreator(
             page: page,
             size: .dinA4
@@ -165,8 +168,10 @@ struct TimeRecordingImage: View {
     ZStack {
         Color.gray
         
-        TimeRecordingImage(page: page, list: list)
-            .padding()
+        VStack {
+            TimeRecordingImage(page: page)
+            ShareLinkPDFView(page: page)
+        }.padding()
     }
     .ignoresSafeArea()
     
