@@ -200,6 +200,7 @@
 				MemberProfile.swift,
 				MemberStatistic.swift,
 				Note.swift,
+				PDFInfo.swift,
 				Protocol/AlertManageProtocol.swift,
 				Protocol/AuthProtocol.swift,
 				Protocol/DatabaseHistoryProtocol.swift,
@@ -234,6 +235,7 @@
 				SwiftDataEntity/UserProfile.swift,
 				TeamAdminProfile.swift,
 				TeamMemberProfile.swift,
+				TrainerSaleryData.swift,
 				UserAccountProfile.swift,
 				WidgetStatistic.swift,
 			);
@@ -271,6 +273,7 @@
 				GeoCoderHelper.swift,
 				MockData/MockTermine.swift,
 				MockData/MockUser.swift,
+				PDFCreator.swift,
 				QRCodeHelper.swift,
 			);
 			target = B6509FDD2D594CDA0032CB17 /* CourtConnectWidgetExtension */;
@@ -326,6 +329,7 @@
 				MemberProfile.swift,
 				MemberStatistic.swift,
 				Note.swift,
+				PDFInfo.swift,
 				Protocol/AlertManageProtocol.swift,
 				Protocol/AuthProtocol.swift,
 				Protocol/DatabaseHistoryProtocol.swift,
@@ -360,6 +364,7 @@
 				SwiftDataEntity/UserProfile.swift,
 				TeamAdminProfile.swift,
 				TeamMemberProfile.swift,
+				TrainerSaleryData.swift,
 				UserAccountProfile.swift,
 				WidgetStatistic.swift,
 			);

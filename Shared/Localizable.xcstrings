@@ -96,6 +96,9 @@
         }
       }
     },
+    "%@ h" : {
+
+    },
     "%@ Statistics" : {
       "localizations" : {
         "de" : {
@@ -688,6 +691,9 @@
         }
       }
     },
+    "Datum / Ort: ___________________" : {
+
+    },
     "December 2024" : {
       "localizations" : {
         "de" : {
@@ -1011,6 +1017,9 @@
         }
       }
     },
+    "Erstellt am: %@" : {
+
+    },
     "Fast & Easy" : {
       "localizations" : {
         "de" : {
@@ -1156,6 +1165,12 @@
           }
         }
       }
+    },
+    "Handle Error" : {
+
+    },
+    "Handle Message" : {
+
     },
     "Headcoach" : {
       "localizations" : {
@@ -1564,6 +1579,9 @@
           }
         }
       }
+    },
+    "Neue Nachricht von Frederik" : {
+
     },
     "New appointment" : {
       "localizations" : {
@@ -2692,6 +2710,9 @@
           }
         }
       }
+    },
+    "Unterschrift: ___________________" : {
+
     },
     "Update Code" : {
       "localizations" : {

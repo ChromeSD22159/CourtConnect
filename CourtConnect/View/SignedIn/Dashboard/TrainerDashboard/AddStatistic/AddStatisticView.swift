@@ -49,7 +49,19 @@ struct AddStatisticView: View {
                 .blurrylistRowBackground()
                 
             }
-        } 
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    let list = [
+                        TrainerData(fullName: "Frederik Kohler", hours: 5, hourlyRate: 12.99),
+                        TrainerData(fullName: "Vorname Nachname", hours: 5, hourlyRate: 12.99)
+                    ]
+                    
+                    let page = PDFInfo(title: "Zeiterfassung", image: Image(.appIcon), description: "Description", list: list, createdAt: Date())
+                    
+                    SharePDFView(page: page, list: list)
+                }
+            }
+        }
         .sheet(item: $viewModel.selectedTermin) { termin in
             let filteredTeamPlayerList = viewModel.filterTeamPlayer(terminId: termin.id)
             let filteredTeamTrainerList = viewModel.filterTeamTrainer(terminId: termin.id) 
@@ -275,34 +287,7 @@ fileprivate struct MemberRowTrainer: View {
 }
 
 #Preview {
-    List {
-        
-        Section {
-            VStack(alignment: .leading) {
-                Label("Infomation", systemImage: "info")
-                    .symbolVariant(.circle.circle)
-                
-                Text("Please enter the statistics for every player here.  Use the steppers to set the number of 2-point throws, 3-point throws and fouls.  The total number of points is automatically calculated.")
-                    .font(.footnote)
-            }
-            .foregroundStyle(Theme.myGray)
-        }
-        .listRowBackground(Color.clear)
-        
-        HStack {
-            Text(Date().toDateString())
-            Text("Freiburg vs Hamburg")
-            Spacer()
-            
-            Text("Game")
-                .font(.caption2)
-                .padding(5)
-                .background(Theme.darkOrange)
-                .borderRadius(5)
-        }
+    NavigationStack {
+        AddStatisticView()
     }
-} 
-
-#Preview {
-    AddStatisticView()
 }
