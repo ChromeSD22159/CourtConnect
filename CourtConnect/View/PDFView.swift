@@ -9,7 +9,7 @@ import SwiftUI
 import PDFKit
 
 // MARK: - Model
-struct PDFView: View {
+struct SaleryPDF: View {
     let info: PDFInfo
     let size: PDFCreator.PDFDinFormat
     
@@ -72,12 +72,12 @@ struct PDFView: View {
     
     @ViewBuilder func tableHeaderRow() -> some View {
         HStack {
-            Text("Trainer Name")
+            Text("Coach")
             Spacer()
             Divider()
-            Text("Stunden").frame(width: oneSixten * 1.3)
+            Text("Hours").frame(width: oneSixten * 1.3)
             Divider()
-            Text("Satz").frame(width: oneSixten * 1.3)
+            Text("Rate").frame(width: oneSixten * 1.3)
             Divider()
             Text("Total").frame(width: oneSixten * 1.3)
         }
@@ -106,11 +106,11 @@ struct PDFView: View {
 }
 
 // MARK: - Model
-struct SharePDFView: View {
+struct ShareLinkPDFView: View {
     @Environment(\.displayScale) var displayScale
     let pdfCreator: PDFCreator
     
-    init(page: PDFInfo, list: [TrainerSaleryData]) {
+    init(page: PDFInfo) {
         self.pdfCreator = PDFCreator(
             page: page,
             size: .dinA4
@@ -125,24 +125,6 @@ struct SharePDFView: View {
         }
         .padding()
     }
-}
-
-#Preview {
-    let list = [
-        TrainerSaleryData(fullName: "Frederik Kohler", hours: 5, hourlyRate: 12.99),
-        TrainerSaleryData(fullName: "Vorname Nachname", hours: 5, hourlyRate: 12.99)
-    ]
-    
-    let page = PDFInfo(image: Image(.appIcon), list: list, createdAt: Date())
-    
-    ZStack {
-        Color.gray
-        
-        TimeRecordingImage(page: page, list: list)
-            .padding()
-    }
-    .ignoresSafeArea()
-    
 }
 
 struct TimeRecordingImage: View {
@@ -170,4 +152,22 @@ struct TimeRecordingImage: View {
             dataUrl = pdfCreator.createPDFData(displayScale: displayScale)
         }
     }
+}
+
+#Preview {
+    let list = [
+        TrainerSaleryData(fullName: "Frederik Kohler", hours: 5, hourlyRate: 12.99),
+        TrainerSaleryData(fullName: "Vorname Nachname", hours: 5, hourlyRate: 12.99)
+    ]
+    
+    let page = PDFInfo(image: Image(.appIcon), list: list, createdAt: Date())
+    
+    ZStack {
+        Color.gray
+        
+        TimeRecordingImage(page: page, list: list)
+            .padding()
+    }
+    .ignoresSafeArea()
+    
 }

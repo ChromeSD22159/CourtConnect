@@ -435,6 +435,9 @@
         }
       }
     },
+    "Beta" : {
+
+    },
     "Birthday" : {
       "localizations" : {
         "de" : {
@@ -605,6 +608,9 @@
         }
       }
     },
+    "Create hourly report" : {
+
+    },
     "Create New Account or Switch to Existing Account" : {
       "localizations" : {
         "de" : {
@@ -722,6 +728,7 @@
       }
     },
     "December 2024" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -954,6 +961,9 @@
         }
       }
     },
+    "Enddatum" : {
+
+    },
     "Enter a Team ID to instantly join an existing team and start managing players and training sessions." : {
       "localizations" : {
         "de" : {
@@ -1140,6 +1150,9 @@
         }
       }
     },
+    "Generate" : {
+
+    },
     "Generate a new Code for your team." : {
       "localizations" : {
         "de" : {
@@ -1252,6 +1265,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Home"
+          }
+        }
+      }
+    },
+    "Hourly report" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stundenbericht"
+          }
+        }
+      }
+    },
+    "Hours" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stunden"
           }
         }
       }
@@ -1657,6 +1690,9 @@
         }
       }
     },
+    "No Confirmed Coaches found" : {
+
+    },
     "No Connection" : {
       "localizations" : {
         "de" : {
@@ -1957,6 +1993,16 @@
         }
       }
     },
+    "Rate" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Satz"
+          }
+        }
+      }
+    },
     "Rate App in App Store" : {
       "localizations" : {
         "de" : {
@@ -2101,9 +2147,6 @@
       }
     },
     "Reset Password" : {
-
-    },
-    "Satz" : {
 
     },
     "Save" : {
@@ -2376,6 +2419,9 @@
         }
       }
     },
+    "Startdatum" : {
+
+    },
     "Statistics" : {
       "localizations" : {
         "de" : {
@@ -2385,9 +2431,6 @@
           }
         }
       }
-    },
-    "Stunden" : {
-
     },
     "Super-Admin" : {
       "localizations" : {
@@ -2560,6 +2603,9 @@
         }
       }
     },
+    "The hourly report cannot be created" : {
+
+    },
     "The input must not be empty!" : {
       "localizations" : {
         "de" : {
@@ -2661,6 +2707,7 @@
       }
     },
     "Time recording" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2691,7 +2738,14 @@
       }
     },
     "Total" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Total"
+          }
+        }
+      }
     },
     "Total Notes: %lld" : {
       "localizations" : {
@@ -2743,9 +2797,6 @@
           }
         }
       }
-    },
-    "Trainer Name" : {
-
     },
     "Training" : {
       "localizations" : {

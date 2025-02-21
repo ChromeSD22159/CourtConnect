@@ -40,7 +40,7 @@ class PDFCreator {
         
         try? renderer.writePDF(to: tempURL) { context in
             context.beginPage()
-            let imageRenderer = ImageRenderer(content: PDFView(info: page, size: size))
+            let imageRenderer = ImageRenderer(content: SaleryPDF(info: page, size: size))
             imageRenderer.scale = displayScale
             imageRenderer.uiImage?.draw(at: CGPoint.zero)
         }

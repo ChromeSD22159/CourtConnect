@@ -10,6 +10,10 @@ extension View {
     func comeSoonBadge() -> some View {
         modifier(ComeSoonBadge())
     }
+    
+    func betaBadge() -> some View {
+        modifier(BetaBadge())
+    }
  
     func comeSoon() -> some View {
         modifier(ComeSoon())
@@ -29,6 +33,21 @@ struct ComeSoonBadge: ViewModifier {
         content
             .overlay(alignment: .topLeading) {
                 Text("Soon..")
+                    .padding(5)
+                    .foregroundStyle(Theme.white)
+                    .background(Theme.headline)
+                    .clipShape(RoundedRectangle(cornerRadius: 7))
+                    .borderRadius(7)
+                    .rotationEffect(Angle(degrees: -15))
+            }
+    }
+}
+
+struct BetaBadge: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .overlay(alignment: .topLeading) {
+                Text("Beta")
                     .padding(5)
                     .foregroundStyle(Theme.white)
                     .background(Theme.headline)

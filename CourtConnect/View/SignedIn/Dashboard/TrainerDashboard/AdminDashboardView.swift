@@ -9,28 +9,26 @@ import Auth
 
 struct AdminDashboardView: View {
     @State var adminDashboardViewModel: AdminDashboardViewModel = AdminDashboardViewModel()
-    
+    @State var isRateSheet = false
     var body: some View {
         AnimationBackgroundChange {
             List {
                 ListInfomationSection(text: "Here you can manage the team admins, change the team names or delete the team.")
                 
                 Section {
-                    // TODO: Stunden PDF Erstellen
                     VStack(alignment: .leading) {
-                        HStack {
-                            Text("December 2024")
-                            Spacer()
-                            Image(systemName: "square.and.arrow.up")
-                        }
-                        
                         Label("Add Report", systemImage: "plus")
+                            .onTapGesture {
+                                isRateSheet.toggle()
+                            }
+                            .sheet(isPresented: $isRateSheet) {
+                                CreateHourlyReportSheet()
+                            }
                     }
-                    .comeSoon()
                 } header: {
                     UpperCasedheadline(text: "Trainer Hour Report")
-                        .comeSoon()
-                        .comeSoonBadge()
+                        //.comeSoon()
+                        .betaBadge()
                 }
                 .blurrylistRowBackground()
                 
@@ -114,6 +112,143 @@ struct AdminDashboardView: View {
     }
 } 
 
+@Observable @MainActor class CreateHourlyReportSheetViewModel: AuthProtocol {
+    var repository: BaseRepository = Repository.shared
+    var user: Auth.User?
+    var userAccount: UserAccount?
+    var userProfile: UserProfile?
+    var currentTeam: Team?
+    
+    var currentList: [TrainerSaleryData] = []
+    
+    var start: Date = Date().startOfMonth
+    var end = Date().endOfMonth
+    
+    init() {
+        inizializeAuth()
+    }
+    
+    func getTrainerData() {
+        do {
+            let data: [UUID: Int] = try getloadTrainerData()
+            var list: [UserProfile: Double] = [:]
+            
+            try data.forEach { (userAccount: UUID, minutes: Int) in
+                if let existAccount = try repository.accountRepository.getAccount(id: userAccount),
+                   let userProfile = try repository.userRepository.getUserProfileFromDatabase(userId: existAccount.userId) {
+                    
+                    let hours = roundMinutesToQuarterHours(minutes: minutes)
+                    list[userProfile] = hours
+                }
+            }
+            
+            currentList = list.map {
+                TrainerSaleryData(fullName: $0.key.fullName, hours: $0.value, hourlyRate: 12.99)
+            }
+        } catch {
+            currentList = []
+        }
+    }
+    
+    private func getloadTrainerData() throws -> [UUID: Int] {
+        guard let team = currentTeam else { throw TeamError.teamNotFound }
+        
+        var trainer: [UUID: Int] = [:]
+        let termine = try repository.terminRepository.getTeamTermineForDateRange(for: team.id, start: start, end: end)
+        try termine.forEach { termin in
+            
+            let minutes = termin.durationMinutes
+            
+            let trainerTheyWasThere = try repository.teamRepository.getTrainersForTermineWhenIsConfirmed(terminId: termin.id)
+            trainerTheyWasThere.forEach { attendance in
+                let trainerId = attendance.userAccountId
+
+                if let existingMinutes = trainer[trainerId] {
+                    // Trainer ist bereits in der Liste, addiere die Minuten
+                    trainer[trainerId] = existingMinutes + minutes
+                } else {
+                    // Trainer ist neu, füge ihn mit den Minuten hinzu
+                    trainer[trainerId] = minutes
+                }
+            }
+        }
+        
+        return trainer
+    }
+    
+    private func roundMinutesToQuarterHours(minutes: Int) -> Double {
+        let totalHours = Double(minutes) / 60.0
+        let quarterHours = round(totalHours * 4.0) / 4.0
+        return quarterHours
+    }
+}
+
+struct CreateHourlyReportSheet: View {
+    @State var viewModel = CreateHourlyReportSheetViewModel()
+    var body: some View {
+        SheetStlye(title: "Create hourly report", detents: [.medium], isLoading: .constant(false)) {
+            VStack {
+                DatePicker("Startdatum", selection: $viewModel.start, in: ...viewModel.end, displayedComponents: .date)
+                    .onChange(of: viewModel.start) { _, _ in
+                        viewModel.getTrainerData()
+                    }
+                
+                DatePicker("Enddatum", selection: $viewModel.end, in: viewModel.start...viewModel.end, displayedComponents: .date)
+                    .onChange(of: viewModel.end) { _, _ in
+                        viewModel.getTrainerData()
+                    }
+                
+                Button("Generate") {
+                    viewModel.getTrainerData()
+                }
+                .buttonStyle(DarkButtonStlye())
+                .padding(.bottom, 20)
+                 
+                if !viewModel.currentList.isEmpty {
+                    let page = PDFInfo(image: Image(.appIcon), list: viewModel.currentList, createdAt: Date())
+                    ShareLinkPDFView(page: page)
+                } else {
+                    ContentUnavailableView("No Confirmed Coaches found", systemImage: "figure.basketball", description: Text("The hourly report cannot be created"))
+                }
+            }
+            .padding(.horizontal, 20)
+        }
+    }
+}
+
 #Preview {
+    VStack {
+        Button("Generate") {
+            
+        }
+        .buttonStyle(DarkButtonStlye())
+        ContentUnavailableView("No Confirmed Coaches found", systemImage: "figure.basketball", description: Text("The hourly report cannot be created"))
+    }
+}
+
+#Preview {
+    @Previewable let cal = Calendar.current
+    @Previewable @State var isSheet = true
+    @Previewable @State var start: Date = Date().startOfMonth
+    @Previewable @State var end = Date().endOfMonth
     AdminDashboardView()
+        .sheet(isPresented: $isSheet) {
+            CreateHourlyReportSheet()
+        }
+}
+
+extension Date {
+    var startOfMonth: Date {
+       let calendar = Calendar(identifier: .gregorian)
+       let components = calendar.dateComponents([.year, .month], from: self)
+
+       return  calendar.date(from: components)!
+   }
+    
+    var endOfMonth: Date {
+        var components = DateComponents()
+        components.month = 1
+        components.second = -1
+        return Calendar(identifier: .gregorian).date(byAdding: components, to: startOfMonth)!
+    }
 }

@@ -7,7 +7,7 @@
 import SwiftUI 
 
 struct PDFInfo {
-    let title: LocalizedStringKey = "Time recording"
+    let title: LocalizedStringKey = "Hourly report"
     let image: Image
     let description: LocalizedStringKey = "Description"
     let list: [TrainerSaleryData]

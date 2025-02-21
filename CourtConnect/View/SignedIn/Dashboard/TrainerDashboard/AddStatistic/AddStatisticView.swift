@@ -58,7 +58,7 @@ struct AddStatisticView: View {
                     
                     let page = PDFInfo(image: Image(.appIcon), list: list, createdAt: Date())
                     
-                    SharePDFView(page: page, list: list)
+                    ShareLinkPDFView(page: page)
                 }
             }
         }

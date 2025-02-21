@@ -413,4 +413,11 @@ import Supabase
             return nil
         }
     }
+    
+    func getTrainersForTermineWhenIsConfirmed(terminId: UUID) throws -> [Attendance] {
+        let status = AttendanceStatus.confirmed.rawValue
+        let predicate = #Predicate<Attendance> { $0.terminId == terminId && $0.attendanceStatus == status && $0.deletedAt == nil && $0.trainerConfirmedAt != nil }
+        let fetchDescriptor = FetchDescriptor(predicate: predicate)
+        return try container.mainContext.fetch(fetchDescriptor)
+    }
 }
