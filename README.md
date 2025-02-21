@@ -14,6 +14,13 @@ Die App bietet Funktionen wie Terminverwaltung, Anwesenheitsmanagement und Benac
   <img src="./images/screenshot/screenshot_light_4.png" width="200"> 
 </p>
 
+## Präsentation  
+<p>
+    <a href="./presentation/praesentation_minimized.pdf" target="_blank">
+        <img src="./presentation/WasistCourtConnect.jpg" width="1000">
+    </a> 
+</p>
+
 
 ## ActivityDiagrams  
 <p>
