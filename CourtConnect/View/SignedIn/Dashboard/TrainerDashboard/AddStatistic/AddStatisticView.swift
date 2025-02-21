@@ -52,11 +52,11 @@ struct AddStatisticView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     let list = [
-                        TrainerData(fullName: "Frederik Kohler", hours: 5, hourlyRate: 12.99),
-                        TrainerData(fullName: "Vorname Nachname", hours: 5, hourlyRate: 12.99)
+                        TrainerSaleryData(fullName: "Frederik Kohler", hours: 5, hourlyRate: 12.99),
+                        TrainerSaleryData(fullName: "Vorname Nachname", hours: 5, hourlyRate: 12.99)
                     ]
                     
-                    let page = PDFInfo(title: "Zeiterfassung", image: Image(.appIcon), description: "Description", list: list, createdAt: Date())
+                    let page = PDFInfo(image: Image(.appIcon), list: list, createdAt: Date())
                     
                     SharePDFView(page: page, list: list)
                 }

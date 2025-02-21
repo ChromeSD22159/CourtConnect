@@ -6,7 +6,8 @@
 //
 import Foundation
 import SwiftUI 
- 
+import PDFKit
+
 // MARK: - Model
 struct PDFView: View {
     let info: PDFInfo
@@ -32,7 +33,7 @@ struct PDFView: View {
                 
                 Spacer()
                 
-                Text("Erstellt am: \(info.createdAt.toDateString())")
+                Text("Created on: \(info.createdAt.toDateString())")
                     .font(.caption2)
             }
               
@@ -49,8 +50,8 @@ struct PDFView: View {
             // MARK: - TrainerDataTable
             tableHeaderRow()
             VStack(spacing: 0) {
-                ForEach(info.list.indices) { itemIndex in
-                    trainerRow(index: itemIndex, item: info.list[itemIndex])
+                ForEach(info.list.indices, id: \.self) { index in
+                    trainerRow(index: index, item: info.list[index])
                 }
             }
             
@@ -58,9 +59,9 @@ struct PDFView: View {
             
             // MARK: - SigningFields
             HStack {
-                Text("Datum / Ort: ___________________")
+                Text("Date / location: ___________________")
                 Spacer()
-                Text("Unterschrift: ___________________")
+                Text("Signature: ___________________")
             }
             .font(.footnote)
         }
@@ -107,8 +108,6 @@ struct PDFView: View {
 // MARK: - Model
 struct SharePDFView: View {
     @Environment(\.displayScale) var displayScale
-    @State private var exportPDF: Bool = false
-    
     let pdfCreator: PDFCreator
     
     init(page: PDFInfo, list: [TrainerSaleryData]) {
@@ -120,7 +119,9 @@ struct SharePDFView: View {
     
     var body: some View {
         VStack {
-            ShareLink(item: pdfCreator.createPDFData(displayScale: displayScale))
+            if let pdf = pdfCreator.createPDFData(displayScale: displayScale) {
+                ShareLink(item: pdf)
+            }
         }
         .padding()
     }
@@ -132,7 +133,41 @@ struct SharePDFView: View {
         TrainerSaleryData(fullName: "Vorname Nachname", hours: 5, hourlyRate: 12.99)
     ]
     
-    let page = PDFInfo(title: "Zeiterfassung", image: Image(.appIcon), description: "Description", list: list, createdAt: Date())
+    let page = PDFInfo(image: Image(.appIcon), list: list, createdAt: Date())
     
-    SharePDFView(page: page, list: list)
-} 
+    ZStack {
+        Color.gray
+        
+        TimeRecordingImage(page: page, list: list)
+            .padding()
+    }
+    .ignoresSafeArea()
+    
+}
+
+struct TimeRecordingImage: View {
+    @Environment(\.displayScale) var displayScale
+    let pdfCreator: PDFCreator
+    @State var dataUrl: URL?
+    
+    init(page:PDFInfo, list: [TrainerSaleryData]) {
+        let page = PDFInfo(image: Image(.appIcon), list: list, createdAt: Date())
+        self.pdfCreator = PDFCreator(
+            page: page,
+            size: .dinA4
+        )
+    }
+    
+    var body: some View {
+        ZStack {
+            if let dataUrl = dataUrl, let image = pdfCreator.createPDFImage(data: dataUrl) {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFit()
+            }
+        }
+        .onAppear {
+            dataUrl = pdfCreator.createPDFData(displayScale: displayScale)
+        }
+    }
+}

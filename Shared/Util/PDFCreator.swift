@@ -6,6 +6,7 @@
 // 
 import Foundation
 import SwiftUI
+import PDFKit
  
 class PDFCreator {
     let size: PDFDinFormat
@@ -26,13 +27,15 @@ class PDFCreator {
     }
     
     @MainActor
-    func createPDFData(displayScale: CGFloat) -> URL {
+    func createPDFData(displayScale: CGFloat) -> URL? {
         let format = UIGraphicsPDFRendererFormat()
         format.documentInfo = metaData as [String : Any]
         let renderer = UIGraphicsPDFRenderer(bounds: rect, format: format)
         
         let tempFolder = FileManager.default.temporaryDirectory
-        let fileName = "\(page.title)_\(UUID().uuidString).pdf"
+        guard let title = page.title.stringValue() else { return nil }
+        
+        let fileName = "\(title)_\(UUID().uuidString).pdf"
         let tempURL = tempFolder.appendingPathComponent(fileName)
         
         try? renderer.writePDF(to: tempURL) { context in
@@ -43,6 +46,18 @@ class PDFCreator {
         }
 
         return tempURL
+    }
+    
+    func createPDFImage(data: URL) -> UIImage? {
+        if let pdfDocument = PDFDocument(url: data),
+           let pdfPage = pdfDocument.page(at: 0) {
+            let pageSize = pdfPage.bounds(for: .cropBox)
+            let image = pdfPage.thumbnail(of: pageSize.size, for: .cropBox)
+            
+            return image
+        } else {
+            return nil
+        }
     }
     
     enum PDFDinFormat {

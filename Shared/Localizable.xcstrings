@@ -139,6 +139,16 @@
         }
       }
     },
+    "%lld. %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld. %2$@"
+          }
+        }
+      }
+    },
     "🤗" : {
 
     },
@@ -645,6 +655,16 @@
         }
       }
     },
+    "Created on: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erstellt auf: %@"
+          }
+        }
+      }
+    },
     "created: %@ - %@" : {
       "localizations" : {
         "de" : {
@@ -681,6 +701,16 @@
         }
       }
     },
+    "Date / location: ___________________" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datum / Ort: ___________________"
+          }
+        }
+      }
+    },
     "Date is invalid." : {
       "localizations" : {
         "de" : {
@@ -690,9 +720,6 @@
           }
         }
       }
-    },
-    "Datum / Ort: ___________________" : {
-
     },
     "December 2024" : {
       "localizations" : {
@@ -1016,9 +1043,6 @@
           }
         }
       }
-    },
-    "Erstellt am: %@" : {
-
     },
     "Fast & Easy" : {
       "localizations" : {
@@ -2079,6 +2103,9 @@
     "Reset Password" : {
 
     },
+    "Satz" : {
+
+    },
     "Save" : {
       "localizations" : {
         "de" : {
@@ -2269,6 +2296,16 @@
         }
       }
     },
+    "Signature: ___________________" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unterschrift: ___________________"
+          }
+        }
+      }
+    },
     "SignIn" : {
       "localizations" : {
         "de" : {
@@ -2348,6 +2385,9 @@
           }
         }
       }
+    },
+    "Stunden" : {
+
     },
     "Super-Admin" : {
       "localizations" : {
@@ -2620,6 +2660,16 @@
         }
       }
     },
+    "Time recording" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeiterfassung"
+          }
+        }
+      }
+    },
     "Title e.g." : {
       "localizations" : {
         "de" : {
@@ -2639,6 +2689,9 @@
           }
         }
       }
+    },
+    "Total" : {
+
     },
     "Total Notes: %lld" : {
       "localizations" : {
@@ -2691,6 +2744,9 @@
         }
       }
     },
+    "Trainer Name" : {
+
+    },
     "Training" : {
       "localizations" : {
         "de" : {
@@ -2710,9 +2766,6 @@
           }
         }
       }
-    },
-    "Unterschrift: ___________________" : {
-
     },
     "Update Code" : {
       "localizations" : {
