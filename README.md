@@ -24,8 +24,9 @@ Die App bietet Funktionen wie Terminverwaltung, Anwesenheitsmanagement und Benac
 
 ## ActivityDiagrams  
 <p>
-  <img src="./images/diagrams/ActivityDiagrammEdgeFunction.jpg" width="200">
-  <img src="./images/diagrams/ActivityDiagrammSyncronization.jpg" width="200"> 
+    <img src="./images/diagrams/ActivityDiagramClientServer.jpg" style="max-width: 33%;">
+    <img src="./images/diagrams/ActivityDiagramServerClient.jpg" style="max-width: 33%;"> 
+    <img src="./images/diagrams/ActivityDiagramNotification.jpg" style="max-width: 33%;"> 
 </p>
 
 
