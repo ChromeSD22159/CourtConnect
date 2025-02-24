@@ -217,7 +217,7 @@ import Supabase
     }
     
     func isTrainerAttendanceConfirmed(userAccountId: UUID, terminId: UUID) throws -> Bool {
-        let predicate = #Predicate<Attendance> { $0.terminId == terminId && $0.userAccountId == userAccountId && $0.deletedAt == nil }
+        let predicate = #Predicate<Attendance> { $0.terminId == terminId && $0.userAccountId == userAccountId && $0.deletedAt == nil && $0.trainerConfirmedAt != nil }
         let fetchDescriptor = FetchDescriptor(predicate: predicate)
         let result = try container.mainContext.fetch(fetchDescriptor)
         return !result.isEmpty
@@ -320,9 +320,9 @@ import Supabase
             // CREATE MEMBER
             let newMember = TeamMember(userAccountId: userAccount.id, teamId: foundTeamDTO.id, shirtNumber: nil, position: "", role: userAccount.role, createdAt: Date(), updatedAt: Date())
             // INSER MEMBER REMOTE
-            print("before insert")
+  
             let supabaseMember: TeamMemberDTO = try await SupabaseService.insert(item: newMember.toDTO(), table: .teamMember)
-            print("after insert")
+       
             // UPDATE LOCAL CURRENTUSERACCOUNT
             userAccount.teamId = newMember.teamId
             userAccount.updatedAt = Date()
@@ -331,9 +331,7 @@ import Supabase
             try self.upsertLocal(item: foundTeamDTO.toModel(), table: .team, userId: userAccount.userId)
             try self.upsertLocal(item: supabaseMember.toModel(), table: .teamMember, userId: userAccount.userId)
        
-            print("before upsert")
             try await SupabaseService.upsertWithOutResult(item: userAccount.toDTO(), table: .userAccount, onConflict: "id")
-            print("after upsert")
         } else {
             throw TeamError.noTeamFoundwithThisJoinCode
         }
@@ -358,8 +356,7 @@ import Supabase
     func upsertTeamRemote(team: Team) async throws {
         try await SupabaseService.upsertWithOutResult(item: team.toDTO(), table: .team, onConflict: "id")
     }
-    
-    // TODO: UMBAU ZU IGNORE UPSERT BEI KEIN INTERNET
+     
     func insertTeamAdmin(newAdmin: TeamAdmin, userId: UUID) async throws {
         do {
             newAdmin.updatedAt = Date()

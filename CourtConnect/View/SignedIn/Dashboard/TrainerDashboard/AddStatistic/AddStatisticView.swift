@@ -31,7 +31,8 @@ struct AddStatisticView: View {
                                     .font(.caption2)
                                     .padding(5)
                                     .background {
-                                        if viewModel.terminHasOpenMembersOrTrainer(termin: termin) {
+                                        if viewModel.terminHasOpenMembers(termin: termin) ||
+                                           viewModel.terminHasOpenTrainer(termin: termin) {
                                             TerminType(rawValue: termin.typeString) == .game ? Theme.lightOrange : Theme.darkOrange
                                         } else {
                                             Color.gray.opacity(0.8)
@@ -53,15 +54,12 @@ struct AddStatisticView: View {
             let filteredTeamPlayerList = viewModel.filterTeamPlayer(terminId: termin.id)
             let filteredTeamTrainerList = viewModel.filterTeamTrainer(terminId: termin.id) 
             
-            AddStaticSheet(termin: termin, filteredTeamPlayerList: filteredTeamPlayerList, filteredTeamTrainerList: filteredTeamTrainerList) { termin in
+            AddStaticSheet(viewModel: viewModel, termin: termin, filteredTeamPlayerList: filteredTeamPlayerList, filteredTeamTrainerList: filteredTeamTrainerList) { termin in
                 viewModel.saveStatistics(termin: termin)
             }
             .presentationCornerRadius(25)
             .presentationBackground(Material.ultraThinMaterial)
             .presentationDragIndicator(.visible)
-            .onDisappear {
-                viewModel.saveStatistics(termin: termin)
-            }
         }
         .refreshable { viewModel.fetchDataFromRemote() }
         .navigationTitle(title: "Statistics")
@@ -70,13 +68,15 @@ struct AddStatisticView: View {
 } 
 
 fileprivate struct AddStaticSheet: View {
+    let viewModel: AddStatisticViewModel
     let filteredTeamPlayerList: [TeamMemberProfileStatistic]
     let filteredTeamTrainerList: [TeamMemberProfile]
     var termin: Termin
     let onSave: (Termin) -> Void
     
-    init(termin: Termin, filteredTeamPlayerList: [TeamMemberProfileStatistic], filteredTeamTrainerList: [TeamMemberProfile], onSave: @escaping (Termin) -> Void) {
+    init(viewModel: AddStatisticViewModel, termin: Termin, filteredTeamPlayerList: [TeamMemberProfileStatistic], filteredTeamTrainerList: [TeamMemberProfile], onSave: @escaping (Termin) -> Void) {
         self.termin = termin
+        self.viewModel = viewModel
         self.filteredTeamPlayerList = filteredTeamPlayerList
         self.filteredTeamTrainerList = filteredTeamTrainerList
         self.onSave = onSave
@@ -132,7 +132,12 @@ fileprivate struct AddStaticSheet: View {
                         .borderRadius(15)
                     } else {
                         ForEach(filteredTeamTrainerList, id: \.teamMember.id) { trainer in
-                            MemberRowTrainer(trainer: trainer)
+                            MemberRowTrainer(trainer: trainer, termin: termin, viewModel: viewModel)
+                            /*
+                            MemberRowTrainer(trainer: trainer) {
+                                //trainerIdsToConfirm.append($0)
+                            }
+                             */
                         }
                     }
                 } header: {
@@ -235,8 +240,10 @@ fileprivate struct NumberTextFieldRow: View {
 
 fileprivate struct MemberRowTrainer: View {
     var trainer: TeamMemberProfile
-    @State var isExpant = false
-    @State var isConfirmed = false
+    let termin: Termin
+    let viewModel: AddStatisticViewModel
+    @State private var isExpant = false
+    @State private var isConfirmed = false
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
@@ -265,6 +272,11 @@ fileprivate struct MemberRowTrainer: View {
             if isExpant {
                 VStack {
                     Toggle("Attendance", isOn: $isConfirmed)
+                        .onChange(of: isConfirmed) {
+                            if isConfirmed {
+                                viewModel.confirmTrainerAttendance(userAccountId: trainer.teamMember.userAccountId, terminId: termin.id)
+                            }
+                        }
                 }
                 .padding([.horizontal, .bottom]) 
             }

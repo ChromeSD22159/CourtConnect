@@ -39,8 +39,7 @@ class Termin: ModelProtocol {
         self.deletedAt = deletedAt
     }
     
-    func toDTO() -> TerminDTO {
-        // swiftlint:disable line_length
+    func toDTO() -> TerminDTO { 
         return TerminDTO(id: id, teamId: teamId, title: title, place: place, infomation: infomation, typeString: typeString, durationMinutes: durationMinutes, startTime: startTime, endTime: endTime, createdByUserAccountId: createdByUserAccountId, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
 }

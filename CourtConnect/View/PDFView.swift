@@ -121,7 +121,13 @@ struct ShareLinkPDFView: View {
         VStack {
             if let pdf = pdfCreator.createPDFData(displayScale: displayScale) {
                 ShareLink(item: pdf) {
-                    Label("Share", systemImage:  "square.and.arrow.up")
+                    HStack(spacing: 25) {
+                        Image(systemName: "doc.text.image")
+                            .font(.title)
+                        
+                        Text("Hourly report")
+                            .font(.title3)
+                    }
                 }
                 .buttonStyle(DarkButtonStlye())
             }

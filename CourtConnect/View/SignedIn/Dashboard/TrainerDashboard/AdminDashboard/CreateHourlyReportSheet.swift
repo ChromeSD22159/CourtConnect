@@ -30,7 +30,7 @@ struct CreateHourlyReportSheet: View {
                     .padding(.bottom, 20)
                      
                     if !viewModel.currentList.isEmpty {
-                        var page = PDFInfo(image: Image(.appIcon), list: viewModel.currentList, createdAt: Date())
+                        let page = PDFInfo(image: Image(.appIcon), list: viewModel.currentList, createdAt: Date())
                         ShareLinkPDFView(page: page)
                     } else {
                         NoConfirmedCoaches()

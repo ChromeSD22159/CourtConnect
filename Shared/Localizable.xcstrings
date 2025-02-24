@@ -284,16 +284,6 @@
         }
       }
     },
-    "Add Report" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bericht hinzufügen"
-          }
-        }
-      }
-    },
     "Add Statistic" : {
       "localizations" : {
         "de" : {
@@ -670,6 +660,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Erstell ein neues Konto oder wechsel auf ein vorhandenes Konto"
+          }
+        }
+      }
+    },
+    "Create report" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bericht erstellen"
           }
         }
       }
@@ -1267,7 +1267,6 @@
       }
     },
     "Handle Error" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1278,7 +1277,6 @@
       }
     },
     "Handle Message" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1725,6 +1723,9 @@
           }
         }
       }
+    },
+    "Neue Nachricht von Frederik" : {
+
     },
     "New appointment" : {
       "localizations" : {
@@ -2348,16 +2349,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Einstellungen"
-          }
-        }
-      }
-    },
-    "Share" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Teilen"
           }
         }
       }

@@ -83,8 +83,7 @@ import UIKit
             }
         }
     }
-    
-    #warning("FUNCTIONIERT NICHT RICHTIG")
+     
     func leaveTeam(role: UserRole) {
         do {
             guard let user = user else { throw UserError.userIdNotFound }

@@ -12,9 +12,9 @@ class PDFCreator {
     let size: PDFDinFormat
     let page: PDFInfo
     
-    private let metaData = [
+    private let metaData = [ 
         kCGPDFContextAuthor: "CourtConnect",
-        kCGPDFContextSubject: "This is a demo on how to create a PDF from a SwiftUI View"
+        kCGPDFContextSubject: "Hourly report PDF from CourtConnect App"
     ]
     
     private var rect: CGRect {

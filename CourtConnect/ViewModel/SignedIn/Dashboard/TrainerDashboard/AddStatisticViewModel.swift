@@ -59,9 +59,11 @@ import Auth
             }
             do {
                 guard let user = user else { throw UserError.userIdNotFound }
+                
                 for statsistic in statistics {
                     try await repository.teamRepository.upsertPlayerStatistic(statistic: statsistic, userId: user.id)
                 }
+                
             } catch {
                 print(error)
             }
@@ -100,13 +102,12 @@ import Auth
         }
     }
     
-    func terminHasOpenMembersOrTrainer(termin: Termin) -> Bool {
+    func terminHasOpenMembers(termin: Termin) -> Bool {
         do {
             guard let team = currentTeam else { throw TeamError.teamNotFound }
             let teamMember = try repository.teamRepository.getTeamMembers(for: team.id)
             
             var teamPlayer: [TeamMemberProfileStatistic] = []
-            var teamTrainer: [TeamMemberProfile] = []
             
             for member in teamMember {
                 if let userAccount = try repository.accountRepository.getAccount(id: member.userAccountId),
@@ -128,22 +129,42 @@ import Auth
                         }
                         
                     }
+                }
+            }
+            
+            return !teamPlayer.isEmpty
+        } catch {
+            return false
+        }
+    }
+    
+    func terminHasOpenTrainer(termin: Termin) -> Bool {
+        do {
+            guard let team = currentTeam else { throw TeamError.teamNotFound }
+            let teamMember = try repository.teamRepository.getTeamMembers(for: team.id)
+            
+            var teamTrainer: [TeamMemberProfile] = []
+            
+            for member in teamMember {
+                if let userAccount = try repository.accountRepository.getAccount(id: member.userAccountId),
+                   let userProfil = try repository.userRepository.getUserProfileFromDatabase(userId: userAccount.userId) {
                     if userAccount.roleEnum == .coach {
                         let teamMemberProfileStatistic = TeamMemberProfile(
                             userProfile: userProfil,
                             teamMember: member
                         )
                         let hasAttendance = repository.teamRepository.memberHasAttendance(userAccountId: teamMemberProfileStatistic.teamMember.userAccountId, terminId: termin.id, confirmedOnly: team.addStatisticConfirmedOnly)
-                        let has = try repository.teamRepository.playerHasStatistic(userAccountId: teamMemberProfileStatistic.teamMember.userAccountId, terminId: termin.id)
-                        
-                        if hasAttendance && !has {
-                            teamTrainer.append(teamMemberProfileStatistic)
-                        }
+                        let isConfirmed = try repository.teamRepository.isTrainerAttendanceConfirmed(userAccountId: teamMemberProfileStatistic.teamMember.userAccountId, terminId: termin.id)
+                          
+                        guard hasAttendance else { continue }
+                        guard !isConfirmed else { continue }
+                         
+                        teamTrainer.append(teamMemberProfileStatistic)
                     }
                 }
             }
             
-            return !teamPlayer.isEmpty && !teamTrainer.isEmpty
+            return !teamTrainer.isEmpty
         } catch {
             return false
         }
@@ -167,19 +188,17 @@ import Auth
         getTermine()
     }
     
-    func hasStatistic(userAccountId: UUID, terminId: UUID) -> Bool {
-        do {
-            return try repository.teamRepository.playerHasStatistic(userAccountId: userAccountId, terminId: terminId)
-        } catch {
-            return false
-        }
-    }
-    
     func filterTeamPlayer(terminId: UUID) -> [TeamMemberProfileStatistic] {
         guard let team = currentTeam else { return [] }
-        return teamPlayer.filter { player in
-            !hasStatistic(userAccountId: player.teamMember.userAccountId, terminId: terminId) &&
-            repository.teamRepository.memberHasAttendance(userAccountId: player.teamMember.userAccountId, terminId: terminId, confirmedOnly: team.addStatisticConfirmedOnly)
+       
+        do {
+            return try teamPlayer.filter { player in
+                let hasStatistic = try repository.teamRepository.playerHasStatistic(userAccountId: player.teamMember.userAccountId, terminId: terminId)
+                let hasAttendance = repository.teamRepository.memberHasAttendance(userAccountId: player.teamMember.userAccountId, terminId: terminId, confirmedOnly: team.addStatisticConfirmedOnly)
+                return !hasStatistic && hasAttendance
+            }
+        } catch {
+            return []
         }
     }
     
@@ -198,19 +217,28 @@ import Auth
         }
     }
     
-    private func isTrainerAttendanceConfirmed(userAccountId: UUID, terminId: UUID) -> Bool {
-        do {
-            return try repository.teamRepository.isTrainerAttendanceConfirmed(userAccountId: userAccountId, terminId: terminId)
-        } catch {
-            return false
-        }
-    }
-    
     func filterTeamTrainer(terminId: UUID) -> [TeamMemberProfile] {
         guard let team = currentTeam else { return [] }
-        return teamTrainer.filter { trainer in
-            !isTrainerAttendanceConfirmed(userAccountId: trainer.teamMember.userAccountId, terminId: terminId) &&
-            repository.teamRepository.memberHasAttendance(userAccountId: trainer.teamMember.userAccountId, terminId: terminId, confirmedOnly: team.addStatisticConfirmedOnly)
+        
+        do {
+            print(teamTrainer.count)
+            
+            let list = try teamTrainer.filter { trainer in
+                let foundAttendance = repository.teamRepository.memberHasAttendance(userAccountId: trainer.teamMember.userAccountId, terminId: terminId, confirmedOnly: team.addStatisticConfirmedOnly)
+                
+                let isConfirmed = try repository.teamRepository.isTrainerAttendanceConfirmed(userAccountId: trainer.teamMember.userAccountId, terminId: terminId)
+
+                guard foundAttendance else { return false }
+                guard !isConfirmed else { return false }
+                 
+                return foundAttendance && !isConfirmed
+            }
+             
+            print(list)
+            
+            return list
+        } catch {
+            return []
         }
     }
     

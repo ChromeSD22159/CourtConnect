@@ -18,7 +18,7 @@ struct AdminDashboardView: View {
                 
                 Section {
                     VStack(alignment: .leading) {
-                        Label("Add Report", systemImage: "plus")
+                        Label("Create report", systemImage: "plus")
                             .onTapGesture {
                                 isRateSheet.toggle()
                             }
@@ -31,8 +31,6 @@ struct AdminDashboardView: View {
                     }
                 } header: {
                     UpperCasedheadline(text: "Trainer Hour Report")
-                        //.comeSoon()
-                        .betaBadge()
                 }
                 .blurrylistRowBackground()
                 
