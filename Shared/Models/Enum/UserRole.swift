@@ -8,7 +8,7 @@ import SwiftUI
 
 enum UserRole: String, CaseIterable, Codable, Identifiable {
     case player = "Player"
-    case coach = "Trainer" // TODO: RENAME
+    case coach = "Trainer" 
     case admin = "Super-Admin"
     
     var id: Self {

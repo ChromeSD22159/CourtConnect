@@ -43,7 +43,7 @@ import Auth
                 let generatedCode = CodeGeneratorHelper.generateCode().map { String($0) }.joined()
                 let now = Date()
                 
-                let newTeam = Team(teamImageURL: nil, teamName: teamName, headcoach: headcoach, joinCode: generatedCode, email: email, createdByUserAccountId: userAccount.id, createdAt: now, updatedAt: now)
+                let newTeam = Team(teamImageURL: nil, teamName: teamName, headcoach: headcoach, joinCode: generatedCode, email: email, coachHourlyRate: nil, addStatisticConfirmedOnly: false, createdByUserAccountId: userAccount.id, createdAt: now, updatedAt: now)
                 let newMember = TeamMember(userAccountId: userAccount.id, teamId: newTeam.id, shirtNumber: nil, position: "", role: userAccount.role, createdAt: now, updatedAt: now)
                 let newAdmin = TeamAdmin(teamId: newTeam.id, userAccountId: userAccount.id, role: userAccount.role, createdAt: now, updatedAt: now)
                 

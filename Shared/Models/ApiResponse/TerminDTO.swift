@@ -37,8 +37,7 @@ struct TerminDTO: DTOProtocol {
         self.deletedAt = deletedAt
     }
     
-    func toModel() -> some ModelProtocol {
-        // swiftlint:disable:next line_length
+    func toModel() -> some ModelProtocol { 
         return Termin(id: id, teamId: teamId, title: title, place: place, infomation: infomation, typeString: typeString, durationMinutes: durationMinutes, startTime: startTime, endTime: endTime, createdByUserAccountId: createdByUserAccountId, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
 }

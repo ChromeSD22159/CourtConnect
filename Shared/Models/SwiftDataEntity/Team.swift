@@ -14,6 +14,8 @@ import Foundation
     var headcoach: String
     var joinCode: String
     var email: String
+    var coachHourlyRate: Double = 0.00
+    var addStatisticConfirmedOnly: Bool = false
     var createdByUserAccountId: UUID
     var createdAt: Date
     var updatedAt: Date
@@ -26,6 +28,8 @@ import Foundation
         headcoach: String,
         joinCode: String,
         email: String,
+        coachHourlyRate: Double?,
+        addStatisticConfirmedOnly: Bool?,
         createdByUserAccountId: UUID,
         createdAt: Date,
         updatedAt: Date,
@@ -37,6 +41,8 @@ import Foundation
         self.headcoach = headcoach
         self.joinCode = joinCode
         self.email = email
+        self.coachHourlyRate = coachHourlyRate ?? 0.00
+        self.addStatisticConfirmedOnly = addStatisticConfirmedOnly ?? false
         self.createdByUserAccountId = createdByUserAccountId
         self.createdAt = createdAt
         self.updatedAt = updatedAt
@@ -44,6 +50,6 @@ import Foundation
     }
     
     func toDTO() -> TeamDTO {
-        return TeamDTO(id: id, teamImageURL: teamImageURL, teamName: teamName, headcoach: headcoach, joinCode: joinCode, email: email, createdByUserAccountId: createdByUserAccountId, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
+        return TeamDTO(id: id, teamImageURL: teamImageURL, teamName: teamName, headcoach: headcoach, joinCode: joinCode, email: email, coachHourlyRate: coachHourlyRate, addStatisticConfirmedOnly: addStatisticConfirmedOnly, createdByUserAccountId: createdByUserAccountId, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
 } 

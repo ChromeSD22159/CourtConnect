@@ -9,5 +9,5 @@ import SwiftUI
 struct TeamMemberProfile: Identifiable {
     var id: UUID = UUID()
     var userProfile: UserProfile
-    var teamMember: TeamMember
+    var teamMember: TeamMember 
 }

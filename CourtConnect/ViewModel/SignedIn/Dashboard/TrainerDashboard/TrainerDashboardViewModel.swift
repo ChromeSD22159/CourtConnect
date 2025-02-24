@@ -23,6 +23,8 @@ import UIKit
     var isEnterCode = false
     var requests = 0
     
+    var attendancesTermines: [AttendanceTermin] = []
+    
     init() {
         inizializeAuth()
         loadLocalData()
@@ -32,6 +34,7 @@ import UIKit
         getTeam()
         getTeamTermine()
         countRequests()
+        getTerminAttendances()
     }
     
     func deleteUserAccount() {
@@ -80,8 +83,7 @@ import UIKit
             }
         }
     }
-    
-    #warning("FUNCTIONIERT NICHT RICHTIG")
+     
     func leaveTeam(role: UserRole) {
         do {
             guard let user = user else { throw UserError.userIdNotFound }
@@ -113,6 +115,19 @@ import UIKit
             ErrorHandlerViewModel.shared.handleError(error: error)
         }
     }
+    
+    func updateTerminAttendance(attendance: Attendance) {
+        Task {
+            defer { loadLocalData() }
+            do {
+                guard let user = user else { throw UserError.userIdNotFound }
+                try await repository.teamRepository.upsertTerminAttendance(attendance: attendance, userId: user.id)
+                
+            } catch {
+                print(error)
+            }
+        }
+    }
      
     private func getTeam() {
         currentTeam = nil
@@ -137,6 +152,24 @@ import UIKit
         do {
             guard let currentTeam = currentTeam else { throw TeamError.userHasNoTeam }
             termine = try repository.terminRepository.getTeamTermine(for: currentTeam.id)
+        } catch {
+            print(error)
+        }
+    }
+    
+    private func getTerminAttendances() {
+        do {
+            guard let userAccount = userAccount else { throw UserError.userAccountNotFound }
+            var attendancesTerminesTmp: [AttendanceTermin] = []
+            
+            let attandances = try repository.accountRepository.getAccountPendingAttendances(for: userAccount.id)
+            for attandance in attandances {
+                if let termine = try repository.terminRepository.getTermineBy(id: attandance.terminId) {
+                    let attendanceTermin = AttendanceTermin(attendance: attandance, termin: termine)
+                    attendancesTerminesTmp.append(attendanceTermin)
+                }
+            }
+            attendancesTermines = attendancesTerminesTmp
         } catch {
             print(error)
         }

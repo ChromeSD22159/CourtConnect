@@ -113,8 +113,7 @@ import SwiftUI
             .execute()
             .value
     }
-    
-    #warning("REMOVE REFACTOR")
+     
     func fetchFromServer(after: Date) async throws -> [UserAccountDTO] {
         return try await backendClient.supabase
             .from(DatabaseTable.userAccount.rawValue)

@@ -141,6 +141,12 @@ fileprivate struct HasTeam: View {
                 }
             }
             
+            ConfirmationTermin(attendanceTermines: trainerDashboardViewModel.attendancesTermines) { attendance in
+                trainerDashboardViewModel.updateTerminAttendance(attendance: attendance)
+            }
+            .padding(.vertical, 16)
+            .padding(.horizontal, 16)
+            
             CalendarCard(title: "Edit appointment", termine: trainerDashboardViewModel.termine, editable: true, onChanged: {
                 trainerDashboardViewModel.loadLocalData()
             })
@@ -243,7 +249,6 @@ fileprivate struct ShowNotesCard: View {
                                 .font(.subheadline)
                                 .fontWeight(.medium)
                                 .buttonStyle(DarkButtonStlye())
-                                
                             }
                             Spacer()
                             
@@ -256,7 +261,7 @@ fileprivate struct ShowNotesCard: View {
                         .clipShape(Rectangle())
                     }
             }
-            .frame(width: .infinity, height: 200)
+            .frame(height: 200)
             .borderRadius(35)
         }
         .padding()

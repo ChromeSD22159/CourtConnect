@@ -88,10 +88,26 @@
     },
     "%@ %@" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ %2$@"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "new",
             "value" : "%1$@ %2$@"
+          }
+        }
+      }
+    },
+    "%@ h" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ h"
           }
         }
       }
@@ -132,6 +148,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld"
+          }
+        }
+      }
+    },
+    "%lld. %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld. %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld. %2$@"
           }
         }
       }
@@ -248,16 +280,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Notiz hinzufügen"
-          }
-        }
-      }
-    },
-    "Add Report" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bericht hinzufügen"
           }
         }
       }
@@ -422,6 +444,16 @@
         }
       }
     },
+    "Beta" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beta"
+          }
+        }
+      }
+    },
     "Birthday" : {
       "localizations" : {
         "de" : {
@@ -522,6 +554,26 @@
         }
       }
     },
+    "Coach hourly rate" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trainer Stundensatz"
+          }
+        }
+      }
+    },
+    "Coach hourly rate e.g. 9.99" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trainer Stundensatz z.B. 9.99"
+          }
+        }
+      }
+    },
     "Code Team: %@" : {
       "localizations" : {
         "de" : {
@@ -592,12 +644,32 @@
         }
       }
     },
+    "Create hourly report" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erstellen Stundenbericht"
+          }
+        }
+      }
+    },
     "Create New Account or Switch to Existing Account" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Erstell ein neues Konto oder wechsel auf ein vorhandenes Konto"
+          }
+        }
+      }
+    },
+    "Create report" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bericht erstellen"
           }
         }
       }
@@ -642,6 +714,16 @@
         }
       }
     },
+    "Created on: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erstellt auf: %@"
+          }
+        }
+      }
+    },
     "created: %@ - %@" : {
       "localizations" : {
         "de" : {
@@ -678,22 +760,22 @@
         }
       }
     },
+    "Date / location: ___________________" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datum / Ort: ___________________"
+          }
+        }
+      }
+    },
     "Date is invalid." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Das Datum ist ungültig."
-          }
-        }
-      }
-    },
-    "December 2024" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dezember 2024"
           }
         }
       }
@@ -849,7 +931,14 @@
       }
     },
     "E-Mail:" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-Mail:"
+          }
+        }
+      }
     },
     "e.g. meeting point on site at 10 am." : {
       "localizations" : {
@@ -917,6 +1006,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "User bearbeiten"
+          }
+        }
+      }
+    },
+    "End date" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enddatum"
           }
         }
       }
@@ -1137,6 +1236,16 @@
         }
       }
     },
+    "Generate pdf" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PDF generieren "
+          }
+        }
+      }
+    },
     "Generates a\nnew team code" : {
       "localizations" : {
         "de" : {
@@ -1153,6 +1262,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Genehmigen"
+          }
+        }
+      }
+    },
+    "Handle Error" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Handle Error"
+          }
+        }
+      }
+    },
+    "Handle Message" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Handle Message"
           }
         }
       }
@@ -1217,6 +1346,26 @@
         }
       }
     },
+    "Hourly report" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stundenbericht"
+          }
+        }
+      }
+    },
+    "Hours" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stunden"
+          }
+        }
+      }
+    },
     "Important?" : {
       "localizations" : {
         "de" : {
@@ -1263,6 +1412,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Code einfügen"
+          }
+        }
+      }
+    },
+    "Insert statistics only for confirmed players" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Statistik einfügen nur für bestätigte Spieler"
           }
         }
       }
@@ -1565,6 +1724,9 @@
         }
       }
     },
+    "Neue Nachricht von Frederik" : {
+
+    },
     "New appointment" : {
       "localizations" : {
         "de" : {
@@ -1611,6 +1773,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Derzeit sind keine Termine geplant."
+          }
+        }
+      }
+    },
+    "No Confirmed Coaches found" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine bestätigten Trainer gefunden"
           }
         }
       }
@@ -1911,6 +2083,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Greife schnell auf das zu, was du brauchen."
+          }
+        }
+      }
+    },
+    "Rate" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Satz"
           }
         }
       }
@@ -2251,6 +2433,16 @@
         }
       }
     },
+    "Signature: ___________________" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unterschrift: ___________________"
+          }
+        }
+      }
+    },
     "SignIn" : {
       "localizations" : {
         "de" : {
@@ -2297,6 +2489,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bald.."
+          }
+        }
+      }
+    },
+    "Start date" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Startdatum"
           }
         }
       }
@@ -2401,6 +2603,16 @@
         }
       }
     },
+    "Team settings" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Team einstellungen"
+          }
+        }
+      }
+    },
     "Teamid copied" : {
       "localizations" : {
         "de" : {
@@ -2498,6 +2710,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Der Name des Cheftrainers muss mindestens 5 Zeichen lang sein."
+          }
+        }
+      }
+    },
+    "The hourly report cannot be created" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Stundenbericht kann nicht erstellt werden"
           }
         }
       }
@@ -2618,6 +2840,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Der Titel ist erforderlich."
+          }
+        }
+      }
+    },
+    "Total" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Total"
           }
         }
       }
