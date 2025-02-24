@@ -38,7 +38,8 @@ struct CourtConnectApp: App {
             .onAppear {
                 authViewModel.loadRocketSimConnect()
                 authViewModel.getAccounts()
-            }
+                NetworkMonitorViewModel.shared.isPingTest()
+            } 
             .onChange(of: scenePhase, {
                 authViewModel.onScenePhaseChange(newValue: scenePhase)
             }) 

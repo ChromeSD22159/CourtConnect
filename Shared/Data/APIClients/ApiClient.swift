@@ -8,7 +8,7 @@ import Foundation
 
 struct ApiClient {  
     static func isPingTest() async throws -> Bool {
-        let url = URL(string: "https://google.de")!
+        let url = URL(string: "https://8.8.8.8")!
         
         let (_, response) = try await URLSession.shared.data(from: url)
         

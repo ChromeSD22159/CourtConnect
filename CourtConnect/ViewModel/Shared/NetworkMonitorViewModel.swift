@@ -8,7 +8,7 @@ import SwiftUI
 import Network
 
 @Observable
-class NetworkMonitorViewModel: ObservableObject {
+class NetworkMonitorViewModel: ObservableObject, @unchecked Sendable {
     
     static let shared = NetworkMonitorViewModel()
     
@@ -33,13 +33,15 @@ class NetworkMonitorViewModel: ObservableObject {
         }
     }
     
-    private func isPingTest(complete:  @escaping (Bool) -> Void) async { 
-        let request = URLRequest(url: URL(string: "8.8.8.8")!)
-        
-        URLSession.shared.dataTask(with: request) { _, _, error in
-            complete(error == nil)
-        }.resume()
-    } 
+    func isPingTest() { 
+        Task {
+            do {
+                self.isConnected =  try await ApiClient.isPingTest()
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
 } 
 
 struct NetworkMonitorKey: EnvironmentKey {
