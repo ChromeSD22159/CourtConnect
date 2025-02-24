@@ -32,11 +32,11 @@ Die App bietet Funktionen wie Terminverwaltung, Anwesenheitsmanagement und Benac
 
 ## Features 
 
-- [ ] User-Registrierung und Login: Für Trainer und Spieler.
-- [ ] Vereinsverwaltung: Trainer können Vereine erstellen und Mitglieder hinzufügen.
-- [ ] Terminverwaltung: Trainings und Events erstellen, verwalten und anzeigen lassen.
-- [ ] Anwesenheit: Trainer können Teilnehmerlisten erstellen; Spieler und Eltern können Zu- oder Absagen senden.
-- [ ] Benachrichtigungen: Spieler werden über Trainings und Änderungen direkt informiert.  
+- [x] User-Registrierung und Login: Für Trainer und Spieler.
+- [x] Vereinsverwaltung: Trainer können Vereine erstellen und Mitglieder hinzufügen.
+- [x] Terminverwaltung: Trainings und Events erstellen, verwalten und anzeigen lassen.
+- [x] Anwesenheit: Trainer können Teilnehmerlisten erstellen; Spieler und Eltern können Zu- oder Absagen senden.
+- [x] Benachrichtigungen: Spieler werden über Trainings und Änderungen direkt informiert.  
 
 ## Technischer Aufbau
 
@@ -57,16 +57,15 @@ Die App verwendet das MVVM-Pattern kombiniert mit einem Repository-Pattern und S
 
 #### 3rd-Party Frameworks
 - Supabase
-- Firebase
-- RNCryptor 
+- Firebase 
 - SwiftLint
 
 
 ## Ausblick 
-- [ ] Statitiken für Spieler
-- [ ] Statitiken für Teams
-- [ ] User-Registrierung und Login: Für Eltern.
-- [ ] Dokumentate Verwaltung und Bereitstellung für Teams.
+- [x] Statitiken für Spieler
+- [x] Statitiken für Teams
+- [x] User-Registrierung und Login: Für Eltern.
+- [x] Dokumentate Verwaltung und Bereitstellung für Teams.
 
 
 ## Ordnerstruktur
