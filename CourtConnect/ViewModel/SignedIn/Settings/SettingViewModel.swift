@@ -45,35 +45,7 @@ import FirebaseMessaging
             }
         }
     }
-    
-    func setUserOffline() {
-        guard let user = user else { return }
-        Task {
-            do {
-                _ = try await self.repository.userRepository.setUserOffline(userId: user.id)
-            } catch { print(error) }
-        }
-    }
-    
-    func setUserOnline() {
-        guard let user = user, let userProfile = userProfile else { return }
-         
-        Task {
-            do {
-                userProfile.lastOnline = Date()
-                if let fcmToken = try? await Messaging.messaging().token() {
-                    userProfile.fcmToken = fcmToken
-                }
-                
-                _ = try await self.repository.userRepository.setUserOnline(userId: user.id, userProfile: userProfile)
-                
-                self.onlineUser = try await self.repository.userRepository.getOnlineUserList()
-                
-                try await self.repository.userRepository.sendUserProfileToBackend(profile: userProfile)
-            } catch { print(error) }
-        }
-    }
-    
+
     func startListeners() {
         self.listenForOnlineUserComesOnline()
         self.listenForOnlineUserGoesOffline()

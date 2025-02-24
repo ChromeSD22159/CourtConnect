@@ -38,4 +38,12 @@ class TerminRepository: RepositoryProtocol {
         let result = try container.mainContext.fetch(fetchDescriptor)
         return result
     }
+    
+    func getTeamTermineForDateRange(for teamId: UUID, start: Date, end: Date) throws -> [Termin] {
+        let predicate = #Predicate<Termin> { $0.startTime >= start && $0.startTime <= end && $0.teamId == teamId && $0.deletedAt == nil }
+        let sortBy = [SortDescriptor(\Termin.startTime, order: .reverse)]
+        let fetchDescriptor = FetchDescriptor(predicate: predicate, sortBy: sortBy)
+        let result = try container.mainContext.fetch(fetchDescriptor)
+        return result
+    }
 }

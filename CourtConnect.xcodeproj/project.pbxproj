@@ -200,6 +200,7 @@
 				MemberProfile.swift,
 				MemberStatistic.swift,
 				Note.swift,
+				PDFInfo.swift,
 				Protocol/AlertManageProtocol.swift,
 				Protocol/AuthProtocol.swift,
 				Protocol/DatabaseHistoryProtocol.swift,
@@ -234,6 +235,7 @@
 				SwiftDataEntity/UserProfile.swift,
 				TeamAdminProfile.swift,
 				TeamMemberProfile.swift,
+				TrainerSaleryData.swift,
 				UserAccountProfile.swift,
 				WidgetStatistic.swift,
 			);
@@ -360,6 +362,7 @@
 				SwiftDataEntity/UserProfile.swift,
 				TeamAdminProfile.swift,
 				TeamMemberProfile.swift,
+				TrainerSaleryData.swift,
 				UserAccountProfile.swift,
 				WidgetStatistic.swift,
 			);
@@ -850,7 +853,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = de.frederikkohler.CourtConnect.CourtConnectWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -883,7 +886,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = de.frederikkohler.CourtConnect.CourtConnectWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1045,7 +1048,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = de.frederikkohler.CourtConnect;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = NO;
@@ -1084,7 +1087,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = de.frederikkohler.CourtConnect;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = NO;

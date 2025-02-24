@@ -184,7 +184,13 @@ import Supabase
         let predicate = #Predicate<Requests> { $0.teamId == teamId && $0.accountId == userAccountId && $0.deletedAt == nil }
         let fetchDescriptor = FetchDescriptor<Requests>(predicate: predicate)
         return try container.mainContext.fetch(fetchDescriptor)
-    } 
+    }
+    
+    func getAttendance(userAccountId: UUID, terminId: UUID) throws -> Attendance? {
+        let status = AttendanceStatus.confirmed.rawValue
+        let predicate = #Predicate<Attendance> { $0.terminId == terminId && $0.userAccountId == userAccountId && $0.attendanceStatus == status && $0.deletedAt == nil }
+        return try container.mainContext.fetch(FetchDescriptor(predicate: predicate)).first
+    }
      
     func getTeamConfirmedAttendances(for terminId: UUID) throws -> [String] {
         let status = AttendanceStatus.confirmed.rawValue
@@ -211,10 +217,30 @@ import Supabase
     }
     
     func isTrainerAttendanceConfirmed(userAccountId: UUID, terminId: UUID) throws -> Bool {
-        let predicate = #Predicate<Attendance> { $0.terminId == terminId && $0.userAccountId == userAccountId && $0.deletedAt == nil }
+        let predicate = #Predicate<Attendance> { $0.terminId == terminId && $0.userAccountId == userAccountId && $0.deletedAt == nil && $0.trainerConfirmedAt != nil }
         let fetchDescriptor = FetchDescriptor(predicate: predicate)
-        return try container.mainContext.fetch(fetchDescriptor).first != nil
-    } 
+        let result = try container.mainContext.fetch(fetchDescriptor)
+        return !result.isEmpty
+    }
+    
+    func memberHasAttendance(userAccountId: UUID, terminId: UUID, confirmedOnly: Bool) -> Bool {
+        do {
+            let predicate: Predicate<Attendance>
+            
+            if confirmedOnly {
+                let status = AttendanceStatus.confirmed.rawValue
+                predicate = #Predicate<Attendance> { $0.terminId == terminId && $0.userAccountId == userAccountId && $0.attendanceStatus == status && $0.deletedAt == nil }
+            } else {
+                predicate = #Predicate<Attendance> { $0.terminId == terminId && $0.userAccountId == userAccountId && $0.deletedAt == nil }
+            }
+            
+            let fetchDescriptor = FetchDescriptor(predicate: predicate)
+            let result = try container.mainContext.fetch(fetchDescriptor)
+            return !result.isEmpty
+        } catch {
+            return false
+        }
+    }
     
     func deleteLocalTeam(for team: Team) {
         container.mainContext.delete(team)
@@ -294,9 +320,9 @@ import Supabase
             // CREATE MEMBER
             let newMember = TeamMember(userAccountId: userAccount.id, teamId: foundTeamDTO.id, shirtNumber: nil, position: "", role: userAccount.role, createdAt: Date(), updatedAt: Date())
             // INSER MEMBER REMOTE
-            print("before insert")
+  
             let supabaseMember: TeamMemberDTO = try await SupabaseService.insert(item: newMember.toDTO(), table: .teamMember)
-            print("after insert")
+       
             // UPDATE LOCAL CURRENTUSERACCOUNT
             userAccount.teamId = newMember.teamId
             userAccount.updatedAt = Date()
@@ -305,9 +331,7 @@ import Supabase
             try self.upsertLocal(item: foundTeamDTO.toModel(), table: .team, userId: userAccount.userId)
             try self.upsertLocal(item: supabaseMember.toModel(), table: .teamMember, userId: userAccount.userId)
        
-            print("before upsert")
             try await SupabaseService.upsertWithOutResult(item: userAccount.toDTO(), table: .userAccount, onConflict: "id")
-            print("after upsert")
         } else {
             throw TeamError.noTeamFoundwithThisJoinCode
         }
@@ -332,8 +356,7 @@ import Supabase
     func upsertTeamRemote(team: Team) async throws {
         try await SupabaseService.upsertWithOutResult(item: team.toDTO(), table: .team, onConflict: "id")
     }
-    
-    // TODO: UMBAU ZU IGNORE UPSERT BEI KEIN INTERNET
+     
     func insertTeamAdmin(newAdmin: TeamAdmin, userId: UUID) async throws {
         do {
             newAdmin.updatedAt = Date()
@@ -412,5 +435,12 @@ import Supabase
             print("Decoding error: \(error)")
             return nil
         }
+    }
+    
+    func getTrainersForTermineWhenIsConfirmed(terminId: UUID) throws -> [Attendance] {
+        let status = AttendanceStatus.confirmed.rawValue
+        let predicate = #Predicate<Attendance> { $0.terminId == terminId && $0.attendanceStatus == status && $0.deletedAt == nil && $0.trainerConfirmedAt != nil }
+        let fetchDescriptor = FetchDescriptor(predicate: predicate)
+        return try container.mainContext.fetch(fetchDescriptor)
     }
 }
