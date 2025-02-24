@@ -317,6 +317,8 @@ create table
     "teamImageURL" text null,
     "joinCode" text not null,
     "email" text not null,
+    "coachHourlyRate" real null,
+    "addStatisticConfirmedOnly" boolean null default false,
     "createdAt" timestamp with time zone not null default now(),
     "updatedAt" timestamp with time zone not null default now(),
     "deletedAt" timestamp with time zone null,

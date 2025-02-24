@@ -10,7 +10,7 @@ struct TrainerSaleryData: Identifiable {
     let id: UUID = UUID()
     let fullName: String
     let hours: Double
-    let hourlyRate: Double
+    var hourlyRate: Double
     
     var totalSalery: Double {
         self.hours * self.hourlyRate

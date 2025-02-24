@@ -8,6 +8,7 @@ import SwiftUI
 import Auth
 
 struct AdminDashboardView: View {
+    @Environment(\.dismiss) var dismiss
     @State var adminDashboardViewModel: AdminDashboardViewModel = AdminDashboardViewModel()
     @State var isRateSheet = false
     var body: some View {
@@ -22,7 +23,10 @@ struct AdminDashboardView: View {
                                 isRateSheet.toggle()
                             }
                             .sheet(isPresented: $isRateSheet) {
-                                CreateHourlyReportSheet()
+                                if !adminDashboardViewModel.coachHourlyRate.isEmpty, let rate = Double(adminDashboardViewModel.coachHourlyRate) {
+                                    CreateHourlyReportSheet(hourlyRate: rate)
+                                }
+                                
                             }
                     }
                 } header: {
@@ -59,9 +63,24 @@ struct AdminDashboardView: View {
                 
                 Section {
                     TextField("Change Team name", text: $adminDashboardViewModel.teamName, prompt: Text("Change Team name"))
-                        .padding(.horizontal)
                 } header: {
                     UpperCasedheadline(text: "Change Team name")
+                }
+                .blurrylistRowBackground()
+                
+                Section {
+                    TextField("Coach hourly rate", text: $adminDashboardViewModel.coachHourlyRate, prompt: Text("Coach hourly rate e.g. 9.99"))
+                } header: {
+                    UpperCasedheadline(text: "Coach hourly rate")
+                }
+                .blurrylistRowBackground() 
+                
+                Section { // addStatisticConfirmedOnly
+                    Toggle(isOn: $adminDashboardViewModel.addStatisticConfirmedOnly) {
+                        Text("Insert statistics only for confirmed players")
+                    }
+                } header: {
+                    UpperCasedheadline(text: "Team settings")
                 }
                 .blurrylistRowBackground()
                  
@@ -80,34 +99,30 @@ struct AdminDashboardView: View {
                 .blurrylistRowBackground()
             }
         }
+        .messagePopover()
         .navigationTitle(title: "Admin Dashboard")
-        .listBackgroundAnimated()
-        .onAppear {
-            adminDashboardViewModel.inizialze()
-        }
+        .listBackgroundAnimated() 
         .sheet(isPresented: $adminDashboardViewModel.isAddAdminSheet) {
             SheetStlye(title: "Add Admin", detents: [.medium, .large], isLoading: .constant(false)) {
-                List {
-                    if adminDashboardViewModel.teamTrainer.isEmpty {
-                        NoTeamMemberAvaible()
-                    } else {
-                        ForEach(adminDashboardViewModel.teamTrainer) { trainer in
-                            Label(trainer.userProfile.fullName, systemImage: "plus")
-                                .onTapGesture {
-                                    adminDashboardViewModel.addTrainerToAdmin(trainer: trainer)
-                                }
+                if adminDashboardViewModel.teamTrainer.isEmpty {
+                    NoTeamMemberAvaible()
+                } else {
+                    ForEach(adminDashboardViewModel.teamTrainer) { trainer in
+                        Button {
+                            adminDashboardViewModel.addTrainerToAdmin(trainer: trainer)
+                        } label: {
+                            HStack {
+                                Label(trainer.userProfile.fullName, systemImage: "plus")
+                                Spacer()
+                            }
+                            .padding()
                         }
                     }
                 }
             }
         }
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Text("Save")
-                    .onTapGesture {
-                        adminDashboardViewModel.save()
-                    }
-            }
+        .onDisappear {
+            adminDashboardViewModel.save()
         }
     }
 }  
@@ -119,7 +134,7 @@ struct AdminDashboardView: View {
     @Previewable @State var end = Date().endOfMonth
     AdminDashboardView()
         .sheet(isPresented: $isSheet) {
-            CreateHourlyReportSheet()
+            CreateHourlyReportSheet(hourlyRate: 9.00)
         }
 }
 

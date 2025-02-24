@@ -7,7 +7,12 @@
 import SwiftUI
   
 struct CreateHourlyReportSheet: View {
-    @State var viewModel = CreateHourlyReportSheetViewModel()
+    @State var viewModel: CreateHourlyReportSheetViewModel
+    
+    init(hourlyRate: Double) {
+        self.viewModel = CreateHourlyReportSheetViewModel(hourlyRate: hourlyRate)
+    }
+    
     var body: some View {
         SheetStlye(title: "Create hourly report", detents: [.medium], isLoading: .constant(false)) {
             ZStack {
@@ -25,7 +30,7 @@ struct CreateHourlyReportSheet: View {
                     .padding(.bottom, 20)
                      
                     if !viewModel.currentList.isEmpty {
-                        let page = PDFInfo(image: Image(.appIcon), list: viewModel.currentList, createdAt: Date())
+                        var page = PDFInfo(image: Image(.appIcon), list: viewModel.currentList, createdAt: Date())
                         ShareLinkPDFView(page: page)
                     } else {
                         NoConfirmedCoaches()
@@ -47,6 +52,6 @@ struct CreateHourlyReportSheet: View {
     @Previewable @State var end = Date().endOfMonth
     AdminDashboardView()
         .sheet(isPresented: $isSheet) {
-            CreateHourlyReportSheet()
+            CreateHourlyReportSheet(hourlyRate: 12.99)
         }
 }

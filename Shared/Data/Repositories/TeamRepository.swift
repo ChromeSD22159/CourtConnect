@@ -184,7 +184,13 @@ import Supabase
         let predicate = #Predicate<Requests> { $0.teamId == teamId && $0.accountId == userAccountId && $0.deletedAt == nil }
         let fetchDescriptor = FetchDescriptor<Requests>(predicate: predicate)
         return try container.mainContext.fetch(fetchDescriptor)
-    } 
+    }
+    
+    func getAttendance(userAccountId: UUID, terminId: UUID) throws -> Attendance? {
+        let status = AttendanceStatus.confirmed.rawValue
+        let predicate = #Predicate<Attendance> { $0.terminId == terminId && $0.userAccountId == userAccountId && $0.attendanceStatus == status && $0.deletedAt == nil }
+        return try container.mainContext.fetch(FetchDescriptor(predicate: predicate)).first
+    }
      
     func getTeamConfirmedAttendances(for terminId: UUID) throws -> [String] {
         let status = AttendanceStatus.confirmed.rawValue
@@ -213,8 +219,28 @@ import Supabase
     func isTrainerAttendanceConfirmed(userAccountId: UUID, terminId: UUID) throws -> Bool {
         let predicate = #Predicate<Attendance> { $0.terminId == terminId && $0.userAccountId == userAccountId && $0.deletedAt == nil }
         let fetchDescriptor = FetchDescriptor(predicate: predicate)
-        return try container.mainContext.fetch(fetchDescriptor).first != nil
-    } 
+        let result = try container.mainContext.fetch(fetchDescriptor)
+        return !result.isEmpty
+    }
+    
+    func memberHasAttendance(userAccountId: UUID, terminId: UUID, confirmedOnly: Bool) -> Bool {
+        do {
+            let predicate: Predicate<Attendance>
+            
+            if confirmedOnly {
+                let status = AttendanceStatus.confirmed.rawValue
+                predicate = #Predicate<Attendance> { $0.terminId == terminId && $0.userAccountId == userAccountId && $0.attendanceStatus == status && $0.deletedAt == nil }
+            } else {
+                predicate = #Predicate<Attendance> { $0.terminId == terminId && $0.userAccountId == userAccountId && $0.deletedAt == nil }
+            }
+            
+            let fetchDescriptor = FetchDescriptor(predicate: predicate)
+            let result = try container.mainContext.fetch(fetchDescriptor)
+            return !result.isEmpty
+        } catch {
+            return false
+        }
+    }
     
     func deleteLocalTeam(for team: Team) {
         container.mainContext.delete(team)

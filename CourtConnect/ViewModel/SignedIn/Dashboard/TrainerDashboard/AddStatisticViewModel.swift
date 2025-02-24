@@ -86,7 +86,7 @@ import Auth
                         
                         self.teamPlayer.append(teamMemberProfileStatistic)
                     }
-                    if userAccount.roleEnum == .coach {
+                    if userAccount.roleEnum == .coach { 
                         let teamMemberProfileStatistic = TeamMemberProfile(
                             userProfile: userProfil,
                             teamMember: member
@@ -118,10 +118,12 @@ import Auth
                             teamMember: member,
                             statistic: TempStatistic()
                         )
+                         
+                        let hasAttendance = repository.teamRepository.memberHasAttendance(userAccountId: teamMemberProfileStatistic.teamMember.userAccountId, terminId: termin.id, confirmedOnly: team.addStatisticConfirmedOnly)
                         
                         let has = try repository.teamRepository.playerHasStatistic(userAccountId: teamMemberProfileStatistic.teamMember.userAccountId, terminId: termin.id)
-                        
-                        if !has {
+                       
+                        if hasAttendance && !has {
                             teamPlayer.append(teamMemberProfileStatistic)
                         }
                         
@@ -131,10 +133,10 @@ import Auth
                             userProfile: userProfil,
                             teamMember: member
                         )
-                        
+                        let hasAttendance = repository.teamRepository.memberHasAttendance(userAccountId: teamMemberProfileStatistic.teamMember.userAccountId, terminId: termin.id, confirmedOnly: team.addStatisticConfirmedOnly)
                         let has = try repository.teamRepository.playerHasStatistic(userAccountId: teamMemberProfileStatistic.teamMember.userAccountId, terminId: termin.id)
                         
-                        if !has {
+                        if hasAttendance && !has {
                             teamTrainer.append(teamMemberProfileStatistic)
                         }
                     }
@@ -174,8 +176,25 @@ import Auth
     }
     
     func filterTeamPlayer(terminId: UUID) -> [TeamMemberProfileStatistic] {
+        guard let team = currentTeam else { return [] }
         return teamPlayer.filter { player in
-            !hasStatistic(userAccountId: player.teamMember.userAccountId, terminId: terminId)
+            !hasStatistic(userAccountId: player.teamMember.userAccountId, terminId: terminId) &&
+            repository.teamRepository.memberHasAttendance(userAccountId: player.teamMember.userAccountId, terminId: terminId, confirmedOnly: team.addStatisticConfirmedOnly)
+        }
+    }
+    
+    func confirmTrainerAttendance(userAccountId: UUID, terminId: UUID) {
+        Task {
+            do {
+                guard let user = user else { throw UserError.userIdNotFound }
+                if let attendance = try repository.teamRepository.getAttendance(userAccountId: userAccountId, terminId: terminId) {
+                    attendance.trainerConfirmedAt = Date()
+                    attendance.updatedAt = Date()
+                    try await repository.teamRepository.upsertTerminAttendance(attendance: attendance, userId: user.id)
+                }
+            } catch {
+                print(error)
+            }
         }
     }
     
@@ -188,8 +207,10 @@ import Auth
     }
     
     func filterTeamTrainer(terminId: UUID) -> [TeamMemberProfile] {
+        guard let team = currentTeam else { return [] }
         return teamTrainer.filter { trainer in
-            !isTrainerAttendanceConfirmed(userAccountId: trainer.teamMember.userAccountId, terminId: terminId)
+            !isTrainerAttendanceConfirmed(userAccountId: trainer.teamMember.userAccountId, terminId: terminId) &&
+            repository.teamRepository.memberHasAttendance(userAccountId: trainer.teamMember.userAccountId, terminId: terminId, confirmedOnly: team.addStatisticConfirmedOnly)
         }
     }
     

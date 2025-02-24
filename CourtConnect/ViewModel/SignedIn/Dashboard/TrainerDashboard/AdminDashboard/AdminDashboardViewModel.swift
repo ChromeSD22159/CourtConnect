@@ -18,19 +18,21 @@ import Auth
     var currentTeam: Team?
     
     var teamName = ""
+    var coachHourlyRate = ""
+    var addStatisticConfirmedOnly = false
     var isDeleteTeamDialog = false
     var isAddAdminSheet = false
     
     var teamAdmin: [TeamAdminProfile] = []
     var teamTrainer: [TeamMemberProfile] = []
     
-    func inizialze() {
+    init() {
         self.inizializeAuth()
          
         self.getAllTeamAdmins()
         self.getAllTeamMemberAvaibleToBeAdmin()
         self.setTeamName()
-    } 
+    }
     
     func deleteTeam() {
         Task {
@@ -51,6 +53,9 @@ import Auth
                 guard !teamName.isEmpty else { throw TeamError.teamNameEmtpy }
                 guard teamName.count >= 4 else { throw TeamError.teamNameLessCharacter }
                 currentTeam?.teamName = teamName
+                currentTeam?.coachHourlyRate = Double(coachHourlyRate) ?? 0
+                currentTeam?.addStatisticConfirmedOnly = addStatisticConfirmedOnly
+                currentTeam?.updatedAt = Date()
                 
                 guard let currentTeam = currentTeam else { return }
                  
@@ -64,8 +69,10 @@ import Auth
     }
     
     func setTeamName() {
-        guard let teamName = currentTeam?.teamName else { return }
-        self.teamName = teamName
+        guard let currentTeam = currentTeam else { return }
+        self.teamName = currentTeam.teamName
+        self.addStatisticConfirmedOnly = currentTeam.addStatisticConfirmedOnly
+        self.coachHourlyRate = String(currentTeam.coachHourlyRate)
     }
      
     func getAllTeamMemberAvaibleToBeAdmin() {
@@ -73,26 +80,28 @@ import Auth
             
             guard let currentTeam = currentTeam else { return }
             let localMember = try repository.teamRepository.getTeamMembers(for: currentTeam.id, role: .coach)
-            
             var teamMemberProfiles: [TeamMemberProfile] = []
             
             for member in localMember {
                 do {
                     let userAccount = try repository.accountRepository.getAccount(id: member.userAccountId)
-                    let admin = teamAdmin.first { $0.teamAdmin.userAccountId == userAccount?.id }
-                    guard admin == nil else { return }
-                    guard let userId = userAccount?.userId,
-                          let userProfile = try repository.userRepository.getUserProfileFromDatabase(userId: userId) else {
+                    let isAdmin = teamAdmin.contains { $0.teamAdmin.userAccountId == userAccount?.id }
+                    if isAdmin {
                         continue
+                    } else {
+                        guard let userId = userAccount?.userId,
+                              let userProfile = try repository.userRepository.getUserProfileFromDatabase(userId: userId) else {
+                            continue
+                        }
+                        
+                        let teamMemberProfile = TeamMemberProfile(userProfile: userProfile, teamMember: member)
+                         
+                        teamMemberProfiles.append(teamMemberProfile)
                     }
-                    let teamMemberProfile = TeamMemberProfile(userProfile: userProfile, teamMember: member)
-                     
-                    teamMemberProfiles.append(teamMemberProfile)
                 } catch {
                     print("Error fetching user profile: \(error)")
                 }
             }
-            
             self.teamTrainer = teamMemberProfiles
         } catch {
             print(error)

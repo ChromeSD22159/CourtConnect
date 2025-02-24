@@ -13,6 +13,8 @@ struct TeamDTO: DTOProtocol {
     var headcoach: String
     var joinCode: String
     var email: String
+    var coachHourlyRate: Double?
+    var addStatisticConfirmedOnly: Bool?
     var createdByUserAccountId: UUID
     var createdAt: Date
     var updatedAt: Date
@@ -25,6 +27,8 @@ struct TeamDTO: DTOProtocol {
         headcoach: String,
         joinCode: String,
         email: String,
+        coachHourlyRate: Double?,
+        addStatisticConfirmedOnly: Bool?,
         createdByUserAccountId: UUID,
         createdAt: Date,
         updatedAt: Date,
@@ -36,14 +40,16 @@ struct TeamDTO: DTOProtocol {
         self.headcoach = headcoach
         self.joinCode = joinCode
         self.email = email
+        self.coachHourlyRate = coachHourlyRate
+        self.addStatisticConfirmedOnly = addStatisticConfirmedOnly
         self.createdByUserAccountId = createdByUserAccountId
         self.createdAt = createdAt
         self.updatedAt = updatedAt
         self.deletedAt = deletedAt
     }
     
-    func toModel() -> Team {
-        return Team(id: id, teamImageURL: teamImageURL, teamName: teamName, headcoach: headcoach, joinCode: joinCode, email: email, createdByUserAccountId: createdByUserAccountId, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
+    func toModel() -> Team { 
+        return Team(id: id, teamImageURL: teamImageURL, teamName: teamName, headcoach: headcoach, joinCode: joinCode, email: email, coachHourlyRate: coachHourlyRate, addStatisticConfirmedOnly: addStatisticConfirmedOnly, createdByUserAccountId: createdByUserAccountId, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
 }
 

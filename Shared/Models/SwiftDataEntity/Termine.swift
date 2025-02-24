@@ -40,7 +40,7 @@ class Termin: ModelProtocol {
     }
     
     func toDTO() -> TerminDTO {
-        // swiftlint:disable:next line_length
+        // swiftlint:disable line_length
         return TerminDTO(id: id, teamId: teamId, title: title, place: place, infomation: infomation, typeString: typeString, durationMinutes: durationMinutes, startTime: startTime, endTime: endTime, createdByUserAccountId: createdByUserAccountId, createdAt: createdAt, updatedAt: updatedAt, deletedAt: deletedAt)
     }
 }

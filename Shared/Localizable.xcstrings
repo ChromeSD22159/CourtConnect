@@ -564,6 +564,26 @@
         }
       }
     },
+    "Coach hourly rate" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trainer Stundensatz"
+          }
+        }
+      }
+    },
+    "Coach hourly rate e.g. 9.99" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trainer Stundensatz z.B. 9.99"
+          }
+        }
+      }
+    },
     "Code Team: %@" : {
       "localizations" : {
         "de" : {
@@ -1247,10 +1267,26 @@
       }
     },
     "Handle Error" : {
-
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Handle Error"
+          }
+        }
+      }
     },
     "Handle Message" : {
-
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Handle Message"
+          }
+        }
+      }
     },
     "Headcoach" : {
       "localizations" : {
@@ -1378,6 +1414,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Code einfügen"
+          }
+        }
+      }
+    },
+    "Insert statistics only for confirmed players" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Statistik einfügen nur für bestätigte Spieler"
           }
         }
       }
@@ -1679,9 +1725,6 @@
           }
         }
       }
-    },
-    "Neue Nachricht von Frederik" : {
-
     },
     "New appointment" : {
       "localizations" : {
@@ -2565,6 +2608,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Teamanfrage von %@"
+          }
+        }
+      }
+    },
+    "Team settings" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Team einstellungen"
           }
         }
       }

@@ -47,19 +47,6 @@ struct AddStatisticView: View {
                     }
                 }
                 .blurrylistRowBackground()
-                
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    let list = [
-                        TrainerSaleryData(fullName: "Frederik Kohler", hours: 5, hourlyRate: 12.99),
-                        TrainerSaleryData(fullName: "Vorname Nachname", hours: 5, hourlyRate: 12.99)
-                    ]
-                    
-                    let page = PDFInfo(image: Image(.appIcon), list: list, createdAt: Date())
-                    
-                    ShareLinkPDFView(page: page)
-                }
             }
         }
         .sheet(item: $viewModel.selectedTermin) { termin in
@@ -249,6 +236,7 @@ fileprivate struct NumberTextFieldRow: View {
 fileprivate struct MemberRowTrainer: View {
     var trainer: TeamMemberProfile
     @State var isExpant = false
+    @State var isConfirmed = false
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
@@ -276,8 +264,9 @@ fileprivate struct MemberRowTrainer: View {
              
             if isExpant {
                 VStack {
-                    Toggle("Attendance", isOn: .constant(true))
-                } .padding([.horizontal, .bottom])
+                    Toggle("Attendance", isOn: $isConfirmed)
+                }
+                .padding([.horizontal, .bottom]) 
             }
             
         }

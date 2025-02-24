@@ -21,8 +21,10 @@ import Foundation
     var end = Date().endOfMonth
     
     var isLoading: Bool = false
+    var hourlyRate: Double
     
-    init() {
+    init(hourlyRate: Double) {
+        self.hourlyRate = hourlyRate
         inizializeAuth()
     }
     
@@ -44,7 +46,7 @@ import Foundation
             }
             
             currentList = list.map {
-                TrainerSaleryData(fullName: $0.key.fullName, hours: $0.value, hourlyRate: 12.99)
+                TrainerSaleryData(fullName: $0.key.fullName, hours: $0.value, hourlyRate: hourlyRate)
             }
         } catch {
             ErrorHandlerViewModel.shared.handleError(error: error)
