@@ -35,6 +35,9 @@ import UIKit
     
     func getTeamMember() {
         do {
+            var teamPlayer: [TeamMemberProfile] = []
+            var teamTrainer: [TeamMemberProfile] = []
+            
             guard let currentTeam = currentTeam else { throw TeamError.teamNotFound }
             let teamMember = try repository.teamRepository.getTeamMembers(for: currentTeam.id)
             
@@ -43,13 +46,16 @@ import UIKit
                    let userProfil = try repository.userRepository.getUserProfileFromDatabase(userId: userAccount.userId) {
                     
                     if userAccount.roleEnum == .player {
-                        self.teamPlayer.append(TeamMemberProfile(userProfile: userProfil, teamMember: member))
+                        teamPlayer.append(TeamMemberProfile(userProfile: userProfil, teamMember: member))
                     }
                     if userAccount.roleEnum == .coach {
-                        self.teamTrainer.append(TeamMemberProfile(userProfile: userProfil, teamMember: member))
+                        teamTrainer.append(TeamMemberProfile(userProfile: userProfil, teamMember: member))
                     }
                 }
             }
+            
+            self.teamPlayer = teamPlayer
+            self.teamTrainer = teamTrainer
         } catch {
             print(error)
         }

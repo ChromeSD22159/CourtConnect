@@ -1267,6 +1267,7 @@
       }
     },
     "Handle Error" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1277,6 +1278,7 @@
       }
     },
     "Handle Message" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1723,9 +1725,6 @@
           }
         }
       }
-    },
-    "Neue Nachricht von Frederik" : {
-
     },
     "New appointment" : {
       "localizations" : {

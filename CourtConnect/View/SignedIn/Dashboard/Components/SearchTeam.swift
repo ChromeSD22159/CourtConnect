@@ -33,7 +33,7 @@ struct SearchTeam: View {
                 }
             }
             
-        } 
+        }.messagePopover()
         .listBackground()
         .searchable(text: $teamListViewModel.searchTeamName, isPresented: $teamListViewModel.isSearchBar)
         .onSubmit(of: .search) {

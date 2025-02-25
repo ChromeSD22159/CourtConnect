@@ -87,8 +87,9 @@ struct AccountSwitch: ViewModifier {
                                             Image(systemName: "xmark")
                                                 .font(.callout)
                                         }
-                                        
-                                        Text("\(account.displayName)")
+                                        if let userRole = UserRole(rawValue: account.displayName) {
+                                            Text(userRole.localized)
+                                        }
                                     }
                                 }
                             }

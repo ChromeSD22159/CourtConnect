@@ -42,6 +42,7 @@ struct SignUpSheet: View {
                     
                     DatePicker("Your Birthday", selection: $registerViewModel.birthday, displayedComponents: .date)
                         .datePickerStyle(.compact)
+                        .tint(Theme.headline)
                     
                     HStack {
                         Text("User role")

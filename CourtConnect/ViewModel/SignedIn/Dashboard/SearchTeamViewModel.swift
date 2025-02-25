@@ -49,14 +49,16 @@ import UIKit
     func requestTeam() async throws {
         guard let userAccount = userAccount else { throw UserError.userAccountNotFound }
         guard let selectedTeam = selectedTeam else { throw TeamError.noTeamFoundwithThisJoinCode }
+       
+        let allRequests = try repository.teamRepository.findRequest(teamId: selectedTeam.id, userAccountId: userAccount.id)
         
-        guard try !repository.teamRepository.findRequest(teamId: selectedTeam.id, userAccountId: userAccount.id).isEmpty else {
+        if allRequests.isEmpty {
+            let newRequest = Requests(accountId: userAccount.id, teamId: selectedTeam.id, createdAt: Date(), updatedAt: Date())
+            try await repository.teamRepository.requestTeam(request: newRequest)
+        } else {
             showInfomationAlert(title: "Request Already Sent", message: "You have already sent a request to join this team.")
             return
         }
-        
-        let newRequest = Requests(accountId: userAccount.id, teamId: selectedTeam.id, createdAt: Date(), updatedAt: Date())
-        try await repository.teamRepository.requestTeam(request: newRequest)
     }
     
     func sendJoinRequest() {
