@@ -6,7 +6,7 @@
 //
 import Foundation
 import Auth 
-import UIKit
+import UIKit 
 
 @MainActor
 @Observable class SearchTeamViewModel: AuthProtocol, @preconcurrency AlertManageProtocol, ObservableObject {
@@ -19,19 +19,46 @@ import UIKit
     var userAccount: UserAccount?
     var currentTeam: Team?
     var userProfile: UserProfile?
-     
+
     var showJoinTeamAlert: Bool = false
-    var searchTeamName: String = ""
+
+    var searchTeamName = "" {
+        didSet {
+            debouncedSearch()
+        }
+    }
+    private var searchTask: Task<Void, Never>?
     var isSearchBar: Bool  = false
     var foundTeams: [TeamDTO] = []
     var selectedTeam: TeamDTO?
-     
-    func inizialize() {
+
+    init() {
         inizializeAuth()
         getAllTeams()
     }
-    
-    func searchTeam() {
+
+    private func debouncedSearch() {
+       searchTask?.cancel()
+       searchTask = Task {
+           try? await Task.sleep(for: .milliseconds(500))
+           guard !Task.isCancelled else { return }
+           searchTeam()
+       }
+    }
+
+    func sendJoinRequest() {
+        Task {
+            do {
+                try await requestTeam()
+                let msg = InAppMessage(title: "Request send!")
+                messagehandler.handleMessage(message: msg)
+            } catch {
+                errorHandler.handleError(error: error)
+            }
+        }
+    }
+
+    private func searchTeam() {
         Task {
             do {
                 guard !searchTeamName.isEmpty else { throw TeamError.searchInputIsNull }
@@ -41,12 +68,8 @@ import UIKit
             }
         }
     }
-    
-    func resetFoundTeams() {
-        foundTeams = []
-    }
-    
-    func requestTeam() async throws {
+
+    private func requestTeam() async throws {
         guard let userAccount = userAccount else { throw UserError.userAccountNotFound }
         guard let selectedTeam = selectedTeam else { throw TeamError.noTeamFoundwithThisJoinCode }
        
@@ -60,20 +83,8 @@ import UIKit
             return
         }
     }
-    
-    func sendJoinRequest() {
-        Task {
-            do {
-                try await requestTeam()
-                let msg = InAppMessage(title: "Request send!")
-                messagehandler.handleMessage(message: msg)
-            } catch {
-                errorHandler.handleError(error: error)
-            }
-        }
-    }
-    
-    func getAllTeams() {
+
+    private func getAllTeams() {
         do {
             let allTeams = try repository.teamRepository.getAllTeamsAsc()
             foundTeams = allTeams

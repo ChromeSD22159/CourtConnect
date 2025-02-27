@@ -35,12 +35,8 @@ struct SearchTeam: View {
             
         }.messagePopover()
         .listBackground()
-        .searchable(text: $teamListViewModel.searchTeamName, isPresented: $teamListViewModel.isSearchBar)
-        .onSubmit(of: .search) {
-            teamListViewModel.searchTeam()
-        }
+        .searchable(text: $teamListViewModel.searchTeamName, isPresented: $teamListViewModel.isSearchBar) 
         .onAppear {
-            teamListViewModel.inizialize()
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0 , execute: {
                 teamListViewModel.isSearchBar.toggle()
             })
